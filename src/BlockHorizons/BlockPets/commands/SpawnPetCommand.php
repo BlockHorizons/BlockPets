@@ -17,6 +17,7 @@ class SpawnPetCommand extends BaseCommand {
 	public function execute(CommandSender $sender, $commandLabel, array $args) {
 		if(!$this->testPermission($sender)) {
 			$this->sendNoPermission($sender);
+			return true;
 		}
 
 		if(!$sender instanceof Player) {
@@ -26,6 +27,7 @@ class SpawnPetCommand extends BaseCommand {
 
 		if(count($args) > 4 || count($args) < 2) {
 			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
+			return true;
 		}
 
 		if(!$this->getLoader()->petExists($args[0])) {

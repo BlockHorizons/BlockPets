@@ -14,7 +14,7 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 
 	public function __construct(Loader $loader, $name, $description = "", $usageMessage = null, array $aliases = []) {
 		parent::__construct($name, $description, $usageMessage, $aliases);
-		$this->owner = $loader;
+		$this->loader = $loader;
 		$this->setUsage($usageMessage);
 	}
 
