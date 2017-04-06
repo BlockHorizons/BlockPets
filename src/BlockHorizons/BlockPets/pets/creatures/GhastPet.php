@@ -11,6 +11,9 @@ class GhastPet extends HoveringPet {
 	public $width = 4;
 	public $height = 4;
 
-	public $speed = 1.2;
 	public $name = "Ghast Pet";
+
+	public function getSpeed(): float {
+		return 1.2;
+	}
 }

@@ -12,4 +12,8 @@ class ChickenPet extends WalkingPet {
 	public $height = 0.7;
 
 	public $name = "Chicken Pet";
+
+	public function getSpeed(): float {
+		return 1.0;
+	}
 }

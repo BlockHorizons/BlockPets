@@ -12,4 +12,8 @@ class BlazePet extends HoveringPet {
 	public $height = 1.8;
 
 	public $name = "Blaze Pet";
+
+	public function getSpeed(): float {
+		return 1.0;
+	}
 }

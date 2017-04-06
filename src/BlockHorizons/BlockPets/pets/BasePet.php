@@ -15,7 +15,7 @@ use pocketmine\utils\TextFormat;
 abstract class BasePet extends Creature {
 
 	protected $name;
-	protected $speed = 1.0;
+	protected $speed;
 	protected $scale = 1;
 	protected $networkId;
 	protected $petOwner;
@@ -28,18 +28,13 @@ abstract class BasePet extends Creature {
 		return $this->name;
 	}
 
+	public abstract function getSpeed(): float;
+
 	/**
 	 * @return int
 	 */
 	public function getNetworkId(): int {
 		return $this->networkId;
-	}
-
-	/**
-	 * @return float
-	 */
-	public function getSpeed(): float {
-		return $this->speed;
 	}
 
 	/**
