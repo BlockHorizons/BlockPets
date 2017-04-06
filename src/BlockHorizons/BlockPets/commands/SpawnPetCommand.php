@@ -1,14 +1,11 @@
 <?php
 
-namespace Sandertv\BlockSniper\commands;
+namespace BlockHorizons\BlockPets\commands;
 
-use BlockHorizons\BlockPets\pets\BasePet;
 use pocketmine\command\CommandSender;
-use pocketmine\nbt\tag\IntTag;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 use BlockHorizons\BlockPets\Loader;
-use BlockHorizons\BlockPets\commands\BaseCommand;
 
 class SpawnPetCommand extends BaseCommand {
 

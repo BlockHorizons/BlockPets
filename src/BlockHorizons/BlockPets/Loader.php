@@ -16,7 +16,7 @@ use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
-use Sandertv\BlockSniper\commands\SpawnPetCommand;
+use BlockHorizons\BlockPets\commands\SpawnPetCommand;
 
 class Loader extends PluginBase {
 
