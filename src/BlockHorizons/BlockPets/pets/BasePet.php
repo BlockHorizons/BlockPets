@@ -15,7 +15,7 @@ use pocketmine\utils\TextFormat;
 abstract class BasePet extends Creature {
 
 	protected $name;
-	protected $speed = 1;
+	protected $speed = 1.0;
 	protected $scale = 1;
 	protected $networkId;
 	protected $target = null;
@@ -118,8 +118,8 @@ abstract class BasePet extends Creature {
 		$this->namedtag->petName = new StringTag("petName", $this->getPetName());
 		$this->namedtag->petOwner = new StringTag("petOwner", $this->getPetOwnerName());
 		$this->namedtag->petLevel = new IntTag("petLevel", $this->getPetLevel());
-		$this->namedtag->speed = new FloatTag("Scale", $this->getSpeed());
-		$this->namedtag->scale = new FloatTag("Speed", $this->getScale());
+		$this->namedtag->speed = new FloatTag("Speed", $this->getSpeed());
+		$this->namedtag->scale = new FloatTag("Scale", $this->getScale());
 		$this->namedtag->networkId = new IntTag("networkId", $this->getNetworkId());
 	}
 
