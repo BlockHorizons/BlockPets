@@ -18,9 +18,8 @@ abstract class BasePet extends Creature {
 	protected $speed = 1.0;
 	protected $scale = 1;
 	protected $networkId;
-	protected $target = null;
 	protected $petOwner;
-	protected $petLevel = 0;
+	protected $petLevel = 1;
 
 	/**
 	 * @return string
