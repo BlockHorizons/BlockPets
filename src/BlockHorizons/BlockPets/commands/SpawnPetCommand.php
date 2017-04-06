@@ -13,7 +13,7 @@ use BlockHorizons\BlockPets\commands\BaseCommand;
 class SpawnPetCommand extends BaseCommand {
 
 	public function __construct(Loader $loader) {
-		parent::__construct($loader, "spawnpet", "Spawn a pet for yourself or other players", "<petType> [player] [size]", ["sp"]);
+		parent::__construct($loader, "spawnpet", "Spawn a pet for yourself or other players", "<petType> <name> [player] [size]", ["sp"]);
 		$this->setPermission("blockpets.command.spawnpet");
 	}
 
@@ -27,7 +27,7 @@ class SpawnPetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(count($args) > 3) {
+		if(count($args) > 4 || count($args) < 2) {
 			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
 		}
 
@@ -42,19 +42,21 @@ class SpawnPetCommand extends BaseCommand {
 		}
 
 		$player = $sender;
-		if(isset($args[1])) {
-			if(($player = $this->getLoader()->getServer()->getPlayer($args[1])) === null) {
+		if(isset($args[2])) {
+			if(($player = $this->getLoader()->getServer()->getPlayer($args[2])) === null) {
 				$sender->sendMessage(TF::RED . "[Warning] That player isn't online.");
 				return true;
 			}
 		}
 
-		if(isset($args[2]) && !is_numeric($args[2])) {
+		if(isset($args[3]) && !is_numeric($args[3])) {
 			$sender->sendMessage(TF::RED . "[Warning] The pet scale should be numeric.");
 			return true;
 		}
 		$petName = $this->getLoader()->getPet($args[0]);
-		$pet = $this->getLoader()->createPet($petName, $player, isset($args[2]) ? $args[2] : null);
+		$pet = $this->getLoader()->createPet($petName, $player, isset($args[3]) ? $args[3] : null);
+		$pet->setNameTag($args[1]);
+		$pet->setNameTag($pet->getPetName());
 		$pet->spawnToAll();
 		return true;
 	}

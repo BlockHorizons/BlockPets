@@ -4,9 +4,9 @@ namespace BlockHorizons\BlockPets;
 
 use BlockHorizons\BlockPets\listeners\EventListener;
 use BlockHorizons\BlockPets\pets\BasePet;
-use BlockHorizons\pets\creatures\BlazePet;
-use BlockHorizons\pets\creatures\ChickenPet;
-use BlockHorizons\pets\creatures\GhastPet;
+use BlockHorizons\BlockPets\pets\creatures\BlazePet;
+use BlockHorizons\BlockPets\pets\creatures\ChickenPet;
+use BlockHorizons\BlockPets\pets\creatures\GhastPet;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\nbt\tag\CompoundTag;

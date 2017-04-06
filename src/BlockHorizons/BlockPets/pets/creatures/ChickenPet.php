@@ -1,6 +1,6 @@
 <?php
 
-namespace BlockHorizons\pets\creatures;
+namespace BlockHorizons\BlockPets\pets\creatures;
 
 use BlockHorizons\BlockPets\pets\WalkingPet;
 
