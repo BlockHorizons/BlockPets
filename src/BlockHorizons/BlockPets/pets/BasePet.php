@@ -4,7 +4,6 @@ namespace BlockHorizons\BlockPets\pets;
 
 use pocketmine\entity\Creature;
 use pocketmine\level\format\Chunk;
-use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\IntTag;
@@ -47,7 +46,7 @@ abstract class BasePet extends Creature {
 	/**
 	 * @return Player|null
 	 */
-	public function getPetOwner(): Player {
+	public function getPetOwner() {
 		return $this->getLevel()->getServer()->getPlayer($this->petOwner);
 	}
 
@@ -56,6 +55,13 @@ abstract class BasePet extends Creature {
 	 */
 	public function getPetOwnerName(): string {
 		return $this->petOwner;
+	}
+
+	/**
+	 * @return float
+	 */
+	public function getScale(): float {
+		return $this->scale;
 	}
 
 	/**
