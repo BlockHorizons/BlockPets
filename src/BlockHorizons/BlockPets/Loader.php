@@ -32,10 +32,6 @@ class Loader extends PluginBase {
 		GhastPet::class
 	];
 
-	const PET_COMMANDS = [
-		"spawnpet" => SpawnPetCommand::class
-	];
-
 	public function onEnable() {
 		foreach(self::PET_CLASSES as $petClass) {
 			Entity::registerEntity($petClass, true);
@@ -45,7 +41,10 @@ class Loader extends PluginBase {
 	}
 
 	public function registerCommands() {
-		foreach(self::PET_COMMANDS as $fallBack => $command) {
+		$petCommands = [
+			"spawnpet" => new SpawnPetCommand($this)
+		]
+		foreach($petCommands as $fallBack => $command) {
 			$this->getServer()->getCommandMap()->register($fallBack, $command);
 		}
 	}
