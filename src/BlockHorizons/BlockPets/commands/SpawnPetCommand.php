@@ -55,7 +55,6 @@ class SpawnPetCommand extends BaseCommand {
 		$petName = $this->getLoader()->getPet($args[0]);
 		$pet = $this->getLoader()->createPet($petName, $player, isset($args[3]) ? $args[3] : 1.0);
 		$pet->setNameTag($args[1]);
-		$pet->setNameTag($pet->getPetName());
 		$pet->spawnToAll();
 		return true;
 	}
