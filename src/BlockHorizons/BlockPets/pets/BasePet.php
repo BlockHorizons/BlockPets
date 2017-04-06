@@ -3,6 +3,7 @@
 namespace BlockHorizons\BlockPets\pets;
 
 use pocketmine\entity\Creature;
+use pocketmine\level\format\Chunk;
 use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\FloatTag;
@@ -71,8 +72,8 @@ abstract class BasePet extends Creature {
 		return $this->getName() . TextFormat::GRAY . " - Level " . $this->getPetLevel();
 	}
 
-	public function __construct(Level $level, CompoundTag $nbt) {
-		parent::__construct($level, $nbt);
+	public function __construct(Chunk $chunk, CompoundTag $nbt) {
+		parent::__construct($chunk, $nbt);
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
 
