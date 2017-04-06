@@ -43,7 +43,7 @@ class Loader extends PluginBase {
 	public function registerCommands() {
 		$petCommands = [
 			"spawnpet" => new SpawnPetCommand($this)
-		]
+		];
 		foreach($petCommands as $fallBack => $command) {
 			$this->getServer()->getCommandMap()->register($fallBack, $command);
 		}
