@@ -41,10 +41,10 @@ abstract class HoveringPet extends BasePet {
 		$this->pitch = rad2deg(atan($petOwner->y - $this->y));
 
 		if($this->getLevel()->getBlock(new Vector3($this->x, $this->y - 0.7, $this->z))->getId() !== Block::AIR) {
-			$this->motionY = $this->gravity * 2.4;
+			$this->motionY = $this->gravity * 4;
 		}
 		if($this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) >= 2.5) {
-			$this->motionY -= $this->gravity * 4;
+			$this->motionY = -$this->gravity * 4;
 		}
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
