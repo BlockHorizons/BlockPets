@@ -84,9 +84,7 @@ abstract class BasePet extends Creature {
 
 		$this->petLevel = $this->namedtag["petLevel"];
 		$this->petOwner = $this->namedtag["petOwner"];
-		$this->speed = $this->namedtag["speed"];
 		$this->scale = $this->namedtag["scale"];
-		$this->networkId = $this->namedtag["networkId"];
 	}
 
 	public function initEntity() {
