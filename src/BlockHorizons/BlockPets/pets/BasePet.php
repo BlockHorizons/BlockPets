@@ -77,27 +77,6 @@ abstract class BasePet extends Creature {
 		return $this->getName() . TextFormat::GRAY . " - Level " . $this->getPetLevel();
 	}
 
-	/**
-	 * @param float $value
-	 */
-	public function setScale(float $value){
-		$multiplier = $value / $this->getScale();
-		$this->width *= $multiplier;
-		$this->height *= $multiplier;
-		$halfWidth = $this->width / 2;
-		$this->boundingBox->setBounds(
-			$this->x - $halfWidth,
-			$this->y,
-			$this->z - $halfWidth,
-			$this->x + $halfWidth,
-			$this->y + $this->height,
-			$this->z + $halfWidth
-		);
-		$this->setDataProperty(self::DATA_SCALE, self::DATA_TYPE_FLOAT, $value);
-		$this->setDataProperty(self::DATA_BOUNDING_BOX_WIDTH, self::DATA_TYPE_FLOAT, $this->width);
-		$this->setDataProperty(self::DATA_BOUNDING_BOX_HEIGHT, self::DATA_TYPE_FLOAT, $this->height);
-	}
-
 	public function __construct(Chunk $chunk, CompoundTag $nbt) {
 		parent::__construct($chunk, $nbt);
 		$this->setNameTagVisible(true);
@@ -106,7 +85,7 @@ abstract class BasePet extends Creature {
 		$this->petOwner = $this->namedtag["petOwner"];
 		$this->scale = $this->namedtag["scale"];
 
-		$this->setScale($this->scale);
+		$this->setDataProperty(self::DATA_SCALE, self::DATA_TYPE_FLOAT, $this->scale);
 	}
 
 	public function initEntity() {
