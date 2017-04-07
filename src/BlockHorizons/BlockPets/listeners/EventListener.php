@@ -7,6 +7,7 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
 use pocketmine\Player;
+use pocketmine\utils\TextFormat;
 
 class EventListener implements Listener {
 
@@ -25,6 +26,7 @@ class EventListener implements Listener {
 						if(!$attacker->getInventory()->getItemInHand() === 329) {
 							$petEntity->setRider($attacker);
 						}
+						$attacker->sendPopup(TextFormat::GRAY . "Tap the pet again to dismount...");
 					}
 				}
 			} else {
