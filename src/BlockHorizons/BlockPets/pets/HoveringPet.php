@@ -42,8 +42,6 @@ abstract class HoveringPet extends BasePet {
 
 		if($this->getLevel()->getBlock(new Vector3($this->x, $this->y - 0.7, $this->z))->getId() !== Block::AIR) {
 			$this->motionY = $this->gravity * 2.4;
-			$this->motionX = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
-			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
 		}
 		if($this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) >= 2.5) {
 			$this->motionY -= $this->gravity * 4;
