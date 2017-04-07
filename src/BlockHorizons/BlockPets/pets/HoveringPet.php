@@ -9,18 +9,25 @@ abstract class HoveringPet extends BasePet {
 
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
+		if($petOwner !== null) {
+			$this->spawnToAll();
+		}
 		if($petOwner === null) {
 			$this->despawnFromAll();
 			return false;
 		}
-		if($this->distanceSquared($petOwner) >= 15) {
+		if($this->distanceSquared($petOwner) >= 20 || $this->getLevel()->getName() !== $petOwner->getLevel()->getName()) {
 			$this->teleport($petOwner);
+			$this->spawnToAll();
 		}
 		if(!$this->isOnGround()) {
 			if($this->motionY > -$this->gravity * 4) {
 				$this->motionY = -$this->gravity * 4;
 			} else {
 				$this->motionY -= $this->gravity;
+			}
+			if($this->getLevel()->getBlock(new Vector3($this->x, $this->y - 0.5, $this->z))->getId() !== Block::AIR) {
+				$this->motionY = $this->gravity * 1.2;
 			}
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
 		}
@@ -37,9 +44,6 @@ abstract class HoveringPet extends BasePet {
 		$this->pitch = rad2deg(atan($petOwner->y - $this->y));
 
 		$this->checkBlockCollision();
-		if($this->getLevel()->getBlock(new Vector3($this->x, $this->y - 0.5, $this->z))->getId() !== Block::AIR) {
-			$this->motionY += $this->gravity * 2;
-		}
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->updateMovement();
 

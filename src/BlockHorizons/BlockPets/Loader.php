@@ -4,9 +4,16 @@ namespace BlockHorizons\BlockPets;
 
 use BlockHorizons\BlockPets\listeners\EventListener;
 use BlockHorizons\BlockPets\pets\BasePet;
+use BlockHorizons\BlockPets\pets\creatures\BatPet;
 use BlockHorizons\BlockPets\pets\creatures\BlazePet;
 use BlockHorizons\BlockPets\pets\creatures\ChickenPet;
+use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use BlockHorizons\BlockPets\pets\creatures\GhastPet;
+use BlockHorizons\BlockPets\pets\creatures\HorsePet;
+use BlockHorizons\BlockPets\pets\creatures\OcelotPet;
+use BlockHorizons\BlockPets\pets\creatures\SkeletonPet;
+use BlockHorizons\BlockPets\pets\creatures\WolfPet;
+use BlockHorizons\BlockPets\pets\creatures\ZombiePet;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\nbt\tag\CompoundTag;
@@ -24,13 +31,27 @@ class Loader extends PluginBase {
 	const PETS = [
 		"Ghast",
 		"Blaze",
-		"Chicken"
+		"Chicken",
+		"Bat",
+		"EnderDragon",
+		"Horse",
+		"Ocelot",
+		"Skeleton",
+		"Wolf",
+		"Zombie"
 	];
 
 	const PET_CLASSES = [
 		BlazePet::class,
 		ChickenPet::class,
-		GhastPet::class
+		GhastPet::class,
+		BatPet::class,
+		EnderDragonPet::class,
+		HorsePet::class,
+		OcelotPet::class,
+		SkeletonPet::class,
+		WolfPet::class,
+		ZombiePet::class
 	];
 
 	public function onEnable() {
