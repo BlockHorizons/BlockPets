@@ -6,7 +6,9 @@ use BlockHorizons\BlockPets\listeners\EventListener;
 use BlockHorizons\BlockPets\pets\BasePet;
 use BlockHorizons\BlockPets\pets\creatures\BatPet;
 use BlockHorizons\BlockPets\pets\creatures\BlazePet;
+use BlockHorizons\BlockPets\pets\creatures\BlueWitherSkullPet;
 use BlockHorizons\BlockPets\pets\creatures\ChickenPet;
+use BlockHorizons\BlockPets\pets\creatures\EnderCrystalPet;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use BlockHorizons\BlockPets\pets\creatures\GhastPet;
 use BlockHorizons\BlockPets\pets\creatures\HorsePet;
@@ -38,7 +40,9 @@ class Loader extends PluginBase {
 		"Ocelot",
 		"Skeleton",
 		"Wolf",
-		"Zombie"
+		"Zombie",
+		"EnderCrystal",
+		"BlueWitherSkull"
 	];
 
 	const PET_CLASSES = [
@@ -51,7 +55,9 @@ class Loader extends PluginBase {
 		OcelotPet::class,
 		SkeletonPet::class,
 		WolfPet::class,
-		ZombiePet::class
+		ZombiePet::class,
+		EnderCrystalPet::class,
+		BlueWitherSkullPet::class
 	];
 
 	public function onEnable() {

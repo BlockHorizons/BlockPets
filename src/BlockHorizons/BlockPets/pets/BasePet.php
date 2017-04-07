@@ -146,9 +146,4 @@ abstract class BasePet extends Creature {
 	public function getDrops(): array {
 		return [];
 	}
-
-	public function saveToArray() {
-		$entityInfo = [];
-		$entityInfo["nbt"] = $this->namedtag;
-	}
 }

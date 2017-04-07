@@ -13,7 +13,7 @@ abstract class WalkingPet extends BasePet {
 			$this->despawnFromAll();
 			return false;
 		}
-		if($this->distanceSquared($petOwner) >= 15) {
+		if($this->distanceSquared($petOwner) >= 60) {
 			$this->teleport($petOwner);
 		}
 		if(!$this->isOnGround()) {
@@ -26,7 +26,7 @@ abstract class WalkingPet extends BasePet {
 		}
 		$x = $petOwner->x - $this->x;
 		$z = $petOwner->z - $this->z;
-		if($x * $x + $z * $z < 4) {
+		if($x * $x + $z * $z < 5) {
 			$this->motionX = 0;
 			$this->motionZ = 0;
 		} else {
