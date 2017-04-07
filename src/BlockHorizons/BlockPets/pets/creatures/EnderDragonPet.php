@@ -10,6 +10,6 @@ class EnderDragonPet extends HoveringPet {
 	public $networkId = 53;
 	public $name = "Ender Dragon Pet";
 
-	public $width = 0;
-	public $height = 0; // Not sure about those. I'll have to do some more research.
+	public $width = 1;
+	public $height = 2.5;
 }

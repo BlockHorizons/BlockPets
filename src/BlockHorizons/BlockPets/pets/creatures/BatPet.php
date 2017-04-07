@@ -11,5 +11,5 @@ class BatPet extends HoveringPet {
 	public $name = "Bat Pet";
 
 	public $width = 0.3;
-	public $height = 0.3;
+	public $height = 2.5;
 }

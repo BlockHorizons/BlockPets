@@ -3,6 +3,8 @@
 namespace BlockHorizons\BlockPets\pets;
 
 use pocketmine\block\Block;
+use pocketmine\block\Slab;
+use pocketmine\block\Stair;
 use pocketmine\math\Vector3;
 
 abstract class WalkingPet extends BasePet {
@@ -29,7 +31,9 @@ abstract class WalkingPet extends BasePet {
 			if($this->distance(new Vector3($this->x, $this->getLevel()->getHighestBlockAt($this->x, $this->z), $this->z)) <= 2) {
 				if($this->getLevel()->getBlock(new Vector3($this->x, $this->y - 0.8, $this->z))->getId() !== Block::AIR) {
 					if($this->level->getBlock($this->getDirectionVector())->isSolid()) {
-						$this->motionY += $this->gravity * 4;
+						$this->motionY = $this->gravity * 8;
+					} elseif($this->level->getBlock($this->getDirectionVector()) instanceof Slab || $this->level->getBlock($this->getDirectionVector()) instanceof Stair) {
+						$this->motionY = $this->gravity * 4;
 					}
 				}
 			}
