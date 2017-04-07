@@ -26,14 +26,11 @@ abstract class HoveringPet extends BasePet {
 			} else {
 				$this->motionY -= $this->gravity;
 			}
-			if($this->getLevel()->getBlock(new Vector3($this->x, $this->y - 0.5, $this->z))->getId() !== Block::AIR) {
-				$this->motionY = $this->gravity * 1.2;
-			}
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
 		}
 		$x = $petOwner->x - $this->x;
 		$z = $petOwner->z - $this->z;
-		if($x * $x + $z * $z < 2.3) {
+		if($x * $x + $z * $z < 4) {
 			$this->motionX = 0;
 			$this->motionZ = 0;
 		} else {
@@ -41,8 +38,13 @@ abstract class HoveringPet extends BasePet {
 			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
 		}
 		$this->yaw = rad2deg(atan2(-$x, $z));
+		if($this->getNetworkId() === 53) {
+			$this->yaw += 180;
+		}
 		$this->pitch = rad2deg(atan($petOwner->y - $this->y));
-
+		if($this->getLevel()->getBlock(new Vector3($this->x, $this->y - 0.6, $this->z))->getId() !== Block::AIR) {
+			$this->motionY = $this->gravity * 1.8;
+		}
 		$this->checkBlockCollision();
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->updateMovement();
