@@ -22,7 +22,7 @@ class EventListener implements Listener {
 						if(!$attacker->getName() === $petOwner->getName()) {
 							return;
 						}
-						if($attacker->getInventory()->getItemInHand() === 329) {
+						if($attacker->getInventory()->getItemInHand()->getId() === 329) {
 							$petEntity->setRider($attacker);
 							$attacker->sendPopup(TextFormat::GRAY . "Tap the pet again to dismount...");
 						}
