@@ -11,11 +11,5 @@ class ChickenPet extends WalkingPet {
 
 	public $name = "Chicken Pet";
 
-	public function getSpeed(): float {
-		return 1.0;
-	}
-
-	public function getNetworkId(): int {
-		return 10;
-	}
+	public $networkId = 10;
 }

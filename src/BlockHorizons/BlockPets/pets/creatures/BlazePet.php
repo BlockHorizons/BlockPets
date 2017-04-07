@@ -11,11 +11,5 @@ class BlazePet extends HoveringPet {
 
 	public $name = "Blaze Pet";
 
-	public function getSpeed(): float {
-		return 1.0;
-	}
-
-	public function getNetworkId(): int {
-		return 43;
-	}
+	public $networkId = 43;
 }

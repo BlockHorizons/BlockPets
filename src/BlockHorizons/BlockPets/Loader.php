@@ -112,7 +112,7 @@ class Loader extends PluginBase {
 			]),
 			"petOwner" => new StringTag("petOwner", $position->getName()),
 			"scale" => new FloatTag("scale", $scale),
-			"networkId" => new IntTag("", 10)
+			"networkId" => new IntTag("networkId", 10),
 		]);
 		$chunk = $position->level->getChunk($position->x >> 4, $position->z >> 4, true);
 
