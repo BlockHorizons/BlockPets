@@ -51,7 +51,10 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return Player|null
 	 */
 	public function getPetOwner() {
-		return $this->getLevel()->getServer()->getPlayer($this->petOwner);
+		if($this->namedtag["petOwner"] === null) {
+			return null;
+		}
+		return $this->getLevel()->getServer()->getPlayer($this->namedtag["petOwner"]);
 	}
 
 	/**
@@ -139,16 +142,15 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->rider = $player->getName();
 
 		$pk = new SetEntityLinkPacket();
-		$pk->from = $player->getId();
-		$pk->to = $this->getId();
+		$pk->from = $this->getId();
+		$pk->to = $player->getId();
 		$pk->type = 1;
 		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
-		var_dump($pk);
 	}
 
 	public function throwRiderOff() {
 		$pk = new SetEntityLinkPacket();
-		$pk->from = $this->getId();
+		$pk->from = $this->getPetOwner()->getId();
 		$pk->to = $this->getId();
 		$pk->type = 0;
 		$this->ridden = false;
