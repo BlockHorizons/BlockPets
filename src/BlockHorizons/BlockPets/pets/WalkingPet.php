@@ -26,7 +26,7 @@ abstract class WalkingPet extends BasePet {
 		}
 		$x = $petOwner->x - $this->x;
 		$z = $petOwner->z - $this->z;
-		if($x * $x + $z * $z < 1.5) {
+		if($x * $x + $z * $z < 2.3) {
 			$this->motionX = 0;
 			$this->motionZ = 0;
 		} else {
@@ -39,8 +39,10 @@ abstract class WalkingPet extends BasePet {
 		$this->checkBlockCollision();
 
 		if($this->isCollidedHorizontally) {
-			if($this->getLevel()->getBlock(new Vector3($this->x, $this->y - 0.9, $this->z))->getId() !== Block::AIR) {
-				$this->motionY += $this->gravity * 4;
+			if(count($this->getBlocksAround()) >= 11) {
+				if($this->getLevel()->getBlock(new Vector3($this->x, $this->y - 0.9, $this->z))->getId() !== Block::AIR) {
+					$this->motionY += $this->gravity * 4;
+				}
 			}
 		}
 		$this->move($this->motionX, $this->motionY, $this->motionZ);

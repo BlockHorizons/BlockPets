@@ -82,15 +82,15 @@ abstract class BasePet extends Creature {
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
 
-		$this->petLevel = $this->namedtag["petLevel"];
 		$this->petOwner = $this->namedtag["petOwner"];
 		$this->scale = $this->namedtag["scale"];
+
+		$this->setDataProperty(self::DATA_SCALE, self::DATA_TYPE_FLOAT, $this->getScale());
 	}
 
 	public function initEntity() {
 		parent::initEntity();
 		$this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, true);
-		$this->setDataProperty(self::DATA_SCALE, self::DATA_TYPE_FLOAT, $this->getScale());
 	}
 
 	public function spawnTo(Player $player) {
