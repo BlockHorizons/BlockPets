@@ -14,7 +14,6 @@ class EventListener implements Listener {
 	public function onEntityDamage(EntityDamageEvent $event) {
 		$petEntity = $event->getEntity();
 		if($petEntity instanceof BasePet) {
-			$event->setCancelled();
 			if(!$petEntity->isRidden()) {
 				$petOwner = $petEntity->getPetOwner();
 				if($event instanceof EntityDamageByEntityEvent) {
@@ -23,15 +22,16 @@ class EventListener implements Listener {
 						if(!$attacker->getName() === $petOwner->getName()) {
 							return;
 						}
-						if(!$attacker->getInventory()->getItemInHand() === 329) {
+						if($attacker->getInventory()->getItemInHand() === 329) {
 							$petEntity->setRider($attacker);
+							$attacker->sendPopup(TextFormat::GRAY . "Tap the pet again to dismount...");
 						}
-						$attacker->sendPopup(TextFormat::GRAY . "Tap the pet again to dismount...");
 					}
 				}
 			} else {
 				$petEntity->throwRiderOff();
 			}
+			$event->setCancelled();
 		}
 	}
 }
