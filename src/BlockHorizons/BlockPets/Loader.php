@@ -42,7 +42,6 @@ class Loader extends PluginBase {
 		"Wolf",
 		"Zombie",
 		"EnderCrystal",
-		"BlueWitherSkull"
 	];
 
 	const PET_CLASSES = [
@@ -57,7 +56,6 @@ class Loader extends PluginBase {
 		WolfPet::class,
 		ZombiePet::class,
 		EnderCrystalPet::class,
-		BlueWitherSkullPet::class
 	];
 
 	public function onEnable() {

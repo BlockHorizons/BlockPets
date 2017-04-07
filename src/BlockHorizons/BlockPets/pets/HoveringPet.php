@@ -9,9 +9,6 @@ abstract class HoveringPet extends BasePet {
 
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
-		if($petOwner !== null) {
-			$this->spawnToAll();
-		}
 		if($petOwner === null) {
 			$this->despawnFromAll();
 			return false;
@@ -38,6 +35,9 @@ abstract class HoveringPet extends BasePet {
 			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
 		}
 		$this->yaw = rad2deg(atan2(-$x, $z));
+		if($this->getNetworkId() === 53) {
+			$this->yaw += 180;
+		}
 		$this->pitch = rad2deg(atan($petOwner->y - $this->y));
 
 		if($this->getLevel()->getBlock(new Vector3($this->x, $this->y - 0.7, $this->z))->getId() !== Block::AIR) {

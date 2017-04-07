@@ -3,14 +3,33 @@
 namespace BlockHorizons\BlockPets\listeners;
 
 use BlockHorizons\BlockPets\pets\BasePet;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
+use pocketmine\Player;
 
 class EventListener implements Listener {
 
 	public function onEntityDamage(EntityDamageEvent $event) {
-		if($event->getEntity() instanceof BasePet) {
+		$petEntity = $event->getEntity();
+		if($petEntity instanceof BasePet) {
 			$event->setCancelled();
+			if(!$petEntity->isRidden()) {
+				$petOwner = $petEntity->getPetOwner();
+				if($event instanceof EntityDamageByEntityEvent) {
+					$attacker = $event->getDamager();
+					if($attacker instanceof Player) {
+						if(!$attacker->getName() === $petOwner->getName()) {
+							return;
+						}
+						if(!$attacker->getInventory()->getItemInHand() === 329) {
+							$petEntity->setRider($attacker);
+						}
+					}
+				}
+			} else {
+				$petEntity->throwRiderOff();
+			}
 		}
 	}
 }

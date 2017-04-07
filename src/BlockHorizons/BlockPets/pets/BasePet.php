@@ -3,16 +3,18 @@
 namespace BlockHorizons\BlockPets\pets;
 
 use pocketmine\entity\Creature;
+use pocketmine\entity\Rideable;
 use pocketmine\level\format\Chunk;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\network\protocol\AddEntityPacket;
+use pocketmine\network\protocol\SetEntityLinkPacket;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
-abstract class BasePet extends Creature {
+abstract class BasePet extends Creature implements Rideable {
 
 	public $name;
 	public $speed = 1.0;
@@ -20,6 +22,9 @@ abstract class BasePet extends Creature {
 	public $networkId;
 	protected $petOwner;
 	protected $petLevel = 1;
+
+	protected $ridden = false;
+	protected $rider = null;
 
 	/**
 	 * @return string
@@ -124,5 +129,42 @@ abstract class BasePet extends Creature {
 	 */
 	public function getDrops(): array {
 		return [];
+	}
+
+	/**
+	 * @param Player $player
+	 */
+	public function setRider(Player $player) {
+		$this->ridden = true;
+		$this->rider = $player->getName();
+
+		$pk = new SetEntityLinkPacket();
+		$pk->from = $player->getId();
+		$pk->to = $this->getId();
+		$pk->type = 1;
+		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
+	}
+
+	public function throwRiderOff() {
+		$pk = new SetEntityLinkPacket();
+		$pk->from = $this->getId();
+		$pk->to = $this->getId();
+		$pk->type = 0;
+		$this->ridden = false;
+		$this->rider = null;
+	}
+
+	/**
+	 * @return Player
+	 */
+	public function getRider(): Player {
+		return $this->getLevel()->getServer()->getPlayer($this->rider);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isRidden(): bool {
+		return $this->ridden;
 	}
 }
