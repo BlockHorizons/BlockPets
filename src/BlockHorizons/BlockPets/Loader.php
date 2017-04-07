@@ -6,7 +6,6 @@ use BlockHorizons\BlockPets\listeners\EventListener;
 use BlockHorizons\BlockPets\pets\BasePet;
 use BlockHorizons\BlockPets\pets\creatures\BatPet;
 use BlockHorizons\BlockPets\pets\creatures\BlazePet;
-use BlockHorizons\BlockPets\pets\creatures\BlueWitherSkullPet;
 use BlockHorizons\BlockPets\pets\creatures\ChickenPet;
 use BlockHorizons\BlockPets\pets\creatures\EnderCrystalPet;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;

@@ -36,18 +36,14 @@ abstract class WalkingPet extends BasePet {
 		$this->yaw = rad2deg(atan2(-$x, $z));
 		$this->pitch = rad2deg(atan($petOwner->y - $this->y));
 
-		$this->checkBlockCollision();
-
 		if($this->isCollidedHorizontally) {
 			if($this->distance(new Vector3($this->x, $this->getLevel()->getHighestBlockAt($this->x, $this->z), $this->z)) <= 2) {
 				if($this->getLevel()->getBlock(new Vector3($this->x, $this->y - 0.8, $this->z))->getId() !== Block::AIR) {
-					$this->motionY += $this->gravity * 4;
+					if($this->level->getBlock($this->getDirectionVector())->isSolid()) {
+						$this->motionY += $this->gravity * 4;
+					}
 				}
 			}
-		}
-
-		if($this->ridden = true) {
-			$rider = $this->rider;
 		}
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
