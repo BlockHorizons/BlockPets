@@ -6,8 +6,6 @@ use BlockHorizons\BlockPets\pets\HoveringPet;
 
 class BlazePet extends HoveringPet {
 
-	public $networkId = 43;
-
 	public $width = 0.72;
 	public $height = 1.8;
 
@@ -15,5 +13,9 @@ class BlazePet extends HoveringPet {
 
 	public function getSpeed(): float {
 		return 1.0;
+	}
+
+	public function getNetworkId(): int {
+		return 43;
 	}
 }

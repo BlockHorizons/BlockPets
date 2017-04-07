@@ -30,12 +30,7 @@ abstract class BasePet extends Creature {
 
 	public abstract function getSpeed(): float;
 
-	/**
-	 * @return int
-	 */
-	public function getNetworkId(): int {
-		return $this->networkId;
-	}
+	public abstract function getNetworkId(): int;
 
 	/**
 	 * @return Player|null
@@ -94,7 +89,7 @@ abstract class BasePet extends Creature {
 		parent::spawnTo($player);
 		$pk = new AddEntityPacket();
 		$pk->eid = $this->getId();
-		$pk->type = $this->networkId;
+		$pk->type = $this->getNetworkId();
 		$pk->x = $this->x;
 		$pk->y = $this->y;
 		$pk->z = $this->z;

@@ -6,8 +6,6 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class ChickenPet extends WalkingPet {
 
-	public $networkId = 10;
-
 	public $width = 0.4;
 	public $height = 0.7;
 
@@ -15,5 +13,9 @@ class ChickenPet extends WalkingPet {
 
 	public function getSpeed(): float {
 		return 1.0;
+	}
+
+	public function getNetworkId(): int {
+		return 10;
 	}
 }

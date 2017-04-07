@@ -12,6 +12,7 @@ use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\FloatTag;
+use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
@@ -111,6 +112,7 @@ class Loader extends PluginBase {
 			]),
 			"petOwner" => new StringTag("petOwner", $position->getName()),
 			"scale" => new FloatTag("scale", $scale),
+			"networkId" => new IntTag("", 10)
 		]);
 		$chunk = $position->level->getChunk($position->x >> 4, $position->z >> 4, true);
 
