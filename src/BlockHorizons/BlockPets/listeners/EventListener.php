@@ -3,6 +3,7 @@
 namespace BlockHorizons\BlockPets\listeners;
 
 use BlockHorizons\BlockPets\pets\BasePet;
+use pocketmine\event\entity\EntityDamageByBlockEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
@@ -30,6 +31,9 @@ class EventListener implements Listener {
 				}
 			} else {
 				$petEntity->throwRiderOff();
+			}
+			if($event instanceof EntityDamageByBlockEvent) {
+				$petEntity->spawnToAll();
 			}
 			$event->setCancelled();
 		}

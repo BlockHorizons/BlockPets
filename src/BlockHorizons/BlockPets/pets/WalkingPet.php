@@ -5,7 +5,6 @@ namespace BlockHorizons\BlockPets\pets;
 use pocketmine\block\Block;
 use pocketmine\block\Slab;
 use pocketmine\block\Stair;
-use pocketmine\math\Vector3;
 
 abstract class WalkingPet extends BasePet {
 
