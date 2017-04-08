@@ -166,21 +166,21 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->rider = $player->getName();
 
 		$pk = new SetEntityLinkPacket();
-		$pk->from = $this->getId();
-		$pk->to = $player->getId();
+		$pk->from = $player->getId();
+		$pk->to = $this->getId();
 		$pk->type = self::STATE_SITTING;
 		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->from = $this->getId();
-		$pk->to = 0;
-		$pk->type = self::STATE_STANDING;
+		$pk->from = $player->getId();
+		$pk->to = $this->getId();
+		$pk->type = self::STATE_SITTING;
 		$player->dataPacket($pk);
 	}
 
 	public function throwRiderOff() {
 		$pk = new SetEntityLinkPacket();
-		$pk->from = $this->getId();
+		$pk->from = $this->getPetOwner()->getId();
 		$pk->to = 0;
 		$pk->type = self::STATE_STANDING;
 		$this->ridden = false;
@@ -188,7 +188,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->from = $this->getId();
+		$pk->from = $this->getPetOwner()->getId();
 		$pk->to = 0;
 		$pk->type = self::STATE_STANDING;
 		$this->getPetOwner()->dataPacket($pk);
