@@ -15,7 +15,7 @@ abstract class WalkingPet extends BasePet {
 			$this->despawnFromAll();
 			return false;
 		}
-		if($this->distanceSquared($petOwner) >= 60) {
+		if($this->distance($petOwner) >= 30 || $petOwner->getLevel()->getName() !== $this->getLevel()->getName()) {
 			$this->teleport($petOwner);
 		}
 		if(!$this->isOnGround()) {

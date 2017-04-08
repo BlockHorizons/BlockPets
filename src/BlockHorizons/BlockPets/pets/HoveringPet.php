@@ -12,7 +12,7 @@ abstract class HoveringPet extends BasePet {
 			$this->despawnFromAll();
 			return false;
 		}
-		if($this->distanceSquared($petOwner) >= 60 || $this->getLevel()->getName() !== $petOwner->getLevel()->getName()) {
+		if($this->distance($petOwner) >= 30 || $this->getLevel()->getName() !== $petOwner->getLevel()->getName()) {
 			$this->teleport($petOwner);
 			$this->spawnToAll();
 		}
