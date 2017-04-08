@@ -78,6 +78,9 @@ abstract class BasePet extends Creature implements Rideable {
 		return $this->petLevel;
 	}
 
+	/**
+	 * @param float $value
+	 */
 	public function setScale(float $value) {
 		$multiplier = $value / $this->getScale();
 		$this->width *= $multiplier;
