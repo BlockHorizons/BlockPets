@@ -10,22 +10,7 @@ abstract class HoveringPet extends BasePet {
 
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
-		if($petOwner === null) {
-			$this->ridden = false;
-			$this->rider = null;
-			$this->despawnFromAll();
-			return false;
-		}
-		if($this->distance($petOwner) >= 50 || $this->getLevel()->getName() !== $petOwner->getLevel()->getName()) {
-			$this->teleport($petOwner);
-			$this->spawnToAll();
-		}
-
-		if($this->isRidden()) {
-			$this->doRidingMovement();
-			parent::onUpdate($currentTick);
-			return true;
-		}
+		parent::onUpdate($currentTick);
 
 		$x = $petOwner->x - $this->x;
 		$y = $petOwner->y + 1 - $this->y;
@@ -48,7 +33,7 @@ abstract class HoveringPet extends BasePet {
 		if($this->getNetworkId() === 53) {
 			$this->yaw += 180;
 		}
-		$this->pitch = rad2deg(atan($petOwner->y - $this->y));
+		$this->pitch = rad2deg(-atan($petOwner->y - $this->y));
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 
 		$this->updateMovement();
@@ -66,8 +51,10 @@ abstract class HoveringPet extends BasePet {
 		$x = $rider->getDirectionVector()->x;
 		$y = $rider->getDirectionVector()->y;
 		$z = $rider->getDirectionVector()->z;
+
 		$this->motionX = $this->getSpeed() * 0.25 * ($x / (abs($x) + abs($z)));
 		$this->motionZ = $this->getSpeed() * 0.25 * ($z / (abs($x) + abs($z)));
+
 		$this->motionY = 0;
 		if(($y !== 0 && abs($y) >= 0.4 && $this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) <= 8) || $y < 0) {
 			$this->motionY = $this->getSpeed() * 0.10 * ($y / abs($y));

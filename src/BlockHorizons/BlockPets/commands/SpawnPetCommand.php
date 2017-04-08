@@ -10,7 +10,7 @@ use BlockHorizons\BlockPets\Loader;
 class SpawnPetCommand extends BaseCommand {
 
 	public function __construct(Loader $loader) {
-		parent::__construct($loader, "spawnpet", "Spawn a pet for yourself or other players", "<petType> <name> [player] [size]", ["sp"]);
+		parent::__construct($loader, "spawnpet", "Spawn a pet for yourself or other players", "/spawnpet <petType> <name> [player] [size]", ["sp"]);
 		$this->setPermission("blockpets.command.spawnpet");
 	}
 

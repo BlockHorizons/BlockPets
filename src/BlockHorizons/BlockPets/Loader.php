@@ -2,6 +2,7 @@
 
 namespace BlockHorizons\BlockPets;
 
+use BlockHorizons\BlockPets\commands\LevelUpPetCommand;
 use BlockHorizons\BlockPets\listeners\EventListener;
 use BlockHorizons\BlockPets\pets\BasePet;
 use BlockHorizons\BlockPets\pets\creatures\BatPet;
@@ -134,7 +135,8 @@ class Loader extends PluginBase {
 
 	public function registerCommands() {
 		$petCommands = [
-			"spawnpet" => new SpawnPetCommand($this)
+			"spawnpet" => new SpawnPetCommand($this),
+			"leveluppet" => new LevelUpPetCommand($this)
 		];
 		foreach($petCommands as $fallBack => $command) {
 			$this->getServer()->getCommandMap()->register($fallBack, $command);
@@ -208,5 +210,23 @@ class Loader extends PluginBase {
 		$chunk = $position->level->getChunk($position->x >> 4, $position->z >> 4, true);
 
 		return Entity::createEntity($entityName . "Pet", $chunk, $nbt);
+	}
+
+	/**
+	 * @param string $name
+	 *
+	 * @return BasePet|null
+	 */
+	public function getPetByName(string $name) {
+		foreach($this->getServer()->getLevels() as $level) {
+			foreach($level->getEntities() as $entity) {
+				if(strpos($entity->getNameTag(), $name)) {
+					if($entity instanceof BasePet) {
+						return $entity;
+					}
+				}
+			}
+		}
+		return null;
 	}
 }

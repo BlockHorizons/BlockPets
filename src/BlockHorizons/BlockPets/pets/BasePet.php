@@ -5,7 +5,7 @@ namespace BlockHorizons\BlockPets\pets;
 use pocketmine\entity\Creature;
 use pocketmine\entity\Rideable;
 use pocketmine\level\format\Chunk;
-use pocketmine\math\Vector3;
+use pocketmine\level\particle\LavaParticle;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\IntTag;
@@ -22,7 +22,6 @@ abstract class BasePet extends Creature implements Rideable {
 	public $scale = 1.0;
 	public $networkId;
 	protected $petOwner;
-	protected $petLevel = 1;
 
 	protected $ridden = false;
 	protected $rider = null;
@@ -79,7 +78,23 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return int
 	 */
 	public function getPetLevel(): int {
-		return $this->petLevel;
+		return $this->namedtag["petLevel"];
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getCurrentPetLevel(): int {
+		return $this->namedtag["currentPetLevel"];
+	}
+
+	public function levelUp() {
+		$this->namedtag["petLevel"] += 1;
+		$this->level->addParticle(new LavaParticle($this));
+	}
+
+	public function levelUpCurrentLevel() {
+		$this->namedtag["currentPetLevel"] += 1;
 	}
 
 	/**
@@ -116,9 +131,11 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setNameTagAlwaysVisible(true);
 
 		$this->petOwner = $this->namedtag["petOwner"];
+		$this->petLevel = $this->namedtag["petLevel"];
 		$this->scale = $this->namedtag["scale"];
 		$this->setDataProperty(60, self::DATA_TYPE_FLOAT, 2.5);
 
+		$this->setNameTag(TextFormat::GRAY . "Lvl" . $this->getPetLevel() . " " . $this->getName() . " - " . $this->getNameTag());
 		$this->setScale($this->scale);
 	}
 
@@ -147,7 +164,8 @@ abstract class BasePet extends Creature implements Rideable {
 	public function saveNBT() {
 		parent::saveNBT();
 		$this->namedtag->petOwner = new StringTag("petOwner", $this->getPetOwnerName());
-		$this->namedtag->petLevel = new IntTag("petLevel", $this->getPetLevel());
+		$this->namedtag->petLevel = new IntTag("petLevel", 1);
+		$this->namedtag->currentPetLevel = new IntTag("currentPetLevel", 1);
 		$this->namedtag->speed = new FloatTag("speed", $this->getSpeed());
 		$this->namedtag->scale = new FloatTag("scale", $this->getScale());
 		$this->namedtag->networkId = new IntTag("networkId", $this->getNetworkId());
@@ -202,4 +220,30 @@ abstract class BasePet extends Creature implements Rideable {
 	public function isRidden(): bool {
 		return $this->ridden;
 	}
+
+	public function onUpdate($currentTick) {
+		$petOwner = $this->getPetOwner();
+		parent::onUpdate($currentTick);
+		if($petOwner === null) {
+			$this->ridden = false;
+			$this->rider = null;
+			$this->despawnFromAll();
+			return false;
+		}
+		if($this->distance($petOwner) >= 50 || $this->getLevel()->getName() !== $petOwner->getLevel()->getName()) {
+			$this->teleport($petOwner);
+			$this->spawnToAll();
+		}
+		if($this->getPetLevel() !== $this->getCurrentPetLevel()) {
+			$this->levelUpCurrentLevel();
+			$this->setNameTag(TextFormat::GRAY . "Lvl" . $this->getPetLevel() . " " . $this->getName() . " - " . explode(" - ", $this->getNameTag())[1]);
+		}
+
+		if($this->isRidden()) {
+			$this->doRidingMovement();
+		}
+		return true;
+	}
+
+	public abstract function doRidingMovement();
 }
