@@ -26,6 +26,9 @@ abstract class BasePet extends Creature implements Rideable {
 	protected $ridden = false;
 	protected $rider = null;
 
+	const STATE_SITTING = 2;
+	const STATE_STANDING = 3;
+
 	/**
 	 * @return string
 	 */
@@ -162,31 +165,28 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->ridden = true;
 		$this->rider = $player->getName();
 
-		$player->setDataFlag(self::DATA_FLAG_RIDING, self::DATA_TYPE_BYTE, true);
-		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, true);
 		$pk = new SetEntityLinkPacket();
-		$pk->from = $player->getId();
-		$pk->to = $this->getId();
-		$pk->type = 1;
+		$pk->from = $this->getId();
+		$pk->to = $player->getId();
+		$pk->type = self::STATE_SITTING;
 		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
+		$player->dataPacket($pk);
 	}
 
 	public function throwRiderOff() {
 		$pk = new SetEntityLinkPacket();
-		$pk->from = $this->getRider()->getId();
-		$pk->to = $this->getId();
-		$pk->type = 0;
+		$pk->from = $this->getId();
+		$pk->to = 0;
+		$pk->type = self::STATE_STANDING;
 		$this->ridden = false;
 		$this->rider = null;
 		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
-		$this->getRider()->setDataFlag(self::DATA_FLAG_RIDING, self::DATA_TYPE_BYTE, false);
-		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, false);
 	}
 
 	/**
 	 * @return Player
 	 */
-	public function getRider(): Player {
+	public function getRider() {
 		return $this->getLevel()->getServer()->getPlayer($this->rider);
 	}
 
