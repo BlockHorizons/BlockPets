@@ -75,8 +75,8 @@ abstract class HoveringPet extends BasePet {
 		$this->motionY = 0;
 		if($y !== 0 || $y < 0) {
 			$this->motionY = $this->getSpeed() * 0.15 * ($y / abs($y));
+			$this->motionY -= $this->motionY * $this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) / 3.5;
 		}
-		$this->motionY -= $this->motionY * $this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) / 3.5;
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->updateMovement();
