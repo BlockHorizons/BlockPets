@@ -163,9 +163,9 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->rider = $player->getName();
 
 		$pk = new SetEntityLinkPacket();
-		$pk->from = $this->getId();
-		$pk->to = $player->getId();
-		$pk->type = 1;
+		$pk->from = $player->getId();
+		$pk->to = $this->getId();
+		$pk->type = 3;
 		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
 	}
 
@@ -176,6 +176,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->type = 0;
 		$this->ridden = false;
 		$this->rider = null;
+		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
 	}
 
 	/**

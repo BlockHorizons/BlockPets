@@ -16,14 +16,7 @@ abstract class HoveringPet extends BasePet {
 			$this->teleport($petOwner);
 			$this->spawnToAll();
 		}
-		foreach($this->getLevel()->getPlayers() as $player) {
-			if(!isset($this->hasSpawned[$player->getLoaderId()])) {
-				$this->spawnTo($player);
-			}
-		}
-		if($this->getSpeed() === null) {
-			$this->speed = 1;
-		}
+
 		$x = $petOwner->x - $this->x;
 		$y = $petOwner->y + 1 - $this->y;
 		$z = $petOwner->z - $this->z;
@@ -35,11 +28,10 @@ abstract class HoveringPet extends BasePet {
 			$this->motionX = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
 			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
 		}
-		$this->motionY = 0;
-		if($y !== 0 && abs($y) >= 0.4) {
-			$this->motionY = $this->getSpeed() * 0.15 * ($y / abs($y));
-		}
 
+		if($y !== 0 && abs($y) >= 0.4) {
+			$this->motionY = $this->getSpeed() * 0.6 * ($y / abs($y));
+		}
 
 		$this->yaw = rad2deg(atan2(-$x, $z));
 		if($this->getNetworkId() === 53) {
