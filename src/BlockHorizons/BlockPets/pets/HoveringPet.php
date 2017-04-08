@@ -65,15 +65,15 @@ abstract class HoveringPet extends BasePet {
 			$this->yaw += 180;
 		}
 
-		$x = $this->getDirectionVector()->x;
-		$y = $this->getDirectionVector()->y;
-		$z = $this->getDirectionVector()->z;
+		$x = $rider->getDirectionVector()->x;
+		$y = $rider->getDirectionVector()->y;
+		$z = $rider->getDirectionVector()->z;
 
-		$this->motionX = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
-		$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
+		$this->motionX = $this->getSpeed() * 0.25 * ($x / (abs($x) + abs($z)));
+		$this->motionZ = $this->getSpeed() * 0.25 * ($z / (abs($x) + abs($z)));
 
 		$this->motionY = 0;
-		if($y !== 0 && abs($y) >= 0.4 && $this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) <= 7) {
+		if($y !== 0 && abs($y) >= 0.4 && $this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) <= 8) {
 			$this->motionY = $this->getSpeed() * 0.10 * ($y / abs($y));
 		}
 
