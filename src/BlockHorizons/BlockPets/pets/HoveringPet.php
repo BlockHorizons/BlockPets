@@ -4,6 +4,8 @@ namespace BlockHorizons\BlockPets\pets;
 
 abstract class HoveringPet extends BasePet {
 
+	public $gravity = 0;
+
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
 		if($petOwner === null) {
@@ -27,6 +29,8 @@ abstract class HoveringPet extends BasePet {
 		}
 		if(abs($this->y - ($y - 1)) <= 0.8) {
 			$this->motionY = $this->getSpeed() * 0.3 * ($y / (abs($y) + abs($y)));
+		} elseif($this->y - ($y + 1) >= 0.8) {
+			$this->motionY = -$this->getSpeed() * 0.3 * ($y / (abs($y) + abs($y)));
 		}
 
 		$this->yaw = rad2deg(atan2(-$x, $z));
