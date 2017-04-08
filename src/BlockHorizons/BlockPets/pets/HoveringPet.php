@@ -29,7 +29,7 @@ abstract class HoveringPet extends BasePet {
 		}
 		$this->motionY = 4;
 		if($this->y - ($y + 1) >= 0) {
-			$this->motionY = -$this->getSpeed() * 0.3 * ($y / (abs($y) + abs($y)));
+			$this->motionY -= $this->getSpeed() * 0.3 * ($y / (abs($y) + abs($y)));
 		}
 
 		$this->yaw = rad2deg(atan2(-$x, $z));
