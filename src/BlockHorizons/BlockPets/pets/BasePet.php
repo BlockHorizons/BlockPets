@@ -5,6 +5,7 @@ namespace BlockHorizons\BlockPets\pets;
 use pocketmine\entity\Creature;
 use pocketmine\entity\Rideable;
 use pocketmine\level\format\Chunk;
+use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\IntTag;
@@ -116,7 +117,7 @@ abstract class BasePet extends Creature implements Rideable {
 
 		$this->petOwner = $this->namedtag["petOwner"];
 		$this->scale = $this->namedtag["scale"];
-		$this->setDataProperty(58, self::DATA_TYPE_FLOAT, 2.5);
+		$this->setDataProperty(57, self::DATA_TYPE_VECTOR3F, new Vector3(0, 3, 0));
 
 		$this->setScale($this->scale);
 	}
