@@ -6,7 +6,7 @@ use BlockHorizons\BlockPets\pets\HoveringPet;
 
 class EnderDragonPet extends HoveringPet {
 
-	public $speed = 1.5;
+	public $speed = 1.6;
 	public $networkId = 53;
 	public $name = "Ender Dragon Pet";
 

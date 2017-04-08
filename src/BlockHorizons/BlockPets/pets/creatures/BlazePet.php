@@ -9,6 +9,7 @@ class BlazePet extends HoveringPet {
 	public $width = 0.72;
 	public $height = 1.8;
 
+	public $speed = 1.1;
 	public $name = "Blaze Pet";
 
 	public $networkId = 43;
