@@ -25,7 +25,7 @@ class EventListener implements Listener {
 						}
 						if($attacker->getInventory()->getItemInHand()->getId() === 329) {
 							$petEntity->setRider($attacker);
-							$attacker->sendPopup(TextFormat::GRAY . "Tap the pet again to dismount...");
+							$attacker->sendTip(TextFormat::GRAY . "Crouch or jump to dismount...");
 						}
 					}
 				}

@@ -59,9 +59,15 @@ abstract class HoveringPet extends BasePet {
 	public function doRidingMovement() {
 		$rider = $this->getPetOwner();
 
-		$x = $rider->add($rider->getDirectionVector()->x) - $this->x;
-		$y = $rider->add($rider->getDirectionVector()->y) - $this->y;
-		$z = $rider->add($rider->getDirectionVector()->z) - $this->z;
+		$this->pitch = $rider->pitch;
+		$this->yaw = $rider->yaw;
+		if($this->getNetworkId() === 53) {
+			$this->yaw += 180;
+		}
+
+		$x = $this->add($this->getDirectionVector()->x) - $this->x;
+		$y = $this->add($this->getDirectionVector()->y) - $this->y;
+		$z = $this->add($this->getDirectionVector()->z) - $this->z;
 
 		$this->motionX = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
 		$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
@@ -71,11 +77,6 @@ abstract class HoveringPet extends BasePet {
 			$this->motionY = $this->getSpeed() * 0.10 * ($y / abs($y));
 		}
 
-		$this->pitch = $rider->pitch;
-		$this->yaw = $rider->yaw;
-		if($this->getNetworkId() === 53) {
-			$this->yaw += 180;
-		}
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->updateMovement();
 	}
