@@ -21,6 +21,9 @@ abstract class HoveringPet extends BasePet {
 				$this->spawnTo($player);
 			}
 		}
+		if($this->getSpeed() === null) {
+			$this->speed = 1;
+		}
 		$x = $petOwner->x - $this->x;
 		$y = $petOwner->y + 1 - $this->y;
 		$z = $petOwner->z - $this->z;
@@ -31,6 +34,8 @@ abstract class HoveringPet extends BasePet {
 		} else {
 			$this->motionX = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
 			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
+		}
+		if(round($y, 1) !== 0) {
 			$this->motionY = $this->getSpeed() * 0.15 * ($y / (abs($y) + abs($y)));
 		}
 
