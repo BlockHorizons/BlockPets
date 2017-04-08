@@ -27,9 +27,9 @@ abstract class HoveringPet extends BasePet {
 			$this->motionX = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
 			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
 		}
-		if($this->y - ($y - 1) <= 0.8) {
+		if($this->y - ($y - 1) <= 0) {
 			$this->motionY = $this->getSpeed() * 0.3 * ($y / (abs($y) + abs($y)));
-		} elseif($this->y - ($y + 1) >= 0.8) {
+		} elseif($this->y - ($y + 1) >= 0) {
 			$this->motionY = -$this->getSpeed() * 0.3 * ($y / (abs($y) + abs($y)));
 		}
 
@@ -38,7 +38,7 @@ abstract class HoveringPet extends BasePet {
 			$this->yaw += 180;
 		}
 		$this->pitch = rad2deg(atan($petOwner->y - $this->y));
-		$this->move($this->motionX, $this->motionY, $this->motionZ);
+		$this->move($this->motionX, $this->motionY * 2, $this->motionZ);
 
 		$this->updateMovement();
 		parent::onUpdate($currentTick);
