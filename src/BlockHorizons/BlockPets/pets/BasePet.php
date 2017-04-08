@@ -195,13 +195,6 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
-	 * @return Player
-	 */
-	public function getRider() {
-		return $this->getLevel()->getServer()->getPlayer($this->rider);
-	}
-
-	/**
 	 * @return bool
 	 */
 	public function isRidden(): bool {
