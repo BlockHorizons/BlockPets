@@ -6,15 +6,37 @@ use BlockHorizons\BlockPets\listeners\EventListener;
 use BlockHorizons\BlockPets\pets\BasePet;
 use BlockHorizons\BlockPets\pets\creatures\BatPet;
 use BlockHorizons\BlockPets\pets\creatures\BlazePet;
+use BlockHorizons\BlockPets\pets\creatures\CaveSpiderPet;
 use BlockHorizons\BlockPets\pets\creatures\ChickenPet;
+use BlockHorizons\BlockPets\pets\creatures\CowPet;
+use BlockHorizons\BlockPets\pets\creatures\CreeperPet;
 use BlockHorizons\BlockPets\pets\creatures\EnderCrystalPet;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
+use BlockHorizons\BlockPets\pets\creatures\EndermanPet;
+use BlockHorizons\BlockPets\pets\creatures\EndermitePet;
 use BlockHorizons\BlockPets\pets\creatures\GhastPet;
 use BlockHorizons\BlockPets\pets\creatures\HorsePet;
+use BlockHorizons\BlockPets\pets\creatures\HuskPet;
+use BlockHorizons\BlockPets\pets\creatures\IronGolemPet;
+use BlockHorizons\BlockPets\pets\creatures\MooshroomPet;
 use BlockHorizons\BlockPets\pets\creatures\OcelotPet;
+use BlockHorizons\BlockPets\pets\creatures\PigPet;
+use BlockHorizons\BlockPets\pets\creatures\PolarBearPet;
+use BlockHorizons\BlockPets\pets\creatures\SheepPet;
+use BlockHorizons\BlockPets\pets\creatures\SilverFishPet;
 use BlockHorizons\BlockPets\pets\creatures\SkeletonPet;
+use BlockHorizons\BlockPets\pets\creatures\SnowGolemPet;
+use BlockHorizons\BlockPets\pets\creatures\SpiderPet;
+use BlockHorizons\BlockPets\pets\creatures\StrayPet;
+use BlockHorizons\BlockPets\pets\creatures\VillagerPet;
+use BlockHorizons\BlockPets\pets\creatures\WitchPet;
+use BlockHorizons\BlockPets\pets\creatures\WitherPet;
+use BlockHorizons\BlockPets\pets\creatures\WitherSkeletonPet;
+use BlockHorizons\BlockPets\pets\creatures\WitherSkullPet;
 use BlockHorizons\BlockPets\pets\creatures\WolfPet;
 use BlockHorizons\BlockPets\pets\creatures\ZombiePet;
+use BlockHorizons\BlockPets\pets\creatures\ZombiePigmanPet;
+use BlockHorizons\BlockPets\pets\creatures\ZombieVillagerPet;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\nbt\tag\CompoundTag;
@@ -41,6 +63,29 @@ class Loader extends PluginBase {
 		"Wolf",
 		"Zombie",
 		"EnderCrystal",
+		"WitherSkull",
+		"CaveSpider",
+		"Cow",
+		"Creeper",
+		"Enderman",
+		"Endermite",
+		"Husk",
+		"IronGolem",
+		"Mooshroom",
+		"Pig",
+		"PolarBear",
+		"Sheep",
+		"SilverFish",
+		"SnowGolem",
+		"Spider",
+		"Stray",
+		"Villager",
+		"Witch",
+		"Wither",
+		"WitherSkeleton",
+		"WitherSkull",
+		"ZombiePigman",
+		"ZombieVillager"
 	];
 
 	const PET_CLASSES = [
@@ -55,6 +100,28 @@ class Loader extends PluginBase {
 		WolfPet::class,
 		ZombiePet::class,
 		EnderCrystalPet::class,
+		CaveSpiderPet::class,
+		CowPet::class,
+		CreeperPet::class,
+		EndermanPet::class,
+		EndermitePet::class,
+		HuskPet::class,
+		IronGolemPet::class,
+		MooshroomPet::class,
+		PigPet::class,
+		PolarBearPet::class,
+		SheepPet::class,
+		SilverFishPet::class,
+		SnowGolemPet::class,
+		SpiderPet::class,
+		StrayPet::class,
+		VillagerPet::class,
+		WitchPet::class,
+		WitherPet::class,
+		WitherSkeletonPet::class,
+		WitherSkullPet::class,
+		ZombiePigmanPet::class,
+		ZombieVillagerPet::class
 	];
 
 	public function onEnable() {

@@ -24,18 +24,12 @@ abstract class WalkingPet extends BasePet {
 			} else {
 				$this->motionY -= $this->gravity;
 			}
-			$this->move($this->motionX, $this->motionY, $this->motionZ);
-		}
 
-		if($this->isCollidedHorizontally) {
-			if($this->distance(new Vector3($this->x, $this->getLevel()->getHighestBlockAt($this->x, $this->z), $this->z)) <= 2) {
-				if($this->getLevel()->getBlock(new Vector3($this->x, $this->y - 0.8, $this->z))->getId() !== Block::AIR) {
-					if($this->level->getBlock($this->getDirectionVector())->isSolid()) {
-						$this->motionY = $this->gravity * 8;
-					} elseif($this->level->getBlock($this->getDirectionVector()) instanceof Slab || $this->level->getBlock($this->getDirectionVector()) instanceof Stair) {
-						$this->motionY = $this->gravity * 4;
-					}
-				}
+		} elseif($this->isCollidedHorizontally && $this->isCollidedVertically) {
+			if($this->getLevel()->getBlock($this->getDirectionVector())->isSolid()) {
+				$this->motionY = $this->gravity * 8;
+			} elseif($this->level->getBlock($this->getDirectionVector()) instanceof Slab || $this->level->getBlock($this->getDirectionVector()) instanceof Stair) {
+				$this->motionY = $this->gravity * 4;
 			}
 		}
 
@@ -52,7 +46,6 @@ abstract class WalkingPet extends BasePet {
 		$this->pitch = rad2deg(atan($petOwner->y - $this->y));
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 
-		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->updateMovement();
 
 		return true;
