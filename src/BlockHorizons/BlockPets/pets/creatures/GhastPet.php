@@ -7,7 +7,7 @@ use BlockHorizons\BlockPets\pets\HoveringPet;
 class GhastPet extends HoveringPet {
 
 	public $width = 4;
-	public $height = 2.5;
+	public $height = 4;
 
 	public $name = "Ghast Pet";
 

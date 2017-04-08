@@ -55,7 +55,6 @@ abstract class WalkingPet extends BasePet {
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->updateMovement();
 
-		parent::onUpdate($currentTick);
 		return true;
 	}
 }
