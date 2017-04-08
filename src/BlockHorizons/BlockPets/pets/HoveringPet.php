@@ -17,7 +17,7 @@ abstract class HoveringPet extends BasePet {
 			$this->spawnToAll();
 		}
 		foreach($this->getLevel()->getPlayers() as $player) {
-			if(!$this->hasSpawned[$player->getLoaderId()]) {
+			if(!isset($this->hasSpawned[$player->getLoaderId()])) {
 				$this->spawnTo($player);
 			}
 		}
