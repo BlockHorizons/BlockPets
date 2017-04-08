@@ -16,6 +16,11 @@ abstract class HoveringPet extends BasePet {
 			$this->teleport($petOwner);
 			$this->spawnToAll();
 		}
+		foreach($this->getLevel()->getPlayers() as $player) {
+			if(!$this->hasSpawned[$player->getLoaderId()]) {
+				$this->spawnTo($player);
+			}
+		}
 		$x = $petOwner->x - $this->x;
 		$y = $petOwner->y + 1 - $this->y;
 		$z = $petOwner->z - $this->z;

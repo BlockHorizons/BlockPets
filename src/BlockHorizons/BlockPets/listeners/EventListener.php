@@ -32,9 +32,6 @@ class EventListener implements Listener {
 			} else {
 				$petEntity->throwRiderOff();
 			}
-			if($event instanceof EntityDamageByBlockEvent) {
-				$petEntity->spawnToAll();
-			}
 			$event->setCancelled();
 		}
 	}
