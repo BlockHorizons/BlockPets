@@ -59,9 +59,9 @@ abstract class HoveringPet extends BasePet {
 	public function doRidingMovement() {
 		$rider = $this->getPetOwner();
 
-		$x = $rider->getDirectionVector()->x - $this->x;
-		$y = $rider->getDirectionVector()->y - $this->y;
-		$z = $rider->getDirectionVector()->z - $this->z;
+		$x = $rider->add($rider->getDirectionVector()->x) - $this->x;
+		$y = $rider->add($rider->getDirectionVector()->y) - $this->y;
+		$z = $rider->add($rider->getDirectionVector()->z) - $this->z;
 
 		$this->motionX = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
 		$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
