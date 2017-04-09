@@ -2,6 +2,7 @@
 
 namespace BlockHorizons\BlockPets\pets;
 
+use pocketmine\block\Block;
 use pocketmine\block\Slab;
 use pocketmine\block\Stair;
 
@@ -42,8 +43,10 @@ abstract class WalkingPet extends BasePet {
 		return true;
 	}
 
-	public function doRidingMovement() {
+	public function doRidingMovement($currentTick) {
 		$rider = $this->getPetOwner();
+		parent::onUpdate($currentTick);
+
 		$this->pitch = $rider->pitch;
 		$this->yaw = $rider->yaw;
 		if(!$this->isOnGround()) {
@@ -64,20 +67,22 @@ abstract class WalkingPet extends BasePet {
 		$this->motionZ = $this->getSpeed() * 0.4 * ($z / (abs($x) + abs($z)));
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
+		$this->checkBlockCollision();
+
 		$this->updateMovement();
 	}
 
 	protected function jump() {
-		$block = $this->getLevel()->getBlock($this);
 		$x = $this->getDirectionVector()->x;
 		$z = $this->getDirectionVector()->z;
-		$blocksToCheck = [
-			$block->add($x, 0, $z),
-			$block->add($x * 0.8, 0, $z * 0.8),
-			$block->add($x, 0.3, $z),
-			$block->add($x, -0.3, $z)
+		$positionsToCheck = [
+			$this->add($x, 0, $z),
+			$this->add($x * 0.8, 0, $z * 0.8),
+			$this->add($x, 0.3, $z),
+			$this->add($x, -0.3, $z)
 		];
-		foreach($blocksToCheck as $blockAhead) {
+		foreach($positionsToCheck as $position) {
+			$blockAhead = $this->getLevel()->getBlock($position);
 			if($blockAhead->isSolid()) {
 				$this->motionY = 0.8;
 				$this->move($this->motionX, $this->motionY, $this->motionZ);

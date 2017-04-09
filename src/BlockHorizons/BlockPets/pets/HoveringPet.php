@@ -45,8 +45,10 @@ abstract class HoveringPet extends BasePet {
 		return true;
 	}
 
-	public function doRidingMovement() {
+	public function doRidingMovement($currentTick) {
 		$rider = $this->getPetOwner();
+		parent::onUpdate($currentTick);
+
 		$this->pitch = $rider->pitch;
 		$this->yaw = $rider->yaw;
 		if($this->getNetworkId() === 53) {
@@ -64,6 +66,8 @@ abstract class HoveringPet extends BasePet {
 			$this->motionY = $this->getSpeed() * 0.10 * ($y / abs($y));
 		}
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
+		$this->checkBlockCollision();
+
 		$this->updateMovement();
 	}
 }
