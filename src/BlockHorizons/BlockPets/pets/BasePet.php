@@ -252,6 +252,7 @@ abstract class BasePet extends Creature implements Rideable {
 		if($this->isRidden()) {
 			$this->doRidingMovement($currentTick);
 		}
+		parent::onUpdate($currentTick);
 		return true;
 	}
 

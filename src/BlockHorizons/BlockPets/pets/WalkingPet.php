@@ -77,8 +77,8 @@ abstract class WalkingPet extends BasePet {
 		$positionsToCheck = [
 			$this->add($x, 0, $z),
 			$this->add($x * 0.8, 0, $z * 0.8),
-			$this->add($x, 0.3, $z),
-			$this->add($x, -0.3, $z)
+			$this->add($x, 0.2, $z),
+			$this->add($x, -0.2, $z)
 		];
 		foreach($positionsToCheck as $position) {
 			$blockAhead = $this->getLevel()->getBlock($position);
