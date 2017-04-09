@@ -73,19 +73,16 @@ abstract class WalkingPet extends BasePet {
 	}
 
 	protected function jump() {
-		var_dump($this->getDirectionVector());
-		$x = $this->getDirectionVector()->x;
-		$z = $this->getDirectionVector()->z;
+		$oldPitch = $this->pitch;
+		$this->pitch = 90;
+		$x = abs($this->getDirectionVector()->x);
+		$z = abs($this->getDirectionVector()->z);
 		$positionsToCheck = [
 			$this->add($x, 0, $z),
 			$this->add($x * 0.8, 0, $z * 0.8),
 			$this->add($x, 0.2, $z),
 			$this->add($x, -0.2, $z),
 			$this->add($x * 1.2, 0, $z * 1.2),
-			$this->add($x + 1, 0, $z),
-			$this->add($x - 1, 0, $z),
-			$this->add($x, 0, $z + 1),
-			$this->add($x, 0, $z - 1)
 		];
 		foreach($positionsToCheck as $position) {
 			$blockAhead = $this->getLevel()->getBlock($position);
@@ -97,5 +94,6 @@ abstract class WalkingPet extends BasePet {
 				break;
 			}
 		}
+		$this->pitch = $oldPitch;
 	}
 }
