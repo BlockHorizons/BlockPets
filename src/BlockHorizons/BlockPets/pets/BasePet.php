@@ -141,7 +141,6 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->petLevel = $this->namedtag["petLevel"];
 		$this->scale = $this->namedtag["scale"];
 		$this->currentPetLevel = $this->namedtag["currentPetLevel"];
-		$this->setDataProperty(60, self::DATA_TYPE_FLOAT, 2.5);
 
 		//$this->setNameTag(TextFormat::GRAY . "Lvl" . $this->getPetLevel() . " " . $this->getName() . " - " . $this->getNameTag());
 		$this->setScale($this->scale);
@@ -192,6 +191,7 @@ abstract class BasePet extends Creature implements Rideable {
 	public function setRider(Player $player) {
 		$this->ridden = true;
 		$this->rider = $player->getName();
+		$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [-0.02, 2.3, 0.19]);
 
 		$pk = new SetEntityLinkPacket();
 		$pk->to = $player->getId();
