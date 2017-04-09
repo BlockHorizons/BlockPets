@@ -191,9 +191,9 @@ abstract class BasePet extends Creature implements Rideable {
 	public function setRider(Player $player) {
 		$this->ridden = true;
 		$this->rider = $player->getName();
-		$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 2.4, -0.1]);
+		$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 2.5, -0.25]);
 		if($this instanceof EnderDragonPet) {
-			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 2.7, -1.7]);
+			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 3, -1.7]);
 		}
 
 		$pk = new SetEntityLinkPacket();

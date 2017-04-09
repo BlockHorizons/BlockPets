@@ -19,11 +19,11 @@ abstract class WalkingPet extends BasePet {
 			} else {
 				$this->motionY -= $this->gravity;
 			}
-
 		} elseif($this->isCollidedHorizontally) {
 			$this->jump();
-			$this->motionY -= $this->gravity;
+			$this->motionY -= $this->gravity * 2;
 		}
+		$this->motionY -= $this->gravity;
 
 		$x = $petOwner->x - $this->x;
 		$z = $petOwner->z - $this->z;
@@ -54,11 +54,10 @@ abstract class WalkingPet extends BasePet {
 			} else {
 				$this->motionY -= $this->gravity;
 			}
-
 		} elseif($this->isCollidedHorizontally) {
 			$this->jump();
-			$this->motionY -= $this->gravity;
 		}
+		$this->motionY -= $this->gravity * 2;
 
 		$x = $rider->getDirectionVector()->x;
 		$z = $rider->getDirectionVector()->z;
@@ -83,6 +82,10 @@ abstract class WalkingPet extends BasePet {
 			$this->add($x, 0.2, $z),
 			$this->add($x, -0.2, $z),
 			$this->add($x * 1.2, 0, $z * 1.2),
+			$this->add($x + 1, 0, $z),
+			$this->add($x - 1, 0, $z),
+			$this->add($x, 0, $z + 1),
+			$this->add($x, 0, $z - 1),
 		];
 		foreach($positionsToCheck as $position) {
 			$blockAhead = $this->getLevel()->getBlock($position);
