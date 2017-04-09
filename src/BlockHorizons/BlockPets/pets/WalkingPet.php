@@ -4,6 +4,7 @@ namespace BlockHorizons\BlockPets\pets;
 
 use pocketmine\block\Slab;
 use pocketmine\block\Stair;
+use pocketmine\math\Vector3;
 
 abstract class WalkingPet extends BasePet {
 
@@ -13,6 +14,8 @@ abstract class WalkingPet extends BasePet {
 		if($petOwner === null || $this->isRidden()) {
 			return false;
 		}
+
+		$this->motionY -= $this->gravity;
 		if(!$this->isOnGround()) {
 			if($this->motionY > -$this->gravity * 4) {
 				$this->motionY = -$this->gravity * 4;
@@ -72,14 +75,14 @@ abstract class WalkingPet extends BasePet {
 		$solidCount = 0;
 		$halfCount = 0;
 		$positionsToCheck = [
-			$this->add(1, 0, 0),
-			$this->add(1, 0, 1),
-			$this->add(0, 0, 1),
-			$this->add(-1, 0, 1),
-			$this->add(-1, 0, 0),
-			$this->add(-1, 0, -1),
-			$this->add(0, 0, -1),
-			$this->add(1, 0, -1)
+			new Vector3($this->x + 1.1, $this->y, $this->z),
+			new Vector3($this->x + 1.1, $this->y, $this->z + 1.1),
+			new Vector3($this->x, $this->y, $this->z + 1.1),
+			new Vector3($this->x - 1.1, $this->y, $this->z + 1.1),
+			new Vector3($this->x - 1.1, $this->y, $this->z),
+			new Vector3($this->x - 1.1, $this->y, $this->z - 1.1),
+			new Vector3($this->x, $this->y, $this->z - 1.1),
+			new Vector3($this->x + 1.1, $this->y, $this->z - 1.1),
 		];
 		foreach($positionsToCheck as $position) {
 			$blockAhead = $this->getLevel()->getBlock($position);
@@ -95,11 +98,11 @@ abstract class WalkingPet extends BasePet {
 			}
 		}
 		if($solidCount >= 2) {
-			$this->motionY = 0.8;
+			$this->motionY = $this->gravity * 8;
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
 			return;
 		} elseif($halfCount >= 2) {
-			$this->motionY = 0.4;
+			$this->motionY = $this->gravity * 4;
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
 			return;
 		}

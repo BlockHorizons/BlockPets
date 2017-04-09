@@ -11,5 +11,5 @@ class SilverFishPet extends WalkingPet {
 
 	public $name = "Silverfish Pet";
 
-	public $networkId = 33;
+	public $networkId = 39;
 }

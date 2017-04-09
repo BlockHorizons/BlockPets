@@ -10,6 +10,7 @@ class VillagerPet extends WalkingPet {
 	public $width = 0.8;
 
 	public $name = "Villager Pet";
+	public $tier = self::TIER_COMMON;
 
 	public $networkId = 15;
 }
