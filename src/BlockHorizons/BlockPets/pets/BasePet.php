@@ -84,7 +84,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return int
 	 */
 	public function getPetLevel(): int {
-		return $this->petLevel;
+		return $this->petLevel ?? 1;
 	}
 
 	/**
