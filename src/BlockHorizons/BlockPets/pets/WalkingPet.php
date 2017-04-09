@@ -94,11 +94,11 @@ abstract class WalkingPet extends BasePet {
 				continue;
 			}
 		}
-		if($solidCount >= 3) {
+		if($solidCount >= 2) {
 			$this->motionY = 0.8;
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
 			return;
-		} elseif($halfCount >= 3) {
+		} elseif($halfCount >= 2) {
 			$this->motionY = 0.4;
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
 			return;
