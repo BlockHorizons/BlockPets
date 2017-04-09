@@ -14,4 +14,7 @@ class GhastPet extends HoveringPet {
 	public $speed = 1.2;
 
 	public $networkId = 41;
+
+	protected $flyHeight = 25;
+	protected $tier = self::TIER_SPECIAL;
 }

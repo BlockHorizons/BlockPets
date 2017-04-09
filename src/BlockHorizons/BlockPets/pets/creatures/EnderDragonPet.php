@@ -12,4 +12,7 @@ class EnderDragonPet extends HoveringPet {
 
 	public $width = 2.5;
 	public $height = 1;
+
+	protected $flyHeight = 50;
+	protected $tier = self::TIER_LEGENDARY;
 }

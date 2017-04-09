@@ -12,4 +12,7 @@ class WitherPet extends HoveringPet {
 	public $name = "Wither Pet";
 
 	public $networkId = 52;
+
+	protected $flyHeight = 35;
+	protected $tier = self::TIER_EPIC;
 }

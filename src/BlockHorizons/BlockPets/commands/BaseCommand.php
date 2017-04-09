@@ -32,6 +32,9 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 		return $this->loader;
 	}
 
+	/**
+	 * @return Loader
+	 */
 	public function getLoader(): Loader {
 		return $this->loader;
 	}

@@ -13,4 +13,7 @@ class BlazePet extends HoveringPet {
 	public $name = "Blaze Pet";
 
 	public $networkId = 43;
+
+	protected $flyHeight = 13;
+	protected $tier = self::TIER_UNCOMMON;
 }

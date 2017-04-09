@@ -7,10 +7,14 @@ use pocketmine\math\Vector3;
 abstract class HoveringPet extends BasePet {
 
 	public $gravity = 0;
+	protected $flyHeight = 0;
 
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
 		parent::onUpdate($currentTick);
+		if($petOwner === null || $this->isRidden()) {
+			return false;
+		}
 
 		$x = $petOwner->x - $this->x;
 		$y = $petOwner->y + 1 - $this->y;
@@ -56,7 +60,7 @@ abstract class HoveringPet extends BasePet {
 		$this->motionZ = $this->getSpeed() * 0.25 * ($z / (abs($x) + abs($z)));
 
 		$this->motionY = 0;
-		if(($y !== 0 && abs($y) >= 0.4 && $this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) <= 8) || $y < 0) {
+		if(($y !== 0 && abs($y) >= 0.4 && $this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) <= $this->flyHeight) || $y < 0) {
 			$this->motionY = $this->getSpeed() * 0.10 * ($y / abs($y));
 		}
 		$this->move($this->motionX, $this->motionY, $this->motionZ);

@@ -20,7 +20,7 @@ class EventListener implements Listener {
 				if($event instanceof EntityDamageByEntityEvent) {
 					$attacker = $event->getDamager();
 					if($attacker instanceof Player) {
-						if(!$attacker->getId() === $petOwner->getId()) {
+						if($attacker->getId() !== $petOwner->getId()) {
 							return;
 						}
 						if($attacker->getInventory()->getItemInHand()->getId() === 329) {
