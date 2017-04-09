@@ -21,10 +21,10 @@ abstract class WalkingPet extends BasePet {
 			}
 
 		} elseif($this->isCollidedHorizontally) {
-			if($this->getLevel()->getBlock($this->add($this->getDirectionVector()->x - 0.2, 0, $this->getDirectionVector()->z - 0.2))->isSolid()) {
-				$this->motionY = $this->gravity * 10;
-			} elseif($this->level->getBlock($this->add($this->getDirectionVector()->x - 0.2, 0, $this->getDirectionVector()->z - 0.2)) instanceof Slab || $this->level->getBlock($this->add($this->getDirectionVector()->x - 0.2, 0, $this->getDirectionVector()->z - 0.2)) instanceof Stair) {
-				$this->motionY = $this->gravity * 5;
+			if($this->getLevel()->getBlock($this->add($this->getDirectionVector()->x, 0, $this->getDirectionVector()->z))->isSolid()) {
+				$this->motionY = 4;
+			} elseif($this->level->getBlock($this->add($this->getDirectionVector()->x, 0, $this->getDirectionVector()->z)) instanceof Slab || $this->level->getBlock($this->add($this->getDirectionVector()->x, 0, $this->getDirectionVector()->z)) instanceof Stair) {
+				$this->motionY = 2;
 			}
 		}
 
@@ -59,9 +59,9 @@ abstract class WalkingPet extends BasePet {
 
 		} elseif($this->isCollidedHorizontally) {
 			if($this->getLevel()->getBlock($this->add($this->getDirectionVector()->x - 0.2, 0, $this->getDirectionVector()->z - 0.2))->isSolid()) {
-				$this->motionY = $this->gravity * 12;
+				$this->motionY = 4;
 			} elseif($this->level->getBlock($this->add($this->getDirectionVector()->x - 0.2, 0, $this->getDirectionVector()->z - 0.2)) instanceof Slab || $this->level->getBlock($this->add($this->getDirectionVector()->x - 0.2, 0, $this->getDirectionVector()->z - 0.2)) instanceof Stair) {
-				$this->motionY = $this->gravity * 6;
+				$this->motionY = 2;
 			}
 		}
 
@@ -72,8 +72,8 @@ abstract class WalkingPet extends BasePet {
 			$this->motionX = 0;
 			$this->motionZ = 0;
 		} else {
-			$this->motionX = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
-			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
+			$this->motionX = $this->getSpeed() * 0.6 * ($x / (abs($x) + abs($z)));
+			$this->motionZ = $this->getSpeed() * 0.6 * ($z / (abs($x) + abs($z)));
 		}
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);

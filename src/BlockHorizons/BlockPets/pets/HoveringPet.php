@@ -52,12 +52,12 @@ abstract class HoveringPet extends BasePet {
 		if($this->getNetworkId() === 53) {
 			$this->yaw += 180;
 		}
-		$x = $rider->getDirectionVector()->multiply(3)->x;
-		$y = $rider->getDirectionVector()->multiply(3)->y;
-		$z = $rider->getDirectionVector()->multiply(3)->z;
+		$x = $rider->getDirectionVector()->x;
+		$y = $rider->getDirectionVector()->y;
+		$z = $rider->getDirectionVector()->z;
 
-		$this->motionX = $this->getSpeed() * 0.3 * ($x / (abs($x) + abs($z)));
-		$this->motionZ = $this->getSpeed() * 0.3 * ($z / (abs($x) + abs($z)));
+		$this->motionX = $this->getSpeed() * 0.6 * ($x / (abs($x) + abs($z)));
+		$this->motionZ = $this->getSpeed() * 0.6 * ($z / (abs($x) + abs($z)));
 
 		$this->motionY = 0;
 		if(($y !== 0 && abs($y) >= 0.4 && $this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) <= $this->flyHeight) || $y < 0) {

@@ -122,7 +122,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setDataProperty(self::DATA_SCALE, self::DATA_TYPE_FLOAT, $value);
 		$this->setDataProperty(self::DATA_BOUNDING_BOX_WIDTH, self::DATA_TYPE_FLOAT, $this->width);
 		$this->setDataProperty(self::DATA_BOUNDING_BOX_HEIGHT, self::DATA_TYPE_FLOAT, $this->height);
-		$this->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [-0.02, 2.3, 0.19]);
+		$this->setDataProperty(58, self::DATA_TYPE_VECTOR3F, [-0.02, 2.3, 0.19]);
 	}
 
 	/**
