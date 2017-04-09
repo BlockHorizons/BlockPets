@@ -135,7 +135,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->scale = $this->namedtag["scale"];
 		$this->setDataProperty(60, self::DATA_TYPE_FLOAT, 2.5);
 
-		$this->setNameTag(TextFormat::GRAY . "Lvl" . $this->getPetLevel() . " " . $this->getName() . " - " . $this->getNameTag());
+		//$this->setNameTag(TextFormat::GRAY . "Lvl" . $this->getPetLevel() . " " . $this->getName() . " - " . $this->getNameTag());
 		$this->setScale($this->scale);
 	}
 
@@ -197,7 +197,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->type = self::STATE_SITTING;
 		$player->dataPacket($pk);
 	}
-
+	
 	public function throwRiderOff() {
 		$pk = new SetEntityLinkPacket();
 		$pk->from = $this->getId();
@@ -234,10 +234,10 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->teleport($petOwner);
 			$this->spawnToAll();
 		}
-		if($this->getPetLevel() !== $this->getCurrentPetLevel()) {
+		/*if($this->getPetLevel() !== $this->getCurrentPetLevel()) {
 			$this->levelUpCurrentLevel();
 			$this->setNameTag(TextFormat::GRAY . "Lvl" . $this->getPetLevel() . " " . $this->getName() . " - " . explode(" - ", $this->getNameTag())[1]);
-		}
+		}*/
 
 		if($this->isRidden()) {
 			$this->doRidingMovement();
