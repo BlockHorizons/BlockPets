@@ -45,7 +45,6 @@ abstract class WalkingPet extends BasePet {
 
 	public function doRidingMovement($currentTick) {
 		$rider = $this->getPetOwner();
-		parent::onUpdate($currentTick);
 
 		$this->pitch = $rider->pitch;
 		$this->yaw = $rider->yaw;
