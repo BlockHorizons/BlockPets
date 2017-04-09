@@ -63,16 +63,18 @@ abstract class WalkingPet extends BasePet {
 		$this->motionX = $this->getSpeed() * 0.6 * ($x / (abs($x) + abs($z)));
 		$this->motionZ = $this->getSpeed() * 0.6 * ($z / (abs($x) + abs($z)));
 
+		$rider->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->updateMovement();
 	}
 
 	protected function jump() {
 		$blockAhead = $this->getLevel()->getBlock($this->add($this->getDirectionVector()->x, 0, $this->getDirectionVector()->z));
-		if($blockAhead->isSolid()) {
+		$blockBefore = $this->getLevel()->getBlock($this->add($this->getDirectionVector()->x * 0.8, 0, $this->getDirectionVector()->z * 0.8));
+		if($blockAhead->isSolid() || $blockBefore->isSolid()) {
 			$this->motionY = 0.8;
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
-		} elseif($blockAhead instanceof Slab || $blockAhead instanceof Stair) {
+		} elseif($blockAhead instanceof Slab || $blockAhead instanceof Stair || $blockBefore instanceof Slab || $blockBefore instanceof Stair) {
 			$this->motionY = 0.4;
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
 		}
