@@ -123,7 +123,6 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setDataProperty(self::DATA_SCALE, self::DATA_TYPE_FLOAT, $value);
 		$this->setDataProperty(self::DATA_BOUNDING_BOX_WIDTH, self::DATA_TYPE_FLOAT, $this->width);
 		$this->setDataProperty(self::DATA_BOUNDING_BOX_HEIGHT, self::DATA_TYPE_FLOAT, $this->height);
-		$this->setDataProperty(58, self::DATA_TYPE_VECTOR3F, [-0.02, 2.3, 0.19]);
 	}
 
 	/**
@@ -194,7 +193,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->rider = $player->getName();
 		$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 2.4, -0.1]);
 		if($this instanceof EnderDragonPet) {
-			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 2.6, -2.3]);
+			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 2.7, -1.7]);
 		}
 
 		$pk = new SetEntityLinkPacket();
@@ -235,7 +234,6 @@ abstract class BasePet extends Creature implements Rideable {
 
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
-		parent::onUpdate($currentTick);
 		if($petOwner === null) {
 			$this->ridden = false;
 			$this->rider = null;
@@ -254,6 +252,7 @@ abstract class BasePet extends Creature implements Rideable {
 		if($this->isRidden()) {
 			$this->doRidingMovement();
 		}
+		parent::onUpdate($currentTick);
 		return true;
 	}
 

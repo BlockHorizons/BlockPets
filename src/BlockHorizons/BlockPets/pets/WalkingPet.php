@@ -60,23 +60,33 @@ abstract class WalkingPet extends BasePet {
 		$x = $rider->getDirectionVector()->x;
 		$z = $rider->getDirectionVector()->z;
 
-		$this->motionX = $this->getSpeed() * 0.6 * ($x / (abs($x) + abs($z)));
-		$this->motionZ = $this->getSpeed() * 0.6 * ($z / (abs($x) + abs($z)));
+		$this->motionX = $this->getSpeed() * 0.4 * ($x / (abs($x) + abs($z)));
+		$this->motionZ = $this->getSpeed() * 0.4 * ($z / (abs($x) + abs($z)));
 
-		$rider->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->updateMovement();
 	}
 
 	protected function jump() {
-		$blockAhead = $this->getLevel()->getBlock($this->add($this->getDirectionVector()->x, 0, $this->getDirectionVector()->z));
-		$blockBefore = $this->getLevel()->getBlock($this->add($this->getDirectionVector()->x * 0.8, 0, $this->getDirectionVector()->z * 0.8));
-		if($blockAhead->isSolid() || $blockBefore->isSolid()) {
-			$this->motionY = 0.8;
-			$this->move($this->motionX, $this->motionY, $this->motionZ);
-		} elseif($blockAhead instanceof Slab || $blockAhead instanceof Stair || $blockBefore instanceof Slab || $blockBefore instanceof Stair) {
-			$this->motionY = 0.4;
-			$this->move($this->motionX, $this->motionY, $this->motionZ);
+		$block = $this->getLevel()->getBlock($this);
+		$x = $this->getDirectionVector()->x;
+		$z = $this->getDirectionVector()->z;
+		$blocksToCheck = [
+			$block->add($x, 0, $z),
+			$block->add($x * 0.8, 0, $z * 0.8),
+			$block->add($x, 0.3, $z),
+			$block->add($x, -0.3, $z)
+		];
+		foreach($blocksToCheck as $blockAhead) {
+			if($blockAhead->isSolid()) {
+				$this->motionY = 0.8;
+				$this->move($this->motionX, $this->motionY, $this->motionZ);
+				break;
+			} elseif($blockAhead instanceof Slab || $blockAhead instanceof Stair) {
+				$this->motionY = 0.4;
+				$this->move($this->motionX, $this->motionY, $this->motionZ);
+				break;
+			}
 		}
 	}
 }
