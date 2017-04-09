@@ -69,6 +69,8 @@ abstract class WalkingPet extends BasePet {
 	}
 
 	protected function jump() {
+		$solidCount = 0;
+		$halfCount = 0;
 		$positionsToCheck = [
 			$this->add(1, 0, 0),
 			$this->add(1, 0, 1),
@@ -85,14 +87,21 @@ abstract class WalkingPet extends BasePet {
 				continue;
 			}
 			if($blockAhead->isSolid()) {
-				$this->motionY = 0.8;
-				$this->move($this->motionX, $this->motionY, $this->motionZ);
-				break;
+				$solidCount++;
+				continue;
 			} elseif($blockAhead instanceof Slab || $blockAhead instanceof Stair) {
-				$this->motionY = 0.4;
-				$this->move($this->motionX, $this->motionY, $this->motionZ);
-				break;
+				$halfCount++;
+				continue;
 			}
+		}
+		if($solidCount >= 3) {
+			$this->motionY = 0.8;
+			$this->move($this->motionX, $this->motionY, $this->motionZ);
+			return;
+		} elseif($halfCount >= 3) {
+			$this->motionY = 0.4;
+			$this->move($this->motionX, $this->motionY, $this->motionZ);
+			return;
 		}
 	}
 }
