@@ -2,6 +2,7 @@
 
 namespace BlockHorizons\BlockPets\pets;
 
+use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use pocketmine\entity\Creature;
 use pocketmine\entity\Rideable;
 use pocketmine\level\format\Chunk;
@@ -191,7 +192,10 @@ abstract class BasePet extends Creature implements Rideable {
 	public function setRider(Player $player) {
 		$this->ridden = true;
 		$this->rider = $player->getName();
-		$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [-0.02, 2.3, 0.19]);
+		$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 2.4, -0.1]);
+		if($this instanceof EnderDragonPet) {
+			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 2.4, 2.2]);
+		}
 
 		$pk = new SetEntityLinkPacket();
 		$pk->to = $player->getId();

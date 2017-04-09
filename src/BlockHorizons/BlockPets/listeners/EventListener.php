@@ -21,6 +21,7 @@ class EventListener implements Listener {
 					$attacker = $event->getDamager();
 					if($attacker instanceof Player) {
 						if($attacker->getId() !== $petOwner->getId()) {
+							$event->setCancelled();
 							return;
 						}
 						if($attacker->getInventory()->getItemInHand()->getId() === 329) {
