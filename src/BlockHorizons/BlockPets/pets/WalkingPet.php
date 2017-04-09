@@ -22,7 +22,6 @@ abstract class WalkingPet extends BasePet {
 		} elseif($this->isCollidedHorizontally) {
 			$this->jump();
 		}
-		$this->motionY -= $this->gravity;
 
 		$x = $petOwner->x - $this->x;
 		$z = $petOwner->z - $this->z;
@@ -56,7 +55,6 @@ abstract class WalkingPet extends BasePet {
 		} elseif($this->isCollidedHorizontally) {
 			$this->jump();
 		}
-		$this->motionY -= $this->gravity;
 
 		$x = $rider->getDirectionVector()->x;
 		$z = $rider->getDirectionVector()->z;
@@ -90,9 +88,11 @@ abstract class WalkingPet extends BasePet {
 			$blockAhead = $this->getLevel()->getBlock($position);
 			if($blockAhead->isSolid()) {
 				$this->motionY = 0.8;
+				$this->move($this->motionX, $this->motionY, $this->motionZ);
 				break;
 			} elseif($blockAhead instanceof Slab || $blockAhead instanceof Stair) {
 				$this->motionY = 0.4;
+				$this->move($this->motionX, $this->motionY, $this->motionZ);
 				break;
 			}
 		}
