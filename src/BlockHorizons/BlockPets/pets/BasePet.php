@@ -91,7 +91,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return int
 	 */
 	public function getCurrentPetLevel(): int {
-		return $this->currentPetLevel;
+		return $this->currentPetLevel ?? 0;
 	}
 
 	public function levelUp() {
@@ -122,6 +122,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setDataProperty(self::DATA_SCALE, self::DATA_TYPE_FLOAT, $value);
 		$this->setDataProperty(self::DATA_BOUNDING_BOX_WIDTH, self::DATA_TYPE_FLOAT, $this->width);
 		$this->setDataProperty(self::DATA_BOUNDING_BOX_HEIGHT, self::DATA_TYPE_FLOAT, $this->height);
+		$this->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [-0.02, 2.3, 0.19]);
 	}
 
 	/**
