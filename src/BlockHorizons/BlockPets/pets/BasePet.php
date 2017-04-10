@@ -186,11 +186,19 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * @return Player|null
+	 */
+	public function getRider() {
+		return $this->getLevel()->getServer()->getPlayer($this->petOwner);
+	}
+
+	/**
 	 * @param Player $player
 	 */
 	public function setRider(Player $player) {
 		$this->ridden = true;
 		$this->rider = $player->getName();
+		$player->canCollide = false;
 		$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 2.5, -0.25]);
 		if($this instanceof EnderDragonPet) {
 			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 3, -1.7]);
@@ -207,6 +215,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->from = $this->getId();
 		$pk->type = self::STATE_SITTING;
 		$player->dataPacket($pk);
+		$player->canCollide = false;
 	}
 	
 	public function throwRiderOff() {
@@ -216,6 +225,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->type = self::STATE_STANDING;
 		$this->ridden = false;
 		$this->rider = null;
+		$this->getPetOwner()->canCollide = true;
 		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
 
 		$pk = new SetEntityLinkPacket();
@@ -223,6 +233,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->to = 0;
 		$pk->type = self::STATE_STANDING;
 		$this->getPetOwner()->dataPacket($pk);
+		$this->getPetOwner()->canCollide = true;
 	}
 
 	/**
