@@ -4,7 +4,6 @@ namespace BlockHorizons\BlockPets\pets;
 
 use pocketmine\block\Slab;
 use pocketmine\block\Stair;
-use pocketmine\math\Vector3;
 
 abstract class WalkingPet extends BasePet {
 
@@ -72,39 +71,16 @@ abstract class WalkingPet extends BasePet {
 	}
 
 	protected function jump() {
-		$solidCount = 0;
-		$halfCount = 0;
-		$positionsToCheck = [
-			new Vector3($this->x + 1.1, $this->y, $this->z),
-			new Vector3($this->x + 1.1, $this->y, $this->z + 1.1),
-			new Vector3($this->x, $this->y, $this->z + 1.1),
-			new Vector3($this->x - 1.1, $this->y, $this->z + 1.1),
-			new Vector3($this->x - 1.1, $this->y, $this->z),
-			new Vector3($this->x - 1.1, $this->y, $this->z - 1.1),
-			new Vector3($this->x, $this->y, $this->z - 1.1),
-			new Vector3($this->x + 1.1, $this->y, $this->z - 1.1),
-		];
-		foreach($positionsToCheck as $position) {
-			$blockAhead = $this->getLevel()->getBlock($position);
-			if($this->getLevel()->getBlock($blockAhead->add(0, 1))->isSolid()) {
-				continue;
-			}
-			if($blockAhead->isSolid()) {
-				$solidCount++;
-				continue;
-			} elseif($blockAhead instanceof Slab || $blockAhead instanceof Stair) {
-				$halfCount++;
-				continue;
-			}
-		}
-		if($solidCount >= 2) {
+		$oldPitch = $this->pitch;
+		$this->pitch = 90;
+		$blockAhead = $this->getTargetBlock(1);
+		if($blockAhead->isSolid()) {
 			$this->motionY = $this->gravity * 8;
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
-			return;
-		} elseif($halfCount >= 2) {
+		} elseif($blockAhead instanceof Slab || $blockAhead instanceof Stair) {
 			$this->motionY = $this->gravity * 4;
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
-			return;
 		}
+		$this->pitch = $oldPitch;
 	}
 }
