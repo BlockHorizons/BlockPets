@@ -73,7 +73,7 @@ abstract class WalkingPet extends BasePet {
 	protected function jump() {
 		$oldPitch = $this->pitch;
 		$this->pitch = 90;
-		$blockAhead = $this->getTargetBlock(1);
+		$blockAhead = $this->getTargetBlock(2);
 		if($blockAhead->isSolid()) {
 			$this->motionY = $this->gravity * 8;
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
