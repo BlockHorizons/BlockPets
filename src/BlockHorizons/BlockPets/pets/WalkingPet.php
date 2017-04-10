@@ -25,6 +25,8 @@ abstract class WalkingPet extends BasePet {
 			}
 		} elseif($this->isCollidedHorizontally) {
 			$this->jump();
+		} else {
+			$this->motionY -= $this->gravity;
 		}
 
 		$x = $petOwner->x - $this->x;
@@ -73,10 +75,12 @@ abstract class WalkingPet extends BasePet {
 	}
 
 	protected function jump() {
+		$this->motionY = -1;
+		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$oldPitch = $this->pitch;
 		$this->pitch = 90;
-		if($this->getLevel()->getBlock(new Vector3($this->x, $this->y - 0.9, $this->z))->getId() === Block::AIR) {
-			$this->y -= 0.9;
+		if($this->getLevel()->getBlock(new Vector3($this->x, $this->y - 0.6, $this->z))->getId() === Block::AIR) {
+			$this->y -= 0.6;
 		}
 		$posAhead = $this->getTargetBlock(3);
 		$blockAhead = $this->getLevel()->getBlock($posAhead);
