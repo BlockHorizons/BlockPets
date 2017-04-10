@@ -60,6 +60,8 @@ abstract class WalkingPet extends BasePet {
 			}
 		} elseif($this->isCollidedHorizontally) {
 			$this->jump();
+		} else {
+			$this->motionY -= $this->gravity;
 		}
 
 		$x = $rider->getDirectionVector()->x;
