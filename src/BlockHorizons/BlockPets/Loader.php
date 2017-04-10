@@ -3,6 +3,7 @@
 namespace BlockHorizons\BlockPets;
 
 use BlockHorizons\BlockPets\commands\LevelUpPetCommand;
+use BlockHorizons\BlockPets\commands\RemovePetCommand;
 use BlockHorizons\BlockPets\listeners\EventListener;
 use BlockHorizons\BlockPets\pets\BasePet;
 use BlockHorizons\BlockPets\pets\creatures\BatPet;
@@ -136,7 +137,8 @@ class Loader extends PluginBase {
 	public function registerCommands() {
 		$petCommands = [
 			"spawnpet" => new SpawnPetCommand($this),
-			"leveluppet" => new LevelUpPetCommand($this)
+			"leveluppet" => new LevelUpPetCommand($this),
+			"removepet" => new RemovePetCommand($this)
 		];
 		foreach($petCommands as $fallBack => $command) {
 			$this->getServer()->getCommandMap()->register($fallBack, $command);
@@ -228,5 +230,30 @@ class Loader extends PluginBase {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @param Player $player
+	 *
+	 * @return array
+	 */
+	public function getPetsFrom(Player $player): array {
+		$playerPets = [];
+		foreach($player->getLevel()->getEntities() as $entity) {
+			if($entity instanceof BasePet) {
+				if($entity->getPetOwner()->getName() === $player->getName()) {
+					$playerPets[] = $entity;
+				}
+			}
+		}
+		return $playerPets;
+	}
+
+	/**
+	 * @param string $name
+	 */
+	public function removePet(string $name) {
+		$pet = $this->getPetByName($name);
+		$pet->kill();
 	}
 }
