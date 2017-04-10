@@ -74,7 +74,7 @@ abstract class WalkingPet extends BasePet {
 		$oldPitch = $this->pitch;
 		$this->pitch = 90;
 		$posAhead = $this->getTargetBlock(2);
-		if(round($posAhead->y) !== round($this->y)) {
+		if(round($posAhead->y) !== (round($this->y) - 1)) {
 			$posAhead->y = $this->y - 1;
 		}
 		$blockAhead = $this->getLevel()->getBlock($posAhead);
