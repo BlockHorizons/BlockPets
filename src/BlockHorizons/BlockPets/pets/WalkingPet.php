@@ -73,7 +73,7 @@ abstract class WalkingPet extends BasePet {
 	protected function jump() {
 		$oldPitch = $this->pitch;
 		$this->pitch = 90;
-		$posAhead = $this->getTargetBlock(2);
+		$posAhead = $this->getTargetBlock(3);
 		if(round($posAhead->y) !== (round($this->y) - 1)) {
 			$posAhead->y = $this->y - 1;
 		}
