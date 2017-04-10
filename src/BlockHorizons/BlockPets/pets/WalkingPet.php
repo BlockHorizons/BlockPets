@@ -74,11 +74,12 @@ abstract class WalkingPet extends BasePet {
 		$oldPitch = $this->pitch;
 		$this->pitch = 90;
 		$blockAhead = $this->getTargetBlock(2);
+		var_dump(round($this->y) === round($blockAhead->y));
 		if($blockAhead->isSolid()) {
-			$this->motionY = $this->gravity * 8;
+			$this->motionY = $this->gravity * 6;
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
 		} elseif($blockAhead instanceof Slab || $blockAhead instanceof Stair) {
-			$this->motionY = $this->gravity * 4;
+			$this->motionY = $this->gravity * 3;
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
 		}
 		$this->pitch = $oldPitch;
