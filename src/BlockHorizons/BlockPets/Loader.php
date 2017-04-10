@@ -222,7 +222,7 @@ class Loader extends PluginBase {
 	public function getPetByName(string $name) {
 		foreach($this->getServer()->getLevels() as $level) {
 			foreach($level->getEntities() as $entity) {
-				if(strpos($entity->getNameTag(), $name)) {
+				if(strpos($entity->getNameTag(), $name) !== false) {
 					if($entity instanceof BasePet) {
 						return $entity;
 					}
@@ -251,9 +251,15 @@ class Loader extends PluginBase {
 
 	/**
 	 * @param string $name
+	 *
+	 * @return bool
 	 */
-	public function removePet(string $name) {
+	public function removePet(string $name): bool {
 		$pet = $this->getPetByName($name);
+		if($pet === null) {
+			return false;
+		}
 		$pet->kill();
+		return true;
 	}
 }

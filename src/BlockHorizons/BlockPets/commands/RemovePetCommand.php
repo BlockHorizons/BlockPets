@@ -29,8 +29,10 @@ class RemovePetCommand extends BaseCommand {
 			return true;
 		}
 
-		$this->getLoader()->removePet($args[0]);
-		$sender->sendMessage(TF::GREEN . "Successfully removed the pet: " . TF::AQUA . $args[0]);
+		if($this->getLoader()->removePet($args[0])) {
+			$sender->sendMessage(TF::GREEN . "Successfully removed the pet: " . TF::AQUA . $args[0]);
+		}
+
 		return true;
 	}
 }
