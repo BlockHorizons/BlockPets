@@ -203,6 +203,7 @@ abstract class BasePet extends Creature implements Rideable {
 		if($this instanceof EnderDragonPet) {
 			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 3, -1.7]);
 		}
+		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, true);
 
 		$pk = new SetEntityLinkPacket();
 		$pk->to = $player->getId();
@@ -215,7 +216,6 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->from = $this->getId();
 		$pk->type = self::STATE_SITTING;
 		$player->dataPacket($pk);
-		$player->canCollide = false;
 	}
 	
 	public function throwRiderOff() {
@@ -234,6 +234,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->type = self::STATE_STANDING;
 		$this->getPetOwner()->dataPacket($pk);
 		$this->getPetOwner()->canCollide = true;
+		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, false);
 	}
 
 	/**

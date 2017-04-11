@@ -31,8 +31,9 @@ class RemovePetCommand extends BaseCommand {
 
 		if($this->getLoader()->removePet($args[0])) {
 			$sender->sendMessage(TF::GREEN . "Successfully removed the pet: " . TF::AQUA . $args[0]);
+		} else {
+			$sender->sendMessage(TF::RED . "[Warning] A pet with that name doesn't exist.");
 		}
-
 		return true;
 	}
 }
