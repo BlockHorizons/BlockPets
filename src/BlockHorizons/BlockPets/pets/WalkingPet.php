@@ -5,6 +5,7 @@ namespace BlockHorizons\BlockPets\pets;
 use pocketmine\block\Block;
 use pocketmine\block\Slab;
 use pocketmine\block\Stair;
+use pocketmine\math\Math;
 use pocketmine\math\Vector3;
 
 abstract class WalkingPet extends BasePet {
@@ -30,6 +31,7 @@ abstract class WalkingPet extends BasePet {
 		}
 
 		$x = $petOwner->x - $this->x;
+		$y = $petOwner->y - $this->y;
 		$z = $petOwner->z - $this->z;
 
 		if($x * $x + $z * $z < 5) {
@@ -40,7 +42,7 @@ abstract class WalkingPet extends BasePet {
 			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
 		}
 		$this->yaw = rad2deg(atan2(-$x, $z));
-		$this->pitch = 90;
+		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->updateMovement();
@@ -50,7 +52,7 @@ abstract class WalkingPet extends BasePet {
 	public function doRidingMovement($currentTick) {
 		$rider = $this->getPetOwner();
 
-		$this->pitch = $rider->pitch;
+		$this->pitch = 90;
 		$this->yaw = $rider->yaw;
 		if(!$this->isOnGround()) {
 			if($this->motionY > -$this->gravity * 4) {
@@ -78,7 +80,7 @@ abstract class WalkingPet extends BasePet {
 
 	protected function jump() {
 		$posAhead = $this->getTargetBlock(3);
-		$blockAhead = $this->getLevel()->getBlock($posAhead);
+		$blockAhead = $this->getLevel()->getBlock(new Vector3($posAhead->x, Math::floorFloat($posAhead->y), $posAhead->z));
 		if($blockAhead->isSolid()) {
 			$this->motionY = $this->gravity * 8;
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
