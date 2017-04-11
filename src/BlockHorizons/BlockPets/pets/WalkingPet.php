@@ -17,7 +17,7 @@ abstract class WalkingPet extends BasePet {
 			return false;
 		}
 
-		$this->motionY -= $this->gravity;
+		$this->motionY = 0;
 		if(!$this->isOnGround()) {
 			if($this->motionY > -$this->gravity * 4) {
 				$this->motionY = -$this->gravity * 4;
@@ -52,8 +52,9 @@ abstract class WalkingPet extends BasePet {
 	public function doRidingMovement($currentTick) {
 		$rider = $this->getPetOwner();
 
-		$this->pitch = 90;
+		$this->pitch = 135;
 		$this->yaw = $rider->yaw;
+		$this->motionY = 0;
 		if(!$this->isOnGround()) {
 			if($this->motionY > -$this->gravity * 4) {
 				$this->motionY = -$this->gravity * 4;
@@ -80,7 +81,7 @@ abstract class WalkingPet extends BasePet {
 
 	protected function jump() {
 		$posAhead = $this->getTargetBlock(3);
-		$blockAhead = $this->getLevel()->getBlock(new Vector3($posAhead->x, Math::floorFloat($posAhead->y), $posAhead->z));
+		$blockAhead = $this->getLevel()->getBlock(new Vector3($posAhead->x, $posAhead->y - 0.3, $posAhead->z));
 		if($blockAhead->isSolid()) {
 			$this->motionY = $this->gravity * 8;
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
