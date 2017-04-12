@@ -2,10 +2,8 @@
 
 namespace BlockHorizons\BlockPets\pets;
 
-use pocketmine\block\Block;
 use pocketmine\block\Slab;
 use pocketmine\block\Stair;
-use pocketmine\math\Math;
 use pocketmine\math\Vector3;
 
 abstract class WalkingPet extends BasePet {
@@ -81,6 +79,9 @@ abstract class WalkingPet extends BasePet {
 
 	protected function jump() {
 		$posAhead = $this->getTargetBlock(3);
+		if($this->level->getBlock($this->getPosition())->isSolid()) {
+			$posAhead = $this->getPosition();
+		}
 		$blockAhead = $this->getLevel()->getBlock(new Vector3($posAhead->x, $posAhead->y - 0.3, $posAhead->z));
 		if($blockAhead->isSolid()) {
 			$this->motionY = $this->gravity * 8;
