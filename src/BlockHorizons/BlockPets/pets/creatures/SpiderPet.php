@@ -8,7 +8,7 @@ class SpiderPet extends WalkingPet {
 
 	public $height = 1.12;
 	public $width = 1.3;
-	public $speed = 1.2;
+	public $speed = 1.4;
 
 	public $name = "Spider Pet";
 	public $tier = self::TIER_SPECIAL;

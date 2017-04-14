@@ -6,7 +6,7 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class WolfPet extends WalkingPet {
 
-	public $speed = 1.3;
+	public $speed = 1.6;
 	public $networkId = 14;
 
 	public $name = "Wolf Pet";

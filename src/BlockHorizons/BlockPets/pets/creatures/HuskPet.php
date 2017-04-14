@@ -8,7 +8,7 @@ class HuskPet extends WalkingPet {
 
 	public $height = 1.75;
 	public $width = 0.8;
-	public $speed = 1.1;
+	public $speed = 1.2;
 
 	public $name = "Husk Pet";
 	public $tier = self::TIER_UNCOMMON;

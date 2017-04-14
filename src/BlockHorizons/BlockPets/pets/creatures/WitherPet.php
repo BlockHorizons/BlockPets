@@ -10,6 +10,7 @@ class WitherPet extends HoveringPet {
 	public $width = 3;
 
 	public $name = "Wither Pet";
+	public $speed = 1.6;
 
 	public $networkId = 52;
 

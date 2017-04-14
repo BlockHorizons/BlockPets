@@ -8,7 +8,7 @@ class ZombieVillagerPet extends WalkingPet {
 
 	public $height = 1.8;
 	public $width = 0.9;
-	public $speed = 1.1;
+	public $speed = 1.2;
 
 	public $name = "Zombie Villager Pet";
 	public $tier = self::TIER_UNCOMMON;
