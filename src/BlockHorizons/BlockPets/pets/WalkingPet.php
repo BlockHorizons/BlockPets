@@ -27,10 +27,11 @@ abstract class WalkingPet extends BasePet {
 			} else {
 				$this->motionY -= $this->gravity;
 			}
-		} elseif($this->isCollidedHorizontally && $this->jumpTicks === 0) {
-			$this->jump();
 		} else {
 			$this->motionY -= $this->gravity;
+		}
+		if($this->isCollidedHorizontally && $this->jumpTicks === 0) {
+			$this->jump();
 		}
 
 		$x = $petOwner->x - $this->x;
@@ -68,10 +69,11 @@ abstract class WalkingPet extends BasePet {
 			} else {
 				$this->motionY -= $this->gravity;
 			}
-		} elseif($this->isCollidedHorizontally && $this->jumpTicks === 0) {
-			$this->jump();
 		} else {
 			$this->motionY -= $this->gravity;
+		}
+		if($this->isCollidedHorizontally && $this->jumpTicks === 0) {
+			$this->jump();
 		}
 
 		$x = $rider->getDirectionVector()->x;
@@ -85,8 +87,8 @@ abstract class WalkingPet extends BasePet {
 	}
 
 	protected function jump() {
-		$this->motionY = $this->gravity * 8;
+		$this->motionY = $this->gravity * 7.5;
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
-		$this->jumpTicks = 3;
+		$this->jumpTicks = 4;
 	}
 }
