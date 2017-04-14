@@ -33,10 +33,10 @@ abstract class HoveringPet extends BasePet {
 			$this->motionY = $this->getSpeed() * 0.15 * ($y / abs($y));
 		}
 
+		$this->yaw = rad2deg(atan2(-$x, $z));
 		if($this->getNetworkId() === 53) {
 			$this->yaw += 180;
 		}
-		$this->yaw = rad2deg(atan2(-$x, $z));
 		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 
