@@ -90,6 +90,7 @@ abstract class WalkingPet extends BasePet {
 
 	protected function jump() {
 		$this->motionY = $this->gravity * 8;
+		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->jumpTicks = 5;
 	}
 }

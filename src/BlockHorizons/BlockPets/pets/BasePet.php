@@ -189,7 +189,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return Player|null
 	 */
 	public function getRider() {
-		return $this->getLevel()->getServer()->getPlayer($this->petOwner);
+		return $this->getLevel()->getServer()->getPlayer($this->rider);
 	}
 
 	/**
@@ -254,6 +254,7 @@ abstract class BasePet extends Creature implements Rideable {
 		}
 		if($this->distance($petOwner) >= 50 || $this->getLevel()->getName() !== $petOwner->getLevel()->getName()) {
 			$this->teleport($petOwner);
+			$this->despawnFromAll();
 			$this->spawnToAll();
 		}
 		/*if($this->getPetLevel() !== $this->getCurrentPetLevel()) {
