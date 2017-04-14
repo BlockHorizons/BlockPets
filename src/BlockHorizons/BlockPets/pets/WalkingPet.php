@@ -20,6 +20,7 @@ abstract class WalkingPet extends BasePet {
 		if($this->jumpTicks > 0) {
 			$this->jumpTicks--;
 		}
+
 		if(!$this->isOnGround()) {
 			if($this->motionY > -$this->gravity * 4) {
 				$this->motionY = -$this->gravity * 4;
@@ -30,10 +31,6 @@ abstract class WalkingPet extends BasePet {
 			$this->jump();
 		} else {
 			$this->motionY -= $this->gravity;
-		}
-
-		if($this->jumpTicks > 0) {
-			$this->motionY = -$this->gravity * 4;
 		}
 
 		$x = $petOwner->x - $this->x;
@@ -60,6 +57,11 @@ abstract class WalkingPet extends BasePet {
 
 		$this->pitch = $rider->pitch;
 		$this->yaw = $rider->yaw;
+
+		if($this->jumpTicks > 0) {
+			$this->jumpTicks--;
+		}
+
 		if(!$this->isOnGround()) {
 			if($this->motionY > -$this->gravity * 4) {
 				$this->motionY = -$this->gravity * 4;
@@ -70,10 +72,6 @@ abstract class WalkingPet extends BasePet {
 			$this->jump();
 		} else {
 			$this->motionY -= $this->gravity;
-		}
-
-		if($this->jumpTicks === 0) {
-			$this->motionY = -$this->gravity * 4;
 		}
 
 		$x = $rider->getDirectionVector()->x;
@@ -91,6 +89,6 @@ abstract class WalkingPet extends BasePet {
 	protected function jump() {
 		$this->motionY = $this->gravity * 8;
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
-		$this->jumpTicks = 5;
+		$this->jumpTicks = 4;
 	}
 }
