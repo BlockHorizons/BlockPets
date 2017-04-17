@@ -30,13 +30,26 @@ class LevelUpPetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(!$this->getLoader()->getPetByName($args[0]) === null) {
+		if(($pet = $this->getLoader()->getPetByName($args[0])) === null) {
 			$sender->sendMessage(TF::RED . "[Warning] A pet with that name doesn't exist.");
 			return true;
 		}
 
 		$this->getLoader()->getPetByName($args[0])->levelUp();
-		$sender->sendMessage(TF::GREEN . "Successfully leveled up the pet: " . TF::AQUA . $args[1]);
+		$sender->sendMessage(TF::GREEN . "Successfully leveled up the pet: " . TF::AQUA . $pet->getNameTag());
 		return true;
+	}
+
+	public function generateCustomCommandData(Player $player) {
+		$commandData = parent::generateCustomCommandData($player);
+
+		$commandData["default"]["input"]["parameters"] = [
+			0 => [
+				"type" => "string",
+				"name" => "pet name",
+				"optional" => false
+			]
+		];
+		return $commandData;
 	}
 }

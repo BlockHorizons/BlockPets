@@ -3,6 +3,7 @@
 namespace BlockHorizons\BlockPets\commands;
 
 use pocketmine\command\CommandSender;
+use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 use BlockHorizons\BlockPets\Loader;
 
@@ -24,16 +25,29 @@ class RemovePetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(!$this->getLoader()->getPetByName($args[0]) === null) {
+		if(($pet = $this->getLoader()->getPetByName($args[0])) === null) {
 			$sender->sendMessage(TF::RED . "[Warning] A pet with that name doesn't exist.");
 			return true;
 		}
 
 		if($this->getLoader()->removePet($args[0])) {
-			$sender->sendMessage(TF::GREEN . "Successfully removed the pet: " . TF::AQUA . $args[0]);
+			$sender->sendMessage(TF::GREEN . "Successfully removed the pet: " . TF::AQUA . $pet->getNameTag());
 		} else {
 			$sender->sendMessage(TF::RED . "[Warning] A pet with that name doesn't exist.");
 		}
 		return true;
+	}
+
+	public function generateCustomCommandData(Player $player) {
+		$commandData = parent::generateCustomCommandData($player);
+
+		$commandData["default"]["input"]["parameters"] = [
+			0 => [
+				"type" => "string",
+				"name" => "pet name",
+				"optional" => false
+			]
+		];
+		return $commandData;
 	}
 }

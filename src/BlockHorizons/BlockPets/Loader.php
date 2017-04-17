@@ -222,7 +222,7 @@ class Loader extends PluginBase {
 	public function getPetByName(string $name) {
 		foreach($this->getServer()->getLevels() as $level) {
 			foreach($level->getEntities() as $entity) {
-				if(strpos($entity->getNameTag(), $name) !== false) {
+				if(strpos(strtolower($entity->getNameTag()), strtolower($name)) !== false) {
 					if($entity instanceof BasePet) {
 						return $entity;
 					}

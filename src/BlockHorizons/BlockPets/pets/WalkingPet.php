@@ -44,6 +44,7 @@ abstract class WalkingPet extends BasePet {
 		} else {
 			$this->motionX = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
 			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
+			$this->motionY -= $this->gravity * 2;
 		}
 		$this->yaw = rad2deg(atan2(-$x, $z));
 		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
@@ -81,6 +82,7 @@ abstract class WalkingPet extends BasePet {
 
 		$this->motionX = $this->getSpeed() * 0.4 * ($x / (abs($x) + abs($z)));
 		$this->motionZ = $this->getSpeed() * 0.4 * ($z / (abs($x) + abs($z)));
+		$this->motionY = $this->gravity * 2;
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->updateMovement();
@@ -89,6 +91,6 @@ abstract class WalkingPet extends BasePet {
 	protected function jump() {
 		$this->motionY = $this->gravity * 7.5;
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
-		$this->jumpTicks = 4;
+		$this->jumpTicks = 3;
 	}
 }
