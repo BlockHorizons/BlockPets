@@ -70,7 +70,7 @@ class SpawnPetCommand extends BaseCommand {
 		foreach($availablePets as $key => $pet) {
 			$availablePets[$key] = strtolower($pet);
 		}
-		$commandData["default"]["input"]["parameters"] = [
+		$commandData["overloads"]["default"]["input"]["parameters"] = [
 			0 => [
 				"type" => "stringenum",
 				"name" => "type",

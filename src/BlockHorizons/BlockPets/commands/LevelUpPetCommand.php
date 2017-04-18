@@ -43,7 +43,7 @@ class LevelUpPetCommand extends BaseCommand {
 	public function generateCustomCommandData(Player $player) {
 		$commandData = parent::generateCustomCommandData($player);
 
-		$commandData["default"]["input"]["parameters"] = [
+		$commandData["overloads"]["default"]["input"]["parameters"] = [
 			0 => [
 				"type" => "string",
 				"name" => "pet name",
