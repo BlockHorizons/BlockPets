@@ -145,10 +145,6 @@ class Loader extends PluginBase {
 		}
 	}
 
-	public function onDisable() {
-
-	}
-
 	public function onEntitySpawn(EntitySpawnEvent $event) {
 		if($event->getEntity() instanceof BasePet) {
 			$clearLaggPlugin = $this->getServer()->getPluginManager()->getPlugin("ClearLagg");
