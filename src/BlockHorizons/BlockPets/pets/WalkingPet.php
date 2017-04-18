@@ -9,6 +9,7 @@ use pocketmine\math\Vector3;
 abstract class WalkingPet extends BasePet {
 
 	protected $jumpTicks = 0;
+	protected $autoJump = true;
 
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
@@ -33,6 +34,7 @@ abstract class WalkingPet extends BasePet {
 		if($this->isCollidedHorizontally && $this->jumpTicks === 0) {
 			$this->jump();
 		}
+		$this->move($this->motionX, $this->motionY, $this->motionZ);
 
 		$x = $petOwner->x - $this->x;
 		$y = $petOwner->y - $this->y;
@@ -44,7 +46,9 @@ abstract class WalkingPet extends BasePet {
 		} else {
 			$this->motionX = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
 			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
-			$this->motionY = -$this->gravity * 2;
+			if($petOwner->y - 0.2 < $this->y) {
+				$this->motionY -= $this->getSpeed() * 0.15 * ($y / (abs($y)));
+			}
 		}
 		$this->yaw = rad2deg(atan2(-$x, $z));
 		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
@@ -76,20 +80,20 @@ abstract class WalkingPet extends BasePet {
 		if($this->isCollidedHorizontally && $this->jumpTicks === 0) {
 			$this->jump();
 		}
+		$this->move($this->motionX, $this->motionY, $this->motionZ);
 
 		$x = $rider->getDirectionVector()->x;
 		$z = $rider->getDirectionVector()->z;
 
 		$this->motionX = $this->getSpeed() * 0.4 * ($x / (abs($x) + abs($z)));
 		$this->motionZ = $this->getSpeed() * 0.4 * ($z / (abs($x) + abs($z)));
-		$this->motionY = -$this->gravity * 2;
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->updateMovement();
 	}
 
 	protected function jump() {
-		$this->motionY = $this->gravity * 7.5;
+		$this->motionY = $this->gravity * 8;
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->jumpTicks = 3;
 	}
