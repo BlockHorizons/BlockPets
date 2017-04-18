@@ -9,7 +9,6 @@ use pocketmine\math\Vector3;
 abstract class WalkingPet extends BasePet {
 
 	protected $jumpTicks = 0;
-	protected $autoJump = true;
 
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
@@ -46,14 +45,12 @@ abstract class WalkingPet extends BasePet {
 		} else {
 			$this->motionX = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
 			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
-			if($petOwner->y - 0.2 < $this->y) {
-				$this->motionY -= $this->getSpeed() * 0.15 * ($y / (abs($y)));
-			}
 		}
 		$this->yaw = rad2deg(atan2(-$x, $z));
 		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
+		$this->checkBlockCollision();
 		$this->updateMovement();
 		return true;
 	}
@@ -89,6 +86,7 @@ abstract class WalkingPet extends BasePet {
 		$this->motionZ = $this->getSpeed() * 0.4 * ($z / (abs($x) + abs($z)));
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
+		$this->checkBlockCollision();
 		$this->updateMovement();
 	}
 

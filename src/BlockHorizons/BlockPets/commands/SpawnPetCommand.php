@@ -30,11 +30,6 @@ class SpawnPetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(!$this->getLoader()->petExists($args[0])) {
-			$sender->sendMessage(TF::RED . "[Warning] That pet doesn't exist.");
-			return true;
-		}
-
 		if(!$sender->hasPermission("blockpets.pet." . $args[0])) {
 			$sender->sendMessage(TF::RED . "[Warning] You don't have permission to spawn that pet.");
 			return true;
