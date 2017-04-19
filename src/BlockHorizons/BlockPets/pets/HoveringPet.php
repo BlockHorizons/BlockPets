@@ -60,8 +60,8 @@ abstract class HoveringPet extends BasePet {
 		$this->motionX = $this->getSpeed() * 0.6 * ($x / (abs($x) + abs($z)));
 		$this->motionZ = $this->getSpeed() * 0.6 * ($z / (abs($x) + abs($z)));
 
-		if(($y !== 0 && $this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) <= $this->flyHeight) || $y < 0) {
-			$this->motionY = $this->getSpeed() * 0.5 * ($y / abs($y));
+		if(($y !== 0.0 && $this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) <= $this->flyHeight) || $y < 0) {
+			$this->motionY = $this->getSpeed() * 0.3 * ($y / abs($y * 2));
 		}
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->checkBlockCollision();
