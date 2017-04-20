@@ -8,10 +8,10 @@ BlockPets is currently under heavy development, and contains messy code and pote
 ### What does this plugin bring?
 
 ##### Commands
-> /spawnpet \<mob\> \<name\> \[size\] \[player\]
+> /spawnpet \<mob\> \<name\> \[size\] \[player\]<br>
 > Spawns the given pet with the name and size specified, to the player specified.
 >
-> /removepet <part of name>
+> /removepet \<part of name\><br>
 > Removes a pet with the given name.
 
 #### Other features
