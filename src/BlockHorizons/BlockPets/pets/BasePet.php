@@ -5,17 +5,14 @@ namespace BlockHorizons\BlockPets\pets;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use pocketmine\entity\Creature;
 use pocketmine\entity\Rideable;
-use pocketmine\level\format\Chunk;
 use pocketmine\level\Level;
-use pocketmine\level\particle\LavaParticle;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\StringTag;
-use pocketmine\network\protocol\AddEntityPacket;
-use pocketmine\network\protocol\SetEntityLinkPacket;
+use pocketmine\network\mcpe\protocol\AddEntityPacket;
+use pocketmine\network\mcpe\protocol\SetEntityLinkPacket;
 use pocketmine\Player;
-use pocketmine\utils\TextFormat;
 
 abstract class BasePet extends Creature implements Rideable {
 
@@ -95,6 +92,9 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, true);
 	}
 
+	/**
+	 * @param Player $player
+	 */
 	public function spawnTo(Player $player) {
 		parent::spawnTo($player);
 		$pk = new AddEntityPacket();
@@ -152,7 +152,10 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->type = self::STATE_SITTING;
 		$player->dataPacket($pk);
 	}
-	
+
+	/**
+	 * Detaches the rider from the pet.
+	 */
 	public function throwRiderOff() {
 		$pk = new SetEntityLinkPacket();
 		$pk->from = $this->getId();
@@ -179,6 +182,11 @@ abstract class BasePet extends Creature implements Rideable {
 		return $this->ridden;
 	}
 
+	/**
+	 * @param $currentTick
+	 *
+	 * @return bool
+	 */
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
 		if($petOwner === null) {
@@ -200,5 +208,10 @@ abstract class BasePet extends Creature implements Rideable {
 		return true;
 	}
 
+	/**
+	 * @param $currentTick
+	 *
+	 * @return mixed
+	 */
 	public abstract function doRidingMovement($currentTick);
 }
