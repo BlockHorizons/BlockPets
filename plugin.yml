@@ -2,6 +2,125 @@
 name: "BlockPets"
 author: "BlockHorizons"
 version: 0.1.0
-api: [3.0.0-ALPHA1, 3.0.0-ALPHA2, 3.0.0-ALPHA3, 3.0.0-ALPHA4]
+api: [3.0.0-ALPHA4, 3.0.0-ALPHA5]
 main: BlockHorizons\BlockPets\Loader
+
+permissions:
+    blockpets:
+        default: false
+        description: "Allows access to all BlockPets features."
+        children:
+            blockpets.command:
+                default: false
+                description: "Allows access to all BlockPets command features."
+                children:
+                    blockpets.command.spawnpet:
+                        default: op
+                        description: "Allows access to use the spawnpet command."
+                    blockpets.command.removepet:
+                        default: op
+                        description: "Allows access to use the removepet command."
+            blockpets.pet:
+                default: false
+                description: "Allows access to all BlockPets pets."
+                children:
+                    blockpets.pet.bat:
+                        default: op
+                        description: "Allows access to use the bat pet."
+                    blockpets.pet.blaze:
+                        default: op
+                        description: "Allows access to use the blaze pet."
+                    blockpets.pet.cavespider:
+                        default: op
+                        description: "Allows access to use the cave spider pet."
+                    blockpets.pet.chicken:
+                        default: op
+                        description: "Allows access to use the chicken pet."
+                    blockpets.pet.cow:
+                        default: op
+                        description: "Allows access to use the cow pet."
+                    blockpets.pet.creeper:
+                        default: op
+                        description: "Allows access to use the creeper pet."
+                    blockpets.pet.endercrystal:
+                        default: op
+                        description: "Allows access to use the ender crystal pet."
+                    blockpets.pet.enderdragon:
+                        default: op
+                        description: "Allows access to use the ender dragon pet."
+                    blockpets.pet.enderman:
+                        default: op
+                        description: "Allows access to use the enderman pet."
+                    blockpets.pet.endermite:
+                        default: op
+                        description: "Allows access to use the endermite pet."
+                    blockpets.pet.ghast:
+                        default: op
+                        description: "Allows access to use the ghast pet."
+                    blockpets.pet.horse:
+                        default: op
+                        description: "Allows access to use the horse pet."
+                    blockpets.pet.husk:
+                        default: op
+                        description: "Allows access to use the husk pet."
+                    blockpets.pet.irongolem:
+                        default: op
+                        description: "Allows access to use the iron golem pet."
+                    blockpets.pet.mooshroom:
+                        default: op
+                        description: "Allows access to use the mooshroom pet."
+                    blockpets.pet.ocelot:
+                        default: op
+                        description: "Allows access to use the ocelot pet."
+                    blockpets.pet.pig:
+                        default: op
+                        description: "Allows access to use the pig pet."
+                    blockpets.pet.polarbear:
+                        default: op
+                        description: "Allows access to use the polar bear pet."
+                    blockpets.pet.sheep:
+                        default: op
+                        description: "Allows access to use the sheep pet."
+                    blockpets.pet.silverfish:
+                        default: op
+                        description: "Allows access to use the silverfish pet."
+                    blockpets.pet.skeleton:
+                        default: op
+                        description: "Allows access to use the skeleton pet."
+                    blockpets.pet.snowgolem:
+                        default: op
+                        description: "Allows access to use the snow golem pet."
+                    blockpets.pet.spider:
+                        default: op
+                        description: "Allows access to use the spider pet."
+                    blockpets.pet.stray:
+                        default: op
+                        description: "Allows access to use the stray pet."
+                    blockpets.pet.villager:
+                        default: op
+                        description: "Allows access to use the village pet."
+                    blockpets.pet.witch:
+                        default: op
+                        description: "Allows access to use the witch pet."
+                    blockpets.pet.wither:
+                        default: op
+                        description: "Allows access to use the wither pet."
+                    blockpets.pet.witherskeleton:
+                        default: op
+                        description: "Allows access to use the wither skeleton pet."
+                    blockpets.pet.witherskull:
+                        default: op
+                        description: "Allows access to use the wither skull pet."
+                    blockpets.pet.wolf:
+                        default: op
+                        description: "Allows access to use the wolf pet."
+                    blockpets.pet.zombie:
+                        default: op
+                        description: "Allows access to use the zombie pet."
+                    blockpets.pet.witherskull:
+                        default: op
+                        description: "Allows access to use the zombie pigman pet."
+                    blockpets.pet.wolf:
+                        default: op
+                        description: "Allows access to use the zombie villager pet."
 ...

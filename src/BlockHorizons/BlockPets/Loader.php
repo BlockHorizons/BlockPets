@@ -174,9 +174,6 @@ class Loader extends PluginBase {
 	 * @return string|null
 	 */
 	public function getPet(string $entityName): string {
-		if(!$this->petExists($entityName)) {
-			return null;
-		}
 		foreach(self::PETS as $pet) {
 			if(strtolower($pet) === strtolower($entityName)) {
 				return $pet;
@@ -212,9 +209,8 @@ class Loader extends PluginBase {
 			"scale" => new FloatTag("scale", $scale),
 			"networkId" => new IntTag("networkId", 10),
 		]);
-		$chunk = $position->level->getChunk($position->x >> 4, $position->z >> 4, true);
 
-		return Entity::createEntity($entityName . "Pet", $chunk, $nbt);
+		return Entity::createEntity($entityName . "Pet", $position->getLevel(), $nbt);
 	}
 
 	/**

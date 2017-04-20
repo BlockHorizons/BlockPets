@@ -6,6 +6,7 @@ use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use pocketmine\entity\Creature;
 use pocketmine\entity\Rideable;
 use pocketmine\level\format\Chunk;
+use pocketmine\level\Level;
 use pocketmine\level\particle\LavaParticle;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\FloatTag;
@@ -22,9 +23,9 @@ abstract class BasePet extends Creature implements Rideable {
 	public $speed = 1.0;
 	public $scale = 1.0;
 	public $networkId;
+
 	protected $tier = 1;
 	protected $petOwner;
-
 	protected $ridden = false;
 	protected $rider = null;
 
@@ -36,6 +37,16 @@ abstract class BasePet extends Creature implements Rideable {
 	const TIER_SPECIAL = 3;
 	const TIER_EPIC = 4;
 	const TIER_LEGENDARY = 5;
+
+	public function __construct(Level $level, CompoundTag $nbt) {
+		parent::__construct($level, $nbt);
+		$this->setNameTagVisible(true);
+		$this->setNameTagAlwaysVisible(true);
+
+		$this->petOwner = $this->namedtag["petOwner"];
+		$this->scale = $this->namedtag["scale"];
+		$this->setScale($this->scale);
+	}
 
 	/**
 	 * @return string
@@ -77,37 +88,6 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function getScale(): float {
 		return $this->scale;
-	}
-
-	/**
-	 * @param float $value
-	 */
-	public function setScale(float $value) {
-		$multiplier = $value / $this->getScale();
-		$this->width *= $multiplier;
-		$this->height *= $multiplier;
-		$halfWidth = $this->width / 2;
-		$this->boundingBox->setBounds(
-			$this->x - $halfWidth,
-			$this->y,
-			$this->z - $halfWidth,
-			$this->x + $halfWidth,
-			$this->y + $this->height,
-			$this->z + $halfWidth
-		);
-		$this->setDataProperty(self::DATA_SCALE, self::DATA_TYPE_FLOAT, $value);
-		$this->setDataProperty(self::DATA_BOUNDING_BOX_WIDTH, self::DATA_TYPE_FLOAT, $this->width);
-		$this->setDataProperty(self::DATA_BOUNDING_BOX_HEIGHT, self::DATA_TYPE_FLOAT, $this->height);
-	}
-
-	public function __construct(Chunk $chunk, CompoundTag $nbt) {
-		parent::__construct($chunk, $nbt);
-		$this->setNameTagVisible(true);
-		$this->setNameTagAlwaysVisible(true);
-
-		$this->petOwner = $this->namedtag["petOwner"];
-		$this->scale = $this->namedtag["scale"];
-		$this->setScale($this->scale);
 	}
 
 	public function initEntity() {
@@ -154,9 +134,9 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->ridden = true;
 		$this->rider = $player->getName();
 		$player->canCollide = false;
-		$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 1.8 + $this->getScale() * 0.8, -0.25]);
+		$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 1.8 + $this->getScale() * 0.9, -0.25]);
 		if($this instanceof EnderDragonPet) {
-			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 2.5 + $this->getScale(), -1.7]);
+			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 2.65 + $this->getScale(), -1.7]);
 		}
 		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, true);
 

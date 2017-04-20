@@ -31,8 +31,6 @@ class EventListener implements Listener {
 						}
 					}
 				}
-			} else {
-				$petEntity->throwRiderOff();
 			}
 			$event->setCancelled();
 		}
