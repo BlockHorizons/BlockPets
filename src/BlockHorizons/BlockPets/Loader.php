@@ -4,7 +4,9 @@ namespace BlockHorizons\BlockPets;
 
 use BlockHorizons\BlockPets\commands\LevelUpPetCommand;
 use BlockHorizons\BlockPets\commands\RemovePetCommand;
+use BlockHorizons\BlockPets\commands\SpawnPetCommand;
 use BlockHorizons\BlockPets\listeners\EventListener;
+use BlockHorizons\BlockPets\listeners\RidingListener;
 use BlockHorizons\BlockPets\pets\BasePet;
 use BlockHorizons\BlockPets\pets\creatures\BatPet;
 use BlockHorizons\BlockPets\pets\creatures\BlazePet;
@@ -49,7 +51,6 @@ use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
-use BlockHorizons\BlockPets\commands\SpawnPetCommand;
 
 class Loader extends PluginBase {
 
@@ -131,7 +132,6 @@ class Loader extends PluginBase {
 			Entity::registerEntity($petClass, true);
 		}
 		$this->registerCommands();
-		$this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
 	}
 
 	public function registerCommands() {
@@ -142,6 +142,16 @@ class Loader extends PluginBase {
 		];
 		foreach($petCommands as $fallBack => $command) {
 			$this->getServer()->getCommandMap()->register($fallBack, $command);
+		}
+	}
+
+	public function registerListeners() {
+		$listeners = [
+			new EventListener($this),
+			new RidingListener($this)
+		];
+		foreach($listeners as $listener) {
+			$this->getServer()->getPluginManager()->registerEvents($listener, $this);
 		}
 	}
 
@@ -234,7 +244,7 @@ class Loader extends PluginBase {
 	/**
 	 * @param Player $player
 	 *
-	 * @return array
+	 * @return BasePet[]
 	 */
 	public function getPetsFrom(Player $player): array {
 		$playerPets = [];
@@ -260,5 +270,28 @@ class Loader extends PluginBase {
 		}
 		$pet->kill();
 		return true;
+	}
+
+	/**
+	 * @param Player $player
+	 *
+	 * @return BasePet
+	 */
+	public function getRiddenPet(Player $player): BasePet {
+		foreach($this->getPetsFrom($player) as $pet) {
+			if($pet->isRidden()) {
+				return $pet;
+			}
+		}
+		return null;
+	}
+
+	public function isRidingAPet(Player $player): bool {
+		foreach($this->getPetsFrom($player) as $pet) {
+			if($pet->isRidden()) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

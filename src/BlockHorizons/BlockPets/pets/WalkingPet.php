@@ -2,10 +2,6 @@
 
 namespace BlockHorizons\BlockPets\pets;
 
-use pocketmine\block\Slab;
-use pocketmine\block\Stair;
-use pocketmine\math\Vector3;
-
 abstract class WalkingPet extends BasePet {
 
 	protected $jumpTicks = 0;
@@ -54,7 +50,7 @@ abstract class WalkingPet extends BasePet {
 		return true;
 	}
 
-	public function doRidingMovement($currentTick) {
+	public function doRidingMovement($motionX, $motionZ) {
 		$rider = $this->getPetOwner();
 
 		$this->pitch = $rider->pitch;
@@ -73,24 +69,16 @@ abstract class WalkingPet extends BasePet {
 		} else {
 			$this->motionY -= $this->gravity;
 		}
-		if($this->isCollidedHorizontally && $this->jumpTicks === 0) {
+		if(($this->isCollidedHorizontally || $this->getRider()->isCollidedHorizontally) && $this->jumpTicks === 0) {
 			$this->jump();
 		}
-		$this->move($this->motionX, $this->motionY, $this->motionZ);
-
-		$x = $rider->getDirectionVector()->x;
-		$z = $rider->getDirectionVector()->z;
-
-		$this->motionX = $this->getSpeed() * 0.4 * ($x / (abs($x) + abs($z)));
-		$this->motionZ = $this->getSpeed() * 0.4 * ($z / (abs($x) + abs($z)));
-
-		$this->move($this->motionX, $this->motionY, $this->motionZ);
+		$this->move($motionX, $this->motionY, $motionZ);
 		$this->updateMovement();
 	}
 
 	protected function jump() {
 		$this->motionY = $this->gravity * 8;
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
-		$this->jumpTicks = 2;
+		$this->jumpTicks = 3;
 	}
 }

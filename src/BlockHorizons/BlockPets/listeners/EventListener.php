@@ -2,16 +2,23 @@
 
 namespace BlockHorizons\BlockPets\listeners;
 
+use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\BasePet;
-use pocketmine\event\entity\EntityDamageByBlockEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
 class EventListener implements Listener {
+
+	private $loader;
+
+	public function __construct(Loader $loader) {
+		$this->loader = $loader;
+	}
 
 	public function onEntityDamage(EntityDamageEvent $event) {
 		$petEntity = $event->getEntity();
@@ -47,5 +54,20 @@ class EventListener implements Listener {
 				}
 			}
 		}
+	}
+
+	public function onCrouch(PlayerToggleSneakEvent $event) {
+		if($event->isSneaking() === false) {
+			if($this->getLoader()->isRidingAPet($event->getPlayer())) {
+				$this->getLoader()->getRiddenPet($event->getPlayer())->throwRiderOff();
+			}
+		}
+	}
+
+	/**
+	 * @return Loader
+	 */
+	public function getLoader(): Loader {
+		return $this->loader;
 	}
 }

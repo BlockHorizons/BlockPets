@@ -2,10 +2,10 @@
 
 namespace BlockHorizons\BlockPets\commands;
 
+use BlockHorizons\BlockPets\Loader;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
-use BlockHorizons\BlockPets\Loader;
 
 class SpawnPetCommand extends BaseCommand {
 
@@ -30,8 +30,8 @@ class SpawnPetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(!$sender->hasPermission("blockpets.pet." . strtolower($args[0]))) {
-			$sender->sendMessage(TF::RED . "[Warning] You don't have permission to spawn that pet.");
+		if(!$sender->hasPermission("blockpets.pet." . strtolower($args[0])) && !$sender->hasPermission("blockpets.pet.*")) {
+		$sender->sendMessage(TF::RED . "[Warning] You don't have permission to spawn that pet.");
 			return true;
 		}
 
@@ -75,7 +75,7 @@ class SpawnPetCommand extends BaseCommand {
 			1 => [
 				"type" => "rawtext",
 				"name" => "name",
-				"optional" => true,
+				"optional" => false,
 			],
 			2 => [
 				"type" => "int",

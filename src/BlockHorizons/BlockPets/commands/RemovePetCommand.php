@@ -2,15 +2,15 @@
 
 namespace BlockHorizons\BlockPets\commands;
 
+use BlockHorizons\BlockPets\Loader;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
-use BlockHorizons\BlockPets\Loader;
 
 class RemovePetCommand extends BaseCommand {
 
 	public function __construct(Loader $loader) {
-		parent::__construct($loader, "removepet", "Remove a pet", "/removepet <petName>", ["remp"]);
+		parent::__construct($loader, "removepet", "Remove a pet", "/removepet <petName>", ["rmp"]);
 		$this->setPermission("blockpets.command.removepet");
 	}
 

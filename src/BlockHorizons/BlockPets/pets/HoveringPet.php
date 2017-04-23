@@ -28,8 +28,7 @@ abstract class HoveringPet extends BasePet {
 			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
 		}
 
-		$this->motionY = 0;
-		if($y !== 0 && abs($y) >= 0.3) {
+		if($y !== 0 && $y >= 0.4) {
 			$this->motionY = $this->getSpeed() * 0.15 * ($y / abs($y));
 		}
 
@@ -45,7 +44,7 @@ abstract class HoveringPet extends BasePet {
 		return true;
 	}
 
-	public function doRidingMovement($currentTick) {
+	public function doRidingMovement($motionX, $motionZ) {
 		$rider = $this->getPetOwner();
 
 		$this->pitch = $rider->pitch;
@@ -53,17 +52,12 @@ abstract class HoveringPet extends BasePet {
 		if($this->getNetworkId() === 53) {
 			$this->yaw += 180;
 		}
-		$x = $rider->getDirectionVector()->x;
 		$y = $rider->getDirectionVector()->y;
-		$z = $rider->getDirectionVector()->z;
-
-		$this->motionX = $this->getSpeed() * 0.6 * ($x / (abs($x) + abs($z)));
-		$this->motionZ = $this->getSpeed() * 0.6 * ($z / (abs($x) + abs($z)));
 
 		if(($y !== 0.0 && $this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) <= $this->flyHeight) || $y < 0) {
 			$this->motionY = $this->getSpeed() * 0.3 * ($y / abs($y * 2));
 		}
-		$this->move($this->motionX, $this->motionY, $this->motionZ);
+		$this->move($motionX, $this->motionY, $motionZ);
 		$this->checkBlockCollision();
 
 		$this->updateMovement();

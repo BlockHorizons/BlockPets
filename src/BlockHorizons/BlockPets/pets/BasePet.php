@@ -171,7 +171,6 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->to = 0;
 		$pk->type = self::STATE_STANDING;
 		$this->getPetOwner()->dataPacket($pk);
-		$this->getPetOwner()->canCollide = true;
 		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, false);
 	}
 
@@ -201,9 +200,6 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->spawnToAll();
 		}
 
-		if($this->isRidden()) {
-			$this->doRidingMovement($currentTick);
-		}
 		parent::onUpdate($currentTick);
 		return true;
 	}
@@ -213,5 +209,5 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @return mixed
 	 */
-	public abstract function doRidingMovement($currentTick);
+	public abstract function doRidingMovement($motionX, $motionZ);
 }
