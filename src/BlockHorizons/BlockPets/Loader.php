@@ -132,6 +132,7 @@ class Loader extends PluginBase {
 			Entity::registerEntity($petClass, true);
 		}
 		$this->registerCommands();
+		$this->registerListeners();
 	}
 
 	public function registerCommands() {
