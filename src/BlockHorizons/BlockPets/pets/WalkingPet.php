@@ -2,6 +2,7 @@
 
 namespace BlockHorizons\BlockPets\pets;
 
+
 abstract class WalkingPet extends BasePet {
 
 	protected $jumpTicks = 0;
@@ -53,8 +54,11 @@ abstract class WalkingPet extends BasePet {
 	public function doRidingMovement($motionX, $motionZ) {
 		$rider = $this->getPetOwner();
 
-		$this->pitch = $rider->pitch;
+		$this->pitch = 90;
 		$this->yaw = $rider->yaw;
+
+		$x = $this->getDirectionVector()->x;
+		$z = $this->getDirectionVector()->z;
 
 		if($this->jumpTicks > 0) {
 			$this->jumpTicks--;
@@ -69,14 +73,14 @@ abstract class WalkingPet extends BasePet {
 		} else {
 			$this->motionY -= $this->gravity;
 		}
-		if(($this->isCollidedHorizontally || $this->getRider()->isCollidedHorizontally) && $this->jumpTicks === 0) {
+		if($this->isCollidedHorizontally && $this->jumpTicks === 0) {
 			$this->jump();
 		}
-		$this->move($motionX, $this->motionY, $motionZ);
+		$this->move($motionX * $x, $this->motionY, $motionZ * $z);
 		$this->updateMovement();
 	}
 
-	protected function jump() {
+	public function jump() {
 		$this->motionY = $this->gravity * 8;
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->jumpTicks = 3;

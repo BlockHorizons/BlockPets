@@ -2,10 +2,10 @@
 
 namespace BlockHorizons\BlockPets\commands;
 
+use BlockHorizons\BlockPets\Loader;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
-use BlockHorizons\BlockPets\Loader;
 
 class LevelUpPetCommand extends BaseCommand {
 
@@ -45,7 +45,7 @@ class LevelUpPetCommand extends BaseCommand {
 
 		$commandData["overloads"]["default"]["input"]["parameters"] = [
 			0 => [
-				"type" => "string",
+				"type" => "rawtext",
 				"name" => "pet name",
 				"optional" => false
 			]

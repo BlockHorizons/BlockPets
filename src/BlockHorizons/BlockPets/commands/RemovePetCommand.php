@@ -43,7 +43,7 @@ class RemovePetCommand extends BaseCommand {
 
 		$commandData["overloads"]["default"]["input"]["parameters"] = [
 			0 => [
-				"type" => "string",
+				"type" => "rawtext",
 				"name" => "pet name",
 				"optional" => false
 			]

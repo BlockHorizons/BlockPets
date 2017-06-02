@@ -6,6 +6,7 @@ use BlockHorizons\BlockPets\Loader;
 use pocketmine\event\Listener;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\PlayerInputPacket;
+use pocketmine\network\mcpe\protocol\SetEntityLinkPacket;
 
 class RidingListener implements Listener {
 
@@ -27,6 +28,11 @@ class RidingListener implements Listener {
 			if($this->getLoader()->isRidingAPet($event->getPlayer())) {
 				$pet = $this->getLoader()->getRiddenPet($event->getPlayer());
 				$pet->doRidingMovement($packet->motionX, $packet->motionY);
+			}
+		} elseif($packet instanceof SetEntityLinkPacket) {
+			if($packet->type === 3) {
+				$pet = $this->getLoader()->getRiddenPet($event->getPlayer());
+				$pet->throwRiderOff();
 			}
 		}
 	}

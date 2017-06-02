@@ -287,6 +287,11 @@ class Loader extends PluginBase {
 		return null;
 	}
 
+	/**
+	 * @param Player $player
+	 *
+	 * @return bool
+	 */
 	public function isRidingAPet(Player $player): bool {
 		foreach($this->getPetsFrom($player) as $pet) {
 			if($pet->isRidden()) {
