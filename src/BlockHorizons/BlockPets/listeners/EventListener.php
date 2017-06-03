@@ -31,6 +31,10 @@ class EventListener implements Listener {
 							$event->setCancelled();
 							return;
 						}
+						if($this->getLoader()->isRidingAPet($event->getDamager())) {
+							$event->setCancelled();
+							return;
+						}
 						if($attacker->getInventory()->getItemInHand()->getId() === 329) {
 							$petEntity->setRider($attacker);
 							$attacker->sendTip(TextFormat::GRAY . "Crouch or jump to dismount...");

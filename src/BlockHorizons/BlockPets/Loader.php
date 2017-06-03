@@ -133,6 +133,7 @@ class Loader extends PluginBase {
 		}
 		$this->registerCommands();
 		$this->registerListeners();
+		$this->getServer()->getScheduler()->scheduleRepeatingTask(new DetachFromPetTask($this), 20);
 	}
 
 	public function registerCommands() {
