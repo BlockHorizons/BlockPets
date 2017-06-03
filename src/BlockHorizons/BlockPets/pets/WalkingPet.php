@@ -86,7 +86,7 @@ abstract class WalkingPet extends BasePet {
 				$finalMotion = [-$x, $z];
 				break;
 		}
-		switch($motionZ) {
+		switch($motionX) {
 			case 1:
 				$finalMotion = [$z, $x];
 				break;

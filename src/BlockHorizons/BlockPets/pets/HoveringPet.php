@@ -63,7 +63,7 @@ abstract class HoveringPet extends BasePet {
 				$finalMotion = [-$x, $y, $z];
 				break;
 		}
-		switch($motionZ) {
+		switch($motionX) {
 			case 1:
 				$finalMotion = [$z, $y, $x];
 				break;
