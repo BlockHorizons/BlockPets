@@ -30,10 +30,11 @@ class RidingListener implements Listener {
 				$pet->doRidingMovement($packet->motionX, $packet->motionY);
 			}
 		} elseif($packet instanceof SetEntityLinkPacket) {
-			if($packet->type === 3) {
-				$pet = $this->getLoader()->getRiddenPet($event->getPlayer());
-				$pet->throwRiderOff();
+			if($packet->type === 2) {
+				return;
 			}
+			$pet = $this->getLoader()->getRiddenPet($event->getPlayer());
+			$pet->throwRiderOff();
 		}
 	}
 }

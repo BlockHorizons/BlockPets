@@ -54,11 +54,11 @@ abstract class WalkingPet extends BasePet {
 	public function doRidingMovement($motionX, $motionZ) {
 		$rider = $this->getPetOwner();
 
-		$this->pitch = 90;
+		$this->pitch = 180;
 		$this->yaw = $rider->yaw;
 
-		$x = $this->getDirectionVector()->x;
-		$z = $this->getDirectionVector()->z;
+		$x = $this->getDirectionVector()->x / 2 * $this->getSpeed();
+		$z = $this->getDirectionVector()->z / 2 * $this->getSpeed();
 
 		if($this->jumpTicks > 0) {
 			$this->jumpTicks--;
@@ -76,7 +76,26 @@ abstract class WalkingPet extends BasePet {
 		if($this->isCollidedHorizontally && $this->jumpTicks === 0) {
 			$this->jump();
 		}
-		$this->move($motionX * $x, $this->motionY, $motionZ * $z);
+
+		$finalMotion = [0, 0];
+		switch($motionZ) {
+			case 1:
+				$finalMotion = [$x, $z];
+				break;
+			case -1:
+				$finalMotion = [-$x, $z];
+				break;
+		}
+		switch($motionZ) {
+			case 1:
+				$finalMotion = [$z, $x];
+				break;
+			case -1:
+				$finalMotion = [-$z, $x];
+				break;
+		}
+
+		$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);
 		$this->updateMovement();
 	}
 
