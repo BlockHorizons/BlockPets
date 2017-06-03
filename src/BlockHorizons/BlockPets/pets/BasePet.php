@@ -98,7 +98,7 @@ abstract class BasePet extends Creature implements Rideable {
 	public function spawnTo(Player $player) {
 		parent::spawnTo($player);
 		$pk = new AddEntityPacket();
-		$pk->eid = $this->getId();
+		$pk->entityRuntimeId = $this->getId();
 		$pk->type = $this->getNetworkId();
 		$pk->x = $this->x;
 		$pk->y = $this->y;
