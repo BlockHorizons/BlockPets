@@ -253,6 +253,9 @@ class Loader extends PluginBase {
 		$playerPets = [];
 		foreach($player->getLevel()->getEntities() as $entity) {
 			if($entity instanceof BasePet) {
+				if($entity->getPetOwner() === null) {
+					continue;
+				}
 				if($entity->getPetOwner()->getName() === $player->getName()) {
 					$playerPets[] = $entity;
 				}
