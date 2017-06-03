@@ -8,7 +8,6 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
-use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
@@ -52,14 +51,6 @@ class EventListener implements Listener {
 						$levelEntity->throwRiderOff();
 					}
 				}
-			}
-		}
-	}
-
-	public function onCrouch(PlayerToggleSneakEvent $event) {
-		if($event->isSneaking() === false) {
-			if($this->getLoader()->isRidingAPet($event->getPlayer())) {
-				$this->getLoader()->getRiddenPet($event->getPlayer())->throwRiderOff();
 			}
 		}
 	}
