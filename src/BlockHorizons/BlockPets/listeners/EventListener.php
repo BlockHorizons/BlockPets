@@ -43,6 +43,13 @@ class EventListener implements Listener {
 				}
 			}
 			$event->setCancelled();
+
+		} elseif($petEntity instanceof Player) {
+			if($event->getCause() === $event::CAUSE_FALL) {
+				if($this->getLoader()->isRidingAPet($petEntity)) {
+					$event->setCancelled();
+				}
+			}
 		}
 	}
 

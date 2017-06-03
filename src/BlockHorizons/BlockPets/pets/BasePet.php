@@ -199,10 +199,6 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->despawnFromAll();
 			$this->spawnToAll();
 		}
-		if($this->isRidden()) {
-			$this->pitch = $this instanceof WalkingPet ? 90 : $petOwner->pitch;
-			$this->yaw = $this->getRider()->yaw;
-		}
 		$this->updateMovement();
 		parent::onUpdate($currentTick);
 		return true;
