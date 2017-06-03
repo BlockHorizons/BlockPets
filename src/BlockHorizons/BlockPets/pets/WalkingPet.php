@@ -57,8 +57,8 @@ abstract class WalkingPet extends BasePet {
 		$this->pitch = $rider->pitch;
 		$this->yaw = $rider->yaw;
 
-		$x = $this->getDirectionVector()->x / 2 * $this->getSpeed();
-		$z = $this->getDirectionVector()->z / 2 * $this->getSpeed();
+		$x = $this->getDirectionVector()->x / 3 * $this->getSpeed();
+		$z = $this->getDirectionVector()->z / 3 * $this->getSpeed();
 
 		if($this->jumpTicks > 0) {
 			$this->jumpTicks--;
@@ -88,10 +88,10 @@ abstract class WalkingPet extends BasePet {
 		}
 		switch($motionX) {
 			case 1:
-				$finalMotion = [$z, $x];
+				$finalMotion = [$z, -$x];
 				break;
 			case -1:
-				$finalMotion = [-$z, -$x];
+				$finalMotion = [-$z, $x];
 				break;
 		}
 

@@ -22,6 +22,7 @@ use BlockHorizons\BlockPets\pets\creatures\GhastPet;
 use BlockHorizons\BlockPets\pets\creatures\HorsePet;
 use BlockHorizons\BlockPets\pets\creatures\HuskPet;
 use BlockHorizons\BlockPets\pets\creatures\IronGolemPet;
+use BlockHorizons\BlockPets\pets\creatures\LlamaPet;
 use BlockHorizons\BlockPets\pets\creatures\MooshroomPet;
 use BlockHorizons\BlockPets\pets\creatures\OcelotPet;
 use BlockHorizons\BlockPets\pets\creatures\PigPet;
@@ -88,7 +89,8 @@ class Loader extends PluginBase {
 		"WitherSkeleton",
 		"WitherSkull",
 		"ZombiePigman",
-		"ZombieVillager"
+		"ZombieVillager",
+		"Llama"
 	];
 
 	const PET_CLASSES = [
@@ -124,7 +126,8 @@ class Loader extends PluginBase {
 		WitherSkeletonPet::class,
 		WitherSkullPet::class,
 		ZombiePigmanPet::class,
-		ZombieVillagerPet::class
+		ZombieVillagerPet::class,
+		LlamaPet::class
 	];
 
 	public function onEnable() {

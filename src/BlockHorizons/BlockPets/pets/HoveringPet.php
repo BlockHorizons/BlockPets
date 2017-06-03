@@ -50,9 +50,9 @@ abstract class HoveringPet extends BasePet {
 		$this->pitch = $rider->pitch;
 		$this->yaw = $this->getNetworkId() === 53 ? $rider->yaw + 180 : $rider->yaw;
 
-		$x = $this->getDirectionVector()->x / 2 * $this->getSpeed();
-		$z = $this->getDirectionVector()->z / 2 * $this->getSpeed();
-		$y = $rider->getDirectionVector()->y / 2 * $this->getSpeed();
+		$x = $this->getDirectionVector()->x / 3 * $this->getSpeed();
+		$z = $this->getDirectionVector()->z / 3 * $this->getSpeed();
+		$y = $rider->getDirectionVector()->y / 3 * $this->getSpeed();
 
 		$finalMotion = [0, 0];
 		switch($motionZ) {
@@ -65,15 +65,18 @@ abstract class HoveringPet extends BasePet {
 		}
 		switch($motionX) {
 			case 1:
-				$finalMotion = [$z, $x];
+				$finalMotion = [$z, -$x];
 				break;
 			case -1:
-				$finalMotion = [-$z, -$x];
+				$finalMotion = [-$z, $x];
 				break;
 		}
 
 		if(($y !== 0.0 && $this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) <= $this->flyHeight) || $y < 0) {
 			$this->motionY = $this->getSpeed() * 0.2 * ($y / abs($y * 2));
+		}
+		if(abs($y < 0.2)) {
+			$this->motionY = 0;
 		}
 		$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);
 
