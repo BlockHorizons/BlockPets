@@ -41,6 +41,7 @@ use BlockHorizons\BlockPets\pets\creatures\WolfPet;
 use BlockHorizons\BlockPets\pets\creatures\ZombiePet;
 use BlockHorizons\BlockPets\pets\creatures\ZombiePigmanPet;
 use BlockHorizons\BlockPets\pets\creatures\ZombieVillagerPet;
+use BlockHorizons\BlockPets\tasks\DetachFromPetTask;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\nbt\tag\CompoundTag;

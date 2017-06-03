@@ -1,7 +1,8 @@
 <?php
 
-namespace BlockHorizons\BlockPets;
+namespace BlockHorizons\BlockPets\tasks;
 
+use BlockHorizons\BlockPets\Loader;
 use pocketmine\scheduler\PluginTask;
 
 class DetachFromPetTask extends PluginTask {
@@ -16,7 +17,7 @@ class DetachFromPetTask extends PluginTask {
 	public function onRun($currentTick) {
 		foreach($this->getLoader()->getServer()->getOnlinePlayers() as $player) {
 			if($this->getLoader()->isRidingAPet($player)) {
-				if($player->distance($this->getLoader()->getRiddenPet($player)) > 1.2) {
+				if($player->distance($this->getLoader()->getRiddenPet($player)) > 2) {
 					$this->getLoader()->getRiddenPet($player)->throwRiderOff();
 				}
 			}

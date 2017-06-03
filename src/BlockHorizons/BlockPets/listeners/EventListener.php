@@ -31,7 +31,7 @@ class EventListener implements Listener {
 							$event->setCancelled();
 							return;
 						}
-						if($this->getLoader()->isRidingAPet($event->getDamager())) {
+						if($this->getLoader()->isRidingAPet($attacker)) {
 							$event->setCancelled();
 							return;
 						}
