@@ -17,7 +17,7 @@ class DetachFromPetTask extends PluginTask {
 	public function onRun($currentTick) {
 		foreach($this->getLoader()->getServer()->getOnlinePlayers() as $player) {
 			if($this->getLoader()->isRidingAPet($player)) {
-				if($player->distance($this->getLoader()->getRiddenPet($player)) > 2) {
+				if($player->distance($this->getLoader()->getRiddenPet($player)) > 2.5 + $this->getLoader()->getRiddenPet($player)->getScale()) {
 					$this->getLoader()->getRiddenPet($player)->throwRiderOff();
 				}
 			}
