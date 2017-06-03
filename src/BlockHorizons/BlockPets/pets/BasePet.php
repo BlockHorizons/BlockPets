@@ -77,7 +77,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return int
 	 */
 	public function getPetLevel(): int {
-		return $this->namedtag["petLevel"];
+		return isset($this->namedtag["petLevel"]) ? $this->namedtag["petLevel"] : 0;
 	}
 
 	/**
