@@ -180,7 +180,7 @@ abstract class BasePet extends Creature implements Rideable {
 		if($this instanceof EnderDragonPet) {
 			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 2.65 + $this->getScale(), -1.7]);
 		} elseif($this instanceof SmallCreature) {
-			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 1 + $this->getScale() * 0.9, -0.25]);
+			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 0.9 + $this->getScale() * 0.9, -0.25]);
 		}
 		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, true);
 
@@ -197,7 +197,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$player->dataPacket($pk);
 
 		if($this->getPetOwner()->isSurvival()) {
-			$this->getPetOwner()->setAllowFlight(true);
+			$this->getPetOwner()->setAllowFlight(true); // Set allow flight to true to prevent any 'kicked for flying' issues.
 		}
 	}
 
@@ -223,7 +223,6 @@ abstract class BasePet extends Creature implements Rideable {
 
 		if($this->getPetOwner()->isSurvival()) {
 			$this->getPetOwner()->setAllowFlight(false);
-			$this->getPetOwner()->setFlying(false);
 		}
 	}
 
