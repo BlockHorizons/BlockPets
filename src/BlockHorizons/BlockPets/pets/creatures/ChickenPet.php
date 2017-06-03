@@ -2,9 +2,10 @@
 
 namespace BlockHorizons\BlockPets\pets\creatures;
 
+use BlockHorizons\BlockPets\pets\SmallCreature;
 use BlockHorizons\BlockPets\pets\WalkingPet;
 
-class ChickenPet extends WalkingPet {
+class ChickenPet extends WalkingPet implements SmallCreature {
 
 	public $tier = self::TIER_UNCOMMON;
 	public $width = 0.4;

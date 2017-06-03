@@ -93,7 +93,10 @@ abstract class BasePet extends Creature implements Rideable {
 	public function levelUp(int $amount = 1) {
 		$this->setPetLevel($this->getPetLevel() + $amount);
 
-		$this->setNameTag($this->getPetName() . TextFormat::GRAY . " : Lvl." . TextFormat::AQUA . $this->getPetLevel() . " " . TextFormat::GRAY . $this->getName());
+		$this->setNameTag(
+			$this->getPetName() . PHP_EOL .
+			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $this->getPetLevel() . " " . TextFormat::GRAY . $this->getName()
+		);
 	}
 
 	/**
@@ -176,6 +179,8 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 1.8 + $this->getScale() * 0.9, -0.25]);
 		if($this instanceof EnderDragonPet) {
 			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 2.65 + $this->getScale(), -1.7]);
+		} elseif($this instanceof SmallCreature) {
+			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 1 + $this->getScale() * 0.9, -0.25]);
 		}
 		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, true);
 
@@ -243,7 +248,7 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		if($this->distance($petOwner) >= 50 || $this->getLevel()->getName() !== $petOwner->getLevel()->getName()) {
-			$this->closed = false;
+			$this->spawnToAll();
 			$this->teleport($petOwner->getPosition());
 			$this->respawnToAll();
 		}

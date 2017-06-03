@@ -2,9 +2,10 @@
 
 namespace BlockHorizons\BlockPets\pets\creatures;
 
+use BlockHorizons\BlockPets\pets\SmallCreature;
 use BlockHorizons\BlockPets\pets\WalkingPet;
 
-class SpiderPet extends WalkingPet {
+class SpiderPet extends WalkingPet implements SmallCreature {
 
 	public $height = 1.12;
 	public $width = 1.3;

@@ -2,9 +2,10 @@
 
 namespace BlockHorizons\BlockPets\pets\creatures;
 
+use BlockHorizons\BlockPets\pets\SmallCreature;
 use BlockHorizons\BlockPets\pets\WalkingPet;
 
-class OcelotPet extends WalkingPet {
+class OcelotPet extends WalkingPet implements SmallCreature {
 
 	public $speed = 1.8;
 	public $networkId = 22;

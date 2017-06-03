@@ -32,13 +32,13 @@ class LevelUpPetCommand extends BaseCommand {
 
 		$amount = 1;
 		if(isset($args[1])) {
-			if(!is_numeric($args[1])) {
+			if(is_numeric($args[1])) {
 				$amount = $args[1];
 			}
 		}
 
 		$pet->levelUp($amount);
-		$sender->sendMessage(TF::GREEN . "Successfully leveled up the pet: " . TF::AQUA . $pet->getNameTag() . $amount === 1 ? " once!" : " " . $amount . " times!");
+		$sender->sendMessage(TF::GREEN . "Successfully leveled up the pet: " . TF::AQUA . $pet->getPetName() . ($amount === 1 ? " once!" : " " . $amount . " times!"));
 		return true;
 	}
 

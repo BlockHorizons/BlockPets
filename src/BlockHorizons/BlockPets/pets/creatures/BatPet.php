@@ -3,8 +3,9 @@
 namespace BlockHorizons\BlockPets\pets\creatures;
 
 use BlockHorizons\BlockPets\pets\HoveringPet;
+use BlockHorizons\BlockPets\pets\SmallCreature;
 
-class BatPet extends HoveringPet {
+class BatPet extends HoveringPet implements SmallCreature {
 
 	public $networkId = 19;
 	public $name = "Bat Pet";
