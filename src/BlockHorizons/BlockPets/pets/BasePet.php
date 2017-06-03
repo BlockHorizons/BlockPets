@@ -151,6 +151,10 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->from = $this->getId();
 		$pk->type = self::STATE_SITTING;
 		$player->dataPacket($pk);
+
+		if($this->getPetOwner()->isSurvival()) {
+			$this->getPetOwner()->setAllowFlight(true);
+		}
 	}
 
 	/**
@@ -172,6 +176,11 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->type = self::STATE_STANDING;
 		$this->getPetOwner()->dataPacket($pk);
 		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, false);
+
+		if($this->getPetOwner()->isSurvival()) {
+			$this->getPetOwner()->setAllowFlight(false);
+			$this->getPetOwner()->setFlying(false);
+		}
 	}
 
 	/**
@@ -195,9 +204,9 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		if($this->distance($petOwner) >= 50 || $this->getLevel()->getName() !== $petOwner->getLevel()->getName()) {
-			$this->teleport($petOwner->getPosition());
 			$this->despawnFromAll();
 			$this->spawnToAll();
+			$this->teleport($petOwner->getPosition());
 		}
 		$this->updateMovement();
 		parent::onUpdate($currentTick);

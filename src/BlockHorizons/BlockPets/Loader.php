@@ -41,7 +41,6 @@ use BlockHorizons\BlockPets\pets\creatures\WolfPet;
 use BlockHorizons\BlockPets\pets\creatures\ZombiePet;
 use BlockHorizons\BlockPets\pets\creatures\ZombiePigmanPet;
 use BlockHorizons\BlockPets\pets\creatures\ZombieVillagerPet;
-use BlockHorizons\BlockPets\tasks\DetachFromPetTask;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\nbt\tag\CompoundTag;
@@ -134,7 +133,6 @@ class Loader extends PluginBase {
 		}
 		$this->registerCommands();
 		$this->registerListeners();
-		$this->getServer()->getScheduler()->scheduleRepeatingTask(new DetachFromPetTask($this), 20);
 	}
 
 	public function registerCommands() {
