@@ -25,18 +25,20 @@ class LevelUpPetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(count($args) > 1 || count($args) < 1) {
-			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
-			return true;
-		}
-
 		if(($pet = $this->getLoader()->getPetByName($args[0])) === null) {
 			$sender->sendMessage(TF::RED . "[Warning] A pet with that name doesn't exist.");
 			return true;
 		}
 
-		$this->getLoader()->getPetByName($args[0])->levelUp();
-		$sender->sendMessage(TF::GREEN . "Successfully leveled up the pet: " . TF::AQUA . $pet->getNameTag());
+		$amount = 1;
+		if(isset($args[1])) {
+			if(!is_numeric($args[1])) {
+				$amount = $args[1];
+			}
+		}
+
+		$pet->levelUp($amount);
+		$sender->sendMessage(TF::GREEN . "Successfully leveled up the pet: " . TF::AQUA . $pet->getNameTag() . $amount === 1 ? " once!" : " " . $amount . " times!");
 		return true;
 	}
 
@@ -48,6 +50,11 @@ class LevelUpPetCommand extends BaseCommand {
 				"type" => "rawtext",
 				"name" => "pet name",
 				"optional" => false
+			],
+			1 => [
+				"type" => "int",
+				"name" => "amount",
+				"optional" => true
 			]
 		];
 		return $commandData;

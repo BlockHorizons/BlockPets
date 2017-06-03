@@ -13,6 +13,7 @@ use pocketmine\nbt\tag\StringTag;
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
 use pocketmine\network\mcpe\protocol\SetEntityLinkPacket;
 use pocketmine\Player;
+use pocketmine\utils\TextFormat;
 
 abstract class BasePet extends Creature implements Rideable {
 
@@ -23,6 +24,8 @@ abstract class BasePet extends Creature implements Rideable {
 
 	protected $tier = 1;
 	protected $petOwner;
+	protected $petLevel = 0;
+	protected $petName;
 	protected $ridden = false;
 	protected $rider = null;
 
@@ -35,14 +38,18 @@ abstract class BasePet extends Creature implements Rideable {
 	const TIER_EPIC = 4;
 	const TIER_LEGENDARY = 5;
 
-	public function __construct(Level $level, CompoundTag $nbt) {
+	public function __construct(Level $level, CompoundTag $nbt, string $name) {
 		parent::__construct($level, $nbt);
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
 
 		$this->petOwner = $this->namedtag["petOwner"];
 		$this->scale = $this->namedtag["scale"];
+		$this->petLevel = $this->namedtag["petLevel"];
+		$this->petName = $name;
 		$this->setScale($this->scale);
+
+		$this->levelUp();
 	}
 
 	/**
@@ -53,10 +60,40 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getPetName(): string {
+		return $this->petName;
+	}
+
+	/**
 	 * @return float
 	 */
 	public function getSpeed(): float {
 		return $this->speed;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getPetLevel(): int {
+		return $this->namedtag["petLevel"];
+	}
+
+	/**
+	 * @param int $petLevel
+	 */
+	public function setPetLevel(int $petLevel) {
+		$this->namedtag->petLevel = new IntTag("petLevel", $petLevel);
+	}
+
+	/**
+	 * @param int $amount
+	 */
+	public function levelUp(int $amount = 1) {
+		$this->setPetLevel($this->getPetLevel() + $amount);
+
+		$this->setNameTag($this->getPetName() . TextFormat::GRAY . " : Lvl." . TextFormat::AQUA . $this->getPetLevel() . " " . TextFormat::GRAY . $this->getName());
 	}
 
 	/**
@@ -115,9 +152,11 @@ abstract class BasePet extends Creature implements Rideable {
 	public function saveNBT() {
 		parent::saveNBT();
 		$this->namedtag->petOwner = new StringTag("petOwner", $this->getPetOwnerName());
+		$this->namedtag->petName = new StringTag("petName", $this->getPetName());
 		$this->namedtag->speed = new FloatTag("speed", $this->getSpeed());
 		$this->namedtag->scale = new FloatTag("scale", $this->getScale());
 		$this->namedtag->networkId = new IntTag("networkId", $this->getNetworkId());
+		$this->namedtag->petLevel = new IntTag("petLevel", $this->getPetLevel());
 	}
 
 	/**
@@ -204,6 +243,7 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		if($this->distance($petOwner) >= 50 || $this->getLevel()->getName() !== $petOwner->getLevel()->getName()) {
+			$this->closed = false;
 			$this->teleport($petOwner->getPosition());
 			$this->respawnToAll();
 		}
@@ -213,7 +253,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
-	 * @param $currentTick
+	 * @param $motionX
+	 * @param $motionZ
 	 *
 	 * @return mixed
 	 */

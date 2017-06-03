@@ -199,11 +199,12 @@ class Loader extends PluginBase {
 	/**
 	 * @param string $entityName
 	 * @param Player $position
+	 * @param string $name
 	 * @param float  $scale
 	 *
 	 * @return Entity
 	 */
-	public function createPet(string $entityName, Player $position, float $scale = 1.0) {
+	public function createPet(string $entityName, Player $position, string $name, float $scale = 1.0) {
 		$nbt = new CompoundTag("", [
 			"Pos" => new ListTag("Pos", [
 				new DoubleTag("", $position->x),
@@ -224,7 +225,7 @@ class Loader extends PluginBase {
 			"networkId" => new IntTag("networkId", 10),
 		]);
 
-		return Entity::createEntity($entityName . "Pet", $position->getLevel(), $nbt);
+		return Entity::createEntity($entityName . "Pet", $position->getLevel(), $nbt, $name);
 	}
 
 	/**
@@ -235,10 +236,11 @@ class Loader extends PluginBase {
 	public function getPetByName(string $name) {
 		foreach($this->getServer()->getLevels() as $level) {
 			foreach($level->getEntities() as $entity) {
-				if(strpos(strtolower($entity->getNameTag()), strtolower($name)) !== false) {
-					if($entity instanceof BasePet) {
-						return $entity;
-					}
+				if(!$entity instanceof BasePet) {
+					continue;
+				}
+				if(strpos(strtolower($entity->getPetName()), strtolower($name)) !== false) {
+					return $entity;
 				}
 			}
 		}

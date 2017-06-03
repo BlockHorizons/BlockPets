@@ -48,7 +48,7 @@ class SpawnPetCommand extends BaseCommand {
 			return true;
 		}
 		$petName = $this->getLoader()->getPet($args[0]);
-		$pet = $this->getLoader()->createPet($petName, $player, isset($args[2]) ? $args[2] : 1.0);
+		$pet = $this->getLoader()->createPet($petName, $player, $args[1], isset($args[2]) ? $args[2] : 1.0);
 		$pet->setNameTag($args[1]);
 		$pet->spawnToAll();
 		$sender->sendMessage(TF::GREEN . "Successfully spawned a pet with the name: " . TF::AQUA . $args[1]);
