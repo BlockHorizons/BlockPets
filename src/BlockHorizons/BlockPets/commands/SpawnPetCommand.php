@@ -10,7 +10,7 @@ use pocketmine\utils\TextFormat as TF;
 class SpawnPetCommand extends BaseCommand {
 
 	public function __construct(Loader $loader) {
-		parent::__construct($loader, "spawnpet", "Spawn a pet for yourself or other players", "/spawnpet <petType> <name> [size] [player]", ["sp"]);
+		parent::__construct($loader, "spawnpet", "Spawn a pet for yourself or other players", "/spawnpet <petType> <name> [size] [baby] [player]", ["sp"]);
 		$this->setPermission("blockpets.command.spawnpet");
 	}
 
@@ -25,7 +25,7 @@ class SpawnPetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(count($args) > 4 || count($args) < 2) {
+		if(count($args) > 5 || count($args) < 2) {
 			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
 			return true;
 		}

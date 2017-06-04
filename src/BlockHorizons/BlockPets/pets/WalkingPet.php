@@ -57,8 +57,8 @@ abstract class WalkingPet extends BasePet {
 		$this->pitch = $rider->pitch;
 		$this->yaw = $rider->yaw;
 
-		$x = $this->getDirectionVector()->x / 3 * $this->getSpeed();
-		$z = $this->getDirectionVector()->z / 3 * $this->getSpeed();
+		$x = $this->getDirectionVector()->x / 2.5 * $this->getSpeed();
+		$z = $this->getDirectionVector()->z / 2.5 * $this->getSpeed();
 
 		if($this->jumpTicks > 0) {
 			$this->jumpTicks--;

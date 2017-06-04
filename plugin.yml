@@ -69,6 +69,9 @@ permissions:
                     blockpets.pet.irongolem:
                         default: op
                         description: "Allows access to use the iron golem pet."
+                    blocksniper.pet.llama:
+                        default: op
+                        description: "Allows access to use the llama pet."
                     blockpets.pet.mooshroom:
                         default: op
                         description: "Allows access to use the mooshroom pet."
@@ -120,10 +123,10 @@ permissions:
                     blockpets.pet.zombie:
                         default: op
                         description: "Allows access to use the zombie pet."
-                    blockpets.pet.witherskull:
+                    blockpets.pet.zombiepigman:
                         default: op
                         description: "Allows access to use the zombie pigman pet."
-                    blockpets.pet.wolf:
+                    blockpets.pet.zombievillager:
                         default: op
                         description: "Allows access to use the zombie villager pet."
 ...

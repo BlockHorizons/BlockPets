@@ -2,6 +2,7 @@
 
 namespace BlockHorizons\BlockPets\pets;
 
+use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use pocketmine\math\Vector3;
 
 abstract class HoveringPet extends BasePet {
@@ -28,7 +29,7 @@ abstract class HoveringPet extends BasePet {
 			$this->motionZ = $this->getSpeed() * 0.25 * ($z / (abs($x) + abs($z)));
 		}
 
-		if($y !== 0 && abs($y) <= 1) {
+		if(((float) $y) !== 0.0 && abs($y) <= 2) {
 			$this->motionY = $this->getSpeed() * 0.15 * ($y / abs($y));
 		}
 
@@ -50,9 +51,9 @@ abstract class HoveringPet extends BasePet {
 		$this->pitch = $rider->pitch;
 		$this->yaw = $this->getNetworkId() === 53 ? $rider->yaw + 180 : $rider->yaw;
 
-		$x = $this->getDirectionVector()->x / 3 * $this->getSpeed();
-		$z = $this->getDirectionVector()->z / 3 * $this->getSpeed();
-		$y = $rider->getDirectionVector()->y / 3 * $this->getSpeed();
+		$x = $this->getDirectionVector()->x / 2 * $this->getSpeed();
+		$z = $this->getDirectionVector()->z / 2 * $this->getSpeed();
+		$y = $rider->getDirectionVector()->y / 2 * $this->getSpeed();
 
 		$finalMotion = [0, 0];
 		switch($motionZ) {
@@ -71,11 +72,14 @@ abstract class HoveringPet extends BasePet {
 				$finalMotion = [-$z, $x];
 				break;
 		}
-
-		if(($y !== 0.0 && $this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) <= $this->flyHeight) || $y < 0) {
-			$this->motionY = $this->getSpeed() * 0.2 * ($y / abs($y * 2));
+		if($this instanceof EnderDragonPet) {
+			$finalMotion = [-$finalMotion[0], -$finalMotion[1]];
 		}
-		if(abs($y < 0.2)) {
+
+		if((((float) $y) !== 0.0 && $this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) <= $this->flyHeight) || $y < 0) {
+			$this->motionY = $this->getSpeed() * 0.2 * ($y / abs($y));
+		}
+		if(abs($y < 0.1)) {
 			$this->motionY = 0;
 		}
 		$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);

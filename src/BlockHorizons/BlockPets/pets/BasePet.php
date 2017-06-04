@@ -153,14 +153,11 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->x = $this->x;
 		$pk->y = $this->y;
 		$pk->z = $this->z;
-		$pk->speedX = 0;
-		$pk->speedY = 0;
-		$pk->speedZ = 0;
+		$pk->speedX = $pk->speedY = $pk->speedZ = 0;
 		$pk->yaw = $this->yaw;
 		$pk->pitch = $this->pitch;
 		$pk->metadata = $this->dataProperties;
 		$player->dataPacket($pk);
-		$this->recalculateAttributes($player);
 	}
 
 	public function saveNBT() {
@@ -289,11 +286,4 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return mixed
 	 */
 	public abstract function doRidingMovement($motionX, $motionZ);
-
-	/**
-	 * @param Player $player
-	 */
-	public function recalculateAttributes(Player $player) {
-
-	}
 }
