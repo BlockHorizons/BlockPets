@@ -230,7 +230,7 @@ class Loader extends PluginBase {
 			"isBaby" => new ByteTag("isBaby", $isBaby)
 		]);
 
-		return Entity::createEntity($entityName . "Pet", $position->getLevel(), $nbt, $name);
+		return Entity::createEntity($entityName . "Pet", $position->getLevel(), $nbt);
 	}
 
 	/**

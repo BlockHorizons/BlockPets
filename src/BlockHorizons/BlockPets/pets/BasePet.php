@@ -39,7 +39,7 @@ abstract class BasePet extends Creature implements Rideable {
 	const TIER_EPIC = 4;
 	const TIER_LEGENDARY = 5;
 
-	public function __construct(Level $level, CompoundTag $nbt, string $name) {
+	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
@@ -49,7 +49,6 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->scale = $this->namedtag["scale"];
 		$this->petName = $this->namedtag["petName"];
 
-		$this->setDataFlag(self::DATA_FLAG_BABY, self::DATA_TYPE_BYTE, $this->namedtag["isBaby"]);
 		$this->setScale($this->scale);
 
 		$this->levelUp();
@@ -137,6 +136,10 @@ abstract class BasePet extends Creature implements Rideable {
 	public function initEntity() {
 		parent::initEntity();
 		$this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, true);
+		$this->setDataFlag(self::DATA_FLAG_BABY, self::DATA_TYPE_BYTE, (bool) $this->namedtag["isBaby"]);
+		if((bool) $this->namedtag["isBaby"]) {
+			$this->setScale($this->getScale() / 2);
+		}
 	}
 
 	/**
@@ -263,10 +266,10 @@ abstract class BasePet extends Creature implements Rideable {
 		if(!$visible) {
 			$this->respawnToAll();
 		}
-		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
-			$entity = $this->getLoader()->createPet(str_replace(" ", "", $this->getName()), $this->getPetOwner(), $this->getPetName(), $this->getScale(), $this->namedtag["isBaby"], $this->getPetLevel());
+		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId() && !$this->closed) {
+			$entity = $this->getLoader()->createPet(str_replace(" ", "", str_replace("Pet", "", $this->getName())), $this->getPetOwner(), $this->getPetName(), $this->getScale(), $this->namedtag["isBaby"], $this->getPetLevel());
 			$entity->spawnToAll();
-			$this->kill();
+			$this->close();
 			return false;
 		}
 		if($this->distance($petOwner) >= 50) {
