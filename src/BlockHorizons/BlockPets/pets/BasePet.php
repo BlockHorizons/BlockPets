@@ -264,7 +264,7 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->respawnToAll();
 		}
 		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
-			$entity = $this->getLoader()->createPet((new \ReflectionClass($this))->getShortName(), $this->getPetOwner(), $this->getPetName(), $this->getScale(), $this->namedtag["isBaby"], $this->getPetLevel());
+			$entity = $this->getLoader()->createPet($this->getLoader()->getPet((new \ReflectionObject($this))->getShortName()), $this->getPetOwner(), $this->getPetName(), $this->getScale(), $this->namedtag["isBaby"], $this->getPetLevel());
 			$entity->spawnToAll();
 			$this->kill();
 			return false;
