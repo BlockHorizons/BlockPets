@@ -3,7 +3,9 @@
 namespace BlockHorizons\BlockPets\listeners;
 
 use BlockHorizons\BlockPets\Loader;
+use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use pocketmine\event\Listener;
+use pocketmine\event\player\cheat\PlayerIllegalMoveEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\InteractPacket;
 use pocketmine\network\mcpe\protocol\PlayerInputPacket;
@@ -27,7 +29,13 @@ class RidingListener implements Listener {
 		if(($packet = $event->getPacket()) instanceof PlayerInputPacket) {
 			if($this->getLoader()->isRidingAPet($event->getPlayer())) {
 				$pet = $this->getLoader()->getRiddenPet($event->getPlayer());
-				$pet->doRidingMovement($packet->motionX, $packet->motionY);
+				$x = $packet->motionX;
+				$z = $packet->motionY;
+				if($pet instanceof EnderDragonPet) {
+					$x = -$x;
+					$z = -$z;
+				}
+				$pet->doRidingMovement($x, $z);
 			}
 		} elseif($packet instanceof InteractPacket) {
 			if($packet->action === $packet::ACTION_LEAVE_VEHICLE) {
@@ -35,6 +43,12 @@ class RidingListener implements Listener {
 					$this->getLoader()->getRiddenPet($event->getPlayer())->throwRiderOff();
 				}
 			}
+		}
+	}
+
+	public function disableRidingMovementRevert(PlayerIllegalMoveEvent $event) {
+		if($this->getLoader()->isRidingAPet($event->getPlayer())) {
+			$event->setCancelled();
 		}
 	}
 }

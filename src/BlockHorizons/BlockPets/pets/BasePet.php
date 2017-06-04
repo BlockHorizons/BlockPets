@@ -160,6 +160,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->pitch = $this->pitch;
 		$pk->metadata = $this->dataProperties;
 		$player->dataPacket($pk);
+		$this->recalculateAttributes($player);
 	}
 
 	public function saveNBT() {
@@ -190,7 +191,7 @@ abstract class BasePet extends Creature implements Rideable {
 		if($this instanceof EnderDragonPet) {
 			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 2.65 + $this->getScale(), -1.7]);
 		} elseif($this instanceof SmallCreature) {
-			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 0.9 + $this->getScale() * 0.9, -0.25]);
+			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 0.83 + $this->getScale() * 0.9, -0.25]);
 		}
 		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, true);
 
@@ -288,4 +289,11 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return mixed
 	 */
 	public abstract function doRidingMovement($motionX, $motionZ);
+
+	/**
+	 * @param Player $player
+	 */
+	public function recalculateAttributes(Player $player) {
+
+	}
 }
