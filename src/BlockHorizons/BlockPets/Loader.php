@@ -207,7 +207,7 @@ class Loader extends PluginBase {
 	 *
 	 * @return Entity
 	 */
-	public function createPet(string $entityName, Player $position, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 0) {
+	public function createPet(string $entityName, Player $position, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1) {
 		$nbt = new CompoundTag("", [
 			"Pos" => new ListTag("Pos", [
 				new DoubleTag("", $position->x),

@@ -44,7 +44,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
 
-		$this->petLevel = $this->namedtag["petLevel"];
+		$this->petLevel = $this->namedtag["petLevel"] - 1;
 		$this->petOwner = $this->namedtag["petOwner"];
 		$this->scale = $this->namedtag["scale"];
 		$this->petName = $this->namedtag["petName"];
