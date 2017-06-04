@@ -2,6 +2,7 @@
 
 namespace BlockHorizons\BlockPets\pets;
 
+use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use pocketmine\entity\Creature;
 use pocketmine\entity\Rideable;
@@ -24,7 +25,7 @@ abstract class BasePet extends Creature implements Rideable {
 
 	protected $tier = 1;
 	protected $petOwner;
-	protected $petLevel = 0;
+	protected $petLevel;
 	protected $petName;
 	protected $ridden = false;
 	protected $rider = null;
@@ -43,9 +44,12 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
 
+		$this->petLevel = $this->namedtag["petLevel"];
 		$this->petOwner = $this->namedtag["petOwner"];
 		$this->scale = $this->namedtag["scale"];
 		$this->petName = $this->namedtag["petName"];
+
+		$this->setDataFlag(self::DATA_FLAG_BABY, self::DATA_TYPE_BYTE, $this->namedtag["isBaby"]);
 		$this->setScale($this->scale);
 
 		$this->levelUp();
@@ -56,6 +60,17 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function getName(): string {
 		return $this->name;
+	}
+
+	/**
+	 * @return Loader
+	 */
+	public function getLoader(): Loader {
+		$plugin = $this->getLevel()->getServer()->getPluginManager()->getPlugin("BlockPets");
+		if($plugin instanceof Loader) {
+			return $plugin;
+		}
+		return null;
 	}
 
 	/**
@@ -248,7 +263,13 @@ abstract class BasePet extends Creature implements Rideable {
 		if(!$visible) {
 			$this->respawnToAll();
 		}
-		if($this->distance($petOwner) >= 50 || $this->getLevel()->getName() !== $petOwner->getLevel()->getName()) {
+		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
+			$entity = $this->getLoader()->createPet((new \ReflectionClass($this))->getShortName(), $this->getPetOwner(), $this->getPetName(), $this->getScale(), $this->namedtag["isBaby"], $this->getPetLevel());
+			$entity->spawnToAll();
+			$this->kill();
+			return false;
+		}
+		if($this->distance($petOwner) >= 50) {
 			$this->teleport($petOwner);
 			return true;
 		}

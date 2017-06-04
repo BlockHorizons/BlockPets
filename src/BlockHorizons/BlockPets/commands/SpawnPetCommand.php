@@ -47,8 +47,18 @@ class SpawnPetCommand extends BaseCommand {
 			$sender->sendMessage(TF::RED . "[Warning] The pet scale should be numeric.");
 			return true;
 		}
+
+		if(isset($args[3])) {
+			if($args[3] === "false") {
+				$args[3] = false;
+			} else {
+				$args[3] = true;
+			}
+		} else {
+			$args[3] = false;
+		}
 		$petName = $this->getLoader()->getPet($args[0]);
-		$pet = $this->getLoader()->createPet($petName, $player, $args[1], isset($args[2]) ? $args[2] : 1.0);
+		$pet = $this->getLoader()->createPet($petName, $player, $args[1], isset($args[2]) ? $args[2] : 1.0, $args[3]);
 		$pet->setNameTag($args[1]);
 		$pet->spawnToAll();
 		$sender->sendMessage(TF::GREEN . "Successfully spawned a pet with the name: " . TF::AQUA . $args[1]);
@@ -83,6 +93,15 @@ class SpawnPetCommand extends BaseCommand {
 				"optional" => true
 			],
 			3 => [
+				"type" => "stringenum",
+				"name" => "baby",
+				"optional" => true,
+				"enum_values" => [
+					"true",
+					"false"
+				]
+			],
+			4 => [
 				"type" => "rawtext",
 				"name" => "player",
 				"optional" => true

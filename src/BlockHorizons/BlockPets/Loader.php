@@ -44,9 +44,11 @@ use BlockHorizons\BlockPets\pets\creatures\ZombiePigmanPet;
 use BlockHorizons\BlockPets\pets\creatures\ZombieVillagerPet;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntitySpawnEvent;
+use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\FloatTag;
+use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
@@ -200,10 +202,12 @@ class Loader extends PluginBase {
 	 * @param Player $position
 	 * @param string $name
 	 * @param float  $scale
+	 * @param bool   $isBaby
+	 * @param int    $level
 	 *
 	 * @return Entity
 	 */
-	public function createPet(string $entityName, Player $position, string $name, float $scale = 1.0) {
+	public function createPet(string $entityName, Player $position, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 0) {
 		$nbt = new CompoundTag("", [
 			"Pos" => new ListTag("Pos", [
 				new DoubleTag("", $position->x),
@@ -221,7 +225,9 @@ class Loader extends PluginBase {
 			]),
 			"petOwner" => new StringTag("petOwner", $position->getName()),
 			"scale" => new FloatTag("scale", $scale),
-			"petName" => new StringTag("petName", $name)
+			"petName" => new StringTag("petName", $name),
+			"petLevel" => new IntTag("petLevel", $level),
+			"isBaby" => new ByteTag("isBaby", $isBaby)
 		]);
 
 		return Entity::createEntity($entityName . "Pet", $position->getLevel(), $nbt, $name);
