@@ -45,8 +45,7 @@ abstract class BasePet extends Creature implements Rideable {
 
 		$this->petOwner = $this->namedtag["petOwner"];
 		$this->scale = $this->namedtag["scale"];
-		$this->petLevel = $this->namedtag["petLevel"];
-		$this->petName = $name;
+		$this->petName = $this->namedtag["petName"];
 		$this->setScale($this->scale);
 
 		$this->levelUp();
@@ -77,14 +76,14 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return int
 	 */
 	public function getPetLevel(): int {
-		return isset($this->namedtag["petLevel"]) ? $this->namedtag["petLevel"] : 0;
+		return $this->petLevel;
 	}
 
 	/**
 	 * @param int $petLevel
 	 */
 	public function setPetLevel(int $petLevel) {
-		$this->namedtag->petLevel = new IntTag("petLevel", $petLevel);
+		$this->petLevel = $petLevel;
 	}
 
 	/**
@@ -118,13 +117,6 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function getPetOwnerName(): string {
 		return $this->petOwner;
-	}
-
-	/**
-	 * @return float
-	 */
-	public function getScale(): float {
-		return $this->scale;
 	}
 
 	public function initEntity() {
@@ -246,10 +238,19 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->despawnFromAll();
 			return false;
 		}
-		if($this->distance($petOwner) >= 50 || $this->getLevel()->getName() !== $petOwner->getLevel()->getName()) {
-			$this->spawnToAll();
-			$this->teleport($petOwner->getPosition());
+		$visible = false;
+		foreach($this->hasSpawned as $key => $player) {
+			if($player->getName() === $petOwner->getName()) {
+				$visible = true;
+				break;
+			}
+		}
+		if(!$visible) {
 			$this->respawnToAll();
+		}
+		if($this->distance($petOwner) >= 50 || $this->getLevel()->getName() !== $petOwner->getLevel()->getName()) {
+			$this->teleport($petOwner);
+			return true;
 		}
 		$this->updateMovement();
 		parent::onUpdate($currentTick);

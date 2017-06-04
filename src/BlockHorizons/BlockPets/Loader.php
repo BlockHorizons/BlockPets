@@ -47,7 +47,6 @@ use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\FloatTag;
-use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
@@ -222,7 +221,7 @@ class Loader extends PluginBase {
 			]),
 			"petOwner" => new StringTag("petOwner", $position->getName()),
 			"scale" => new FloatTag("scale", $scale),
-			"networkId" => new IntTag("networkId", 10),
+			"petName" => new StringTag("petName", $name)
 		]);
 
 		return Entity::createEntity($entityName . "Pet", $position->getLevel(), $nbt, $name);
