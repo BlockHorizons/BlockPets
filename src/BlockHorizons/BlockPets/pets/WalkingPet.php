@@ -51,6 +51,12 @@ abstract class WalkingPet extends BasePet {
 		return true;
 	}
 
+	public function jump() {
+		$this->motionY = $this->gravity * 8;
+		$this->move($this->motionX, $this->motionY, $this->motionZ);
+		$this->jumpTicks = 5;
+	}
+
 	public function doRidingMovement($motionX, $motionZ) {
 		$rider = $this->getPetOwner();
 
@@ -97,11 +103,5 @@ abstract class WalkingPet extends BasePet {
 
 		$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);
 		$this->updateMovement();
-	}
-
-	public function jump() {
-		$this->motionY = $this->gravity * 8;
-		$this->move($this->motionX, $this->motionY, $this->motionZ);
-		$this->jumpTicks = 5;
 	}
 }

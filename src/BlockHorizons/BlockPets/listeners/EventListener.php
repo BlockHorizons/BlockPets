@@ -53,6 +53,13 @@ class EventListener implements Listener {
 		}
 	}
 
+	/**
+	 * @return Loader
+	 */
+	public function getLoader(): Loader {
+		return $this->loader;
+	}
+
 	public function onPlayerQuit(PlayerQuitEvent $event) {
 		foreach($event->getPlayer()->getLevel()->getEntities() as $levelEntity) {
 			if($levelEntity instanceof BasePet) {
@@ -64,12 +71,5 @@ class EventListener implements Listener {
 				}
 			}
 		}
-	}
-
-	/**
-	 * @return Loader
-	 */
-	public function getLoader(): Loader {
-		return $this->loader;
 	}
 }

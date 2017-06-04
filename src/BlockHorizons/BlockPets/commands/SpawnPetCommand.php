@@ -31,7 +31,7 @@ class SpawnPetCommand extends BaseCommand {
 		}
 
 		if(!$sender->hasPermission("blockpets.pet." . strtolower($args[0])) && !$sender->hasPermission("blockpets.pet.*")) {
-		$sender->sendMessage(TF::RED . "[Warning] You don't have permission to spawn that pet.");
+			$sender->sendMessage(TF::RED . "[Warning] You don't have permission to spawn that pet.");
 			return true;
 		}
 

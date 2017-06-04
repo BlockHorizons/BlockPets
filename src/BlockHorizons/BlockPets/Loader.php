@@ -238,6 +238,20 @@ class Loader extends PluginBase {
 	/**
 	 * @param string $name
 	 *
+	 * @return bool
+	 */
+	public function removePet(string $name): bool {
+		$pet = $this->getPetByName($name);
+		if($pet === null) {
+			return false;
+		}
+		$pet->kill();
+		return true;
+	}
+
+	/**
+	 * @param string $name
+	 *
 	 * @return BasePet|null
 	 */
 	public function getPetByName(string $name) {
@@ -249,6 +263,20 @@ class Loader extends PluginBase {
 				if(strpos(strtolower($entity->getPetName()), strtolower($name)) !== false) {
 					return $entity;
 				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @param Player $player
+	 *
+	 * @return BasePet
+	 */
+	public function getRiddenPet(Player $player): BasePet {
+		foreach($this->getPetsFrom($player) as $pet) {
+			if($pet->isRidden()) {
+				return $pet;
 			}
 		}
 		return null;
@@ -272,34 +300,6 @@ class Loader extends PluginBase {
 			}
 		}
 		return $playerPets;
-	}
-
-	/**
-	 * @param string $name
-	 *
-	 * @return bool
-	 */
-	public function removePet(string $name): bool {
-		$pet = $this->getPetByName($name);
-		if($pet === null) {
-			return false;
-		}
-		$pet->kill();
-		return true;
-	}
-
-	/**
-	 * @param Player $player
-	 *
-	 * @return BasePet
-	 */
-	public function getRiddenPet(Player $player): BasePet {
-		foreach($this->getPetsFrom($player) as $pet) {
-			if($pet->isRidden()) {
-				return $pet;
-			}
-		}
-		return null;
 	}
 
 	/**

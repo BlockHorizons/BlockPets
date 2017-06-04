@@ -18,26 +18,23 @@ use pocketmine\utils\TextFormat;
 
 abstract class BasePet extends Creature implements Rideable {
 
+	const STATE_SITTING = 2;
+	const STATE_STANDING = 3;
+	const TIER_COMMON = 1;
+	const TIER_UNCOMMON = 2;
+	const TIER_SPECIAL = 3;
+	const TIER_EPIC = 4;
+	const TIER_LEGENDARY = 5;
 	public $name;
 	public $speed = 1.0;
 	public $scale = 1.0;
 	public $networkId;
-
 	protected $tier = 1;
 	protected $petOwner;
 	protected $petLevel;
 	protected $petName;
 	protected $ridden = false;
 	protected $rider = null;
-
-	const STATE_SITTING = 2;
-	const STATE_STANDING = 3;
-
-	const TIER_COMMON = 1;
-	const TIER_UNCOMMON = 2;
-	const TIER_SPECIAL = 3;
-	const TIER_EPIC = 4;
-	const TIER_LEGENDARY = 5;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
@@ -55,35 +52,15 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
-	 * @return string
+	 * @param int $amount
 	 */
-	public function getName(): string {
-		return $this->name;
-	}
+	public function levelUp(int $amount = 1) {
+		$this->setPetLevel($this->getPetLevel() + $amount);
 
-	/**
-	 * @return Loader
-	 */
-	public function getLoader(): Loader {
-		$plugin = $this->getLevel()->getServer()->getPluginManager()->getPlugin("BlockPets");
-		if($plugin instanceof Loader) {
-			return $plugin;
-		}
-		return null;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getPetName(): string {
-		return $this->petName;
-	}
-
-	/**
-	 * @return float
-	 */
-	public function getSpeed(): float {
-		return $this->speed;
+		$this->setNameTag(
+			$this->getPetName() . PHP_EOL .
+			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $this->getPetLevel() . " " . TextFormat::GRAY . $this->getName()
+		);
 	}
 
 	/**
@@ -101,36 +78,17 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
-	 * @param int $amount
+	 * @return string
 	 */
-	public function levelUp(int $amount = 1) {
-		$this->setPetLevel($this->getPetLevel() + $amount);
-
-		$this->setNameTag(
-			$this->getPetName() . PHP_EOL .
-			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $this->getPetLevel() . " " . TextFormat::GRAY . $this->getName()
-		);
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getNetworkId(): int {
-		return $this->networkId;
-	}
-
-	/**
-	 * @return Player|null
-	 */
-	public function getPetOwner() {
-		return $this->getLevel()->getServer()->getPlayer($this->petOwner);
+	public function getPetName(): string {
+		return $this->petName;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getPetOwnerName(): string {
-		return $this->petOwner;
+	public function getName(): string {
+		return $this->name;
 	}
 
 	public function initEntity() {
@@ -160,6 +118,13 @@ abstract class BasePet extends Creature implements Rideable {
 		$player->dataPacket($pk);
 	}
 
+	/**
+	 * @return int
+	 */
+	public function getNetworkId(): int {
+		return $this->networkId;
+	}
+
 	public function saveNBT() {
 		parent::saveNBT();
 		$this->namedtag->petOwner = new StringTag("petOwner", $this->getPetOwnerName());
@@ -168,6 +133,20 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->namedtag->scale = new FloatTag("scale", $this->getScale());
 		$this->namedtag->networkId = new IntTag("networkId", $this->getNetworkId());
 		$this->namedtag->petLevel = new IntTag("petLevel", $this->getPetLevel());
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPetOwnerName(): string {
+		return $this->petOwner;
+	}
+
+	/**
+	 * @return float
+	 */
+	public function getSpeed(): float {
+		return $this->speed;
 	}
 
 	/**
@@ -207,6 +186,13 @@ abstract class BasePet extends Creature implements Rideable {
 		if($this->getPetOwner()->isSurvival()) {
 			$this->getPetOwner()->setAllowFlight(true); // Set allow flight to true to prevent any 'kicked for flying' issues.
 		}
+	}
+
+	/**
+	 * @return Player|null
+	 */
+	public function getPetOwner() {
+		return $this->getLevel()->getServer()->getPlayer($this->petOwner);
 	}
 
 	/**
@@ -277,6 +263,17 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->updateMovement();
 		parent::onUpdate($currentTick);
 		return true;
+	}
+
+	/**
+	 * @return Loader
+	 */
+	public function getLoader(): Loader {
+		$plugin = $this->getLevel()->getServer()->getPluginManager()->getPlugin("BlockPets");
+		if($plugin instanceof Loader) {
+			return $plugin;
+		}
+		return null;
 	}
 
 	/**

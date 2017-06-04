@@ -18,10 +18,10 @@ abstract class HoveringPet extends BasePet {
 		}
 
 		$x = $petOwner->x - $this->x;
-		$y = $petOwner->y + 1.5 - $this->y;
+		$y = $petOwner->y - $this->y;
 		$z = $petOwner->z - $this->z;
 
-		if($x * $x + $z * $z < 8) {
+		if($x * $x + $z * $z < 10) {
 			$this->motionX = 0;
 			$this->motionZ = 0;
 		} else {
@@ -29,7 +29,7 @@ abstract class HoveringPet extends BasePet {
 			$this->motionZ = $this->getSpeed() * 0.25 * ($z / (abs($x) + abs($z)));
 		}
 
-		if($y > 0) {
+		if($y > -1.5) {
 			$this->motionY = $this->getSpeed() * 0.25 * ($y / abs($y));
 		}
 
