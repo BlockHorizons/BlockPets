@@ -2,6 +2,7 @@
 
 namespace BlockHorizons\BlockPets;
 
+use BlockHorizons\BlockPets\commands\CommandOverloads;
 use BlockHorizons\BlockPets\commands\LevelUpPetCommand;
 use BlockHorizons\BlockPets\commands\RemovePetCommand;
 use BlockHorizons\BlockPets\commands\SpawnPetCommand;
@@ -132,6 +133,7 @@ class Loader extends PluginBase {
 	];
 
 	public function onEnable() {
+		CommandOverloads::initialize();
 		foreach(self::PET_CLASSES as $petClass) {
 			Entity::registerEntity($petClass, true);
 		}

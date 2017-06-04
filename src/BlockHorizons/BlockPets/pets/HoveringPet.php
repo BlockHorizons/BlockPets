@@ -18,7 +18,7 @@ abstract class HoveringPet extends BasePet {
 		}
 
 		$x = $petOwner->x - $this->x;
-		$y = $petOwner->y + 1 - $this->y;
+		$y = $petOwner->y + 1.5 - $this->y;
 		$z = $petOwner->z - $this->z;
 
 		if($x * $x + $z * $z < 8) {
@@ -29,8 +29,8 @@ abstract class HoveringPet extends BasePet {
 			$this->motionZ = $this->getSpeed() * 0.25 * ($z / (abs($x) + abs($z)));
 		}
 
-		if(((float) $y) !== 0.0 && abs($y) <= 2) {
-			$this->motionY = $this->getSpeed() * 0.15 * ($y / abs($y));
+		if($y > 0) {
+			$this->motionY = $this->getSpeed() * 0.25 * ($y / abs($y));
 		}
 
 		$this->yaw = rad2deg(atan2(-$x, $z));
@@ -53,7 +53,7 @@ abstract class HoveringPet extends BasePet {
 
 		$x = $this->getDirectionVector()->x / 2 * $this->getSpeed();
 		$z = $this->getDirectionVector()->z / 2 * $this->getSpeed();
-		$y = $rider->getDirectionVector()->y / 2 * $this->getSpeed();
+		$y = $this->getDirectionVector()->y / 2 * $this->getSpeed();
 
 		$finalMotion = [0, 0];
 		switch($motionZ) {
@@ -77,7 +77,7 @@ abstract class HoveringPet extends BasePet {
 		}
 
 		if((((float) $y) !== 0.0 && $this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) <= $this->flyHeight) || $y < 0) {
-			$this->motionY = $this->getSpeed() * 0.2 * ($y / abs($y));
+			$this->motionY = $this->getSpeed() * 0.25 * ($y / abs($y));
 		}
 		if(abs($y < 0.1)) {
 			$this->motionY = 0;

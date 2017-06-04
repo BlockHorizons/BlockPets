@@ -4,7 +4,6 @@ namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 
 class RemovePetCommand extends BaseCommand {
@@ -36,18 +35,5 @@ class RemovePetCommand extends BaseCommand {
 			$sender->sendMessage(TF::RED . "[Warning] A pet with that name doesn't exist.");
 		}
 		return true;
-	}
-
-	public function generateCustomCommandData(Player $player) {
-		$commandData = parent::generateCustomCommandData($player);
-
-		$commandData["overloads"]["default"]["input"]["parameters"] = [
-			0 => [
-				"type" => "rawtext",
-				"name" => "pet name",
-				"optional" => false
-			]
-		];
-		return $commandData;
 	}
 }

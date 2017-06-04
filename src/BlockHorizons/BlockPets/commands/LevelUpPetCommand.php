@@ -41,22 +41,4 @@ class LevelUpPetCommand extends BaseCommand {
 		$sender->sendMessage(TF::GREEN . "Successfully leveled up the pet: " . TF::AQUA . $pet->getPetName() . ($amount === 1 ? " once!" : " " . $amount . " times!"));
 		return true;
 	}
-
-	public function generateCustomCommandData(Player $player) {
-		$commandData = parent::generateCustomCommandData($player);
-
-		$commandData["overloads"]["default"]["input"]["parameters"] = [
-			0 => [
-				"type" => "rawtext",
-				"name" => "pet name",
-				"optional" => false
-			],
-			1 => [
-				"type" => "int",
-				"name" => "amount",
-				"optional" => true
-			]
-		];
-		return $commandData;
-	}
 }

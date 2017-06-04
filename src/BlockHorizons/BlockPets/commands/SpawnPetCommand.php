@@ -66,46 +66,4 @@ class SpawnPetCommand extends BaseCommand {
 		}
 		return true;
 	}
-
-	public function generateCustomCommandData(Player $player) {
-		$commandData = parent::generateCustomCommandData($player);
-
-		$availablePets = Loader::PETS;
-		foreach($availablePets as $key => $pet) {
-			$availablePets[$key] = strtolower($pet);
-		}
-		$commandData["overloads"]["default"]["input"]["parameters"] = [
-			0 => [
-				"type" => "stringenum",
-				"name" => "type",
-				"optional" => false,
-				"enum_values" => $availablePets
-			],
-			1 => [
-				"type" => "rawtext",
-				"name" => "name",
-				"optional" => false,
-			],
-			2 => [
-				"type" => "int",
-				"name" => "size",
-				"optional" => true
-			],
-			3 => [
-				"type" => "stringenum",
-				"name" => "baby",
-				"optional" => true,
-				"enum_values" => [
-					"true",
-					"false"
-				]
-			],
-			4 => [
-				"type" => "rawtext",
-				"name" => "player",
-				"optional" => true
-			]
-		];
-		return $commandData;
-	}
 }
