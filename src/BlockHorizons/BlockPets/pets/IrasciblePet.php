@@ -77,7 +77,6 @@ abstract class IrasciblePet extends Calculator {
 				}
 				if($this->getLoader()->getBlockPetsConfig()->petsDoAttack()) {
 					$this->setAngry($attacker);
-
 				}
 			}
 		}

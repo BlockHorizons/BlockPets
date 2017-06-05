@@ -9,7 +9,7 @@ use pocketmine\event\entity\EntityDamageEvent;
 abstract class WalkingPet extends IrasciblePet {
 
 	protected $jumpTicks = 0;
-	private $waitingTime = 9;
+	private $waitingTime = 10;
 
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
@@ -97,11 +97,11 @@ abstract class WalkingPet extends IrasciblePet {
 		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
-		if($this->distance($target) <= $this->scale + 0.3 && $this->waitingTime <= 0) {
+		if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0) {
 			$this->getLoader()->getServer()->getPluginManager()->callEvent($event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage()));
 			$target->attack($event->getFinalDamage(), $event);
 
-			$this->waitingTime = 8;
+			$this->waitingTime = 10;
 		}
 		if($this->distance($this->getPetOwner()) > 20 || $this->distance($this->getTarget()) > 15) {
 			$this->calmDown();

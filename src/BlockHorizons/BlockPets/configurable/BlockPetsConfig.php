@@ -13,6 +13,7 @@ class BlockPetsConfig {
 		$this->loader = $loader;
 
 		$loader->saveDefaultConfig();
+		$this->collectPreferences();
 	}
 
 	public function collectPreferences() {
