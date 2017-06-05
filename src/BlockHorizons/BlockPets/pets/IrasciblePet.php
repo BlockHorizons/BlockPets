@@ -3,6 +3,8 @@
 namespace BlockHorizons\BlockPets\pets;
 
 use pocketmine\entity\Entity;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
@@ -54,6 +56,37 @@ abstract class IrasciblePet extends Calculator {
 	 */
 	public function isAngry(): bool {
 		return $this->target !== null;
+	}
+
+	/**
+	 * @param float             $damage
+	 * @param EntityDamageEvent $source
+	 *
+	 * @return bool
+	 */
+	public function attack($damage, EntityDamageEvent $source): bool {
+		if($this->getLoader()->getBlockPetsConfig()->arePetsInvulnerable()) {
+			$source->setCancelled();
+			return false;
+		}
+		if($this->isRidden()) {
+			$source->setCancelled();
+			return false;
+		}
+		if($source instanceof EntityDamageByEntityEvent) {
+			$attacker = $source->getDamager();
+			if(!$this->getLoader()->getBlockPetsConfig()->arePetsInvulnerable()) {
+				if($attacker->getId() === $this->getPetOwner()->getId()) {
+					$source->setCancelled();
+					return false;
+				}
+				if($this->getLoader()->getBlockPetsConfig()->petsDoAttack()) {
+					$this->setAngry($attacker);
+				}
+			}
+		}
+		parent::attack($damage, $source);
+		return true;
 	}
 
 	public abstract function doAttackingMovement();
