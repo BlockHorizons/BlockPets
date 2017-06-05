@@ -212,7 +212,7 @@ class Loader extends PluginBase {
 	 * @param bool   $isBaby
 	 * @param int    $level
 	 *
-	 * @return Entity
+	 * @return BasePet
 	 */
 	public function createPet(string $entityName, Player $position, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1) {
 		$nbt = new CompoundTag("", [
@@ -237,7 +237,11 @@ class Loader extends PluginBase {
 			"isBaby" => new ByteTag("isBaby", $isBaby)
 		]);
 
-		return Entity::createEntity($entityName . "Pet", $position->getLevel(), $nbt);
+		$entity = Entity::createEntity($entityName . "Pet", $position->getLevel(), $nbt);
+		if($entity instanceof BasePet) {
+			return $entity;
+		}
+		return null;
 	}
 
 	/**

@@ -2,6 +2,7 @@
 
 namespace BlockHorizons\BlockPets\listeners;
 
+use BlockHorizons\BlockPets\events\PetRespawnEvent;
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\PetRespawnTask;
 use BlockHorizons\BlockPets\pets\BasePet;
@@ -75,10 +76,17 @@ class EventListener implements Listener {
 
 	public function onPetDeath(EntityDeathEvent $event) {
 		$pet = $event->getEntity();
+		$delay = $this->getLoader()->getBlockPetsConfig()->getRespawnTime() * 20;
 		if($pet instanceof BasePet) {
 			$newPet = $this->getLoader()->createPet($pet->getEntityType(), $pet->getPetOwner(), $pet->getPetName(), $pet->getStartingScale(), $pet->namedtag["isBaby"], $pet->getPetLevel());
+			$this->getLoader()->getServer()->getPluginManager()->callEvent($ev = new PetRespawnEvent($this->getLoader(), $newPet, $delay));
+			if($ev->isCancelled()) {
+				return;
+			}
+			$delay = $ev->getDelay();
+
 			$newPet->despawnFromAll();
-			$this->getLoader()->getServer()->getScheduler()->scheduleDelayedTask(new PetRespawnTask($this->getLoader(), $pet), $this->getLoader()->getBlockPetsConfig()->getRespawnTime() * 20);
+			$this->getLoader()->getServer()->getScheduler()->scheduleDelayedTask(new PetRespawnTask($this->getLoader(), $pet), $delay * 20);
 		}
 	}
 }

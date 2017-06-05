@@ -2,6 +2,7 @@
 
 namespace BlockHorizons\BlockPets\pets;
 
+use BlockHorizons\BlockPets\events\PetLevelUpEvent;
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use pocketmine\entity\Creature;
@@ -59,14 +60,33 @@ abstract class BasePet extends Creature implements Rideable {
 
 	/**
 	 * @param int $amount
+	 *
+	 * @return bool
 	 */
-	public function levelUp(int $amount = 1) {
-		$this->setPetLevel($this->getPetLevel() + $amount);
+	public function levelUp(int $amount = 1): bool {
+		$this->getLoader()->getServer()->getPluginManager()->callEvent($ev = new PetLevelUpEvent($this->getLoader(), $this, $this->getPetLevel(), $this->getPetLevel() + $amount));
+		if($ev->isCancelled()) {
+			return false;
+		}
+		$this->setPetLevel($ev->getTo());
 
 		$this->setNameTag(
 			$this->getPetName() . PHP_EOL .
 			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $this->getPetLevel() . " " . TextFormat::GRAY . $this->getName()
 		);
+		$this->getPetOwner()->addTitle((TextFormat::GREEN . "Level Up!"), (TextFormat::AQUA . "Your pet " . $this->getPetName() . TextFormat::RESET . TextFormat::AQUA . " turned level " . $ev->getTo() . "!"));
+		return true;
+	}
+
+	/**
+	 * @return Loader
+	 */
+	public function getLoader(): Loader {
+		$plugin = $this->getLevel()->getServer()->getPluginManager()->getPlugin("BlockPets");
+		if($plugin instanceof Loader) {
+			return $plugin;
+		}
+		return null;
 	}
 
 	/**
@@ -95,6 +115,13 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function getName(): string {
 		return $this->name;
+	}
+
+	/**
+	 * @return Player|null
+	 */
+	public function getPetOwner() {
+		return $this->getLevel()->getServer()->getPlayer($this->petOwner);
 	}
 
 	public function initEntity() {
@@ -216,13 +243,6 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
-	 * @return Player|null
-	 */
-	public function getPetOwner() {
-		return $this->getLevel()->getServer()->getPlayer($this->petOwner);
-	}
-
-	/**
 	 * Detaches the rider from the pet.
 	 */
 	public function throwRiderOff() {
@@ -282,17 +302,6 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->updateMovement();
 		parent::onUpdate($currentTick);
 		return true;
-	}
-
-	/**
-	 * @return Loader
-	 */
-	public function getLoader(): Loader {
-		$plugin = $this->getLevel()->getServer()->getPluginManager()->getPlugin("BlockPets");
-		if($plugin instanceof Loader) {
-			return $plugin;
-		}
-		return null;
 	}
 
 	/**
