@@ -61,30 +61,27 @@ abstract class IrasciblePet extends Calculator {
 	/**
 	 * @param float             $damage
 	 * @param EntityDamageEvent $source
-	 *
-	 * @return bool
 	 */
-	public function attack($damage, EntityDamageEvent $source): bool {
+	public function attack($damage, EntityDamageEvent $source) {
 		if($this->getLoader()->getBlockPetsConfig()->arePetsInvulnerable()) {
-			return false;
+			$source->setCancelled();
 		}
 		if($this->isRidden()) {
-			return false;
+			$source->setCancelled();
 		}
 		if($source instanceof EntityDamageByEntityEvent) {
 			$attacker = $source->getDamager();
 			if(!$this->getLoader()->getBlockPetsConfig()->arePetsInvulnerable()) {
 				if($attacker->getId() === $this->getPetOwner()->getId()) {
-					return false;
+					$source->setCancelled();
 				}
 				if($this->getLoader()->getBlockPetsConfig()->petsDoAttack()) {
 					$this->setAngry($attacker);
-					parent::attack($damage, $source);
-					return true;
+
 				}
 			}
 		}
-		return false;
+		parent::attack($damage, $source);
 	}
 
 	public abstract function doAttackingMovement();

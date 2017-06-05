@@ -67,7 +67,6 @@ abstract class WalkingPet extends IrasciblePet {
 		if($this->jumpTicks > 0) {
 			$this->jumpTicks--;
 		}
-		$this->waitingTime--;
 
 		if(!$this->isOnGround()) {
 			if($this->motionY > -$this->gravity * 4) {
@@ -98,7 +97,7 @@ abstract class WalkingPet extends IrasciblePet {
 		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
-		if($this->distance($target) <= $this->scale + 0.3 && $this->waitingTime === 0) {
+		if($this->distance($target) <= $this->scale + 0.3 && $this->waitingTime <= 0) {
 			$this->getLoader()->getServer()->getPluginManager()->callEvent($event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage()));
 			$target->attack($event->getFinalDamage(), $event);
 
@@ -108,6 +107,7 @@ abstract class WalkingPet extends IrasciblePet {
 			$this->calmDown();
 		}
 		$this->updateMovement();
+		$this->waitingTime--;
 		return true;
 	}
 

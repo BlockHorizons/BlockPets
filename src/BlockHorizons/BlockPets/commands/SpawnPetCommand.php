@@ -48,6 +48,10 @@ class SpawnPetCommand extends BaseCommand {
 			return true;
 		}
 
+		if(empty($args[1])) {
+			$args[1] = $sender->getDisplayName();
+		}
+
 		if(isset($args[3])) {
 			if($args[3] === "false") {
 				$args[3] = false;
