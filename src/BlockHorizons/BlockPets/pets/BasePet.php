@@ -40,11 +40,8 @@ abstract class BasePet extends Creature implements Rideable {
 	protected $rider = null;
 	protected $attackDamage = 0;
 
-	private $calculator;
-
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
-		$this->calculator = new Calculator($this);
 
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
@@ -70,7 +67,6 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->getPetName() . PHP_EOL .
 			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $this->getPetLevel() . " " . TextFormat::GRAY . $this->getName()
 		);
-		$this->calculator->recalculateAll();
 	}
 
 	/**

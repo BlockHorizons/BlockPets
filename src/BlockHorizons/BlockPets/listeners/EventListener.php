@@ -9,6 +9,7 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
@@ -23,41 +24,38 @@ class EventListener implements Listener {
 	public function onEntityDamage(EntityDamageEvent $event) {
 		$petEntity = $event->getEntity();
 		if($petEntity instanceof IrasciblePet) {
-			if(!$petEntity->isRidden()) {
-				$petOwner = $petEntity->getPetOwner();
-				if($event instanceof EntityDamageByEntityEvent) {
-					$attacker = $event->getDamager();
-					if($attacker instanceof Player) {
-						if($attacker->getId() === $petOwner->getId()) {
-							if($this->getLoader()->isRidingAPet($attacker)) {
-								$event->setCancelled();
-								return;
-							}
-							if($attacker->getInventory()->getItemInHand()->getId() === 329) {
-								$petEntity->setRider($attacker);
-								$attacker->sendTip(TextFormat::GRAY . "Crouch or jump to dismount...");
-								$event->setCancelled();
-								return;
-							}
-						}
-					}
+			$petOwner = $petEntity->getPetOwner();
+			if($this->getLoader()->getBlockPetsConfig()->arePetsInvulnerable()) {
+				$event->setCancelled();
+			}
+			if($petEntity->isRidden()) {
+				$event->setCancelled();
+			}
+			if(!$event instanceof EntityDamageByEntityEvent) {
+				return;
+			}
 
-					if(!$this->getLoader()->getBlockPetsConfig()->arePetsInvulnerable()) {
-						if($attacker->getId() === $petOwner->getId()) {
-							$event->setCancelled();
-							return;
-						}
-						if($this->getLoader()->getBlockPetsConfig()->petsDoAttack()) {
-							$petEntity->setAngry($attacker);
-						}
+			$attacker = $event->getDamager();
+			if($attacker instanceof Player) {
+				if($attacker->getId() === $petOwner->getId()) {
+					if($attacker->getInventory()->getItemInHand()->getId() === Item::SADDLE) {
+						$petEntity->setRider($attacker);
+						$attacker->sendTip(TextFormat::GRAY . "Crouch or jump to dismount...");
+						$event->setCancelled();
+						return;
 					}
 				}
 			}
 
-			if($this->getLoader()->getBlockPetsConfig()->arePetsInvulnerable()) {
-				$event->setCancelled();
+			if(!$this->getLoader()->getBlockPetsConfig()->arePetsInvulnerable()) {
+				if($attacker->getId() === $petOwner->getId()) {
+					$event->setCancelled();
+					return;
+				}
+				if($this->getLoader()->getBlockPetsConfig()->petsDoAttack()) {
+					$petEntity->setAngry($attacker);
+				}
 			}
-
 		} elseif($petEntity instanceof Player) {
 			$player = $petEntity;
 			if($event->getCause() === $event::CAUSE_FALL) {

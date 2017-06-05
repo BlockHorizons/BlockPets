@@ -7,7 +7,7 @@ use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
 
-abstract class IrasciblePet extends BasePet {
+abstract class IrasciblePet extends Calculator {
 
 	private $target = null;
 	private $isAttacking = false;
@@ -16,12 +16,23 @@ abstract class IrasciblePet extends BasePet {
 		parent::__construct($level, $nbt);
 	}
 
+	/**
+	 * @param Entity $player
+	 */
 	public function setAngry(Entity $player) {
 		$this->target = $player;
 	}
 
 	public function calmDown() {
 		$this->target = null;
+	}
+
+	/**
+	 * @param int $amount
+	 */
+	public function levelUp(int $amount = 1) {
+		parent::levelUp($amount);
+		$this->recalculateAll();
 	}
 
 	/**

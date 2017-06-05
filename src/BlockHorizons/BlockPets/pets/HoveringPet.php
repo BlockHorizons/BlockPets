@@ -40,7 +40,7 @@ abstract class HoveringPet extends IrasciblePet {
 			$this->motionZ = $this->getSpeed() * 0.25 * ($z / (abs($x) + abs($z)));
 		}
 
-		if($y > -1.5 && (float) $y !== 0.0) {
+		if($y > -2.5 && (float) $y !== 0.0) {
 			$this->motionY = $this->getSpeed() * 0.25 * ($y / abs($y));
 		}
 
@@ -61,7 +61,7 @@ abstract class HoveringPet extends IrasciblePet {
 		$y = $target->y - $this->y;
 		$z = $target->z - $this->z;
 
-		if($x * $x + $z * $z < 1) {
+		if($x * $x + $z * $z < 1.2) {
 			$this->motionX = 0;
 			$this->motionZ = 0;
 		} else {
@@ -69,7 +69,7 @@ abstract class HoveringPet extends IrasciblePet {
 			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
 		}
 
-		if($y > -0.5 && (float) $y !== 0.0) {
+		if($y > -1.5 && (float) $y !== 0.0) {
 			$this->motionY = $this->getSpeed() * 0.15 * ($y / abs($y));
 		}
 
@@ -84,7 +84,7 @@ abstract class HoveringPet extends IrasciblePet {
 			$this->getLoader()->getServer()->getPluginManager()->callEvent($event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage()));
 			$target->attack($event->getFinalDamage(), $event);
 
-			$this->waitingTime = 9;
+			$this->waitingTime = 8;
 		}
 		if($this->distance($this->getPetOwner()) > 20 || $this->distance($this->getTarget()) > 15) {
 			$this->calmDown();

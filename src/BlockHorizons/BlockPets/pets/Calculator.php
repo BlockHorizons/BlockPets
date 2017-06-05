@@ -2,13 +2,13 @@
 
 namespace BlockHorizons\BlockPets\pets;
 
+use pocketmine\level\Level;
+use pocketmine\nbt\tag\CompoundTag;
 
-class Calculator {
+abstract class Calculator extends BasePet {
 
-	private $pet;
-
-	public function __construct(BasePet $pet) {
-		$this->pet = $pet;
+	public function __construct(Level $level, CompoundTag $nbt) {
+		parent::__construct($level, $nbt);
 	}
 
 	public function recalculateAll() {
@@ -18,32 +18,25 @@ class Calculator {
 	}
 
 	public function recalculateHealth() {
-		$petLevel = $this->getPet()->getPetLevel();
-		$baseHealth = $this->getPet()->getLoader()->getBlockPetsConfig()->getBasePetHealth();
-		$scalingHealth = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetHealthPerLevel();
+		$petLevel = $this->getPetLevel();
+		$baseHealth = $this->getLoader()->getBlockPetsConfig()->getBasePetHealth();
+		$scalingHealth = $this->getLoader()->getBlockPetsConfig()->getPetHealthPerLevel();
 
-		$this->getPet()->setMaxHealth((int) round($baseHealth + $scalingHealth * $petLevel));
-	}
-
-	/**
-	 * @return BasePet
-	 */
-	public function getPet(): BasePet {
-		return $this->pet;
+		$this->setMaxHealth((int) round($baseHealth + $scalingHealth * $petLevel));
 	}
 
 	public function recalculateSize() {
-		$petLevel = $this->getPet()->getPetLevel();
-		$scalingSize = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetSizePerLevel();
+		$petLevel = $this->getPetLevel();
+		$scalingSize = $this->getLoader()->getBlockPetsConfig()->getPetSizePerLevel();
 
-		$this->getPet()->setScale((float) ($this->getPet()->getStartingScale() + $scalingSize * $petLevel));
+		$this->setScale((float) ($this->getStartingScale() + $scalingSize * $petLevel));
 	}
 
 	public function recalculateDamage() {
-		$petLevel = $this->getPet()->getPetLevel();
-		$baseDamage = $this->getPet()->getLoader()->getBlockPetsConfig()->getBasePetDamage();
-		$scalingDamage = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetDamagePerLevel();
+		$petLevel = $this->getPetLevel();
+		$baseDamage = $this->getLoader()->getBlockPetsConfig()->getBasePetDamage();
+		$scalingDamage = $this->getLoader()->getBlockPetsConfig()->getPetDamagePerLevel();
 
-		$this->getPet()->setAttackDamage((int) round($baseDamage + $scalingDamage * $petLevel));
+		$this->setAttackDamage((int) round($baseDamage + $scalingDamage * $petLevel));
 	}
 }
