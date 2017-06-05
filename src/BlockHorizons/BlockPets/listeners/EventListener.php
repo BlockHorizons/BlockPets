@@ -4,6 +4,7 @@ namespace BlockHorizons\BlockPets\listeners;
 
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\BasePet;
+use BlockHorizons\BlockPets\pets\IrasciblePet;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
@@ -21,33 +22,58 @@ class EventListener implements Listener {
 
 	public function onEntityDamage(EntityDamageEvent $event) {
 		$petEntity = $event->getEntity();
-		if($petEntity instanceof BasePet) {
+		if($petEntity instanceof IrasciblePet) {
 			if(!$petEntity->isRidden()) {
 				$petOwner = $petEntity->getPetOwner();
 				if($event instanceof EntityDamageByEntityEvent) {
 					$attacker = $event->getDamager();
 					if($attacker instanceof Player) {
-						if($attacker->getId() !== $petOwner->getId()) {
+						if($attacker->getId() === $petOwner->getId()) {
+							if($this->getLoader()->isRidingAPet($attacker)) {
+								$event->setCancelled();
+								return;
+							}
+							if($attacker->getInventory()->getItemInHand()->getId() === 329) {
+								$petEntity->setRider($attacker);
+								$attacker->sendTip(TextFormat::GRAY . "Crouch or jump to dismount...");
+								$event->setCancelled();
+								return;
+							}
+						}
+					}
+
+					if(!$this->getLoader()->getBlockPetsConfig()->arePetsInvulnerable()) {
+						if($attacker->getId() === $petOwner->getId()) {
 							$event->setCancelled();
 							return;
 						}
-						if($this->getLoader()->isRidingAPet($attacker)) {
-							$event->setCancelled();
-							return;
-						}
-						if($attacker->getInventory()->getItemInHand()->getId() === 329) {
-							$petEntity->setRider($attacker);
-							$attacker->sendTip(TextFormat::GRAY . "Crouch or jump to dismount...");
+						if($this->getLoader()->getBlockPetsConfig()->petsDoAttack()) {
+							$petEntity->setAngry($attacker);
 						}
 					}
 				}
 			}
-			$event->setCancelled();
+
+			if($this->getLoader()->getBlockPetsConfig()->arePetsInvulnerable()) {
+				$event->setCancelled();
+			}
 
 		} elseif($petEntity instanceof Player) {
+			$player = $petEntity;
 			if($event->getCause() === $event::CAUSE_FALL) {
-				if($this->getLoader()->isRidingAPet($petEntity)) {
+				if($this->getLoader()->isRidingAPet($player)) {
 					$event->setCancelled();
+					return;
+				}
+			}
+			if($event instanceof EntityDamageByEntityEvent) {
+				if(!empty($this->getLoader()->getPetsFrom($player))) {
+					foreach($this->getLoader()->getPetsFrom($player) as $pet) {
+						if(!$pet instanceof IrasciblePet) {
+							continue;
+						}
+						$pet->setAngry($event->getDamager());
+					}
 				}
 			}
 		}

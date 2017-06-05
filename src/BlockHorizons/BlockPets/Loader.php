@@ -6,6 +6,7 @@ use BlockHorizons\BlockPets\commands\CommandOverloads;
 use BlockHorizons\BlockPets\commands\LevelUpPetCommand;
 use BlockHorizons\BlockPets\commands\RemovePetCommand;
 use BlockHorizons\BlockPets\commands\SpawnPetCommand;
+use BlockHorizons\BlockPets\configurable\BlockPetsConfig;
 use BlockHorizons\BlockPets\listeners\EventListener;
 use BlockHorizons\BlockPets\listeners\RidingListener;
 use BlockHorizons\BlockPets\pets\BasePet;
@@ -132,6 +133,8 @@ class Loader extends PluginBase {
 		LlamaPet::class
 	];
 
+	private $bpConfig;
+
 	public function onEnable() {
 		CommandOverloads::initialize();
 		foreach(self::PET_CLASSES as $petClass) {
@@ -139,6 +142,8 @@ class Loader extends PluginBase {
 		}
 		$this->registerCommands();
 		$this->registerListeners();
+
+		$this->bpConfig = new BlockPetsConfig($this);
 	}
 
 	public function registerCommands() {
@@ -314,5 +319,12 @@ class Loader extends PluginBase {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * @return BlockPetsConfig
+	 */
+	public function getBlockPetsConfig(): BlockPetsConfig {
+		return $this->bpConfig;
 	}
 }

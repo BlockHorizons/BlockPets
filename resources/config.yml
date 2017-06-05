@@ -1,0 +1,24 @@
+---
+# Configuration file for BlockPets, a pets plugin by BlockHorizons.
+
+# Whether to make pets invulnerable to any damage, or allow damaging them.
+Invulnerable-Pets: true
+
+# Whether to make pets attack the person that attacked them, or their owner.
+Attacking-Pets: true
+
+# The base health a pet will be spawned with. This is equal to the health of a pet with level 0.
+Pet-Base-Health: 20
+
+# The health that gets added each level the pet gets.
+Pet-Per-Level-Health: 0.5
+
+# The size that gets added each level the pet gets.
+Pet-Per-Level-Size: 0.03
+
+# The base damage a pet will be spawned with. This is equal to the damage of a pet with level 0.
+Pet-Base-Damage: 4
+
+# The damage that gets added each level the pet gets.
+Pet-Per-Level-Damage: 0.1
+...

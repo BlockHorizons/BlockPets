@@ -3,15 +3,23 @@
 namespace BlockHorizons\BlockPets\pets;
 
 
-abstract class WalkingPet extends BasePet {
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\entity\EntityDamageEvent;
+
+abstract class WalkingPet extends IrasciblePet {
 
 	protected $jumpTicks = 0;
+	private $waitingTime = 9;
 
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
-		parent::onUpdate($currentTick);
 		if($petOwner === null || $this->isRidden()) {
 			return false;
+		}
+		if($this->isAngry()) {
+			$this->doAttackingMovement();
+			parent::onUpdate($currentTick);
+			return true;
 		}
 
 		if($this->jumpTicks > 0) {
@@ -47,6 +55,57 @@ abstract class WalkingPet extends BasePet {
 		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
+		$this->updateMovement();
+		parent::onUpdate($currentTick);
+		return true;
+	}
+
+	public function doAttackingMovement() {
+		$target = $this->getTarget();
+
+		if($this->jumpTicks > 0) {
+			$this->jumpTicks--;
+		}
+		$this->waitingTime--;
+
+		if(!$this->isOnGround()) {
+			if($this->motionY > -$this->gravity * 4) {
+				$this->motionY = -$this->gravity * 4;
+			} else {
+				$this->motionY -= $this->gravity;
+			}
+		} else {
+			$this->motionY -= $this->gravity;
+		}
+		if($this->isCollidedHorizontally && $this->jumpTicks === 0) {
+			$this->jump();
+		}
+		$this->move($this->motionX, $this->motionY, $this->motionZ);
+
+		$x = $target->x - $this->x;
+		$y = $target->y - $this->y;
+		$z = $target->z - $this->z;
+
+		if($x * $x + $z * $z < 5) {
+			$this->motionX = 0;
+			$this->motionZ = 0;
+		} else {
+			$this->motionX = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
+			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
+		}
+		$this->yaw = rad2deg(atan2(-$x, $z));
+		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
+
+		$this->move($this->motionX, $this->motionY, $this->motionZ);
+		if($this->distance($target) < $this->scale && $this->waitingTime === 0) {
+			$this->getLoader()->getServer()->getPluginManager()->callEvent($event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage()));
+			$target->attack($event->getFinalDamage(), $event);
+
+			$this->waitingTime = 9;
+		}
+		if($this->distance($this->getPetOwner()) > 20 || $this->distance($this->getTarget()) > 15) {
+			$this->calmDown();
+		}
 		$this->updateMovement();
 		return true;
 	}

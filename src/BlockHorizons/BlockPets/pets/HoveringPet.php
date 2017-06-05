@@ -3,18 +3,27 @@
 namespace BlockHorizons\BlockPets\pets;
 
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\math\Vector3;
 
-abstract class HoveringPet extends BasePet {
+abstract class HoveringPet extends IrasciblePet {
 
 	public $gravity = 0;
+
 	protected $flyHeight = 0;
+
+	private $waitingTime = 9;
 
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
-		parent::onUpdate($currentTick);
 		if($petOwner === null || $this->isRidden()) {
 			return false;
+		}
+		if($this->isAngry()) {
+			$this->doAttackingMovement();
+			parent::onUpdate($currentTick);
+			return true;
 		}
 
 		$x = $petOwner->x - $this->x;
@@ -42,6 +51,45 @@ abstract class HoveringPet extends BasePet {
 
 		$this->updateMovement();
 		parent::onUpdate($currentTick);
+		return true;
+	}
+
+	public function doAttackingMovement() {
+		$target = $this->getTarget();
+		$x = $target->x - $this->x;
+		$y = $target->y - $this->y;
+		$z = $target->z - $this->z;
+
+		if($x * $x + $z * $z < 1) {
+			$this->motionX = 0;
+			$this->motionZ = 0;
+		} else {
+			$this->motionX = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
+			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
+		}
+
+		if($y > -0.5) {
+			$this->motionY = $this->getSpeed() * 0.15 * ($y / abs($y));
+		}
+
+		$this->yaw = rad2deg(atan2(-$x, $z));
+		if($this->getNetworkId() === 53) {
+			$this->yaw += 180;
+		}
+		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
+		$this->move($this->motionX, $this->motionY, $this->motionZ);
+
+		if($this->distance($target) < $this->scale && $this->waitingTime === 0) {
+			$this->getLoader()->getServer()->getPluginManager()->callEvent($event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage()));
+			$target->attack($event->getFinalDamage(), $event);
+
+			$this->waitingTime = 9;
+		}
+		if($this->distance($this->getPetOwner()) > 20 || $this->distance($this->getTarget()) > 15) {
+			$this->calmDown();
+		}
+
+		$this->updateMovement();
 		return true;
 	}
 

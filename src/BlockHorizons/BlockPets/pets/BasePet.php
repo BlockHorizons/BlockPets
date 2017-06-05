@@ -20,24 +20,33 @@ abstract class BasePet extends Creature implements Rideable {
 
 	const STATE_SITTING = 2;
 	const STATE_STANDING = 3;
+
 	const TIER_COMMON = 1;
 	const TIER_UNCOMMON = 2;
 	const TIER_SPECIAL = 3;
 	const TIER_EPIC = 4;
 	const TIER_LEGENDARY = 5;
+
 	public $name;
 	public $speed = 1.0;
 	public $scale = 1.0;
 	public $networkId;
+
 	protected $tier = 1;
 	protected $petOwner;
 	protected $petLevel;
 	protected $petName;
 	protected $ridden = false;
 	protected $rider = null;
+	protected $attackDamage = 0;
+
+	private $calculator;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
+		$this->calculator = new Calculator($this);
+		$this->calculator->recalculateAll();
+
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
 
@@ -61,6 +70,7 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->getPetName() . PHP_EOL .
 			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $this->getPetLevel() . " " . TextFormat::GRAY . $this->getName()
 		);
+		$this->calculator->recalculateAll();
 	}
 
 	/**
@@ -147,6 +157,20 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function getSpeed(): float {
 		return $this->speed;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getAttackDamage(): int {
+		return $this->attackDamage;
+	}
+
+	/**
+	 * @param int $amount
+	 */
+	public function setAttackDamage(int $amount) {
+		$this->attackDamage = $amount;
 	}
 
 	/**
