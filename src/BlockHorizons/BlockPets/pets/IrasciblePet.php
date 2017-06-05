@@ -5,9 +5,11 @@ namespace BlockHorizons\BlockPets\pets;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\item\Item;
 use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
+use pocketmine\utils\TextFormat;
 
 abstract class IrasciblePet extends Calculator {
 
@@ -16,13 +18,6 @@ abstract class IrasciblePet extends Calculator {
 
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
-	}
-
-	/**
-	 * @param Entity $player
-	 */
-	public function setAngry(Entity $player) {
-		$this->target = $player;
 	}
 
 	public function calmDown() {
@@ -79,8 +74,22 @@ abstract class IrasciblePet extends Calculator {
 					$this->setAngry($attacker);
 				}
 			}
+			if($attacker instanceof Player) {
+				if($attacker->getInventory()->getItemInHand()->getId() === Item::SADDLE) {
+					$this->setRider($attacker);
+					$attacker->sendTip(TextFormat::GRAY . "Crouch or jump to dismount...");
+					$source->setCancelled();
+				}
+			}
 		}
 		parent::attack($damage, $source);
+	}
+
+	/**
+	 * @param Entity $player
+	 */
+	public function setAngry(Entity $player) {
+		$this->target = $player;
 	}
 
 	public abstract function doAttackingMovement();
