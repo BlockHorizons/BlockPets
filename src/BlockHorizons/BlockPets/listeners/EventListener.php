@@ -24,7 +24,7 @@ class EventListener implements Listener {
 	/**
 	 * @param EntityDamageEvent $event
 	 *
-	 * @ignoreCanceled true
+	 * @ignoreCancelled true
 	 */
 	public function onEntityDamage(EntityDamageEvent $event) {
 		$petEntity = $event->getEntity();
@@ -52,6 +52,9 @@ class EventListener implements Listener {
 				}
 			}
 			if($event instanceof EntityDamageByEntityEvent) {
+				if($event->isCancelled()) {
+					return;
+				}
 				if(!empty($this->getLoader()->getPetsFrom($player))) {
 					foreach($this->getLoader()->getPetsFrom($player) as $pet) {
 						if(!$pet instanceof IrasciblePet) {
