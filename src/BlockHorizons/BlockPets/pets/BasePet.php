@@ -57,6 +57,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setScale($this->scale);
 
 		$this->levelUp();
+		$this->spawnToAll();
 	}
 
 	/**
@@ -105,8 +106,15 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, true);
 		$this->setDataFlag(self::DATA_FLAG_BABY, self::DATA_TYPE_BYTE, (bool) $this->namedtag["isBaby"]);
 		if((bool) $this->namedtag["isBaby"]) {
-			$this->setScale($this->getScale() / 2);
+			$this->setScale($this->getStartingScale() / 2);
 		}
+	}
+
+	/**
+	 * @return float
+	 */
+	public function getStartingScale(): float {
+		return $this->scale;
 	}
 
 	/**
@@ -139,7 +147,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->namedtag->petOwner = new StringTag("petOwner", $this->getPetOwnerName());
 		$this->namedtag->petName = new StringTag("petName", $this->getPetName());
 		$this->namedtag->speed = new FloatTag("speed", $this->getSpeed());
-		$this->namedtag->scale = new FloatTag("scale", $this->getScale());
+		$this->namedtag->scale = new FloatTag("scale", $this->getStartingScale());
 		$this->namedtag->networkId = new IntTag("networkId", $this->getNetworkId());
 		$this->namedtag->petLevel = new IntTag("petLevel", $this->getPetLevel());
 	}
@@ -256,6 +264,9 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	public function onUpdate($currentTick) {
+		if($this->closed) {
+			return false;
+		}
 		$petOwner = $this->getPetOwner();
 		if($petOwner === null) {
 			$this->ridden = false;
@@ -273,9 +284,8 @@ abstract class BasePet extends Creature implements Rideable {
 		if(!$visible) {
 			$this->respawnToAll();
 		}
-		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId() && !$this->closed) {
-			$entity = $this->getLoader()->createPet(str_replace(" ", "", str_replace("Pet", "", $this->getName())), $this->getPetOwner(), $this->getPetName(), $this->getScale(), $this->namedtag["isBaby"], $this->getPetLevel());
-			$entity->spawnToAll();
+		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
+			$this->getLoader()->createPet(str_replace(" ", "", str_replace("Pet", "", $this->getName())), $this->getPetOwner(), $this->getPetName(), $this->getStartingScale(), $this->namedtag["isBaby"], $this->getPetLevel());
 			$this->close();
 			return false;
 		}

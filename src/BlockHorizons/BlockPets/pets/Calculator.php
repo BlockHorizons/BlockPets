@@ -22,8 +22,7 @@ class Calculator {
 		$baseHealth = $this->getPet()->getLoader()->getBlockPetsConfig()->getBasePetHealth();
 		$scalingHealth = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetHealthPerLevel();
 
-		$this->getPet()->setMaxHealth($baseHealth + $scalingHealth * $petLevel);
-		$this->getPet()->setHealth($this->getPet()->getMaxHealth());
+		$this->getPet()->setMaxHealth((int) round($baseHealth + $scalingHealth * $petLevel));
 	}
 
 	/**
@@ -37,7 +36,7 @@ class Calculator {
 		$petLevel = $this->getPet()->getPetLevel();
 		$scalingSize = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetSizePerLevel();
 
-		$this->getPet()->setScale($this->getPet()->scale + $scalingSize * $petLevel);
+		$this->getPet()->setScale((float) ($this->getPet()->getStartingScale() + $scalingSize * $petLevel));
 	}
 
 	public function recalculateDamage() {
@@ -45,6 +44,6 @@ class Calculator {
 		$baseDamage = $this->getPet()->getLoader()->getBlockPetsConfig()->getBasePetDamage();
 		$scalingDamage = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetDamagePerLevel();
 
-		$this->getPet()->setAttackDamage($baseDamage + $scalingDamage * $petLevel);
+		$this->getPet()->setAttackDamage((int) round($baseDamage + $scalingDamage * $petLevel));
 	}
 }

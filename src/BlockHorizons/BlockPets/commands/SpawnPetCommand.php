@@ -37,7 +37,7 @@ class SpawnPetCommand extends BaseCommand {
 
 		$player = $sender;
 		if(isset($args[4])) {
-			if(($player = $this->getLoader()->getServer()->getPlayer($args[3])) === null) {
+			if(($player = $this->getLoader()->getServer()->getPlayer($args[4])) === null) {
 				$sender->sendMessage(TF::RED . "[Warning] That player isn't online.");
 				return true;
 			}
@@ -58,8 +58,7 @@ class SpawnPetCommand extends BaseCommand {
 			$args[3] = false;
 		}
 		$petName = $this->getLoader()->getPet($args[0]);
-		$pet = $this->getLoader()->createPet($petName, $player, $args[1], isset($args[2]) ? $args[2] : 1.0, $args[3]);
-		$pet->spawnToAll();
+		$this->getLoader()->createPet($petName, $player, $args[1], isset($args[2]) ? $args[2] : 1.0, $args[3]);
 		$sender->sendMessage(TF::GREEN . "Successfully spawned a pet with the name: " . TF::AQUA . $args[1]);
 		if($player->getName() !== $sender->getName()) {
 			$player->sendMessage(TF::GREEN . "You have received a pet with the name: " . TF::AQUA . $args[1]);

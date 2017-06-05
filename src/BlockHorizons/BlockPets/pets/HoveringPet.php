@@ -20,9 +20,11 @@ abstract class HoveringPet extends IrasciblePet {
 		if($petOwner === null || $this->isRidden()) {
 			return false;
 		}
+		if(parent::onUpdate($currentTick) === false) {
+			return false;
+		}
 		if($this->isAngry()) {
 			$this->doAttackingMovement();
-			parent::onUpdate($currentTick);
 			return true;
 		}
 
@@ -50,7 +52,6 @@ abstract class HoveringPet extends IrasciblePet {
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 
 		$this->updateMovement();
-		parent::onUpdate($currentTick);
 		return true;
 	}
 
