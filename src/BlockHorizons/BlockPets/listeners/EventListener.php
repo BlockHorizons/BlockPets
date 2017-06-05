@@ -21,6 +21,11 @@ class EventListener implements Listener {
 		$this->loader = $loader;
 	}
 
+	/**
+	 * @param EntityDamageEvent $event
+	 *
+	 * @priority MONITOR
+	 */
 	public function onEntityDamage(EntityDamageEvent $event) {
 		$petEntity = $event->getEntity();
 		if($petEntity instanceof IrasciblePet) {

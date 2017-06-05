@@ -23,6 +23,7 @@ abstract class Calculator extends BasePet {
 		$scalingHealth = $this->getLoader()->getBlockPetsConfig()->getPetHealthPerLevel();
 
 		$this->setMaxHealth((int) round($baseHealth + $scalingHealth * $petLevel));
+		$this->setHealth($this->getMaxHealth());
 	}
 
 	public function recalculateSize() {
