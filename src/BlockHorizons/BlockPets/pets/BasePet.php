@@ -45,7 +45,6 @@ abstract class BasePet extends Creature implements Rideable {
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
 		$this->calculator = new Calculator($this);
-		$this->calculator->recalculateAll();
 
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
