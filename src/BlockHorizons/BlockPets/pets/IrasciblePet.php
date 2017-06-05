@@ -66,18 +66,15 @@ abstract class IrasciblePet extends Calculator {
 	 */
 	public function attack($damage, EntityDamageEvent $source): bool {
 		if($this->getLoader()->getBlockPetsConfig()->arePetsInvulnerable()) {
-			$source->setCancelled();
 			return false;
 		}
 		if($this->isRidden()) {
-			$source->setCancelled();
 			return false;
 		}
 		if($source instanceof EntityDamageByEntityEvent) {
 			$attacker = $source->getDamager();
 			if(!$this->getLoader()->getBlockPetsConfig()->arePetsInvulnerable()) {
 				if($attacker->getId() === $this->getPetOwner()->getId()) {
-					$source->setCancelled();
 					return false;
 				}
 				if($this->getLoader()->getBlockPetsConfig()->petsDoAttack()) {
