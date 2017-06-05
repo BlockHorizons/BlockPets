@@ -24,7 +24,7 @@ class EventListener implements Listener {
 	/**
 	 * @param EntityDamageEvent $event
 	 *
-	 * @priority MONITOR
+	 * @ignoreCanceled true
 	 */
 	public function onEntityDamage(EntityDamageEvent $event) {
 		$petEntity = $event->getEntity();
