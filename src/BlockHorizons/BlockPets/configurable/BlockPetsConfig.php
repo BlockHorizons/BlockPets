@@ -76,4 +76,11 @@ class BlockPetsConfig {
 	public function getPetDamagePerLevel(): float {
 		return (float) $this->settings["Pet-Per-Level-Damage"];
 	}
+
+	/**
+	 * @return int
+	 */
+	public function getRespawnTime(): int {
+		return (int) $this->settings["Pet-Respawn-Time"];
+	}
 }

@@ -270,18 +270,8 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->despawnFromAll();
 			return false;
 		}
-		$visible = false;
-		foreach($this->hasSpawned as $key => $player) {
-			if($player->getName() === $petOwner->getName()) {
-				$visible = true;
-				break;
-			}
-		}
-		if(!$visible) {
-			$this->respawnToAll();
-		}
 		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
-			$this->getLoader()->createPet(str_replace(" ", "", str_replace("Pet", "", $this->getName())), $this->getPetOwner(), $this->getPetName(), $this->getStartingScale(), $this->namedtag["isBaby"], $this->getPetLevel());
+			$this->getLoader()->createPet($this->getEntityType(), $this->getPetOwner(), $this->getPetName(), $this->getStartingScale(), $this->namedtag["isBaby"], $this->getPetLevel());
 			$this->close();
 			return false;
 		}
@@ -303,6 +293,13 @@ abstract class BasePet extends Creature implements Rideable {
 			return $plugin;
 		}
 		return null;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getEntityType(): string {
+		return str_replace(" ", "", str_replace("Pet", "", $this->getName()));
 	}
 
 	/**

@@ -13,7 +13,7 @@ abstract class HoveringPet extends IrasciblePet {
 
 	protected $flyHeight = 0;
 
-	private $waitingTime = 9;
+	private $waitingTime = 15;
 
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
@@ -57,6 +57,11 @@ abstract class HoveringPet extends IrasciblePet {
 
 	public function doAttackingMovement() {
 		$target = $this->getTarget();
+
+		if(!$this->getTarget()->isAlive()) {
+			$this->calmDown();
+		}
+
 		$x = $target->x - $this->x;
 		$y = $target->y - $this->y;
 		$z = $target->z - $this->z;
@@ -81,10 +86,10 @@ abstract class HoveringPet extends IrasciblePet {
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 
 		if($this->distance($target) < $this->scale && $this->waitingTime <= 0) {
-			$this->getLoader()->getServer()->getPluginManager()->callEvent($event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage()));
+			$this->getLoader()->getServer()->getPluginManager()->callEvent($event = new EntityDamageByEntityEvent($this->getPetOwner(), $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage()));
 			$target->attack($event->getFinalDamage(), $event);
 
-			$this->waitingTime = 8;
+			$this->waitingTime = 15;
 		}
 		if($this->distance($this->getPetOwner()) > 20 || $this->distance($this->getTarget()) > 15) {
 			$this->calmDown();

@@ -4,6 +4,9 @@
 # Whether to make pets invulnerable to any damage, or allow damaging them.
 Invulnerable-Pets: true
 
+# The time in seconds to wait before spawning a pet that died earlier.
+Pet-Respawn-Time: 20
+
 # Whether to make pets attack the person that attacked them, or their owner.
 Attacking-Pets: true
 
@@ -14,7 +17,7 @@ Pet-Base-Health: 20
 Pet-Per-Level-Health: 0.5
 
 # The size that gets added each level the pet gets.
-Pet-Per-Level-Size: 0.03
+Pet-Per-Level-Size: 0.02
 
 # The base damage a pet will be spawned with. This is equal to the damage of a pet with level 0.
 Pet-Base-Damage: 4

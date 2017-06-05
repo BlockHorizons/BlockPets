@@ -3,10 +3,12 @@
 namespace BlockHorizons\BlockPets\listeners;
 
 use BlockHorizons\BlockPets\Loader;
+use BlockHorizons\BlockPets\PetRespawnTask;
 use BlockHorizons\BlockPets\pets\BasePet;
 use BlockHorizons\BlockPets\pets\IrasciblePet;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityDeathEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\Player;
@@ -68,6 +70,15 @@ class EventListener implements Listener {
 					}
 				}
 			}
+		}
+	}
+
+	public function onPetDeath(EntityDeathEvent $event) {
+		$pet = $event->getEntity();
+		if($pet instanceof BasePet) {
+			$newPet = $this->getLoader()->createPet($pet->getEntityType(), $pet->getPetOwner(), $pet->getPetName(), $pet->getStartingScale(), $pet->namedtag["isBaby"], $pet->getPetLevel());
+			$newPet->despawnFromAll();
+			$this->getLoader()->getServer()->getScheduler()->scheduleDelayedTask(new PetRespawnTask($this->getLoader(), $pet), $this->getLoader()->getBlockPetsConfig()->getRespawnTime() * 20);
 		}
 	}
 }
