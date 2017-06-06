@@ -1,7 +1,8 @@
 <?php
 
-namespace BlockHorizons\BlockPets;
+namespace BlockHorizons\BlockPets\tasks;
 
+use BlockHorizons\BlockPets\Loader;
 use pocketmine\scheduler\PluginTask;
 
 abstract class BaseTask extends PluginTask {

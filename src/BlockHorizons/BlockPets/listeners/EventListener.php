@@ -4,9 +4,9 @@ namespace BlockHorizons\BlockPets\listeners;
 
 use BlockHorizons\BlockPets\events\PetRespawnEvent;
 use BlockHorizons\BlockPets\Loader;
-use BlockHorizons\BlockPets\PetRespawnTask;
 use BlockHorizons\BlockPets\pets\BasePet;
 use BlockHorizons\BlockPets\pets\IrasciblePet;
+use BlockHorizons\BlockPets\tasks\PetRespawnTask;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDeathEvent;

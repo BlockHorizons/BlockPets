@@ -1,7 +1,8 @@
 <?php
 
-namespace BlockHorizons\BlockPets;
+namespace BlockHorizons\BlockPets\tasks;
 
+use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\BasePet;
 
 class PetRespawnTask extends BaseTask {
