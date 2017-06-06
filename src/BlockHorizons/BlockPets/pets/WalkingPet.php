@@ -101,7 +101,7 @@ abstract class WalkingPet extends IrasciblePet {
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0) {
-			$this->getLoader()->getServer()->getPluginManager()->callEvent($event = new EntityDamageByEntityEvent($this->getPetOwner(), $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage()));
+			$this->getLoader()->getServer()->getPluginManager()->callEvent($event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage()));
 			$target->attack($event->getFinalDamage(), $event);
 
 			$this->waitingTime = 15;

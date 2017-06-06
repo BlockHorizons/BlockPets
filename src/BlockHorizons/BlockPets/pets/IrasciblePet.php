@@ -76,7 +76,7 @@ abstract class IrasciblePet extends Calculator {
 				if($attacker->getId() === $this->getPetOwner()->getId()) {
 					$source->setCancelled();
 				}
-				if($this->getLoader()->getBlockPetsConfig()->petsDoAttack()) {
+				if($this->getLoader()->getBlockPetsConfig()->petsDoAttack() && !$source->isCancelled()) {
 					$this->setAngry($attacker);
 				}
 			}
