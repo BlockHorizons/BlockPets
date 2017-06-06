@@ -54,16 +54,17 @@ abstract class BasePet extends Creature implements Rideable {
 
 		$this->setScale($this->scale);
 
-		$this->levelUp();
+		$this->levelUp(1, true);
 		$this->spawnToAll();
 	}
 
 	/**
-	 * @param int $amount
+	 * @param int  $amount
+	 * @param bool $silent
 	 *
 	 * @return bool
 	 */
-	public function levelUp(int $amount = 1): bool {
+	public function levelUp(int $amount = 1, bool $silent = false): bool {
 		$this->getLoader()->getServer()->getPluginManager()->callEvent($ev = new PetLevelUpEvent($this->getLoader(), $this, $this->getPetLevel(), $this->getPetLevel() + $amount));
 		if($ev->isCancelled()) {
 			return false;
@@ -74,7 +75,9 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->getPetName() . PHP_EOL .
 			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $this->getPetLevel() . " " . TextFormat::GRAY . $this->getName()
 		);
-		$this->getPetOwner()->addTitle((TextFormat::GREEN . "Level Up!"), (TextFormat::AQUA . "Your pet " . $this->getPetName() . TextFormat::RESET . TextFormat::AQUA . " turned level " . $ev->getTo() . "!"));
+		if(!$silent && $this->getPetOwner() !== null) {
+			$this->getPetOwner()->addTitle((TextFormat::GREEN . "Level Up!"), (TextFormat::AQUA . "Your pet " . $this->getPetName() . TextFormat::RESET . TextFormat::AQUA . " turned level " . $ev->getTo() . "!"));
+		}
 		return true;
 	}
 
