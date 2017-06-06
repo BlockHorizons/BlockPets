@@ -11,7 +11,6 @@ class PigPet extends WalkingPet implements SmallCreature {
 	public $width = 0.7;
 
 	public $name = "Pig Pet";
-	public $tier = self::TIER_COMMON;
 
 	public $networkId = 12;
 }

@@ -74,7 +74,7 @@ abstract class HoveringPet extends IrasciblePet {
 			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
 		}
 
-		if($y > -1.5 && (float) $y !== 0.0) {
+		if($y > -2.5 && (float) $y !== 0.0) {
 			$this->motionY = $this->getSpeed() * 0.15 * ($y / abs($y));
 		}
 

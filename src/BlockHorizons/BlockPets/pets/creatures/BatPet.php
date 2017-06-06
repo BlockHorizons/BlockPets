@@ -14,5 +14,4 @@ class BatPet extends HoveringPet implements SmallCreature {
 	public $height = 0.3;
 
 	protected $flyHeight = 10;
-	protected $tier = self::TIER_COMMON;
 }

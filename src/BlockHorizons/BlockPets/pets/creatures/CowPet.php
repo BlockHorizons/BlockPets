@@ -10,7 +10,6 @@ class CowPet extends WalkingPet {
 	public $width = 0.9;
 
 	public $name = "Cow Pet";
-	public $tier = self::TIER_COMMON;
 
 	public $networkId = 11;
 }

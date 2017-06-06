@@ -33,10 +33,10 @@ abstract class BasePet extends Creature implements Rideable {
 	public $scale = 1.0;
 	public $networkId;
 
-	protected $tier = 1;
+	protected $tier = self::TIER_COMMON;
 	protected $petOwner;
-	protected $petLevel;
-	protected $petName;
+	protected $petLevel = 0;
+	protected $petName = "";
 	protected $ridden = false;
 	protected $rider = null;
 	protected $attackDamage = 0;
@@ -81,7 +81,7 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * @return Loader
 	 */
-	public function getLoader(): Loader {
+	protected function getLoader(): Loader {
 		$plugin = $this->getLevel()->getServer()->getPluginManager()->getPlugin("BlockPets");
 		if($plugin instanceof Loader) {
 			return $plugin;
@@ -122,6 +122,13 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function getPetOwner() {
 		return $this->getLevel()->getServer()->getPlayer($this->petOwner);
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getTier(): int {
+		return $this->tier;
 	}
 
 	public function initEntity() {
@@ -221,7 +228,7 @@ abstract class BasePet extends Creature implements Rideable {
 		if($this instanceof EnderDragonPet) {
 			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 2.65 + $this->getScale(), -1.7]);
 		} elseif($this instanceof SmallCreature) {
-			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 0.83 + $this->getScale() * 0.9, -0.25]);
+			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 0.78 + $this->getScale() * 0.9, -0.25]);
 		}
 		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, true);
 
