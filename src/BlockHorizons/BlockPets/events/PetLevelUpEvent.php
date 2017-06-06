@@ -8,6 +8,8 @@ use pocketmine\event\Cancellable;
 
 class PetLevelUpEvent extends BlockPetsEvent implements Cancellable {
 
+	public static $handlerList = null;
+
 	private $pet;
 	private $from;
 	private $to;

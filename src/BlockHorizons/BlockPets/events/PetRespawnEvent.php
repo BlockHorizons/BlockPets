@@ -8,6 +8,8 @@ use pocketmine\event\Cancellable;
 
 class PetRespawnEvent extends BlockPetsEvent implements Cancellable {
 
+	public static $handlerList = null;
+
 	private $delay = 0;
 	private $pet;
 
