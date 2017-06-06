@@ -26,10 +26,15 @@ abstract class IrasciblePet extends Calculator {
 
 	/**
 	 * @param int $amount
+	 *
+	 * @return bool
 	 */
-	public function levelUp(int $amount = 1) {
-		parent::levelUp($amount);
-		$this->recalculateAll();
+	public function levelUp(int $amount = 1): bool {
+		if(parent::levelUp($amount)) {
+			$this->recalculateAll();
+			return true;
+		}
+		return false;
 	}
 
 	/**

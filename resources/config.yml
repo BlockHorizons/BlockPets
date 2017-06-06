@@ -7,7 +7,7 @@ Invulnerable-Pets: true
 # The time in seconds to wait before spawning a pet that died earlier.
 Pet-Respawn-Time: 20
 
-# Whether to make pets attack the person that attacked them, or their owner.
+# Whether to make pets attack the person that attacked them or their owner.
 Attacking-Pets: true
 
 # The base health a pet will be spawned with. This is equal to the health of a pet with level 0.
