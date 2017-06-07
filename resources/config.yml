@@ -24,4 +24,10 @@ Pet-Base-Damage: 4
 
 # The damage that gets added each level the pet gets.
 Pet-Per-Level-Damage: 0.1
+
+# The experience a pet gets each time it kills a player.
+Experience-Points-Per-Player-Kill: 15
+
+# The experience a pet gets each time it kills an entity.
+Experience-Points-Per-Entity-Kill: 10
 ...

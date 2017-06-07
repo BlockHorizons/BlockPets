@@ -5,6 +5,7 @@ namespace BlockHorizons\BlockPets\pets;
 
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\Player;
 
 abstract class WalkingPet extends IrasciblePet {
 
@@ -67,7 +68,12 @@ abstract class WalkingPet extends IrasciblePet {
 		if($this->jumpTicks > 0) {
 			$this->jumpTicks--;
 		}
-		if(!$this->getTarget()->isAlive()) {
+		if(!$this->getTarget()->isAlive() && !$this->getTarget()->closed) {
+			if($this->getTarget() instanceof Player) {
+				$this->addPetLevelPoints($this->getLoader()->getBlockPetsConfig()->getPlayerExperiencePoints());
+			} else {
+				$this->addPetLevelPoints($this->getLoader()->getBlockPetsConfig()->getEntityExperiencePoints());
+			}
 			$this->calmDown();
 		}
 

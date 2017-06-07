@@ -40,6 +40,7 @@ abstract class BasePet extends Creature implements Rideable {
 	protected $ridden = false;
 	protected $rider = null;
 	protected $attackDamage = 0;
+	protected $petLevelPoints = 0;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
@@ -51,6 +52,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->petOwner = $this->namedtag["petOwner"];
 		$this->scale = $this->namedtag["scale"];
 		$this->petName = $this->namedtag["petName"];
+		$this->petLevelPoints = $this->namedtag["petLevelPoints"];
 
 		$this->setScale($this->scale);
 
@@ -128,6 +130,51 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * @param int $points
+	 *
+	 * @return bool
+	 */
+	public function addPetLevelPoints(int $points): bool {
+		$totalPoints = $this->getPetLevelPoints() + $points;
+		if($totalPoints >= $this->getRequiredLevelPoints($this->getPetLevel())) {
+			$this->setPetLevelPoints($totalPoints - $this->getRequiredLevelPoints($this->getPetLevel()));
+			$this->levelUp();
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getPetLevelPoints(): int {
+		return $this->petLevelPoints;
+	}
+
+	/**
+	 * @param int $points
+	 */
+	public function setPetLevelPoints(int $points) {
+		$this->petLevelPoints = $points;
+	}
+
+	/**
+	 * @param int $level
+	 *
+	 * @return int
+	 */
+	public function getRequiredLevelPoints(int $level) {
+		if(($level - 1) <= 15) {
+			$requiredPoints = 2 * ($level - 1) + 7;
+		} elseif(($level - 1) <= 30) {
+			$requiredPoints = 5 * ($level - 1) - 38;
+		} else {
+			$requiredPoints = 9 * ($level - 1) - 158;
+		}
+		return $requiredPoints;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getNameTag(): string {
@@ -190,6 +237,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->namedtag->scale = new FloatTag("scale", $this->getStartingScale());
 		$this->namedtag->networkId = new IntTag("networkId", $this->getNetworkId());
 		$this->namedtag->petLevel = new IntTag("petLevel", $this->getPetLevel());
+		$this->namedtag->petLevelPoints = new IntTag("petLevelPoints", $this->getPetLevelPoints());
 	}
 
 	/**
@@ -260,31 +308,6 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
-	 * Detaches the rider from the pet.
-	 */
-	public function throwRiderOff() {
-		$pk = new SetEntityLinkPacket();
-		$pk->from = $this->getId();
-		$pk->to = $this->getPetOwner()->getId();
-		$pk->type = self::STATE_STANDING;
-		$this->ridden = false;
-		$this->rider = null;
-		$this->getPetOwner()->canCollide = true;
-		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
-
-		$pk = new SetEntityLinkPacket();
-		$pk->from = $this->getPetOwner()->getId();
-		$pk->to = 0;
-		$pk->type = self::STATE_STANDING;
-		$this->getPetOwner()->dataPacket($pk);
-		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, false);
-
-		if($this->getPetOwner()->isSurvival()) {
-			$this->getPetOwner()->setAllowFlight(false);
-		}
-	}
-
-	/**
 	 * @return bool
 	 */
 	public function isRidden(): bool {
@@ -308,12 +331,13 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
-			$this->getLoader()->createPet($this->getEntityType(), $this->getPetOwner(), $this->getPetName(), $this->getStartingScale(), $this->namedtag["isBaby"], $this->getPetLevel());
+			$this->getLoader()->createPet($this->getEntityType(), $this->getPetOwner(), $this->getPetName(), $this->getStartingScale(), $this->namedtag["isBaby"], $this->getPetLevel(), $this->getPetLevelPoints());
 			$this->close();
 			return false;
 		}
 		if($this->distance($petOwner) >= 50) {
 			$this->teleport($petOwner);
+			$this->throwRiderOff();
 			return true;
 		}
 		$this->updateMovement();
@@ -326,6 +350,31 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function getEntityType(): string {
 		return str_replace(" ", "", str_replace("Pet", "", $this->getName()));
+	}
+
+	/**
+	 * Detaches the rider from the pet.
+	 */
+	public function throwRiderOff() {
+		$pk = new SetEntityLinkPacket();
+		$pk->from = $this->getId();
+		$pk->to = $this->getPetOwner()->getId();
+		$pk->type = self::STATE_STANDING;
+		$this->ridden = false;
+		$this->rider = null;
+		$this->getPetOwner()->canCollide = true;
+		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
+
+		$pk = new SetEntityLinkPacket();
+		$pk->from = $this->getPetOwner()->getId();
+		$pk->to = 0;
+		$pk->type = self::STATE_STANDING;
+		$this->getPetOwner()->dataPacket($pk);
+		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, false);
+
+		if($this->getPetOwner()->isSurvival()) {
+			$this->getPetOwner()->setAllowFlight(false);
+		}
 	}
 
 	/**

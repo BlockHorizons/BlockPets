@@ -211,10 +211,11 @@ class Loader extends PluginBase {
 	 * @param float  $scale
 	 * @param bool   $isBaby
 	 * @param int    $level
+	 * @param int    $levelPoints
 	 *
-	 * @return BasePet
+	 * @return null|BasePet
 	 */
-	public function createPet(string $entityName, Player $position, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1) {
+	public function createPet(string $entityName, Player $position, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0) {
 		$nbt = new CompoundTag("", [
 			"Pos" => new ListTag("Pos", [
 				new DoubleTag("", $position->x),
@@ -234,6 +235,7 @@ class Loader extends PluginBase {
 			"scale" => new FloatTag("scale", $scale),
 			"petName" => new StringTag("petName", $name),
 			"petLevel" => new IntTag("petLevel", $level),
+			"petLevelPoints" => new IntTag("petLevelPoints", $levelPoints),
 			"isBaby" => new ByteTag("isBaby", $isBaby)
 		]);
 

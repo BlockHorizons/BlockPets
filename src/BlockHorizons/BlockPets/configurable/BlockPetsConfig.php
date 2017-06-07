@@ -83,4 +83,18 @@ class BlockPetsConfig {
 	public function getRespawnTime(): int {
 		return (int) $this->settings["Pet-Respawn-Time"];
 	}
+
+	/**
+	 * @return int
+	 */
+	public function getPlayerExperiencePoints(): int {
+		return (int) $this->settings["Experience-Points-Per-Player-Kill"];
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getEntityExperiencePoints(): int {
+		return (int) $this->settings["Experience-Points-Per-Entity-Kill"];
+	}
 }

@@ -2,7 +2,7 @@
 
 namespace BlockHorizons\BlockPets\pets;
 
-use pocketmine\entity\Entity;
+use pocketmine\entity\Living;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\item\Item;
@@ -46,9 +46,9 @@ abstract class IrasciblePet extends Calculator {
 	}
 
 	/**
-	 * @return Player
+	 * @return Living
 	 */
-	public function getTarget(): Player {
+	public function getTarget(): Living {
 		return $this->target;
 	}
 
@@ -92,10 +92,10 @@ abstract class IrasciblePet extends Calculator {
 	}
 
 	/**
-	 * @param Entity $player
+	 * @param Living $entity
 	 */
-	public function setAngry(Entity $player) {
-		$this->target = $player;
+	public function setAngry(Living $entity) {
+		$this->target = $entity;
 	}
 
 	public abstract function doAttackingMovement();
