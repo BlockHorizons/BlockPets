@@ -11,7 +11,7 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDeathEvent;
 use pocketmine\event\Listener;
-use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\Player;
 
 class EventListener implements Listener {
@@ -61,19 +61,6 @@ class EventListener implements Listener {
 		return $this->loader;
 	}
 
-	public function onPlayerQuit(PlayerQuitEvent $event) {
-		foreach($event->getPlayer()->getLevel()->getEntities() as $levelEntity) {
-			if($levelEntity instanceof BasePet) {
-				if($levelEntity->isRidden()) {
-					$rider = $levelEntity->getRider();
-					if($rider->getName() === $event->getPlayer()->getName()) {
-						$levelEntity->throwRiderOff();
-					}
-				}
-			}
-		}
-	}
-
 	public function onPetDeath(EntityDeathEvent $event) {
 		$pet = $event->getEntity();
 		$delay = $this->getLoader()->getBlockPetsConfig()->getRespawnTime() * 20;
@@ -87,6 +74,16 @@ class EventListener implements Listener {
 
 			$this->getLoader()->getServer()->getScheduler()->scheduleDelayedTask(new PetRespawnTask($this->getLoader(), $newPet), $delay * 20);
 			$newPet->despawnFromAll();
+		}
+	}
+
+	public function onPlayerLogin(PlayerLoginEvent $event) {
+		$pets = $this->getLoader()->getPetsFrom($event->getPlayer());
+		if(empty($pets)) {
+			return;
+		}
+		foreach($pets as $pet) {
+			$pet->spawnToAll();
 		}
 	}
 }
