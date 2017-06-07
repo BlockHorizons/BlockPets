@@ -164,14 +164,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return int
 	 */
 	public function getRequiredLevelPoints(int $level) {
-		if(($level - 1) <= 15) {
-			$requiredPoints = 2 * ($level - 1) + 7;
-		} elseif(($level - 1) <= 30) {
-			$requiredPoints = 5 * ($level - 1) - 38;
-		} else {
-			$requiredPoints = 9 * ($level - 1) - 158;
-		}
-		return $requiredPoints;
+		return (int)(10 + $level / 1.5 * $level);
 	}
 
 	/**
@@ -190,8 +183,8 @@ abstract class BasePet extends Creature implements Rideable {
 
 	public function initEntity() {
 		parent::initEntity();
-		$this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, true);
-		$this->setDataFlag(self::DATA_FLAG_BABY, self::DATA_TYPE_BYTE, (bool) $this->namedtag["isBaby"]);
+		$this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, 1);
+		$this->setDataFlag(self::DATA_FLAG_BABY, self::DATA_TYPE_BYTE, (int) $this->namedtag["isBaby"]);
 		if((bool) $this->namedtag["isBaby"]) {
 			$this->setScale($this->getStartingScale() / 2);
 		}
@@ -215,7 +208,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->x = $this->x;
 		$pk->y = $this->y;
 		$pk->z = $this->z;
-		$pk->speedX = $pk->speedY = $pk->speedZ = 0;
+		$pk->speedX = $pk->speedY = $pk->speedZ = 0.0;
 		$pk->yaw = $this->yaw;
 		$pk->pitch = $this->pitch;
 		$pk->metadata = $this->dataProperties;
@@ -288,7 +281,7 @@ abstract class BasePet extends Creature implements Rideable {
 		} elseif($this instanceof SmallCreature) {
 			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 0.78 + $this->getScale() * 0.9, -0.25]);
 		}
-		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, true);
+		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, 1);
 
 		$pk = new SetEntityLinkPacket();
 		$pk->to = $player->getId();
@@ -320,9 +313,6 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	public function onUpdate($currentTick) {
-		if($this->closed) {
-			return false;
-		}
 		$petOwner = $this->getPetOwner();
 		if($petOwner === null) {
 			$this->ridden = false;
@@ -330,10 +320,13 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->despawnFromAll();
 			return false;
 		}
+		if($this->closed) {
+			return false;
+		}
 		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
 			$this->getLoader()->createPet($this->getEntityType(), $this->getPetOwner(), $this->getPetName(), $this->getStartingScale(), $this->namedtag["isBaby"], $this->getPetLevel(), $this->getPetLevelPoints());
 			$this->close();
-			return false;
+			return true;
 		}
 		if($this->distance($petOwner) >= 50) {
 			$this->teleport($petOwner);
@@ -370,7 +363,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->to = 0;
 		$pk->type = self::STATE_STANDING;
 		$this->getPetOwner()->dataPacket($pk);
-		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, false);
+		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, 0);
 
 		if($this->getPetOwner()->isSurvival()) {
 			$this->getPetOwner()->setAllowFlight(false);

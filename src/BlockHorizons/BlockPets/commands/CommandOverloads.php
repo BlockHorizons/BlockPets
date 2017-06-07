@@ -34,7 +34,7 @@ class CommandOverloads {
 				1 => [
 					"type" => "rawtext",
 					"name" => "name",
-					"optional" => false
+					"optional" => false,
 				],
 				2 => [
 					"type" => "int",
@@ -43,7 +43,7 @@ class CommandOverloads {
 				],
 				3 => [
 					"type" => "stringenum",
-					"name" => "baby",
+					"name" => "isBaby",
 					"optional" => true,
 					"enum_values" => [
 						"true",
@@ -53,7 +53,7 @@ class CommandOverloads {
 				4 => [
 					"type" => "rawtext",
 					"name" => "player",
-					"optional" => true
+					"optional" => true,
 				]
 			],
 

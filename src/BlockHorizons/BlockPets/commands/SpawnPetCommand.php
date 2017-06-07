@@ -54,15 +54,15 @@ class SpawnPetCommand extends BaseCommand {
 
 		if(isset($args[3])) {
 			if($args[3] === "false") {
-				$args[3] = false;
+				$args[3] = 0;
 			} else {
-				$args[3] = true;
+				$args[3] = 1;
 			}
 		} else {
-			$args[3] = false;
+			$args[3] = 0;
 		}
 		$petName = $this->getLoader()->getPet($args[0]);
-		$this->getLoader()->createPet($petName, $player, $args[1], isset($args[2]) ? $args[2] : 1.0, $args[3]);
+		$this->getLoader()->createPet($petName, $player, $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3]);
 		$sender->sendMessage(TF::GREEN . "Successfully spawned a pet with the name: " . TF::AQUA . $args[1]);
 		if($player->getName() !== $sender->getName()) {
 			$player->sendMessage(TF::GREEN . "You have received a pet with the name: " . TF::AQUA . $args[1]);
