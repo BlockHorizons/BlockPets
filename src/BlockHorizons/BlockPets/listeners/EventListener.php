@@ -85,8 +85,8 @@ class EventListener implements Listener {
 			}
 			$delay = $ev->getDelay();
 
+			$this->getLoader()->getServer()->getScheduler()->scheduleDelayedTask(new PetRespawnTask($this->getLoader(), $newPet), $delay * 20);
 			$newPet->despawnFromAll();
-			$this->getLoader()->getServer()->getScheduler()->scheduleDelayedTask(new PetRespawnTask($this->getLoader(), $pet), $delay * 20);
 		}
 	}
 }

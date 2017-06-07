@@ -254,7 +254,7 @@ class Loader extends PluginBase {
 		if($pet === null) {
 			return false;
 		}
-		$pet->kill();
+		$pet->close();
 		return true;
 	}
 

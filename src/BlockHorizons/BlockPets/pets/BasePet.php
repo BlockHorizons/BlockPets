@@ -117,7 +117,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return string
 	 */
 	public function getName(): string {
-		return $this->getPetName();
+		return $this->name;
 	}
 
 	/**
@@ -125,6 +125,13 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function getPetOwner() {
 		return $this->getLevel()->getServer()->getPlayer($this->petOwner);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getNameTag(): string {
+		return $this->getPetName();
 	}
 
 	/**
