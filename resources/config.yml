@@ -42,7 +42,7 @@ MySQL-Info:
   Host: 127.0.0.1
   User: Admin
   Password: Admin
-  Database: Blockpets
+  Database: BlockPets
   Port: 3306
 
 # Whether to store pet data to the database set above or not.

@@ -16,17 +16,17 @@ class SQLiteDataStorer extends BaseDataStorer {
 
 	public function registerPet(BasePet $pet): bool {
 		$petName = $pet->getPetName();
-		$playerName = strtolower($pet->getPetOwnerName());
+		$playerName = $pet->getPetOwnerName();
 		$entityName = $pet->getEntityType();
 		$size = $pet->getScale();
-		$baby = $pet->namedtag["IsBaby"];
+		$baby = (int) $pet->namedtag["IsBaby"];
 		$level = $pet->getPetLevel();
 		$points = $pet->getPetLevelPoints();
 		if($this->petExists($petName, $playerName)) {
 			return false;
 		}
 
-		$query = "INSERT INTO Pets(Player, PetName, EntityName, PetSize, IsBaby, PetLevel, LevelPoints) VALUES ('" . $this->escape($petName) . "', '" . $this->escape($playerName) . "', '" . $this->escape($entityName) . "', $size, $baby, $level, $points)";
+		$query = "INSERT INTO Pets(Player, PetName, EntityName, PetSize, IsBaby, PetLevel, LevelPoints) VALUES ('" . $this->escape($playerName) . "', '" . $this->escape($petName) . "', '" . $this->escape($entityName) . "', $size, $baby, $level, $points)";
 		return $this->database->exec($query);
 	}
 
