@@ -47,7 +47,7 @@ abstract class WalkingPet extends IrasciblePet {
 		$y = $petOwner->y - $this->y;
 		$z = $petOwner->z - $this->z;
 
-		if($x * $x + $z * $z < 5) {
+		if($x * $x + $z * $z < 4 + $this->getScale()) {
 			$this->motionX = 0;
 			$this->motionZ = 0;
 		} else {

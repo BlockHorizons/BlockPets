@@ -97,4 +97,32 @@ class BlockPetsConfig {
 	public function getEntityExperiencePoints(): int {
 		return (int) $this->settings["Experience-Points-Per-Entity-Kill"];
 	}
+
+	/**
+	 * @return array
+	 */
+	public function getMySQLInfo(): array {
+		return (array) $this->settings["MySQL-Info"];
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function storeToDatabase(): bool {
+		return (bool) $this->settings["Store-To-Database"];
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function fetchFromDatabase(): bool {
+		return (bool) $this->settings["Fetch-From-Database"];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getDatabase(): string {
+		return (string) $this->settings["Database"];
+	}
 }

@@ -44,6 +44,9 @@ use BlockHorizons\BlockPets\pets\creatures\WolfPet;
 use BlockHorizons\BlockPets\pets\creatures\ZombiePet;
 use BlockHorizons\BlockPets\pets\creatures\ZombiePigmanPet;
 use BlockHorizons\BlockPets\pets\creatures\ZombieVillagerPet;
+use BlockHorizons\BlockPets\pets\datastorage\BaseDataStorer;
+use BlockHorizons\BlockPets\pets\datastorage\MySQLDataStorer;
+use BlockHorizons\BlockPets\pets\datastorage\SQLiteDataStorer;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\nbt\tag\ByteTag;
@@ -134,6 +137,7 @@ class Loader extends PluginBase {
 	];
 
 	private $bpConfig;
+	private $database;
 
 	public function onEnable() {
 		CommandOverloads::initialize();
@@ -144,6 +148,7 @@ class Loader extends PluginBase {
 		$this->registerListeners();
 
 		$this->bpConfig = new BlockPetsConfig($this);
+		$this->selectDatabase();
 	}
 
 	public function registerCommands() {
@@ -165,6 +170,33 @@ class Loader extends PluginBase {
 		foreach($listeners as $listener) {
 			$this->getServer()->getPluginManager()->registerEvents($listener, $this);
 		}
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function selectDatabase(): bool {
+		if(!$this->getBlockPetsConfig()->storeToDatabase()) {
+			return false;
+		}
+		switch(strtolower($this->getBlockPetsConfig()->getDatabase())) {
+			default:
+			case "mysql":
+				$this->database = new MySQLDataStorer($this);
+				break;
+			case "sqlite3":
+			case "sqlite":
+				$this->database = new SQLiteDataStorer($this);
+				break;
+		}
+		return true;
+	}
+
+	/**
+	 * @return BlockPetsConfig
+	 */
+	public function getBlockPetsConfig(): BlockPetsConfig {
+		return $this->bpConfig;
 	}
 
 	public function onEntitySpawn(EntitySpawnEvent $event) {
@@ -328,9 +360,12 @@ class Loader extends PluginBase {
 	}
 
 	/**
-	 * @return BlockPetsConfig
+	 * @return BaseDataStorer
 	 */
-	public function getBlockPetsConfig(): BlockPetsConfig {
-		return $this->bpConfig;
+	public function getDatabase(): BaseDataStorer {
+		if($this->database === null) {
+			throw new \RuntimeException("Attempted to retrieve the database while database storing was disabled.");
+		}
+		return $this->database;
 	}
 }

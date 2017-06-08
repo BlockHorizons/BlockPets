@@ -32,7 +32,7 @@ abstract class HoveringPet extends IrasciblePet {
 		$y = $petOwner->y - $this->y;
 		$z = $petOwner->z - $this->z;
 
-		if($x * $x + $z * $z < 10) {
+		if($x * $x + $z * $z < 8 + $this->getScale()) {
 			$this->motionX = 0;
 			$this->motionZ = 0;
 		} else {

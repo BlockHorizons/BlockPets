@@ -72,13 +72,19 @@ class EventListener implements Listener {
 			}
 			$delay = $ev->getDelay();
 
-			$this->getLoader()->getServer()->getScheduler()->scheduleDelayedTask(new PetRespawnTask($this->getLoader(), $newPet), $delay * 20);
+			$this->getLoader()->getServer()->getScheduler()->scheduleDelayedTask(new PetRespawnTask($this->getLoader(), $newPet), $delay);
 			$newPet->despawnFromAll();
 		}
 	}
 
 	public function onPlayerLogin(PlayerLoginEvent $event) {
 		$pets = $this->getLoader()->getPetsFrom($event->getPlayer());
+		if($this->getLoader()->getBlockPetsConfig()->fetchFromDatabase()) {
+			$petData = $this->getLoader()->getDatabase()->fetchAllPetData($event->getPlayer()->getName());
+			foreach($petData as $data) {
+				$this->getLoader()->createPet($data["EntityName"], $event->getPlayer(), $data["PetName"], $data["PetSize"], $data["IsBaby"], $data["PetLevel"], $data["LevelPoints"]);
+			}
+		}
 		if(empty($pets)) {
 			return;
 		}

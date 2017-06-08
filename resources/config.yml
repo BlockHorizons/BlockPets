@@ -30,4 +30,24 @@ Experience-Points-Per-Player-Kill: 15
 
 # The experience a pet gets each time it kills an entity.
 Experience-Points-Per-Entity-Kill: 10
+
+# The database used to store data of pets in. This is only relevant if storage to database is turned to true.
+# Options:
+# MySQL
+# SQLite
+Database: MySQL
+
+# MySQL information. This is only relevant if database above is set to MySQL.
+MySQL-Info:
+  Host: 127.0.0.1
+  User: Admin
+  Password: Admin
+  Database: Blockpets
+  Port: 3306
+
+# Whether to store pet data to the database set above or not.
+Store-To-Database: true
+
+# Whether to use data from the database. Pets get saved using NBT by default, and do not necessarily need this.
+Fetch-From-Database: false
 ...

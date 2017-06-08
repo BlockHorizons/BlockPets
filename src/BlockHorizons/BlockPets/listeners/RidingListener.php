@@ -3,7 +3,6 @@
 namespace BlockHorizons\BlockPets\listeners;
 
 use BlockHorizons\BlockPets\Loader;
-use BlockHorizons\BlockPets\pets\BasePet;
 use pocketmine\event\Listener;
 use pocketmine\event\player\cheat\PlayerIllegalMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -48,14 +47,12 @@ class RidingListener implements Listener {
 	}
 
 	public function onPlayerQuit(PlayerQuitEvent $event) {
-		foreach($event->getPlayer()->getLevel()->getEntities() as $levelEntity) {
-			if($levelEntity instanceof BasePet) {
-				if($levelEntity->isRidden()) {
-					$rider = $levelEntity->getRider();
-					if($rider->getName() === $event->getPlayer()->getName()) {
-						$levelEntity->throwRiderOff();
-					}
-				}
+		foreach($this->getLoader()->getPetsFrom($event->getPlayer()) as $pet) {
+			if($pet->isRidden()) {
+				$pet->throwRiderOff();
+			}
+			if($this->getLoader()->getBlockPetsConfig()->fetchFromDatabase()) {
+				$pet->close();
 			}
 		}
 	}

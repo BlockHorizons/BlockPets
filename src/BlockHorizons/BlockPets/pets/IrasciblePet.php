@@ -14,7 +14,6 @@ use pocketmine\utils\TextFormat;
 abstract class IrasciblePet extends Calculator {
 
 	private $target = null;
-	private $isAttacking = false;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
@@ -33,16 +32,16 @@ abstract class IrasciblePet extends Calculator {
 	public function levelUp(int $amount = 1, bool $silent = false): bool {
 		if(parent::levelUp($amount, $silent)) {
 			$this->recalculateAll();
+			if($this->getLoader()->getBlockPetsConfig()->storeToDatabase()) {
+				if($this->getLoader()->getDatabase()->petExists($this->getName(), $this->getPetOwnerName())) {
+					$this->getLoader()->getDatabase()->updatePetExperience($this->getName(), $this->getPetOwnerName(), $this->getPetLevel(), $this->getPetLevelPoints());
+				} else {
+					$this->getLoader()->getDatabase()->registerPet($this);
+				}
+			}
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isAttacking(): bool {
-		return $this->isAttacking;
 	}
 
 	/**
