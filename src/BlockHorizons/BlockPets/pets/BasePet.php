@@ -65,6 +65,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Levels up the pet's experience level by the given amount. Sends a title if $silent is false or not set.
+	 *
 	 * @param int  $amount
 	 * @param bool $silent
 	 *
@@ -86,6 +88,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Returns the BlockPets Loader. Only for internal usage.
+	 *
 	 * @return Loader
 	 */
 	public function getLoader(): Loader {
@@ -97,6 +101,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Returns the current experience level of the pet.
+	 *
 	 * @return int
 	 */
 	public function getPetLevel(): int {
@@ -104,6 +110,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Sets the pet's experience level to the given amount.
+	 *
 	 * @param int $petLevel
 	 */
 	public function setPetLevel(int $petLevel) {
@@ -111,6 +119,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Returns the player that owns this pet if they are online, and null if not.
+	 *
 	 * @return Player|null
 	 */
 	public function getPetOwner() {
@@ -118,6 +128,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Returns the actual name of the pet. Not to be confused with getName(), which returns the pet type name.
+	 *
 	 * @return string
 	 */
 	public function getPetName(): string {
@@ -125,6 +137,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Adds the given amount of experience points to the pet. Levels up the pet if required.
+	 *
 	 * @param int $points
 	 *
 	 * @return bool
@@ -140,6 +154,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Returns the pet's current experience level points.
+	 *
 	 * @return int
 	 */
 	public function getPetLevelPoints(): int {
@@ -147,6 +163,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Sets the pet's experience level points to the given amount.
+	 *
 	 * @param int $points
 	 */
 	public function setPetLevelPoints(int $points) {
@@ -154,6 +172,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Returns the required amount of points for the given level to level up automatically.
+	 *
 	 * @param int $level
 	 *
 	 * @return int
@@ -163,6 +183,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Internal.
+	 *
 	 * @return string
 	 */
 	public function getNameTag(): string {
@@ -170,6 +192,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Returns the tier of the pet.
+	 *
 	 * @return int
 	 */
 	public function getTier(): int {
@@ -211,6 +235,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Returns the network (entity) ID of the entity.
+	 *
 	 * @return int
 	 */
 	public function getNetworkId(): int {
@@ -229,6 +255,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Returns the name of the owner of this pet.
+	 *
 	 * @return string
 	 */
 	public function getPetOwnerName(): string {
@@ -236,6 +264,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Returns the speed of this pet.
+	 *
 	 * @return float
 	 */
 	public function getSpeed(): float {
@@ -243,6 +273,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Returns the attack damage of this pet.
+	 *
 	 * @return int
 	 */
 	public function getAttackDamage(): int {
@@ -250,6 +282,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Sets the attack damage to the given amount.
+	 *
 	 * @param int $amount
 	 */
 	public function setAttackDamage(int $amount) {
@@ -257,6 +291,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Returns the rider of the pet if it has a rider, and null if this is not the case.
+	 *
 	 * @return Player|null
 	 */
 	public function getRider() {
@@ -264,6 +300,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Sets the given player as rider on the pet, connecting it to it and initializing some things.
+	 *
 	 * @param Player $player
 	 */
 	public function setRider(Player $player) {
@@ -296,6 +334,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Returns whether this pet is being ridden or not.
+	 *
 	 * @return bool
 	 */
 	public function isRidden(): bool {
@@ -338,6 +378,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Returns whether this pet is dormant or not. If this pet is dormant, it will not move.
+	 *
 	 * @return bool
 	 */
 	public function isDormant(): bool {
@@ -345,6 +387,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Sets the dormant state to this pet with the given value.
+	 *
 	 * @param bool $value
 	 */
 	public function setDormant(bool $value = true) {
@@ -352,6 +396,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Internal.
+	 *
 	 * @return string
 	 */
 	public function getEntityType(): string {
@@ -359,6 +405,8 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Returns the name of the pet type.
+	 *
 	 * @return string
 	 */
 	public function getName(): string {

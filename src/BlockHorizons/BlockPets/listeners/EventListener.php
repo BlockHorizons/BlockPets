@@ -61,6 +61,9 @@ class EventListener implements Listener {
 		return $this->loader;
 	}
 
+	/**
+	 * @param EntityDeathEvent $event
+	 */
 	public function onPetDeath(EntityDeathEvent $event) {
 		$pet = $event->getEntity();
 		$delay = $this->getLoader()->getBlockPetsConfig()->getRespawnTime() * 20;
@@ -78,6 +81,9 @@ class EventListener implements Listener {
 		}
 	}
 
+	/**
+	 * @param PlayerLoginEvent $event
+	 */
 	public function onPlayerLogin(PlayerLoginEvent $event) {
 		$pets = $this->getLoader()->getPetsFrom($event->getPlayer());
 		if($this->getLoader()->getBlockPetsConfig()->fetchFromDatabase()) {

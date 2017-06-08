@@ -199,6 +199,9 @@ class Loader extends PluginBase {
 		return $this->bpConfig;
 	}
 
+	/**
+	 * @param EntitySpawnEvent $event
+	 */
 	public function onEntitySpawn(EntitySpawnEvent $event) {
 		if($event->getEntity() instanceof BasePet) {
 			$clearLaggPlugin = $this->getServer()->getPluginManager()->getPlugin("ClearLagg");
@@ -209,6 +212,8 @@ class Loader extends PluginBase {
 	}
 
 	/**
+	 * Checks if a pet type of that name exists.
+	 *
 	 * @param string $entityName
 	 *
 	 * @return bool
@@ -223,6 +228,8 @@ class Loader extends PluginBase {
 	}
 
 	/**
+	 * Tries to match a pet type with the pet type list, and returns the fully qualified name if this could be found. Null if no valid result was found.
+	 *
 	 * @param string $entityName
 	 *
 	 * @return string|null
@@ -237,6 +244,8 @@ class Loader extends PluginBase {
 	}
 
 	/**
+	 * Creates a new pet to the given player.
+	 *
 	 * @param string $entityName
 	 * @param Player $position
 	 * @param string $name
@@ -279,6 +288,8 @@ class Loader extends PluginBase {
 	}
 
 	/**
+	 * Removes the first pet found with the given name.
+	 *
 	 * @param string $name
 	 *
 	 * @return bool
@@ -293,6 +304,8 @@ class Loader extends PluginBase {
 	}
 
 	/**
+	 * Returns the first pet found with the given name.
+	 *
 	 * @param string $name
 	 *
 	 * @return BasePet|null
@@ -312,6 +325,8 @@ class Loader extends PluginBase {
 	}
 
 	/**
+	 * Gets the pet the given player is currently riding.
+	 *
 	 * @param Player $player
 	 *
 	 * @return BasePet
@@ -326,6 +341,8 @@ class Loader extends PluginBase {
 	}
 
 	/**
+	 * Gets all currently available pets from the given player.
+	 *
 	 * @param Player $player
 	 *
 	 * @return BasePet[]
@@ -346,6 +363,8 @@ class Loader extends PluginBase {
 	}
 
 	/**
+	 * Checks if the given player is currently riding a pet.
+	 *
 	 * @param Player $player
 	 *
 	 * @return bool
@@ -360,6 +379,8 @@ class Loader extends PluginBase {
 	}
 
 	/**
+	 * Returns the database to store and fetch data from.
+	 *
 	 * @return BaseDataStorer
 	 */
 	public function getDatabase(): BaseDataStorer {

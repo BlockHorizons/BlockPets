@@ -19,11 +19,16 @@ abstract class IrasciblePet extends BasePet {
 		parent::__construct($level, $nbt);
 	}
 
+	/**
+	 * Calms down the pet, making it stop chasing it's target.
+	 */
 	public function calmDown() {
 		$this->target = null;
 	}
 
 	/**
+	 * Returns the current target of this pet.
+	 *
 	 * @return Living
 	 */
 	public function getTarget(): Living {
@@ -31,6 +36,8 @@ abstract class IrasciblePet extends BasePet {
 	}
 
 	/**
+	 * Returns whether this pet is angry or not.
+	 *
 	 * @return bool
 	 */
 	public function isAngry(): bool {
@@ -75,6 +82,8 @@ abstract class IrasciblePet extends BasePet {
 	}
 
 	/**
+	 * Sets the pet angry and it's target to the given entity, making it chase the entity.
+	 *
 	 * @param Living $entity
 	 */
 	public function setAngry(Living $entity) {
