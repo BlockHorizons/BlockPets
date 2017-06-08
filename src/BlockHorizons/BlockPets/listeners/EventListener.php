@@ -90,6 +90,7 @@ class EventListener implements Listener {
 		}
 		foreach($pets as $pet) {
 			$pet->spawnToAll();
+			$pet->setDormant(false);
 		}
 	}
 }

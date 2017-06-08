@@ -42,6 +42,8 @@ abstract class BasePet extends Creature implements Rideable {
 	protected $attackDamage = 0;
 	protected $petLevelPoints = 0;
 
+	private $dormant = false;
+
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
 
@@ -164,7 +166,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return int
 	 */
 	public function getRequiredLevelPoints(int $level) {
-		return (int)(10 + $level / 1.5 * $level);
+		return (int)(20 + $level / 1.5 * $level);
 	}
 
 	/**
@@ -314,10 +316,14 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
+		if($this->isDormant()) {
+			return false;
+		}
 		if($petOwner === null) {
 			$this->ridden = false;
 			$this->rider = null;
 			$this->despawnFromAll();
+			$this->setDormant();
 			return false;
 		}
 		if($this->closed) {
@@ -336,6 +342,20 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->updateMovement();
 		parent::onUpdate($currentTick);
 		return true;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isDormant(): bool {
+		return $this->dormant;
+	}
+
+	/**
+	 * @param bool $value
+	 */
+	public function setDormant(bool $value = true) {
+		$this->dormant = $value;
 	}
 
 	/**

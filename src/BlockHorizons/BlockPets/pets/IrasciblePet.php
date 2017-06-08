@@ -72,7 +72,12 @@ abstract class IrasciblePet extends Calculator {
 		if($source instanceof EntityDamageByEntityEvent) {
 			$attacker = $source->getDamager();
 			if(!$this->getLoader()->getBlockPetsConfig()->arePetsInvulnerable()) {
-				if($attacker->getId() === $this->getPetOwner()->getId()) {
+				if($attacker instanceof Player) {
+					$nameTag = $attacker->getName();
+				} else {
+					$nameTag = $attacker->getNameTag();
+				}
+				if($nameTag === $this->getPetOwnerName()) {
 					$source->setCancelled();
 				}
 				if($this->getLoader()->getBlockPetsConfig()->petsDoAttack() && !$source->isCancelled()) {

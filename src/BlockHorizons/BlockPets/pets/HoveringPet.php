@@ -40,8 +40,8 @@ abstract class HoveringPet extends IrasciblePet {
 			$this->motionZ = $this->getSpeed() * 0.25 * ($z / (abs($x) + abs($z)));
 		}
 
-		if($y > -2.5 && (float) $y !== 0.0) {
-			$this->motionY = $this->getSpeed() * 0.25 * ($y / abs($y));
+		if($y > -3.5 && (float) $y !== 0.0) {
+			$this->motionY = $this->getSpeed() * 0.25 * $y;
 		}
 
 		$this->yaw = rad2deg(atan2(-$x, $z));
@@ -74,8 +74,8 @@ abstract class HoveringPet extends IrasciblePet {
 			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
 		}
 
-		if($y > -2.5 && (float) $y !== 0.0) {
-			$this->motionY = $this->getSpeed() * 0.15 * ($y / abs($y));
+		if($y > -3.5 && (float) $y !== 0.0) {
+			$this->motionY = $this->getSpeed() * 0.15 * $y;
 		}
 
 		$this->yaw = rad2deg(atan2(-$x, $z));
@@ -132,7 +132,7 @@ abstract class HoveringPet extends IrasciblePet {
 		}
 
 		if((((float) $y) !== 0.0 && $this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) <= $this->flyHeight) || $y < 0) {
-			$this->motionY = $this->getSpeed() * 0.25 * ($y / abs($y));
+			$this->motionY = $this->getSpeed() * 0.25 * $y;
 		}
 		if(abs($y < 0.1)) {
 			$this->motionY = 0;
