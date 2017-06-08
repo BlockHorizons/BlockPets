@@ -41,11 +41,13 @@ abstract class BasePet extends Creature implements Rideable {
 	protected $rider = null;
 	protected $attackDamage = 0;
 	protected $petLevelPoints = 0;
+	protected $calculator;
 
 	private $dormant = false;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
+		$this->calculator = new Calculator($this);
 
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
@@ -75,10 +77,8 @@ abstract class BasePet extends Creature implements Rideable {
 		}
 		$this->setPetLevel($ev->getTo());
 
-		$this->setNameTag(
-			$this->getPetName() . PHP_EOL .
-			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $this->getPetLevel() . " " . TextFormat::GRAY . $this->getName()
-		);
+		$this->calculator->recalculateAll();
+
 		if(!$silent && $this->getPetOwner() !== null) {
 			$this->getPetOwner()->addTitle((TextFormat::GREEN . "Level Up!"), (TextFormat::AQUA . "Your pet " . $this->getPetName() . TextFormat::RESET . TextFormat::AQUA . " turned level " . $ev->getTo() . "!"));
 		}
@@ -88,7 +88,7 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * @return Loader
 	 */
-	protected function getLoader(): Loader {
+	public function getLoader(): Loader {
 		$plugin = $this->getLevel()->getServer()->getPluginManager()->getPlugin("BlockPets");
 		if($plugin instanceof Loader) {
 			return $plugin;
@@ -111,24 +111,17 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
-	 * @return string
-	 */
-	public function getPetName(): string {
-		return $this->petName;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getName(): string {
-		return $this->name;
-	}
-
-	/**
 	 * @return Player|null
 	 */
 	public function getPetOwner() {
 		return $this->getLevel()->getServer()->getPlayer($this->petOwner);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPetName(): string {
+		return $this->petName;
 	}
 
 	/**
@@ -363,6 +356,13 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function getEntityType(): string {
 		return str_replace(" ", "", str_replace("Pet", "", $this->getName()));
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getName(): string {
+		return $this->name;
 	}
 
 	/**

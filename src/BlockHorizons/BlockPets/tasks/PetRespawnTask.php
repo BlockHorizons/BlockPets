@@ -16,5 +16,6 @@ class PetRespawnTask extends BaseTask {
 
 	public function onRun($currentTick) {
 		$this->pet->spawnToAll();
+		$this->pet->setDormant(false);
 	}
 }

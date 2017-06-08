@@ -20,6 +20,9 @@ permissions:
                     blockpets.command.removepet:
                         default: op
                         description: "Allows access to use the removepet command."
+                    blockpets.command.levelupppet:
+                        default: op
+                        description: "Allows access to use the leveluppet command."
             blockpets.pet:
                 default: false
                 description: "Allows access to all BlockPets pets."

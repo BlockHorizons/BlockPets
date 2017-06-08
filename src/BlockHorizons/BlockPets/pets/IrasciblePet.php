@@ -11,7 +11,7 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
-abstract class IrasciblePet extends Calculator {
+abstract class IrasciblePet extends BasePet {
 
 	private $target = null;
 
@@ -21,27 +21,6 @@ abstract class IrasciblePet extends Calculator {
 
 	public function calmDown() {
 		$this->target = null;
-	}
-
-	/**
-	 * @param int  $amount
-	 * @param bool $silent
-	 *
-	 * @return bool
-	 */
-	public function levelUp(int $amount = 1, bool $silent = false): bool {
-		if(parent::levelUp($amount, $silent)) {
-			$this->recalculateAll();
-			if($this->getLoader()->getBlockPetsConfig()->storeToDatabase()) {
-				if($this->getLoader()->getDatabase()->petExists($this->getName(), $this->getPetOwnerName())) {
-					$this->getLoader()->getDatabase()->updatePetExperience($this->getName(), $this->getPetOwnerName(), $this->getPetLevel(), $this->getPetLevelPoints());
-				} else {
-					$this->getLoader()->getDatabase()->registerPet($this);
-				}
-			}
-			return true;
-		}
-		return false;
 	}
 
 	/**

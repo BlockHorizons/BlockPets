@@ -2,42 +2,70 @@
 
 namespace BlockHorizons\BlockPets\pets;
 
-use pocketmine\level\Level;
-use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\utils\TextFormat;
 
-abstract class Calculator extends BasePet {
+class Calculator {
 
-	public function __construct(Level $level, CompoundTag $nbt) {
-		parent::__construct($level, $nbt);
+	private $pet;
+
+	public function __construct(BasePet $pet) {
+		$this->pet = $pet;
 	}
 
 	public function recalculateAll() {
 		$this->recalculateHealth();
 		$this->recalculateSize();
 		$this->recalculateDamage();
+		$this->updateNameTag();
+		$this->storeToDatabase();
 	}
 
 	public function recalculateHealth() {
-		$petLevel = $this->getPetLevel();
-		$baseHealth = $this->getLoader()->getBlockPetsConfig()->getBasePetHealth();
-		$scalingHealth = $this->getLoader()->getBlockPetsConfig()->getPetHealthPerLevel();
+		$petLevel = $this->getPet()->getPetLevel();
+		$baseHealth = $this->getPet()->getLoader()->getBlockPetsConfig()->getBasePetHealth();
+		$scalingHealth = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetHealthPerLevel();
 
-		$this->setMaxHealth((int) round($baseHealth + $scalingHealth * $petLevel));
-		$this->setHealth($this->getMaxHealth());
+		$this->getPet()->setMaxHealth((int) round($baseHealth + $scalingHealth * $petLevel));
+		$this->getPet()->setHealth($this->getPet()->getMaxHealth());
+	}
+
+	/**
+	 * @return BasePet
+	 */
+	public function getPet(): BasePet {
+		return $this->pet;
 	}
 
 	public function recalculateSize() {
-		$petLevel = $this->getPetLevel();
-		$scalingSize = $this->getLoader()->getBlockPetsConfig()->getPetSizePerLevel();
+		$petLevel = $this->getPet()->getPetLevel();
+		$scalingSize = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetSizePerLevel();
 
-		$this->setScale((float) ($this->getStartingScale() + $scalingSize * $petLevel));
+		$this->getPet()->setScale((float) ($this->getPet()->getStartingScale() + $scalingSize * $petLevel));
 	}
 
 	public function recalculateDamage() {
-		$petLevel = $this->getPetLevel();
-		$baseDamage = $this->getLoader()->getBlockPetsConfig()->getBasePetDamage();
-		$scalingDamage = $this->getLoader()->getBlockPetsConfig()->getPetDamagePerLevel();
+		$petLevel = $this->getPet()->getPetLevel();
+		$baseDamage = $this->getPet()->getLoader()->getBlockPetsConfig()->getBasePetDamage();
+		$scalingDamage = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetDamagePerLevel();
 
-		$this->setAttackDamage((int) round($baseDamage + $scalingDamage * $petLevel));
+		$this->getPet()->setAttackDamage((int) round($baseDamage + $scalingDamage * $petLevel));
+	}
+
+	public function updateNameTag() {
+		$percentage = (int) ($this->getPet()->getPetLevelPoints() / $this->getPet()->getRequiredLevelPoints($this->getPet()->getPetLevel()) * 100);
+		$this->getPet()->setNameTag(
+			$this->getPet()->getPetName() . PHP_EOL .
+			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $this->getPet()->getPetLevel() . TextFormat::GRAY . " (" . TextFormat::YELLOW . $percentage . TextFormat::GRAY . "%) " . TextFormat::GRAY . $this->getPet()->getName()
+		);
+	}
+
+	public function storeToDatabase() {
+		if($this->getPet()->getLoader()->getBlockPetsConfig()->storeToDatabase()) {
+			if($this->getPet()->getLoader()->getDatabase()->petExists($this->getPet()->getName(), $this->getPet()->getPetOwnerName())) {
+				$this->getPet()->getLoader()->getDatabase()->updatePetExperience($this->getPet()->getName(), $this->getPet()->getPetOwnerName(), $this->getPet()->getPetLevel(), $this->getPet()->getPetLevelPoints());
+			} else {
+				$this->getPet()->getLoader()->getDatabase()->registerPet($this->getPet());
+			}
+		}
 	}
 }
