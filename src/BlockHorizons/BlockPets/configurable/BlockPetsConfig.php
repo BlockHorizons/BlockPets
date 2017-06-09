@@ -125,4 +125,11 @@ class BlockPetsConfig {
 	public function getDatabase(): string {
 		return (string) $this->settings["Database"];
 	}
+
+	/**
+	 * @return int
+	 */
+	public function getMaxPets(): int {
+		return (int) $this->settings["Pet-Limit"];
+	}
 }

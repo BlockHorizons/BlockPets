@@ -10,6 +10,9 @@ permissions:
         default: false
         description: "Allows access to all BlockPets features."
         children:
+            blockpets.bypass-limit:
+                default: op
+                description: "Allows bypassing the pet limit set in the config.yml"
             blockpets.command:
                 default: false
                 description: "Allows access to all BlockPets command features."

@@ -288,18 +288,29 @@ class Loader extends PluginBase {
 	}
 
 	/**
-	 * Removes the first pet found with the given name.
+	 * Removes the first pet found with the given name, or the pet with the given name if playerName has been specified.
 	 *
 	 * @param string $name
+	 * @param Player $player
 	 *
 	 * @return bool
 	 */
-	public function removePet(string $name): bool {
-		$pet = $this->getPetByName($name);
+	public function removePet(string $name, Player $player = null): bool {
+		$pet = $this->getPetByName($name, $player);
 		if($pet === null) {
 			return false;
 		}
+		if(!empty($playerName)) {
+			foreach($this->getPetsFrom($player) as $pet) {
+				if(strpos(strtolower($pet->getPetName()), strtolower($name)) !== false) {
+					$pet->close();
+					return true;
+				}
+			}
+			return false;
+		}
 		$pet->close();
+		$this->getDatabase()->unregisterPet($pet->getPetName(), $pet->getPetOwnerName());
 		return true;
 	}
 
@@ -307,10 +318,19 @@ class Loader extends PluginBase {
 	 * Returns the first pet found with the given name.
 	 *
 	 * @param string $name
+	 * @param Player $player
 	 *
 	 * @return BasePet|null
 	 */
-	public function getPetByName(string $name) {
+	public function getPetByName(string $name, Player $player = null) {
+		if($player !== null) {
+			foreach($this->getPetsFrom($player) as $pet) {
+				if(strpos(strtolower($pet->getPetName()), strtolower($name)) !== false) {
+					return $pet;
+				}
+			}
+			return null;
+		}
 		foreach($this->getServer()->getLevels() as $level) {
 			foreach($level->getEntities() as $entity) {
 				if(!$entity instanceof BasePet) {
@@ -319,22 +339,6 @@ class Loader extends PluginBase {
 				if(strpos(strtolower($entity->getPetName()), strtolower($name)) !== false) {
 					return $entity;
 				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Gets the pet the given player is currently riding.
-	 *
-	 * @param Player $player
-	 *
-	 * @return BasePet
-	 */
-	public function getRiddenPet(Player $player): BasePet {
-		foreach($this->getPetsFrom($player) as $pet) {
-			if($pet->isRidden()) {
-				return $pet;
 			}
 		}
 		return null;
@@ -363,6 +367,34 @@ class Loader extends PluginBase {
 	}
 
 	/**
+	 * Returns the database to store and fetch data from.
+	 *
+	 * @return BaseDataStorer
+	 */
+	public function getDatabase(): BaseDataStorer {
+		if($this->database === null) {
+			throw new \RuntimeException("Attempted to retrieve the database while database storing was disabled.");
+		}
+		return $this->database;
+	}
+
+	/**
+	 * Gets the pet the given player is currently riding.
+	 *
+	 * @param Player $player
+	 *
+	 * @return BasePet
+	 */
+	public function getRiddenPet(Player $player): BasePet {
+		foreach($this->getPetsFrom($player) as $pet) {
+			if($pet->isRidden()) {
+				return $pet;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Checks if the given player is currently riding a pet.
 	 *
 	 * @param Player $player
@@ -376,17 +408,5 @@ class Loader extends PluginBase {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Returns the database to store and fetch data from.
-	 *
-	 * @return BaseDataStorer
-	 */
-	public function getDatabase(): BaseDataStorer {
-		if($this->database === null) {
-			throw new \RuntimeException("Attempted to retrieve the database while database storing was disabled.");
-		}
-		return $this->database;
 	}
 }

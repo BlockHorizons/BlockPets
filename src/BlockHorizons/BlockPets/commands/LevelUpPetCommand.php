@@ -10,7 +10,7 @@ use pocketmine\utils\TextFormat as TF;
 class LevelUpPetCommand extends BaseCommand {
 
 	public function __construct(Loader $loader) {
-		parent::__construct($loader, "leveluppet", "Level up your pet", "/leveluppet <petName>", ["lup"]);
+		parent::__construct($loader, "leveluppet", "Level up your pet", "/leveluppet <petName> [player]", ["lup"]);
 		$this->setPermission("blockpets.command.leveluppet");
 	}
 
@@ -35,6 +35,20 @@ class LevelUpPetCommand extends BaseCommand {
 			if(is_numeric($args[1])) {
 				$amount = $args[1];
 			}
+		}
+
+		if(isset($args[1])) {
+			if(($player = $this->getLoader()->getServer()->getPlayer($args[1])) === null) {
+				$sender->sendMessage(TF::RED . "[Warning] The given player could not be found.");
+				return true;
+			}
+			if(($pet = $this->getLoader()->getPetByName($args[0], $player)) === null) {
+				$sender->sendMessage(TF::RED . "[Warning] The given player does not own a pet with that name.");
+				return true;
+			}
+			$pet->levelUp($amount);
+			$sender->sendMessage(TF::GREEN . "Successfully leveled up the pet: " . TF::AQUA . $pet->getPetName() . TF::GREEN . ($amount === 1 ? " once!" : " " . $amount . " times!"));
+			return true;
 		}
 
 		$pet->levelUp($amount);

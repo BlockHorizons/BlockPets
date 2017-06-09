@@ -62,6 +62,16 @@ class SpawnPetCommand extends BaseCommand {
 			$args[3] = 0;
 		}
 		$petName = $this->getLoader()->getPet($args[0]);
+		foreach($this->getLoader()->getPetsFrom($sender) as $pet) {
+			if(strtolower($args[1]) === $pet->getPetName()) {
+				$sender->sendMessage(TF::RED . "[Warning] You already own a pet with that name.");
+				return true;
+			}
+		}
+		if(count($this->getLoader()->getPetsFrom($player)) >= $this->getLoader()->getBlockPetsConfig()->getMaxPets() && !$player->hasPermission("blockpets.bypass-limit")) {
+			$sender->sendMessage(TF::RED . "[Warning] " . $player === $sender ? "You have " : "Your target has " . " exceeded the pet limit.");
+			return true;
+		}
 		$this->getLoader()->createPet($petName, $player, $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3]);
 		$sender->sendMessage(TF::GREEN . "Successfully spawned a pet with the name: " . TF::AQUA . $args[1]);
 		if($player->getName() !== $sender->getName()) {
