@@ -13,7 +13,7 @@ Pet-Respawn-Time: 20
 # Whether to make pets attack the person that attacked them or their owner.
 Attacking-Pets: true
 
-# The limit of pets per player by default. This can be changed for players using the /limitpet command on players.
+# The limit of pets per player by default.
 Pet-Limit: 2
 
 # The base health a pet will be spawned with. This is equal to the health of a pet with level 0.

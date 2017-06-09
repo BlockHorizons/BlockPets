@@ -6,6 +6,7 @@ use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\math\Vector3;
+use pocketmine\Player;
 
 abstract class HoveringPet extends IrasciblePet {
 
@@ -87,6 +88,14 @@ abstract class HoveringPet extends IrasciblePet {
 
 		if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0) {
 			$this->getLoader()->getServer()->getPluginManager()->callEvent($event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage()));
+			if($target->getHealth() - $event->getFinalDamage() <= 0) {
+				if($this->getTarget() instanceof Player) {
+					$this->addPetLevelPoints($this->getLoader()->getBlockPetsConfig()->getPlayerExperiencePoints());
+				} else {
+					$this->addPetLevelPoints($this->getLoader()->getBlockPetsConfig()->getEntityExperiencePoints());
+				}
+				$this->calmDown();
+			}
 			$target->attack($event->getFinalDamage(), $event);
 
 			$this->waitingTime = 15;

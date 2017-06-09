@@ -7,6 +7,7 @@ use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use pocketmine\entity\Creature;
 use pocketmine\entity\Rideable;
+use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\FloatTag;
@@ -149,8 +150,10 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->setPetLevelPoints($totalPoints - $this->getRequiredLevelPoints($this->getPetLevel()));
 			$this->levelUp();
 			return true;
+		} else {
+			$this->setPetLevelPoints($this->getPetLevelPoints() + $points);
+			return false;
 		}
-		return false;
 	}
 
 	/**
@@ -349,6 +352,12 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
+		if(mt_rand() === 10) {
+			$diff = $this->getHealth() + 1;
+			if($this->getHealth() !== $this->getMaxHealth()) {
+				$this->heal($diff, new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
+			}
+		}
 		if($this->isDormant()) {
 			$this->despawnFromAll();
 			return false;
