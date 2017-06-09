@@ -55,7 +55,7 @@ abstract class IrasciblePet extends BasePet {
 		if($this->isRidden()) {
 			$source->setCancelled();
 		}
-		if($this->getLoader()->getBlockPetsConfig()->arePetsInvulnerableIfOwnerIs()) {
+		if($this->getLoader()->getBlockPetsConfig()->arePetsInvulnerableIfOwnerIs() && $this->getPetOwner() !== null) {
 			$this->getLoader()->getServer()->getPluginManager()->callEvent($ownerDamageEvent = new EntityDamageEvent($this->getPetOwner(), EntityDamageEvent::CAUSE_CUSTOM, 0));
 			if($ownerDamageEvent->isCancelled()) {
 				$source->setCancelled();

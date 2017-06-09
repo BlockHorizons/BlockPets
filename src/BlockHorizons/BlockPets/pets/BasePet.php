@@ -350,6 +350,7 @@ abstract class BasePet extends Creature implements Rideable {
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
 		if($this->isDormant()) {
+			$this->despawnFromAll();
 			return false;
 		}
 		if($petOwner === null) {
