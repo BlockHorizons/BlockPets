@@ -37,8 +37,8 @@ class LevelUpPetCommand extends BaseCommand {
 			}
 		}
 
-		if(isset($args[1])) {
-			if(($player = $this->getLoader()->getServer()->getPlayer($args[1])) === null) {
+		if(isset($args[2])) {
+			if(($player = $this->getLoader()->getServer()->getPlayer($args[2])) === null) {
 				$sender->sendMessage(TF::RED . "[Warning] The given player could not be found.");
 				return true;
 			}

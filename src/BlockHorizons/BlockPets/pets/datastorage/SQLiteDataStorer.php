@@ -55,7 +55,7 @@ class SQLiteDataStorer extends BaseDataStorer {
 		UPDATE Pets SET
 		PetLevel = $petLevel,
 		LevelPoints = $levelPoints
-		WHERE Player = '" . $this->escape($ownerName) . "' AND PetName = '" . $this->escape($ownerName) . "'";
+		WHERE Player = '" . $this->escape($ownerName) . "' AND PetName = '" . $this->escape($petName) . "'";
 		return $this->database->exec($query);
 	}
 
