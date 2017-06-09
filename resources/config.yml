@@ -2,7 +2,10 @@
 # Configuration file for BlockPets, a pets plugin by BlockHorizons.
 
 # Whether to make pets invulnerable to any damage, or allow damaging them.
-Invulnerable-Pets: true
+Invulnerable-Pets: false
+
+# Whether to make the pet invulnerable to damage if the owner of it is or not.
+Invulnerable-If-Owner-Is: true
 
 # The time in seconds to wait before spawning a pet that died earlier.
 Pet-Respawn-Time: 20

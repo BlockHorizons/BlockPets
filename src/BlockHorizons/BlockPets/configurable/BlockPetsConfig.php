@@ -132,4 +132,11 @@ class BlockPetsConfig {
 	public function getMaxPets(): int {
 		return (int) $this->settings["Pet-Limit"];
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function arePetsInvulnerableIfOwnerIs(): bool {
+		return (bool) $this->settings["Invulnerable-If-Owner-Is"];
+	}
 }

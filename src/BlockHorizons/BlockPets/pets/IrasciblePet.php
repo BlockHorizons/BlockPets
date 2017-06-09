@@ -29,9 +29,9 @@ abstract class IrasciblePet extends BasePet {
 	/**
 	 * Returns the current target of this pet.
 	 *
-	 * @return Living
+	 * @return Living|null
 	 */
-	public function getTarget(): Living {
+	public function getTarget() {
 		return $this->target;
 	}
 
@@ -54,6 +54,13 @@ abstract class IrasciblePet extends BasePet {
 		}
 		if($this->isRidden()) {
 			$source->setCancelled();
+		}
+		if($this->getLoader()->getBlockPetsConfig()->arePetsInvulnerableIfOwnerIs()) {
+			$this->getLoader()->getServer()->getPluginManager()->callEvent($ownerDamageEvent = new EntityDamageEvent($this->getPetOwner(), EntityDamageEvent::CAUSE_CUSTOM, 0));
+			if($ownerDamageEvent->isCancelled()) {
+				$source->setCancelled();
+			}
+			$ownerDamageEvent->setCancelled();
 		}
 		if($source instanceof EntityDamageByEntityEvent) {
 			$attacker = $source->getDamager();
