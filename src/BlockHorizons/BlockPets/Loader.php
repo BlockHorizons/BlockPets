@@ -2,7 +2,9 @@
 
 namespace BlockHorizons\BlockPets;
 
+use BlockHorizons\BlockPets\commands\BaseCommand;
 use BlockHorizons\BlockPets\commands\CommandOverloads;
+use BlockHorizons\BlockPets\commands\HealPetCommand;
 use BlockHorizons\BlockPets\commands\LevelUpPetCommand;
 use BlockHorizons\BlockPets\commands\RemovePetCommand;
 use BlockHorizons\BlockPets\commands\SpawnPetCommand;
@@ -152,13 +154,15 @@ class Loader extends PluginBase {
 	}
 
 	public function registerCommands() {
+		/** @var BaseCommand[] $petCommands */
 		$petCommands = [
-			"spawnpet" => new SpawnPetCommand($this),
-			"leveluppet" => new LevelUpPetCommand($this),
-			"removepet" => new RemovePetCommand($this)
+			new SpawnPetCommand($this),
+			new LevelUpPetCommand($this),
+			new RemovePetCommand($this),
+			new HealPetCommand($this)
 		];
-		foreach($petCommands as $fallBack => $command) {
-			$this->getServer()->getCommandMap()->register($fallBack, $command);
+		foreach($petCommands as $command) {
+			$this->getServer()->getCommandMap()->register($command->getName(), $command);
 		}
 	}
 

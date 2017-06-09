@@ -4,17 +4,18 @@ namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
 use pocketmine\command\CommandSender;
+use pocketmine\level\particle\HeartParticle;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 
-class LevelUpPetCommand extends BaseCommand {
+class HealPetCommand extends BaseCommand {
 
 	public function __construct(Loader $loader) {
-		parent::__construct($loader, "leveluppet", "Level up a pet", "/leveluppet <petName> [player]", ["lup"]);
-		$this->setPermission("blockpets.command.leveluppet");
+		parent::__construct($loader, "healpet", "Heal a pet back to full health", "/healpet <petName> [player]", ["hp", "petheal"]);
+		$this->setPermission("blockpets.command.healpet");
 	}
 
-	public function execute(CommandSender $sender, $commandLabel, array $args) {
+	public function execute(CommandSender $sender, $commandLabel, array $args): bool {
 		if(!$this->testPermission($sender)) {
 			$this->sendNoPermission($sender);
 			return true;
@@ -30,15 +31,8 @@ class LevelUpPetCommand extends BaseCommand {
 			return true;
 		}
 
-		$amount = 1;
 		if(isset($args[1])) {
-			if(is_numeric($args[1])) {
-				$amount = $args[1];
-			}
-		}
-
-		if(isset($args[2])) {
-			if(($player = $this->getLoader()->getServer()->getPlayer($args[2])) === null) {
+			if(($player = $this->getLoader()->getServer()->getPlayer($args[1])) === null) {
 				$sender->sendMessage(TF::RED . "[Warning] The given player could not be found.");
 				return true;
 			}
@@ -46,13 +40,15 @@ class LevelUpPetCommand extends BaseCommand {
 				$sender->sendMessage(TF::RED . "[Warning] The given player does not own a pet with that name.");
 				return true;
 			}
-			$pet->levelUp($amount);
-			$sender->sendMessage(TF::GREEN . "Successfully leveled up the pet: " . TF::AQUA . $pet->getPetName() . TF::GREEN . ($amount === 1 ? " once!" : " " . $amount . " times!"));
+			$pet->fullHeal();
+			$pet->getLevel()->addParticle(new HeartParticle($pet->add(0, 2), 4));
+			$sender->sendMessage(TF::GREEN . "The pet " . $pet->getPetName() . TF::RESET . TF::GREEN . " has been healed successfully!");
 			return true;
 		}
 
-		$pet->levelUp($amount);
-		$sender->sendMessage(TF::GREEN . "Successfully leveled up the pet: " . TF::AQUA . $pet->getPetName() . TF::GREEN . ($amount === 1 ? " once!" : " " . $amount . " times!"));
+		$pet->fullHeal();
+		$pet->getLevel()->addParticle(new HeartParticle($pet->add(0, 2), 4));
+		$sender->sendMessage(TF::GREEN . "The pet " . $pet->getPetName() . TF::RESET . TF::GREEN . " has been healed successfully!");
 		return true;
 	}
 }

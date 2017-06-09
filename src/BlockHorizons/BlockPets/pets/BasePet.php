@@ -151,7 +151,8 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->levelUp();
 			return true;
 		} else {
-			$this->setPetLevelPoints($this->getPetLevelPoints() + $points);
+			$this->setPetLevelPoints($totalPoints);
+			$this->calculator->updateNameTag();
 			return false;
 		}
 	}
@@ -352,10 +353,9 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
-		if(mt_rand() === 10) {
-			$diff = $this->getHealth() + 1;
+		if(mt_rand() === 7) {
 			if($this->getHealth() !== $this->getMaxHealth()) {
-				$this->heal($diff, new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
+				$this->heal(1, new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
 			}
 		}
 		if($this->isDormant()) {
@@ -446,6 +446,14 @@ abstract class BasePet extends Creature implements Rideable {
 		if($this->getPetOwner()->isSurvival()) {
 			$this->getPetOwner()->setAllowFlight(false);
 		}
+	}
+
+	/**
+	 * Heals the current pet back to full health.
+	 */
+	public function fullHeal() {
+		$diff = $this->getMaxHealth() - $this->getHealth();
+		$this->heal($diff, new EntityRegainHealthEvent($this, $diff, EntityRegainHealthEvent::CAUSE_CUSTOM));
 	}
 
 	/**

@@ -26,6 +26,9 @@ permissions:
                     blockpets.command.leveluppet:
                         default: op
                         description: "Allows access to use the leveluppet command."
+                    blockpets.command.healpet:
+                        default: op
+                        description: "Allows access to use the healpet command."
             blockpets.pet:
                 default: false
                 description: "Allows access to all BlockPets pets."
