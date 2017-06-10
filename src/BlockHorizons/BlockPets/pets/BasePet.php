@@ -7,7 +7,10 @@ use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use pocketmine\entity\Creature;
 use pocketmine\entity\Rideable;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
+use pocketmine\item\Food;
 use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\FloatTag;
@@ -135,6 +138,25 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function getPetName(): string {
 		return $this->petName;
+	}
+
+	public function attack($damage, EntityDamageEvent $source) {
+		if($source instanceof EntityDamageByEntityEvent) {
+			$player = $source->getDamager();
+			if($player instanceof Player) {
+				$food = $player->getInventory()->getItemInHand();
+				if($food instanceof Food) {
+					$nutrition = $food->getFoodRestore();
+					$heal = $nutrition / 20 * $this->getMaxHealth();
+					if($this->getHealth() + $heal > $this->getMaxHealth()) {
+						$heal = $this->getMaxHealth() - $this->getHealth();
+					}
+					$this->heal($heal, new EntityRegainHealthEvent($this, $heal, EntityRegainHealthEvent::CAUSE_SATURATION));
+					$this->calculator->updateNameTag();
+					$source->setCancelled();
+				}
+			}
+		}
 	}
 
 	/**
@@ -347,6 +369,15 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Returns the calculator connected to this pet, used to recalculate health, size, experience etc.
+	 *
+	 * @return Calculator
+	 */
+	public function getCalculator(): Calculator {
+		return $this->calculator;
+	}
+
+	/**
 	 * @param $currentTick
 	 *
 	 * @return bool
@@ -356,6 +387,7 @@ abstract class BasePet extends Creature implements Rideable {
 		if(mt_rand() === 7) {
 			if($this->getHealth() !== $this->getMaxHealth()) {
 				$this->heal(1, new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
+				$this->calculator->updateNameTag();
 			}
 		}
 		if($this->isDormant()) {

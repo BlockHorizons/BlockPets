@@ -31,7 +31,7 @@ class Calculator {
 		$baseHealth = $this->getPet()->getLoader()->getBlockPetsConfig()->getBasePetHealth();
 		$scalingHealth = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetHealthPerLevel();
 
-		$this->getPet()->setMaxHealth((int) round($baseHealth + $scalingHealth * $petLevel));
+		$this->getPet()->setMaxHealth((int) $baseHealth + $scalingHealth * $petLevel);
 		$this->getPet()->fullHeal();
 	}
 
@@ -67,10 +67,11 @@ class Calculator {
 	 * Updates the name tag to include the latest data like level, level points etc.
 	 */
 	public function updateNameTag() {
-		$percentage = (int) ($this->getPet()->getPetLevelPoints() / $this->getPet()->getRequiredLevelPoints($this->getPet()->getPetLevel()) * 100);
+		$percentage = round($this->getPet()->getPetLevelPoints() / $this->getPet()->getRequiredLevelPoints($this->getPet()->getPetLevel()) * 100, 1);
 		$this->getPet()->setNameTag(
 			$this->getPet()->getPetName() . PHP_EOL .
-			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $this->getPet()->getPetLevel() . TextFormat::GRAY . " (" . TextFormat::YELLOW . $percentage . TextFormat::GRAY . "%) " . TextFormat::GRAY . $this->getPet()->getName()
+			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $this->getPet()->getPetLevel() . TextFormat::GRAY . " (" . TextFormat::YELLOW . $percentage . TextFormat::GRAY . "%) " . TextFormat::GRAY . $this->getPet()->getName() .
+			TextFormat::RED . " (" . $this->getPet()->getHealth() . "/" . $this->getPet()->getMaxHealth() . ")"
 		);
 	}
 

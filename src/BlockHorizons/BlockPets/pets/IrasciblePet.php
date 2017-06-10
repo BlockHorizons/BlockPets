@@ -49,6 +49,7 @@ abstract class IrasciblePet extends BasePet {
 	 * @param EntityDamageEvent $source
 	 */
 	public function attack($damage, EntityDamageEvent $source) {
+		parent::attack($damage, $source);
 		if($this->getLoader()->getBlockPetsConfig()->arePetsInvulnerable()) {
 			$source->setCancelled();
 		}
