@@ -48,7 +48,7 @@ class RidingListener implements Listener {
 	}
 
 	/**
-	 * Used to dismount the player if it teleports, just like it does visually.
+	 * Used to dismount the player if it teleports, just like it does in vanilla.
 	 *
 	 * @param EntityTeleportEvent $event
 	 */
@@ -62,7 +62,7 @@ class RidingListener implements Listener {
 	}
 
 	/**
-	 * Used to ignore any movement revert issues while riding a pet.
+	 * Used to ignore any movement revert issues whilst riding a pet.
 	 *
 	 * @param PlayerIllegalMoveEvent $event
 	 */

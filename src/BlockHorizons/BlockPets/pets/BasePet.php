@@ -152,7 +152,7 @@ abstract class BasePet extends Creature implements Rideable {
 			return true;
 		} else {
 			$this->setPetLevelPoints($totalPoints);
-			$this->calculator->updateNameTag();
+			$this->calculator->recalculateAll();
 			return false;
 		}
 	}

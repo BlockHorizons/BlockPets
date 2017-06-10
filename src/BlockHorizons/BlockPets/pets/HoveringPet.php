@@ -41,7 +41,7 @@ abstract class HoveringPet extends IrasciblePet {
 			$this->motionZ = $this->getSpeed() * 0.25 * ($z / (abs($x) + abs($z)));
 		}
 
-		if($y > -3.5 && (float) $y !== 0.0) {
+		if($y > -5 && (float) $y !== 0.0) {
 			$this->motionY = $this->getSpeed() * 0.25 * $y;
 		}
 
@@ -75,7 +75,7 @@ abstract class HoveringPet extends IrasciblePet {
 			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
 		}
 
-		if($y > -3.5 && (float) $y !== 0.0) {
+		if($y > -5 && (float) $y !== 0.0) {
 			$this->motionY = $this->getSpeed() * 0.15 * $y;
 		}
 
@@ -88,15 +88,15 @@ abstract class HoveringPet extends IrasciblePet {
 
 		if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0) {
 			$this->getLoader()->getServer()->getPluginManager()->callEvent($event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage()));
-			if($target->getHealth() - $event->getFinalDamage() <= 0) {
-				if($this->getTarget() instanceof Player) {
+			$target->attack($event->getFinalDamage(), $event);
+			if(!$target->isAlive()) {
+				if($target instanceof Player) {
 					$this->addPetLevelPoints($this->getLoader()->getBlockPetsConfig()->getPlayerExperiencePoints());
 				} else {
 					$this->addPetLevelPoints($this->getLoader()->getBlockPetsConfig()->getEntityExperiencePoints());
 				}
 				$this->calmDown();
 			}
-			$target->attack($event->getFinalDamage(), $event);
 
 			$this->waitingTime = 15;
 		}
