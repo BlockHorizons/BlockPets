@@ -12,6 +12,9 @@ class Calculator {
 		$this->pet = $pet;
 	}
 
+	/**
+	 * Recalculates every property of the pet and saves/updates it to the database.
+	 */
 	public function recalculateAll() {
 		$this->recalculateHealth();
 		$this->recalculateSize();
@@ -20,6 +23,9 @@ class Calculator {
 		$this->storeToDatabase();
 	}
 
+	/**
+	 * Recalculates maximum health that the pet should have according to its configuration scalings.
+	 */
 	public function recalculateHealth() {
 		$petLevel = $this->getPet()->getPetLevel();
 		$baseHealth = $this->getPet()->getLoader()->getBlockPetsConfig()->getBasePetHealth();
@@ -36,6 +42,9 @@ class Calculator {
 		return $this->pet;
 	}
 
+	/**
+	 * Recalculates size that the pet should have according to its configuration scalings.
+	 */
 	public function recalculateSize() {
 		$petLevel = $this->getPet()->getPetLevel();
 		$scalingSize = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetSizePerLevel();
@@ -43,6 +52,9 @@ class Calculator {
 		$this->getPet()->setScale((float) ($this->getPet()->getStartingScale() + $scalingSize * $petLevel));
 	}
 
+	/**
+	 * Recalculates attack damage that the pet should have according to its configuration attack damage.
+	 */
 	public function recalculateDamage() {
 		$petLevel = $this->getPet()->getPetLevel();
 		$baseDamage = $this->getPet()->getLoader()->getBlockPetsConfig()->getBasePetDamage();
@@ -51,6 +63,9 @@ class Calculator {
 		$this->getPet()->setAttackDamage((int) round($baseDamage + $scalingDamage * $petLevel));
 	}
 
+	/**
+	 * Updates the name tag to include the latest data like level, level points etc.
+	 */
 	public function updateNameTag() {
 		$percentage = (int) ($this->getPet()->getPetLevelPoints() / $this->getPet()->getRequiredLevelPoints($this->getPet()->getPetLevel()) * 100);
 		$this->getPet()->setNameTag(
@@ -59,6 +74,9 @@ class Calculator {
 		);
 	}
 
+	/**
+	 * Stores the pet to the database, or updates level and level points if the pet has already been added to the database.
+	 */
 	public function storeToDatabase() {
 		if($this->getPet()->getLoader()->getBlockPetsConfig()->storeToDatabase()) {
 			if($this->getPet()->getLoader()->getDatabase()->petExists($this->getPet()->getName(), $this->getPet()->getPetOwnerName())) {

@@ -3,12 +3,14 @@
 namespace BlockHorizons\BlockPets\listeners;
 
 use BlockHorizons\BlockPets\Loader;
+use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\cheat\PlayerIllegalMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\InteractPacket;
 use pocketmine\network\mcpe\protocol\PlayerInputPacket;
+use pocketmine\Player;
 
 class RidingListener implements Listener {
 
@@ -19,6 +21,8 @@ class RidingListener implements Listener {
 	}
 
 	/**
+	 * Used for getting values of arrows clicked during the riding of a pet, and when dismounted.
+	 *
 	 * @param DataPacketReceiveEvent $event
 	 */
 	public function ridePet(DataPacketReceiveEvent $event) {
@@ -44,6 +48,22 @@ class RidingListener implements Listener {
 	}
 
 	/**
+	 * Used to dismount the player if it teleports, just like it does visually.
+	 *
+	 * @param EntityTeleportEvent $event
+	 */
+	public function onTeleport(EntityTeleportEvent $event) {
+		$player = $event->getEntity();
+		if($player instanceof Player) {
+			if($this->getLoader()->isRidingAPet($player)) {
+				$this->getLoader()->getRiddenPet($player)->throwRiderOff();
+			}
+		}
+	}
+
+	/**
+	 * Used to ignore any movement revert issues while riding a pet.
+	 *
 	 * @param PlayerIllegalMoveEvent $event
 	 */
 	public function disableRidingMovementRevert(PlayerIllegalMoveEvent $event) {
@@ -53,6 +73,8 @@ class RidingListener implements Listener {
 	}
 
 	/**
+	 * Used to dismount the player from the ridden pet. This does not matter for the player, but could have a significant effect on the pet's behaviour.
+	 *
 	 * @param PlayerQuitEvent $event
 	 */
 	public function onPlayerQuit(PlayerQuitEvent $event) {

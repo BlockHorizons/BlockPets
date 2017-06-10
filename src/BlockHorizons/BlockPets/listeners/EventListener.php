@@ -23,6 +23,8 @@ class EventListener implements Listener {
 	}
 
 	/**
+	 * Used to ignore fall damage when ridden and anger pets when their owner has been attacked.
+	 *
 	 * @param EntityDamageEvent $event
 	 *
 	 * @priority MONITOR
@@ -62,6 +64,8 @@ class EventListener implements Listener {
 	}
 
 	/**
+	 * Used to respawn a pet after being killed.
+	 *
 	 * @param EntityDeathEvent $event
 	 */
 	public function onPetDeath(EntityDeathEvent $event) {
@@ -82,6 +86,8 @@ class EventListener implements Listener {
 	}
 
 	/**
+	 * Used to respawn pets to the player, and fetch pets from the database if this has been configured.
+	 *
 	 * @param PlayerLoginEvent $event
 	 */
 	public function onPlayerLogin(PlayerLoginEvent $event) {

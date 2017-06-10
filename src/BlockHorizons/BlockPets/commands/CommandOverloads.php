@@ -86,6 +86,24 @@ class CommandOverloads {
 					"name" => "player",
 					"optional" => true
 				]
+			],
+
+			"healpet" => [
+				0 => [
+					"type" => "rawtext",
+					"name" => "pet name",
+					"optional" => false
+				],
+				1 => [
+					"type" => "int",
+					"name" => "amount",
+					"optional" => true
+				],
+				2 => [
+					"type" => "rawtext",
+					"name" => "player",
+					"optional" => true
+				]
 			]
 		];
 	}

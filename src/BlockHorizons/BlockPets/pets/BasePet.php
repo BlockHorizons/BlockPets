@@ -379,7 +379,6 @@ abstract class BasePet extends Creature implements Rideable {
 		}
 		if($this->distance($petOwner) >= 50) {
 			$this->teleport($petOwner);
-			$this->throwRiderOff();
 			return true;
 		}
 		$this->updateMovement();

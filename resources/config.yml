@@ -8,7 +8,7 @@ Invulnerable-Pets: false
 Invulnerable-If-Owner-Is: true
 
 # The time in seconds to wait before spawning a pet that died earlier.
-Pet-Respawn-Time: 20
+Pet-Respawn-Time: 10
 
 # Whether to make pets attack the person that attacked them or their owner.
 Attacking-Pets: true

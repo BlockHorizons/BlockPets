@@ -33,9 +33,6 @@ permissions:
                 default: false
                 description: "Allows access to all BlockPets pets."
                 children:
-                    blockpets.pet.*:
-                        default: false
-                        description: "Allows access to use all pets."
                     blockpets.pet.bat:
                         default: op
                         description: "Allows access to use the bat pet."
