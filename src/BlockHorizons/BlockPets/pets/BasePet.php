@@ -140,6 +140,10 @@ abstract class BasePet extends Creature implements Rideable {
 		return $this->petName;
 	}
 
+	/**
+	 * @param float             $damage
+	 * @param EntityDamageEvent $source
+	 */
 	public function attack($damage, EntityDamageEvent $source) {
 		if($source instanceof EntityDamageByEntityEvent) {
 			$player = $source->getDamager();
@@ -151,12 +155,14 @@ abstract class BasePet extends Creature implements Rideable {
 					if($this->getHealth() + $heal > $this->getMaxHealth()) {
 						$heal = $this->getMaxHealth() - $this->getHealth();
 					}
+					$player->getInventory()->setitemInHand($player->getInventory()->getItemInHand()->pop());
 					$this->heal($heal, new EntityRegainHealthEvent($this, $heal, EntityRegainHealthEvent::CAUSE_SATURATION));
 					$this->calculator->updateNameTag();
 					$source->setCancelled();
 				}
 			}
 		}
+		parent::attack($damage, $source);
 	}
 
 	/**
