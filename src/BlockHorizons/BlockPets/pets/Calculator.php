@@ -79,8 +79,8 @@ class Calculator {
 	 */
 	public function storeToDatabase() {
 		if($this->getPet()->getLoader()->getBlockPetsConfig()->storeToDatabase()) {
-			if($this->getPet()->getLoader()->getDatabase()->petExists($this->getPet()->getName(), $this->getPet()->getPetOwnerName())) {
-				$this->getPet()->getLoader()->getDatabase()->updatePetExperience($this->getPet()->getName(), $this->getPet()->getPetOwnerName(), $this->getPet()->getPetLevel(), $this->getPet()->getPetLevelPoints());
+			if($this->getPet()->getLoader()->getDatabase()->petExists($this->getPet()->getPetName(), $this->getPet()->getPetOwnerName())) {
+				$this->getPet()->getLoader()->getDatabase()->updatePetExperience($this->getPet()->getPetName(), $this->getPet()->getPetOwnerName(), $this->getPet()->getPetLevel(), $this->getPet()->getPetLevelPoints());
 			} else {
 				$this->getPet()->getLoader()->getDatabase()->registerPet($this->getPet());
 			}

@@ -248,7 +248,7 @@ class Loader extends PluginBase {
 	}
 
 	/**
-	 * Creates a new pet to the given player.
+	 * Creates a new pet for the given player.
 	 *
 	 * @param string $entityName
 	 * @param Player $position
