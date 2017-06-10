@@ -9,6 +9,8 @@ use BlockHorizons\BlockPets\commands\LevelUpPetCommand;
 use BlockHorizons\BlockPets\commands\RemovePetCommand;
 use BlockHorizons\BlockPets\commands\SpawnPetCommand;
 use BlockHorizons\BlockPets\configurable\BlockPetsConfig;
+use BlockHorizons\BlockPets\events\PetRemoveEvent;
+use BlockHorizons\BlockPets\events\PetSpawnEvent;
 use BlockHorizons\BlockPets\listeners\EventListener;
 use BlockHorizons\BlockPets\listeners\RidingListener;
 use BlockHorizons\BlockPets\pets\BasePet;
@@ -286,6 +288,11 @@ class Loader extends PluginBase {
 
 		$entity = Entity::createEntity($entityName . "Pet", $position->getLevel(), $nbt);
 		if($entity instanceof BasePet) {
+			$this->getServer()->getPluginManager()->callEvent($ev = new PetSpawnEvent($this, $entity));
+			if($ev->isCancelled()) {
+				$entity->close();
+				return null;
+			}
 			return $entity;
 		}
 		return null;
@@ -304,13 +311,22 @@ class Loader extends PluginBase {
 		if($pet === null) {
 			return false;
 		}
-		if(!empty($playerName)) {
+		if(!empty($player)) {
 			foreach($this->getPetsFrom($player) as $pet) {
 				if(strpos(strtolower($pet->getPetName()), strtolower($name)) !== false) {
+					$this->getServer()->getPluginManager()->callEvent($ev = new PetRemoveEvent($this, $pet));
+					if($ev->isCancelled()) {
+						return false;
+					}
 					$pet->close();
+					$this->getDatabase()->unregisterPet($pet->getPetName(), $pet->getPetOwnerName());
 					return true;
 				}
 			}
+			return false;
+		}
+		$this->getServer()->getPluginManager()->callEvent($ev = new PetRemoveEvent($this, $pet));
+		if($ev->isCancelled()) {
 			return false;
 		}
 		$pet->close();

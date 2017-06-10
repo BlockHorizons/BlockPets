@@ -72,7 +72,10 @@ class SpawnPetCommand extends BaseCommand {
 			$sender->sendMessage(TF::RED . "[Warning] " . $player === $sender ? "You have " : "Your target has " . " exceeded the pet limit.");
 			return true;
 		}
-		$this->getLoader()->createPet($petName, $player, $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3]);
+		if($this->getLoader()->createPet($petName, $player, $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3]) === null) {
+			$sender->sendMessage(TF::RED . "[Warning] A plugin has cancelled spawning this pet.");
+			return true;
+		}
 		$sender->sendMessage(TF::GREEN . "Successfully spawned a pet with the name: " . TF::AQUA . $args[1]);
 		if($player->getName() !== $sender->getName()) {
 			$player->sendMessage(TF::GREEN . "You have received a pet with the name: " . TF::AQUA . $args[1]);

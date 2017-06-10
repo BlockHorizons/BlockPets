@@ -32,7 +32,10 @@ class RemovePetCommand extends BaseCommand {
 				$sender->sendMessage(TF::RED . "[Warning] The given player does not own a pet with that name.");
 				return true;
 			}
-			$this->getLoader()->removePet($pet->getPetOwnerName(), $player);
+			if($this->getLoader()->removePet($pet->getPetOwnerName(), $player) === false) {
+				$sender->sendMessage(TF::RED . "[Warning] A plugin has cancelled the removal of this pet.");
+				return true;
+			}
 			$sender->sendMessage(TF::GREEN . "Successfully removed the pet: " . TF::AQUA . $pet->getPetName());
 			return true;
 		}
@@ -40,7 +43,7 @@ class RemovePetCommand extends BaseCommand {
 		if($this->getLoader()->removePet($args[0])) {
 			$sender->sendMessage(TF::GREEN . "Successfully removed the pet: " . TF::AQUA . $pet->getPetName());
 		} else {
-			$sender->sendMessage(TF::RED . "[Warning] A pet with that name doesn't exist.");
+			$sender->sendMessage(TF::RED . "[Warning] A plugin has cancelled the removal this pet.");
 		}
 		return true;
 	}
