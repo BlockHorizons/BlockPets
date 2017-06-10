@@ -104,6 +104,18 @@ class CommandOverloads {
 					"name" => "player",
 					"optional" => true
 				]
+			],
+
+			"clearpet" => [
+				0 => [
+					"type" => "rawtext",
+					"name"  => "pet name",
+					"optional" => false
+				]
+			],
+
+			"togglepets" => [
+
 			]
 		];
 	}

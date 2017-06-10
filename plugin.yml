@@ -29,6 +29,12 @@ permissions:
                     blockpets.command.healpet:
                         default: op
                         description: "Allows access to use the healpet command."
+                    blockpets.command.clearpet:
+                        default: true
+                        description: "Allows access to use the clearpet command."
+                    blockpets.command.togglepets:
+                        default: true
+                        description: "Allows access to use the togglepets command."
             blockpets.pet:
                 default: false
                 description: "Allows access to all BlockPets pets."

@@ -3,11 +3,13 @@
 namespace BlockHorizons\BlockPets;
 
 use BlockHorizons\BlockPets\commands\BaseCommand;
+use BlockHorizons\BlockPets\commands\ClearPetCommand;
 use BlockHorizons\BlockPets\commands\CommandOverloads;
 use BlockHorizons\BlockPets\commands\HealPetCommand;
 use BlockHorizons\BlockPets\commands\LevelUpPetCommand;
 use BlockHorizons\BlockPets\commands\RemovePetCommand;
 use BlockHorizons\BlockPets\commands\SpawnPetCommand;
+use BlockHorizons\BlockPets\commands\TogglePetsCommand;
 use BlockHorizons\BlockPets\configurable\BlockPetsConfig;
 use BlockHorizons\BlockPets\events\PetRemoveEvent;
 use BlockHorizons\BlockPets\events\PetSpawnEvent;
@@ -142,6 +144,7 @@ class Loader extends PluginBase {
 
 	private $bpConfig;
 	private $database;
+	private $toggledOff = [];
 
 	public function onEnable() {
 		CommandOverloads::initialize();
@@ -161,7 +164,9 @@ class Loader extends PluginBase {
 			new SpawnPetCommand($this),
 			new LevelUpPetCommand($this),
 			new RemovePetCommand($this),
-			new HealPetCommand($this)
+			new HealPetCommand($this),
+			new ClearPetCommand($this),
+			new TogglePetsCommand($this)
 		];
 		foreach($petCommands as $command) {
 			$this->getServer()->getCommandMap()->register($command->getName(), $command);
@@ -311,7 +316,7 @@ class Loader extends PluginBase {
 		if($pet === null) {
 			return false;
 		}
-		if(!empty($player)) {
+		if($player !== null) {
 			foreach($this->getPetsFrom($player) as $pet) {
 				if(strpos(strtolower($pet->getPetName()), strtolower($name)) !== false) {
 					$this->getServer()->getPluginManager()->callEvent($ev = new PetRemoveEvent($this, $pet));
@@ -428,5 +433,39 @@ class Loader extends PluginBase {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Toggles pets of the given player on/off.
+	 *
+	 * @param Player $player
+	 *
+	 * @return bool
+	 */
+	public function togglePets(Player $player): bool {
+		if($this->arePetsToggledOn($player)) {
+			$this->toggledOff[$player->getName()] = true;
+			foreach($this->getPetsFrom($player) as $pet) {
+				$pet->despawnFromAll();
+			}
+			return false;
+		} else {
+			unset($this->toggledOff[$player->getName()]);
+			foreach($this->getPetsFrom($player) as $pet) {
+				$pet->spawnToAll();
+			}
+			return true;
+		}
+	}
+
+	/**
+	 * Checks if pets are toggled on.
+	 *
+	 * @param Player $player
+	 *
+	 * @return bool
+	 */
+	public function arePetsToggledOn(Player $player): bool {
+		return !isset($this->toggledOff[$player->getName()]);
 	}
 }
