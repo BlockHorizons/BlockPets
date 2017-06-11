@@ -321,8 +321,8 @@ class Loader extends PluginBase {
 	 * @return bool
 	 */
 	public function removePet(string $name, Player $player = null): bool {
-		$pet = $this->getPetByName($name, $player);
-		if($pet === null) {
+		$foundPet = $this->getPetByName($name);
+		if($foundPet === null) {
 			return false;
 		}
 		if($player !== null) {
@@ -339,12 +339,12 @@ class Loader extends PluginBase {
 			}
 			return false;
 		}
-		$this->getServer()->getPluginManager()->callEvent($ev = new PetRemoveEvent($this, $pet));
+		$this->getServer()->getPluginManager()->callEvent($ev = new PetRemoveEvent($this, $foundPet));
 		if($ev->isCancelled()) {
 			return false;
 		}
-		$pet->close();
-		$this->getDatabase()->unregisterPet($pet->getPetName(), $pet->getPetOwnerName());
+		$foundPet->close();
+		$this->getDatabase()->unregisterPet($foundPet->getPetName(), $foundPet->getPetOwnerName());
 		return true;
 	}
 

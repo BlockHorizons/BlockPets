@@ -127,7 +127,7 @@ abstract class BouncingPet extends IrasciblePet {
 	public function jump() {
 		$this->motionY = $this->gravity * 12 * $this->getScale();
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
-		$this->jumpTicks = 6;
+		$this->jumpTicks = 7;
 	}
 
 	public function doRidingMovement($motionX, $motionZ) {
