@@ -91,8 +91,8 @@ abstract class WalkingPet extends IrasciblePet {
 			$this->motionX = 0;
 			$this->motionZ = 0;
 		} else {
-			$this->motionX = $this->getSpeed() * 0.1 * ($x / (abs($x) + abs($z)));
-			$this->motionZ = $this->getSpeed() * 0.1 * ($z / (abs($x) + abs($z)));
+			$this->motionX = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
+			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
 		}
 		$this->yaw = rad2deg(atan2(-$x, $z));
 		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));

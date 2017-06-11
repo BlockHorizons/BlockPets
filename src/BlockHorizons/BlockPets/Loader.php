@@ -31,13 +31,16 @@ use BlockHorizons\BlockPets\pets\creatures\HorsePet;
 use BlockHorizons\BlockPets\pets\creatures\HuskPet;
 use BlockHorizons\BlockPets\pets\creatures\IronGolemPet;
 use BlockHorizons\BlockPets\pets\creatures\LlamaPet;
+use BlockHorizons\BlockPets\pets\creatures\MagmaCubePet;
 use BlockHorizons\BlockPets\pets\creatures\MooshroomPet;
 use BlockHorizons\BlockPets\pets\creatures\OcelotPet;
 use BlockHorizons\BlockPets\pets\creatures\PigPet;
 use BlockHorizons\BlockPets\pets\creatures\PolarBearPet;
+use BlockHorizons\BlockPets\pets\creatures\RabbitPet;
 use BlockHorizons\BlockPets\pets\creatures\SheepPet;
 use BlockHorizons\BlockPets\pets\creatures\SilverFishPet;
 use BlockHorizons\BlockPets\pets\creatures\SkeletonPet;
+use BlockHorizons\BlockPets\pets\creatures\SlimePet;
 use BlockHorizons\BlockPets\pets\creatures\SnowGolemPet;
 use BlockHorizons\BlockPets\pets\creatures\SpiderPet;
 use BlockHorizons\BlockPets\pets\creatures\StrayPet;
@@ -102,7 +105,10 @@ class Loader extends PluginBase {
 		"WitherSkull",
 		"ZombiePigman",
 		"ZombieVillager",
-		"Llama"
+		"Llama",
+		"Rabbit",
+		"Slime",
+		"MagmaCube"
 	];
 
 	const PET_CLASSES = [
@@ -139,7 +145,10 @@ class Loader extends PluginBase {
 		WitherSkullPet::class,
 		ZombiePigmanPet::class,
 		ZombieVillagerPet::class,
-		LlamaPet::class
+		LlamaPet::class,
+		MagmaCubePet::class,
+		SlimePet::class,
+		RabbitPet::class
 	];
 
 	private $bpConfig;
