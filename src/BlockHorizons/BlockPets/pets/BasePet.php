@@ -212,7 +212,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return int
 	 */
 	public function getRequiredLevelPoints(int $level) {
-		return (int)(20 + $level / 1.5 * $level);
+		return (int) (20 + $level / 1.5 * $level);
 	}
 
 	/**

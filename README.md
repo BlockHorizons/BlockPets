@@ -1,5 +1,5 @@
 # BlockPets
-An advanced pets plugin for PocketMine-MP.
+An advanced pets plugin for PocketMine-MP.<br>
 [![Poggit-CI](https://poggit.pmmp.io/ci.shield/BlockHorizons/BlockPets/BlockPets)](https://poggit.pmmp.io/ci/BlockHorizons/BlockPets/BlockPets)
 
 ### Overview

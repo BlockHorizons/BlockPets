@@ -109,7 +109,7 @@ class CommandOverloads {
 			"clearpet" => [
 				0 => [
 					"type" => "rawtext",
-					"name"  => "pet name",
+					"name" => "pet name",
 					"optional" => false
 				]
 			],

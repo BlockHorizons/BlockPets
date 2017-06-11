@@ -8,10 +8,10 @@ use BlockHorizons\BlockPets\pets\BasePet;
 abstract class BaseDataStorer {
 
 	protected $loader;
-	
+
 	public function __construct(Loader $loader) {
 		$this->loader = $loader;
-		
+
 		$this->prepare();
 	}
 

@@ -30,7 +30,7 @@ class SQLiteDataStorer extends BaseDataStorer {
 		return $this->database->exec($query);
 	}
 
-	public  function petExists(string $petName, string $ownerName): bool {
+	public function petExists(string $petName, string $ownerName): bool {
 		$query = "SELECT * FROM Pets WHERE PetName = '" . $this->escape($petName) . "' AND Player = '" . $this->escape($ownerName) . "'";
 		return !empty($this->database->query($query)->fetchArray(SQLITE3_ASSOC));
 	}

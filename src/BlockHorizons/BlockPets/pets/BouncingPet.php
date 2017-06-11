@@ -186,4 +186,15 @@ abstract class BouncingPet extends IrasciblePet {
 		$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);
 		$this->updateMovement();
 	}
+
+	/**
+	 * @param float             $damage
+	 * @param EntityDamageEvent $source
+	 */
+	public function attack($damage, EntityDamageEvent $source) {
+		if($source->getCause() === $source::CAUSE_FALL) {
+			$source->setCancelled();
+		}
+		return parent::attack($damage, $source);
+	}
 }
