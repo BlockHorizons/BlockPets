@@ -84,6 +84,9 @@ permissions:
                     blocksniper.pet.llama:
                         default: op
                         description: "Allows access to use the llama pet."
+                    blockpets.pet.magmacube:
+                        default: op
+                        description: "Allows access to use the magma cube pet."
                     blockpets.pet.mooshroom:
                         default: op
                         description: "Allows access to use the mooshroom pet."
@@ -96,6 +99,9 @@ permissions:
                     blockpets.pet.polarbear:
                         default: op
                         description: "Allows access to use the polar bear pet."
+                    blockpets.pet.rabbit:
+                        default: op
+                        description: "Allows access to use the rabbit pet."
                     blockpets.pet.sheep:
                         default: op
                         description: "Allows access to use the sheep pet."
@@ -105,6 +111,9 @@ permissions:
                     blockpets.pet.skeleton:
                         default: op
                         description: "Allows access to use the skeleton pet."
+                    blockpets.pet.slime:
+                        default: op
+                        description: "Allows access to use the slime pet."
                     blockpets.pet.snowgolem:
                         default: op
                         description: "Allows access to use the snow golem pet."
