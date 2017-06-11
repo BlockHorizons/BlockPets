@@ -12,6 +12,7 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDeathEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerLoginEvent;
+use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\Player;
 
 class EventListener implements Listener {
@@ -105,5 +106,14 @@ class EventListener implements Listener {
 			$pet->spawnToAll();
 			$pet->setDormant(false);
 		}
+	}
+	
+	/**
+	 * Used to fix command bug.
+	 *
+	 * @param PlayerJoinEvent $event
+	 */
+	public function onPlayerJoin(PlayerJoinEvent $event){
+		$event->getPlayer()->sendCommandData();
 	}
 }
