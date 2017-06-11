@@ -14,7 +14,7 @@ class SpawnPetCommand extends BaseCommand {
 		$this->setPermission("blockpets.command.spawnpet");
 	}
 
-	public function execute(CommandSender $sender, $commandLabel, array $args) {
+	public function execute(CommandSender $sender, $commandLabel, array $args): bool {
 		if(!$this->testPermission($sender)) {
 			$this->sendNoPermission($sender);
 			return true;

@@ -14,7 +14,7 @@ class TogglePetsCommand extends BaseCommand {
 		$this->setPermission("blockpets.command.togglepets");
 	}
 
-	public function execute(CommandSender $sender, $commandLabel, array $args) {
+	public function execute(CommandSender $sender, $commandLabel, array $args): bool {
 		if(!$this->testPermission($sender)) {
 			$this->sendNoPermission($sender);
 			return true;
@@ -26,7 +26,7 @@ class TogglePetsCommand extends BaseCommand {
 		}
 
 		$this->getLoader()->togglePets($sender);
-		$sender->sendMessage(TF::GREEN . "Successfully toggled your pets " . $this->getLoader()->arePetsToggledOn($sender) ? "on." : "off.");
+		$sender->sendMessage(TF::GREEN . "Successfully toggled your pets " . ($this->getLoader()->arePetsToggledOn($sender) ? "on." : "off."));
 		return true;
 	}
 }

@@ -35,6 +35,9 @@ permissions:
                     blockpets.command.togglepets:
                         default: true
                         description: "Allows access to use the togglepets command."
+                    blockpets.command.pet:
+                        default: op
+                        description: "Allows access to use the pets command."
             blockpets.pet:
                 default: false
                 description: "Allows access to all BlockPets pets."

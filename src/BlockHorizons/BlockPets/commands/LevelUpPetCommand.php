@@ -10,11 +10,11 @@ use pocketmine\utils\TextFormat as TF;
 class LevelUpPetCommand extends BaseCommand {
 
 	public function __construct(Loader $loader) {
-		parent::__construct($loader, "leveluppet", "Level up a pet", "/leveluppet <petName> [player]", ["lup"]);
+		parent::__construct($loader, "leveluppet", "Level up a pet", "/leveluppet <petName> [amount] [player]", ["lup"]);
 		$this->setPermission("blockpets.command.leveluppet");
 	}
 
-	public function execute(CommandSender $sender, $commandLabel, array $args) {
+	public function execute(CommandSender $sender, $commandLabel, array $args): bool {
 		if(!$this->testPermission($sender)) {
 			$this->sendNoPermission($sender);
 			return true;

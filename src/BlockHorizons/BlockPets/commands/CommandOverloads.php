@@ -116,6 +116,24 @@ class CommandOverloads {
 
 			"togglepets" => [
 
+			],
+
+			"pet" => [
+				0 => [
+					"type" => "stringenum",
+					"name" => "parameter",
+					"optional" => true,
+					"enum_values" => [
+						"info",
+						"reload",
+						"help"
+					]
+				],
+				1 => [
+					"type" => "int",
+					"name" => "help page",
+					"optional" => true
+				]
 			]
 		];
 	}

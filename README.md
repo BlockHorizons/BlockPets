@@ -1,6 +1,6 @@
 # BlockPets
 An advanced pets plugin for PocketMine-MP.
-
+[![Poggit-CI](https://poggit.pmmp.io/ci.shield/BlockHorizons/BlockPets/BlockPets)](https://poggit.pmmp.io/ci/BlockHorizons/BlockPets/BlockPets)
 
 ### Overview
 BlockPets is a pet plugin designed to bring every feature that should be included in a good pets plugin. This includes pets being able to level up, fight, smooth walking, riding and other essential features. A full list of features can be found below.
@@ -17,11 +17,5 @@ BlockPets is a pet plugin designed to bring every feature that should be include
 - Multi-world pets, following you through worlds.
 
 #### Commands
-> /spawnpet \<mob\> \<name\> \[size\] \[player\]<br>
-> Spawns the given pet with the name and size specified, to the player specified.
->
-> /removepet \<part of name\><br>
-> Removes a pet with the given name.
->
-> /leveluppet \<part of name\> \[amount\]<br>
-> Levels up the specified pet with the given amount.
+BlockPets contains a hand full of commands to modify, create and remove pets. These commands can be found using the /pet \<help\> command.<br>
+Permission nodes for each command and pet can be found in the [plugin.yml](https://github.com/BlockHorizons/BlockPets/blob/master/plugin.yml) file.

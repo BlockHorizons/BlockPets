@@ -7,6 +7,7 @@ use BlockHorizons\BlockPets\commands\ClearPetCommand;
 use BlockHorizons\BlockPets\commands\CommandOverloads;
 use BlockHorizons\BlockPets\commands\HealPetCommand;
 use BlockHorizons\BlockPets\commands\LevelUpPetCommand;
+use BlockHorizons\BlockPets\commands\PetCommand;
 use BlockHorizons\BlockPets\commands\RemovePetCommand;
 use BlockHorizons\BlockPets\commands\SpawnPetCommand;
 use BlockHorizons\BlockPets\commands\TogglePetsCommand;
@@ -69,6 +70,9 @@ use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 
 class Loader extends PluginBase {
+
+	const VERSION = "0.99.0";
+	const API_TARGET = "3.0.0-ALPHA5";
 
 	const PETS = [
 		"Ghast",
@@ -175,7 +179,8 @@ class Loader extends PluginBase {
 			new RemovePetCommand($this),
 			new HealPetCommand($this),
 			new ClearPetCommand($this),
-			new TogglePetsCommand($this)
+			new TogglePetsCommand($this),
+			new PetCommand($this)
 		];
 		foreach($petCommands as $command) {
 			$this->getServer()->getCommandMap()->register($command->getName(), $command);
