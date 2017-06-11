@@ -28,8 +28,8 @@ abstract class BouncingPet extends IrasciblePet {
 		}
 
 		if(!$this->isOnGround()) {
-			if($this->motionY > -$this->gravity * 2.5) {
-				$this->motionY = -$this->gravity * 2.5;
+			if($this->motionY > -$this->gravity * 2) {
+				$this->motionY = -$this->gravity * 2;
 			} else {
 				$this->motionY -= $this->gravity;
 			}
@@ -69,8 +69,8 @@ abstract class BouncingPet extends IrasciblePet {
 		}
 
 		if(!$this->isOnGround()) {
-			if($this->motionY > -$this->gravity * 2.5) {
-				$this->motionY = -$this->gravity * 2.5;
+			if($this->motionY > -$this->gravity * 2) {
+				$this->motionY = -$this->gravity * 2;
 			} else {
 				$this->motionY -= $this->gravity;
 			}
@@ -100,8 +100,7 @@ abstract class BouncingPet extends IrasciblePet {
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		if($this->distance($target) <= $this->scale + 1 && $this->waitingTime <= 0) {
 			$this->getLoader()->getServer()->getPluginManager()->callEvent($event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage()));
-			$target->attack($event->getFinalDamage(), $event);
-			if(!$target->isAlive()) {
+			if(!$target->getHealth() - $event->getFinalDamage() <= 0) {
 				if($target instanceof Player) {
 					$this->addPetLevelPoints($this->getLoader()->getBlockPetsConfig()->getPlayerExperiencePoints());
 				} else {
@@ -109,6 +108,7 @@ abstract class BouncingPet extends IrasciblePet {
 				}
 				$this->calmDown();
 			}
+			$target->attack($event->getFinalDamage(), $event);
 
 			$this->waitingTime = 15;
 		}
@@ -125,7 +125,7 @@ abstract class BouncingPet extends IrasciblePet {
 	}
 
 	public function jump() {
-		$this->motionY = $this->gravity * 10 * $this->getScale();
+		$this->motionY = $this->gravity * 12 * $this->getScale();
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->jumpTicks = 6;
 	}
@@ -144,33 +144,42 @@ abstract class BouncingPet extends IrasciblePet {
 		}
 
 		if(!$this->isOnGround()) {
-			if($this->motionY > -$this->gravity * 2.5) {
-				$this->motionY = -$this->gravity * 2.5;
+			if($this->motionY > -$this->gravity * 2) {
+				$this->motionY = -$this->gravity * 2;
 			} else {
 				$this->motionY -= $this->gravity;
 			}
 		} else {
 			$this->motionY -= $this->gravity;
 		}
-		if($this->isOnGround()) {
-			$this->jump();
-		}
 
 		$finalMotion = [0, 0];
 		switch($motionZ) {
 			case 1:
 				$finalMotion = [$x, $z];
+				if($this->isOnGround()) {
+					$this->jump();
+				}
 				break;
 			case -1:
 				$finalMotion = [-$x, -$z];
+				if($this->isOnGround()) {
+					$this->jump();
+				}
 				break;
 		}
 		switch($motionX) {
 			case 1:
 				$finalMotion = [$z, -$x];
+				if($this->isOnGround()) {
+					$this->jump();
+				}
 				break;
 			case -1:
 				$finalMotion = [-$z, $x];
+				if($this->isOnGround()) {
+					$this->jump();
+				}
 				break;
 		}
 
