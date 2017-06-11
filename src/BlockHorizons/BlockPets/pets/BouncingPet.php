@@ -28,8 +28,8 @@ abstract class BouncingPet extends IrasciblePet {
 		}
 
 		if(!$this->isOnGround()) {
-			if($this->motionY > -$this->gravity * 4) {
-				$this->motionY = -$this->gravity * 4;
+			if($this->motionY > -$this->gravity * 2.5) {
+				$this->motionY = -$this->gravity * 2.5;
 			} else {
 				$this->motionY -= $this->gravity;
 			}
@@ -69,8 +69,8 @@ abstract class BouncingPet extends IrasciblePet {
 		}
 
 		if(!$this->isOnGround()) {
-			if($this->motionY > -$this->gravity * 4) {
-				$this->motionY = -$this->gravity * 4;
+			if($this->motionY > -$this->gravity * 2.5) {
+				$this->motionY = -$this->gravity * 2.5;
 			} else {
 				$this->motionY -= $this->gravity;
 			}
@@ -98,7 +98,7 @@ abstract class BouncingPet extends IrasciblePet {
 		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
-		if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0) {
+		if($this->distance($target) <= $this->scale + 1 && $this->waitingTime <= 0) {
 			$this->getLoader()->getServer()->getPluginManager()->callEvent($event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage()));
 			$target->attack($event->getFinalDamage(), $event);
 			if(!$target->isAlive()) {
@@ -125,7 +125,7 @@ abstract class BouncingPet extends IrasciblePet {
 	}
 
 	public function jump() {
-		$this->motionY = $this->gravity * 12 * $this->getScale();
+		$this->motionY = $this->gravity * 10 * $this->getScale();
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->jumpTicks = 6;
 	}
@@ -144,8 +144,8 @@ abstract class BouncingPet extends IrasciblePet {
 		}
 
 		if(!$this->isOnGround()) {
-			if($this->motionY > -$this->gravity * 4) {
-				$this->motionY = -$this->gravity * 4;
+			if($this->motionY > -$this->gravity * 2.5) {
+				$this->motionY = -$this->gravity * 2.5;
 			} else {
 				$this->motionY -= $this->gravity;
 			}
