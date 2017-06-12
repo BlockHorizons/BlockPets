@@ -64,14 +64,9 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->petLevelPoints = $this->namedtag["petLevelPoints"];
 
 		$this->setScale($this->scale);
-		$this->generateCustomPetData();
 
 		$this->levelUp(1, true);
 		$this->spawnToAll();
-	}
-
-	public function generateCustomPetData() {
-
 	}
 
 	/**
@@ -250,11 +245,16 @@ abstract class BasePet extends Creature implements Rideable {
 
 	public function initEntity() {
 		parent::initEntity();
+		$this->generateCustomPetData();
 		$this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, 1);
 		$this->setDataFlag(self::DATA_FLAG_BABY, self::DATA_TYPE_BYTE, (int) $this->namedtag["isBaby"]);
 		if((bool) $this->namedtag["isBaby"]) {
 			$this->setScale($this->getStartingScale() / 2);
 		}
+	}
+
+	public function generateCustomPetData() {
+
 	}
 
 	/**

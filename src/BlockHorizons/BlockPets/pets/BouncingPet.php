@@ -136,8 +136,8 @@ abstract class BouncingPet extends IrasciblePet {
 		$this->pitch = $rider->pitch;
 		$this->yaw = $rider->yaw;
 
-		$x = $this->getDirectionVector()->x / 2.5 * $this->getSpeed();
-		$z = $this->getDirectionVector()->z / 2.5 * $this->getSpeed();
+		$x = $this->getDirectionVector()->x / 2 * $this->getSpeed();
+		$z = $this->getDirectionVector()->z / 2 * $this->getSpeed();
 
 		if($this->jumpTicks > 0) {
 			$this->jumpTicks--;

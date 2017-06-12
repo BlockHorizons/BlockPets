@@ -15,4 +15,8 @@ class SpiderPet extends WalkingPet implements SmallCreature {
 	public $tier = self::TIER_SPECIAL;
 
 	public $networkId = 35;
+
+	public function generateCustomPetData() {
+		$this->setDataProperty(self::DATA_FLAG_CAN_CLIMB, self::DATA_TYPE_BYTE, 1);
+	}
 }

@@ -6,7 +6,7 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class VindicatorPet extends WalkingPet {
 
-	public $networkId = 36;
+	public $networkId = 57;
 	public $name = "Vindicator Pet";
 	public $tier = self::TIER_UNCOMMON;
 
