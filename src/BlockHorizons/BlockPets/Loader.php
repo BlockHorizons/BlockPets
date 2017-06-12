@@ -309,7 +309,8 @@ class Loader extends PluginBase {
 			"petName" => new StringTag("petName", $name),
 			"petLevel" => new IntTag("petLevel", $level),
 			"petLevelPoints" => new IntTag("petLevelPoints", $levelPoints),
-			"isBaby" => new ByteTag("isBaby", (int) $isBaby)
+			"isBaby" => new ByteTag("isBaby", (int) $isBaby),
+			"chested" => new ByteTag("chested")
 		]);
 
 		$entity = Entity::createEntity($entityName . "Pet", $position->getLevel(), $nbt);

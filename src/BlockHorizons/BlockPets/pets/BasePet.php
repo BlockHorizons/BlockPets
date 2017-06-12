@@ -2,6 +2,7 @@
 
 namespace BlockHorizons\BlockPets\pets;
 
+use BlockHorizons\BlockPets\events\PetInventoryInitializationEvent;
 use BlockHorizons\BlockPets\events\PetLevelUpEvent;
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
@@ -11,8 +12,10 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\item\Food;
+use pocketmine\item\Item;
 use pocketmine\level\Level;
 use pocketmine\level\particle\HeartParticle;
+use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\IntTag;
@@ -49,6 +52,7 @@ abstract class BasePet extends Creature implements Rideable {
 	protected $calculator;
 
 	private $dormant = false;
+	private $chested = false;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
@@ -62,11 +66,28 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->scale = $this->namedtag["scale"];
 		$this->petName = $this->namedtag["petName"];
 		$this->petLevelPoints = $this->namedtag["petLevelPoints"];
+		$this->chested = $this->namedtag["chested"];
 
 		$this->setScale($this->scale);
+		$this->setDataProperty(self::DATA_FLAG_CHESTED, self::DATA_TYPE_BYTE, (int) $this->isChested());
 
 		$this->levelUp(1, true);
 		$this->spawnToAll();
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isChested(): bool {
+		return $this->chested;
+	}
+
+	/**
+	 * @param bool $value
+	 */
+	public function setChested(bool $value = true) {
+		$this->setDataProperty(self::DATA_FLAG_CHESTED, self::DATA_TYPE_BYTE, 1);
+		$this->chested = $value;
 	}
 
 	/**
@@ -149,18 +170,18 @@ abstract class BasePet extends Creature implements Rideable {
 		if($source instanceof EntityDamageByEntityEvent) {
 			$player = $source->getDamager();
 			if($player instanceof Player) {
-				$food = $player->getInventory()->getItemInHand();
+				$hand = $player->getInventory()->getItemInHand();
 				if($this->getHealth() === $this->getMaxHealth()) {
 					parent::attack($damage, $source);
 					return;
 				}
-				if($food instanceof Food) {
-					$nutrition = $food->getFoodRestore();
+				if($hand instanceof Food) {
+					$nutrition = $hand->getFoodRestore();
 					$heal = $nutrition / 20 * $this->getMaxHealth();
 					if($this->getHealth() + $heal > $this->getMaxHealth()) {
 						$heal = $this->getMaxHealth() - $this->getHealth();
 					}
-					$remainder = $player->getInventory()->getItemInHand();
+					$remainder = $hand;
 					$remainder->setCount($remainder->getCount() - 1);
 					$player->getInventory()->setItemInHand($remainder);
 					$this->heal($heal, new EntityRegainHealthEvent($this, $heal, EntityRegainHealthEvent::CAUSE_SATURATION));
@@ -169,6 +190,17 @@ abstract class BasePet extends Creature implements Rideable {
 					$this->addPetLevelPoints($nutrition / 20 * $this->getRequiredLevelPoints($this->getPetLevel()) + 2);
 					$this->calculator->updateNameTag();
 					$source->setCancelled();
+				} elseif($hand->getId() === Item::CHEST) {
+					if(!$this->isChested() && $this->getPetOwnerName() === $player->getName()) {
+						$this->getLoader()->getServer()->getPluginManager()->callEvent($ev = new PetInventoryInitializationEvent($this->getLoader(), $this));
+						if(!$ev->isCancelled()) {
+							$remainder = $hand;
+							$remainder->setCount($remainder->getCount() - 1);
+							$player->getInventory()->setItemInHand($remainder);
+							$this->setChested();
+							$source->setCancelled();
+						}
+					}
 				}
 			}
 		}
@@ -223,6 +255,15 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function getRequiredLevelPoints(int $level) {
 		return (int) (20 + $level / 1.5 * $level);
+	}
+
+	/**
+	 * Returns the name of the owner of this pet.
+	 *
+	 * @return string
+	 */
+	public function getPetOwnerName(): string {
+		return $this->petOwner;
 	}
 
 	/**
@@ -293,22 +334,14 @@ abstract class BasePet extends Creature implements Rideable {
 
 	public function saveNBT() {
 		parent::saveNBT();
-		$this->namedtag->petOwner = new StringTag("petOwner", $this->getPetOwnerName());
-		$this->namedtag->petName = new StringTag("petName", $this->getPetName());
-		$this->namedtag->speed = new FloatTag("speed", $this->getSpeed());
-		$this->namedtag->scale = new FloatTag("scale", $this->getStartingScale());
-		$this->namedtag->networkId = new IntTag("networkId", $this->getNetworkId());
-		$this->namedtag->petLevel = new IntTag("petLevel", $this->getPetLevel());
+		$this->namedtag->petOwner = new StringTag("petOwner", (string) $this->getPetOwnerName());
+		$this->namedtag->petName = new StringTag("petName", (string) $this->getPetName());
+		$this->namedtag->speed = new FloatTag("speed", (float) $this->getSpeed());
+		$this->namedtag->scale = new FloatTag("scale", (float) $this->getStartingScale());
+		$this->namedtag->networkId = new IntTag("networkId", (int) $this->getNetworkId());
+		$this->namedtag->petLevel = new IntTag("petLevel", (int) $this->getPetLevel());
 		$this->namedtag->petLevelPoints = new IntTag("petLevelPoints", (int) $this->getPetLevelPoints());
-	}
-
-	/**
-	 * Returns the name of the owner of this pet.
-	 *
-	 * @return string
-	 */
-	public function getPetOwnerName(): string {
-		return $this->petOwner;
+		$this->namedtag->chested = new ByteTag("chested", (int) $this->isChested());
 	}
 
 	/**

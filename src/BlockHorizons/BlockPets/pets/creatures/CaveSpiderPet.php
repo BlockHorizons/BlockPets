@@ -7,7 +7,7 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class CaveSpiderPet extends WalkingPet implements SmallCreature {
 
-	public $speed = 1.2;
+	public $speed = 1.4;
 	public $height = 0.8;
 	public $width = 0.9;
 
