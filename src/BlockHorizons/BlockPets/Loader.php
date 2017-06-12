@@ -259,7 +259,7 @@ class Loader extends PluginBase {
 	 *
 	 * @return string|null
 	 */
-	public function getPet(string $entityName): string {
+	public function getPet(string $entityName) {
 		foreach(self::PETS as $pet) {
 			if(strtolower($pet) === strtolower($entityName)) {
 				return $pet;
