@@ -32,7 +32,7 @@ permissions:
                     blockpets.command.clearpet:
                         default: true
                         description: "Allows access to use the clearpet command."
-                    blockpets.command.togglepets:
+                    blockpets.command.togglepet:
                         default: true
                         description: "Allows access to use the togglepets command."
                     blockpets.command.pet:

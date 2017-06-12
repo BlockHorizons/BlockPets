@@ -12,6 +12,7 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\item\Food;
 use pocketmine\level\Level;
+use pocketmine\level\particle\HeartParticle;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\IntTag;
@@ -149,14 +150,23 @@ abstract class BasePet extends Creature implements Rideable {
 			$player = $source->getDamager();
 			if($player instanceof Player) {
 				$food = $player->getInventory()->getItemInHand();
+				if($this->getHealth() === $this->getMaxHealth()) {
+					parent::attack($damage, $source);
+					return;
+				}
 				if($food instanceof Food) {
 					$nutrition = $food->getFoodRestore();
 					$heal = $nutrition / 20 * $this->getMaxHealth();
 					if($this->getHealth() + $heal > $this->getMaxHealth()) {
 						$heal = $this->getMaxHealth() - $this->getHealth();
 					}
-					$player->getInventory()->setitemInHand($player->getInventory()->getItemInHand()->pop());
+					$remainder = $player->getInventory()->getItemInHand();
+					$remainder->setCount($remainder->getCount() - 1);
+					$player->getInventory()->setItemInHand($remainder);
 					$this->heal($heal, new EntityRegainHealthEvent($this, $heal, EntityRegainHealthEvent::CAUSE_SATURATION));
+					$this->getLevel()->addParticle(new HeartParticle($this->add(0, 2), 4));
+
+					$this->addPetLevelPoints($nutrition / 20 * $this->getRequiredLevelPoints($this->getPetLevel()) + 2);
 					$this->calculator->updateNameTag();
 					$source->setCancelled();
 				}
@@ -169,11 +179,11 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * Adds the given amount of experience points to the pet. Levels up the pet if required.
 	 *
-	 * @param int $points
+	 * @param float $points
 	 *
 	 * @return bool
 	 */
-	public function addPetLevelPoints(int $points): bool {
+	public function addPetLevelPoints(float $points): bool {
 		$totalPoints = $this->getPetLevelPoints() + $points;
 		if($totalPoints >= $this->getRequiredLevelPoints($this->getPetLevel())) {
 			$this->setPetLevelPoints($totalPoints - $this->getRequiredLevelPoints($this->getPetLevel()));
@@ -189,9 +199,9 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * Returns the pet's current experience level points.
 	 *
-	 * @return int
+	 * @return float
 	 */
-	public function getPetLevelPoints(): int {
+	public function getPetLevelPoints(): float {
 		return $this->petLevelPoints;
 	}
 
@@ -200,7 +210,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @param int $points
 	 */
-	public function setPetLevelPoints(int $points) {
+	public function setPetLevelPoints(float $points) {
 		$this->petLevelPoints = $points;
 	}
 
@@ -284,7 +294,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->namedtag->scale = new FloatTag("scale", $this->getStartingScale());
 		$this->namedtag->networkId = new IntTag("networkId", $this->getNetworkId());
 		$this->namedtag->petLevel = new IntTag("petLevel", $this->getPetLevel());
-		$this->namedtag->petLevelPoints = new IntTag("petLevelPoints", $this->getPetLevelPoints());
+		$this->namedtag->petLevelPoints = new IntTag("petLevelPoints", (int) $this->getPetLevelPoints());
 	}
 
 	/**

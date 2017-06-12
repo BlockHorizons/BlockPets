@@ -10,7 +10,7 @@ use BlockHorizons\BlockPets\commands\LevelUpPetCommand;
 use BlockHorizons\BlockPets\commands\PetCommand;
 use BlockHorizons\BlockPets\commands\RemovePetCommand;
 use BlockHorizons\BlockPets\commands\SpawnPetCommand;
-use BlockHorizons\BlockPets\commands\TogglePetsCommand;
+use BlockHorizons\BlockPets\commands\TogglePetCommand;
 use BlockHorizons\BlockPets\configurable\BlockPetsConfig;
 use BlockHorizons\BlockPets\events\PetRemoveEvent;
 use BlockHorizons\BlockPets\events\PetSpawnEvent;
@@ -158,6 +158,7 @@ class Loader extends PluginBase {
 	private $bpConfig;
 	private $database;
 	private $toggledOff = [];
+	private $toggledPets = [];
 
 	public function onEnable() {
 		CommandOverloads::initialize();
@@ -179,7 +180,7 @@ class Loader extends PluginBase {
 			new RemovePetCommand($this),
 			new HealPetCommand($this),
 			new ClearPetCommand($this),
-			new TogglePetsCommand($this),
+			new TogglePetCommand($this),
 			new PetCommand($this)
 		];
 		foreach($petCommands as $command) {
@@ -481,5 +482,39 @@ class Loader extends PluginBase {
 	 */
 	public function arePetsToggledOn(Player $player): bool {
 		return !isset($this->toggledOff[$player->getName()]);
+	}
+
+	/**
+	 * Toggles the given pet of the given player on or off.
+	 *
+	 * @param BasePet $pet
+	 * @param Player  $owner
+	 *
+	 * @return bool
+	 */
+	public function togglePet(BasePet $pet, Player $owner): bool {
+		if(isset($this->toggledPets[$pet->getPetName()])) {
+			if($this->toggledPets[$pet->getPetName()] === $owner->getName()) {
+				$pet->spawnToAll();
+				unset($this->toggledPets[$pet->getPetName()]);
+				return true;
+			}
+		}
+		$pet->despawnFromAll();
+		$this->toggledPets[$pet->getPetName()] = $owner->getName();
+		return false;
+	}
+
+	/**
+	 * @param BasePet $pet
+	 * @param Player  $owner
+	 *
+	 * @return bool
+	 */
+	public function isPetToggledOn(BasePet $pet, Player $owner): bool {
+		if(isset($this->toggledPets[$pet->getPetName()])) {
+			return $this->toggledPets[$pet->getPetName()] === $owner->getName();
+		}
+		return false;
 	}
 }

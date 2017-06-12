@@ -114,8 +114,12 @@ class CommandOverloads {
 				]
 			],
 
-			"togglepets" => [
-
+			"togglepet" => [
+				0 => [
+					"type" => "rawtext",
+					"name" => "pet name|all",
+					"optional" => true
+				]
 			],
 
 			"pet" => [
