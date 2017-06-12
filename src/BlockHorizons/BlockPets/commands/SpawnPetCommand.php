@@ -62,6 +62,10 @@ class SpawnPetCommand extends BaseCommand {
 			$args[3] = 0;
 		}
 		$petName = $this->getLoader()->getPet($args[0]);
+		if($petName == null){
+			$sender->sendMessage(TF::RED . "[Warning] Pet type " . $args[0] . " does not exist!");
+			return true;							     
+		}	
 		foreach($this->getLoader()->getPetsFrom($sender) as $pet) {
 			if(strtolower($args[1]) === $pet->getPetName()) {
 				$sender->sendMessage(TF::RED . "[Warning] You already own a pet with that name.");
