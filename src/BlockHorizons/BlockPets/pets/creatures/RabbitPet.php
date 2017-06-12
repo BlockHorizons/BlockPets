@@ -15,4 +15,12 @@ class RabbitPet extends BouncingPet implements SmallCreature {
 	public $tier = self::TIER_EPIC;
 
 	public $networkId = 18;
+
+	public function generateCustomPetData() {
+		$variants = [
+			0, 1, 2, 3, 4, 5, 99
+		];
+		$randomVariant = $variants[array_rand($variants)];
+		$this->setDataProperty(self::DATA_VARIANT, self::DATA_TYPE_INT, $randomVariant);
+	}
 }

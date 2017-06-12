@@ -64,9 +64,14 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->petLevelPoints = $this->namedtag["petLevelPoints"];
 
 		$this->setScale($this->scale);
+		$this->generateCustomPetData();
 
 		$this->levelUp(1, true);
 		$this->spawnToAll();
+	}
+
+	public function generateCustomPetData() {
+
 	}
 
 	/**
@@ -351,11 +356,11 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->ridden = true;
 		$this->rider = $player->getName();
 		$player->canCollide = false;
-		$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 1.8 + $this->getScale() * 0.9, -0.25]);
+		$this->getPetOwner()->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 1.8 + $this->getScale() * 0.9, -0.25]);
 		if($this instanceof EnderDragonPet) {
-			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 2.65 + $this->getScale(), -1.7]);
+			$this->getPetOwner()->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 2.65 + $this->getScale(), -1.7]);
 		} elseif($this instanceof SmallCreature) {
-			$this->getPetOwner()->setDataProperty(57, self::DATA_TYPE_VECTOR3F, [0, 0.78 + $this->getScale() * 0.9, -0.25]);
+			$this->getPetOwner()->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 0.78 + $this->getScale() * 0.9, -0.25]);
 		}
 		$this->setDataFlag(self::DATA_FLAG_SADDLED, self::DATA_TYPE_BYTE, 1);
 

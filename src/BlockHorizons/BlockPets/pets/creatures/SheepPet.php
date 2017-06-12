@@ -12,4 +12,9 @@ class SheepPet extends WalkingPet {
 	public $name = "Sheep Pet";
 
 	public $networkId = 13;
+
+	public function generateCustomPetData() {
+		$randomColour = mt_rand(0, 15);
+		$this->setDataProperty(self::DATA_COLOUR, self::DATA_TYPE_INT, $randomColour);
+	}
 }
