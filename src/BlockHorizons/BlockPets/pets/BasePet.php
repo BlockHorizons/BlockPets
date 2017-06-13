@@ -66,7 +66,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->scale = $this->namedtag["scale"];
 		$this->petName = $this->namedtag["petName"];
 		$this->petLevelPoints = $this->namedtag["petLevelPoints"];
-		$this->chested = $this->namedtag["chested"];
+		$this->chested = (bool)$this->namedtag["chested"];
 
 		$this->setScale($this->scale);
 		$this->setDataProperty(self::DATA_FLAG_CHESTED, self::DATA_TYPE_BYTE, (int) $this->isChested());

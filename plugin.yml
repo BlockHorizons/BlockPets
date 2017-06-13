@@ -72,6 +72,9 @@ permissions:
                     blockpets.pet.endermite:
                         default: op
                         description: "Allows access to use the endermite pet."
+                    blockpets.pet.evocationfangs:
+                        default: op
+                        description: "Allows access to use the evocation fangs pet."
                     blockpets.pet.evoker:
                         default: op
                         description: "Allows access to use the evoker pet."
