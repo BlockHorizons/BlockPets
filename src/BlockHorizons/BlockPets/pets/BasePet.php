@@ -187,7 +187,10 @@ abstract class BasePet extends Creature implements Rideable {
 					$this->heal($heal, new EntityRegainHealthEvent($this, $heal, EntityRegainHealthEvent::CAUSE_SATURATION));
 					$this->getLevel()->addParticle(new HeartParticle($this->add(0, 2), 4));
 
-					$this->addPetLevelPoints($nutrition / 20 * $this->getRequiredLevelPoints($this->getPetLevel()) + 1);
+					if($this->getLoader()->getBlockPetsConfig()->giveExperienceWhenFed()) {
+						$this->addPetLevelPoints($nutrition / 20 * $this->getRequiredLevelPoints($this->getPetLevel()) + 1);
+					}
+
 					$this->calculator->updateNameTag();
 					$source->setCancelled();
 

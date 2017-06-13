@@ -37,6 +37,9 @@ Experience-Points-Per-Player-Kill: 15
 # The experience a pet gets each time it kills an entity.
 Experience-Points-Per-Entity-Kill: 10
 
+# Whether to give the pet some experience if it's being fed by the owner.
+Give-Experience-For-Feeding: true
+
 # The database used to store data of pets in. This is only relevant if storage to database is turned to true.
 # Options:
 # MySQL

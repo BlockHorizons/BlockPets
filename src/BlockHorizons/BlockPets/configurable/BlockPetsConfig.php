@@ -139,4 +139,11 @@ class BlockPetsConfig {
 	public function arePetsInvulnerableIfOwnerIs(): bool {
 		return (bool) $this->settings["Invulnerable-If-Owner-Is"];
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function giveExperienceWhenFed(): bool {
+		return (bool) $this->settings["Give-Experience-For-Feeding"];
+	}
 }
