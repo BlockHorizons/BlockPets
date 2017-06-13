@@ -17,13 +17,13 @@ abstract class HoveringPet extends IrasciblePet {
 	private $waitingTime = 15;
 
 	public function onUpdate($currentTick) {
-		$petOwner = $this->getPetOwner();
-		if($petOwner === null || $this->isRidden()) {
+		if($this->isRidden()) {
 			return false;
 		}
 		if(parent::onUpdate($currentTick) === false) {
 			return false;
 		}
+		$petOwner = $this->getPetOwner();
 		if($this->isAngry()) {
 			$this->doAttackingMovement();
 			return true;

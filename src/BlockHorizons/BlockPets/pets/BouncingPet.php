@@ -12,13 +12,13 @@ abstract class BouncingPet extends IrasciblePet {
 	private $waitingTime = 15;
 
 	public function onUpdate($currentTick) {
-		$petOwner = $this->getPetOwner();
 		if($this->isRidden()) {
 			return false;
 		}
 		if(parent::onUpdate($currentTick) === false) {
 			return false;
 		}
+		$petOwner = $this->getPetOwner();
 		if($this->isAngry() && $this->getTarget() !== null) {
 			$this->doAttackingMovement();
 			return true;

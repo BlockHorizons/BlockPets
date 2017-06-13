@@ -117,8 +117,6 @@ class EventListener implements Listener {
 	 * Used to select a name through chat. Allows for names with spaces and players to choose themselves.
 	 *
 	 * @param PlayerChatEvent $event
-	 *
-	 * @return bool
 	 */
 	public function onChat(PlayerChatEvent $event) {
 		if(isset($this->getLoader()->selectingName[$event->getPlayer()->getName()])) {
@@ -126,11 +124,12 @@ class EventListener implements Listener {
 			$event->setCancelled();
 			if($this->getLoader()->getPetByName($petName, $event->getPlayer()) !== null) {
 				$event->getPlayer()->sendMessage(TextFormat::RED . "[Warning] You already own a pet with that name. Please choose a different name.");
-				return true;
+				return;
 			}
 			$data = $this->getLoader()->selectingName[$event->getPlayer()->getName()];
 
 			$this->getLoader()->createPet($data["petType"], $event->getPlayer(), $petName);
+			$event->getPlayer()->sendMessage(TextFormat::GREEN . "Successfully obtained a " . $data["petType"] . " with the name " . $event->getMessage());
 			unset($this->getLoader()->selectingName[$event->getPlayer()->getName()]);
 		}
 	}

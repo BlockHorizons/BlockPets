@@ -449,10 +449,10 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	public function onUpdate($currentTick) {
-		$petOwner = $this->getPetOwner();
 		if($this->closed || !$this->isAlive()) {
 			return false;
 		}
+		$petOwner = $this->getPetOwner();
 		if(mt_rand() === 7) {
 			if($this->getHealth() !== $this->getMaxHealth()) {
 				$this->heal(1, new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
