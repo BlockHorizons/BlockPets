@@ -17,6 +17,7 @@ class RabbitPet extends BouncingPet implements SmallCreature {
 	public $networkId = 18;
 
 	public function generateCustomPetData() {
+		parent::generateCustomPetData();
 		$variants = [
 			0, 1, 2, 3, 4, 5, 99
 		];

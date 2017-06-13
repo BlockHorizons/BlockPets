@@ -3,8 +3,9 @@
 namespace BlockHorizons\BlockPets\pets\creatures;
 
 use BlockHorizons\BlockPets\pets\HoveringPet;
+use BlockHorizons\BlockPets\pets\SmallCreature;
 
-class VexPet extends HoveringPet {
+class VexPet extends HoveringPet implements SmallCreature {
 
 	public $height = 0.8;
 	public $width = 0.4;

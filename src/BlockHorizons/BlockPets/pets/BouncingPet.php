@@ -43,7 +43,7 @@ abstract class BouncingPet extends IrasciblePet {
 		$y = $petOwner->y - $this->y;
 		$z = $petOwner->z - $this->z;
 
-		if($x * $x + $z * $z < 5 + $this->getScale()) {
+		if($x * $x + $z * $z < 9 + $this->getScale()) {
 			$this->motionX = 0;
 			$this->motionZ = 0;
 		} else {
@@ -196,5 +196,9 @@ abstract class BouncingPet extends IrasciblePet {
 			$source->setCancelled();
 		}
 		return parent::attack($damage, $source);
+	}
+
+	public function generateCustomPetData() {
+		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_MOVING, true);
 	}
 }
