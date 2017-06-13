@@ -60,6 +60,9 @@ permissions:
                     blockpets.pet.creeper:
                         default: op
                         description: "Allows access to use the creeper pet."
+                    blockpets.pet.donkey:
+                        default: op
+                        description: "Allows access to use the donkey pet."
                     blockpets.pet.endercrystal:
                         default: op
                         description: "Allows access to use the ender crystal pet."
@@ -99,6 +102,9 @@ permissions:
                     blockpets.pet.mooshroom:
                         default: op
                         description: "Allows access to use the mooshroom pet."
+                    blockpets.pet.mule:
+                        default: op
+                        description: "Allows access to use the mule pet."
                     blockpets.pet.ocelot:
                         default: op
                         description: "Allows access to use the ocelot pet."
@@ -120,6 +126,9 @@ permissions:
                     blockpets.pet.skeleton:
                         default: op
                         description: "Allows access to use the skeleton pet."
+                    blockpets.pet.skeletonhorse:
+                        default: op
+                        description: "Allows access to use the skeleton horse pet."
                     blockpets.pet.slime:
                         default: op
                         description: "Allows access to use the slime pet."
@@ -159,6 +168,9 @@ permissions:
                     blockpets.pet.zombie:
                         default: op
                         description: "Allows access to use the zombie pet."
+                    blockpets.pet.zombiehorse:
+                        default: op
+                        description: "Allows access to use the zombie horse pet."
                     blockpets.pet.zombiepigman:
                         default: op
                         description: "Allows access to use the zombie pigman pet."

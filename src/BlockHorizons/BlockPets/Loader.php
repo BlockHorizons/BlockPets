@@ -23,6 +23,7 @@ use BlockHorizons\BlockPets\pets\creatures\CaveSpiderPet;
 use BlockHorizons\BlockPets\pets\creatures\ChickenPet;
 use BlockHorizons\BlockPets\pets\creatures\CowPet;
 use BlockHorizons\BlockPets\pets\creatures\CreeperPet;
+use BlockHorizons\BlockPets\pets\creatures\DonkeyPet;
 use BlockHorizons\BlockPets\pets\creatures\EnderCrystalPet;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use BlockHorizons\BlockPets\pets\creatures\EndermanPet;
@@ -36,12 +37,14 @@ use BlockHorizons\BlockPets\pets\creatures\IronGolemPet;
 use BlockHorizons\BlockPets\pets\creatures\LlamaPet;
 use BlockHorizons\BlockPets\pets\creatures\MagmaCubePet;
 use BlockHorizons\BlockPets\pets\creatures\MooshroomPet;
+use BlockHorizons\BlockPets\pets\creatures\MulePet;
 use BlockHorizons\BlockPets\pets\creatures\OcelotPet;
 use BlockHorizons\BlockPets\pets\creatures\PigPet;
 use BlockHorizons\BlockPets\pets\creatures\PolarBearPet;
 use BlockHorizons\BlockPets\pets\creatures\RabbitPet;
 use BlockHorizons\BlockPets\pets\creatures\SheepPet;
 use BlockHorizons\BlockPets\pets\creatures\SilverFishPet;
+use BlockHorizons\BlockPets\pets\creatures\SkeletonHorsePet;
 use BlockHorizons\BlockPets\pets\creatures\SkeletonPet;
 use BlockHorizons\BlockPets\pets\creatures\SlimePet;
 use BlockHorizons\BlockPets\pets\creatures\SnowGolemPet;
@@ -55,6 +58,7 @@ use BlockHorizons\BlockPets\pets\creatures\WitherPet;
 use BlockHorizons\BlockPets\pets\creatures\WitherSkeletonPet;
 use BlockHorizons\BlockPets\pets\creatures\WitherSkullPet;
 use BlockHorizons\BlockPets\pets\creatures\WolfPet;
+use BlockHorizons\BlockPets\pets\creatures\ZombieHorsePet;
 use BlockHorizons\BlockPets\pets\creatures\ZombiePet;
 use BlockHorizons\BlockPets\pets\creatures\ZombiePigmanPet;
 use BlockHorizons\BlockPets\pets\creatures\ZombieVillagerPet;
@@ -120,7 +124,11 @@ class Loader extends PluginBase {
 		"Evoker",
 		"Vindicator",
 		"EvocationFangs",
-		"Vex"
+		"Vex",
+		"Mule",
+		"Donkey",
+		"SkeletonHorse",
+		"ZombieHorse"
 	];
 
 	const PET_CLASSES = [
@@ -164,7 +172,11 @@ class Loader extends PluginBase {
 		EvokerPet::class,
 		VindicatorPet::class,
 		VexPet::class,
-		EvocationFangsPet::class
+		EvocationFangsPet::class,
+		MulePet::class,
+		DonkeyPet::class,
+		SkeletonHorsePet::class,
+		ZombieHorsePet::class
 	];
 
 	/** @var array */

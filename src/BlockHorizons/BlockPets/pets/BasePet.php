@@ -177,7 +177,7 @@ abstract class BasePet extends Creature implements Rideable {
 				}
 				if($hand instanceof Food) {
 					$nutrition = $hand->getFoodRestore();
-					$heal = $nutrition / 20 * $this->getMaxHealth();
+					$heal = (int) ($nutrition / 30 * $this->getMaxHealth() + (2 + 2 / 3));
 					if($this->getHealth() + $heal > $this->getMaxHealth()) {
 						$heal = $this->getMaxHealth() - $this->getHealth();
 					}
@@ -231,7 +231,7 @@ abstract class BasePet extends Creature implements Rideable {
 			return true;
 		} else {
 			$this->setPetLevelPoints($totalPoints);
-			$this->calculator->recalculateAll();
+			$this->calculator->updateNameTag();
 			return false;
 		}
 	}
