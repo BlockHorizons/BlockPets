@@ -150,7 +150,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return Player|null
 	 */
 	public function getPetOwner() {
-		return $this->getLevel()->getServer()->getPlayer($this->petOwner);
+		return $this->getLoader()->getServer()->getPlayer($this->petOwner);
 	}
 
 	/**

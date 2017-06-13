@@ -20,7 +20,7 @@ abstract class WalkingPet extends IrasciblePet {
 			return false;
 		}
 		$petOwner = $this->getPetOwner();
-		if($this->isAngry() && $this->getTarget() !== null) {
+		if($this->isAngry()) {
 			$this->doAttackingMovement();
 			return true;
 		}
