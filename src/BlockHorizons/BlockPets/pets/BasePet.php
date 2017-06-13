@@ -187,9 +187,10 @@ abstract class BasePet extends Creature implements Rideable {
 					$this->heal($heal, new EntityRegainHealthEvent($this, $heal, EntityRegainHealthEvent::CAUSE_SATURATION));
 					$this->getLevel()->addParticle(new HeartParticle($this->add(0, 2), 4));
 
-					$this->addPetLevelPoints($nutrition / 20 * $this->getRequiredLevelPoints($this->getPetLevel()) + 2);
+					$this->addPetLevelPoints($nutrition / 20 * $this->getRequiredLevelPoints($this->getPetLevel()) + 1);
 					$this->calculator->updateNameTag();
 					$source->setCancelled();
+
 				} elseif($hand->getId() === Item::CHEST) {
 					if(!$this->isChested() && $this->getPetOwnerName() === $player->getName()) {
 						$this->getLoader()->getServer()->getPluginManager()->callEvent($ev = new PetInventoryInitializationEvent($this->getLoader(), $this));
@@ -200,6 +201,13 @@ abstract class BasePet extends Creature implements Rideable {
 							$this->setChested();
 							$source->setCancelled();
 						}
+					}
+				}
+
+				if($player->getName() === $this->getPetOwnerName()) {
+					if($this->isChested() && $player->isSneaking()) {
+						$source->setCancelled();
+						// Open inventory here!
 					}
 				}
 			}

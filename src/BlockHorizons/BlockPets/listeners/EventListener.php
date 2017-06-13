@@ -11,8 +11,10 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDeathEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\Player;
+use pocketmine\utils\TextFormat;
 
 class EventListener implements Listener {
 
@@ -104,6 +106,28 @@ class EventListener implements Listener {
 		foreach($pets as $pet) {
 			$pet->spawnToAll();
 			$pet->setDormant(false);
+		}
+	}
+
+	/**
+	 * Used to select a name through chat. Allows for names with spaces and players to choose themselves.
+	 *
+	 * @param PlayerChatEvent $event
+	 *
+	 * @return bool
+	 */
+	public function onChat(PlayerChatEvent $event) {
+		if(isset($this->getLoader()->selectingName[$event->getPlayer()->getName()])) {
+			$petName = $event->getMessage();
+			$event->setCancelled();
+			if($this->getLoader()->getPetByName($petName, $event->getPlayer()) !== null) {
+				$event->getPlayer()->sendMessage(TextFormat::RED . "[Warning] You already own a pet with that name. Please choose a different name.");
+				return true;
+			}
+			$data = $this->getLoader()->selectingName[$event->getPlayer()->getName()];
+
+			$this->getLoader()->createPet($data["petType"], $event->getPlayer(), $petName);
+			unset($this->getLoader()->selectingName[$event->getPlayer()->getName()]);
 		}
 	}
 }

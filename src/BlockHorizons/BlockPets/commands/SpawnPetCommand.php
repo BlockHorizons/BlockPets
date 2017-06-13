@@ -10,7 +10,7 @@ use pocketmine\utils\TextFormat as TF;
 class SpawnPetCommand extends BaseCommand {
 
 	public function __construct(Loader $loader) {
-		parent::__construct($loader, "spawnpet", "Spawn a pet for yourself or other players", "/spawnpet <petType> <name> [size] [baby] [player]", ["sp"]);
+		parent::__construct($loader, "spawnpet", "Spawn a pet for yourself or other players", "/spawnpet <petType> [name] [size] [baby] [player]", ["sp"]);
 		$this->setPermission("blockpets.command.spawnpet");
 	}
 
@@ -25,7 +25,7 @@ class SpawnPetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(count($args) > 5 || count($args) < 2) {
+		if(count($args) > 5 || count($args) < 1) {
 			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
 			return true;
 		}
@@ -48,10 +48,6 @@ class SpawnPetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(empty($args[1])) {
-			$args[1] = $sender->getDisplayName();
-		}
-
 		if(isset($args[3])) {
 			if($args[3] === "false") {
 				$args[3] = 0;
@@ -64,17 +60,25 @@ class SpawnPetCommand extends BaseCommand {
 		$petName = $this->getLoader()->getPet($args[0]);
 		if($petName == null){
 			$sender->sendMessage(TF::RED . "[Warning] Pet type " . $args[0] . " does not exist!");
-			return true;							     
-		}
-		if($this->getLoader()->getPetByName($args[1], $sender) !== null) {
-			$sender->sendMessage(TF::RED . "[Warning] You already own a pet with that name.");
 			return true;
 		}
 		if(count($this->getLoader()->getPetsFrom($player)) >= $this->getLoader()->getBlockPetsConfig()->getMaxPets() && !$player->hasPermission("blockpets.bypass-limit")) {
 			$sender->sendMessage(TF::RED . "[Warning] " . $player === $sender ? "You have " : "Your target has " . " exceeded the pet limit.");
 			return true;
 		}
-		if($this->getLoader()->createPet($petName, $player, $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3]) === null) {
+		if(!isset($args[1]) || strtolower($args[1]) === "select") {
+			if($player !== $sender) {
+				$sender->sendMessage(TF::GREEN . $player->getName() . " is now selecting a name for their pet.");
+			}
+			$player->sendMessage(TF::GREEN . "Please type a name for your pet in chat.");
+			$this->getLoader()->selectingName[$player->getName()] = ["petType" => $petName];
+			return true;
+		}
+		if($this->getLoader()->getPetByName($args[1], $sender) !== null) {
+			$sender->sendMessage(TF::RED . "[Warning] You already own a pet with that name.");
+			return true;
+		}
+		if($this->getLoader()->createPet((string) $petName, $player, (int) $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3]) === null) {
 			$sender->sendMessage(TF::RED . "[Warning] A plugin has cancelled spawning this pet.");
 			return true;
 		}

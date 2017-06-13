@@ -72,6 +72,9 @@ permissions:
                     blockpets.pet.endermite:
                         default: op
                         description: "Allows access to use the endermite pet."
+                    blockpets.pet.evoker:
+                        default: op
+                        description: "Allows access to use the evoker pet."
                     blockpets.pet.ghast:
                         default: op
                         description: "Allows access to use the ghast pet."
@@ -126,9 +129,15 @@ permissions:
                     blockpets.pet.stray:
                         default: op
                         description: "Allows access to use the stray pet."
+                    blockpets.pet.vex:
+                        default: op
+                        description: "Allows access to use the vex pet."
                     blockpets.pet.villager:
                         default: op
                         description: "Allows access to use the village pet."
+                    blockpets.pet.vindicator:
+                        default: op
+                        description: "Allows access to use the vindicator pet."
                     blockpets.pet.witch:
                         default: op
                         description: "Allows access to use the witch pet."

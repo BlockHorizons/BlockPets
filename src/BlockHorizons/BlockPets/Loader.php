@@ -27,6 +27,7 @@ use BlockHorizons\BlockPets\pets\creatures\EnderCrystalPet;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use BlockHorizons\BlockPets\pets\creatures\EndermanPet;
 use BlockHorizons\BlockPets\pets\creatures\EndermitePet;
+use BlockHorizons\BlockPets\pets\creatures\EvocationFangsPet;
 use BlockHorizons\BlockPets\pets\creatures\EvokerPet;
 use BlockHorizons\BlockPets\pets\creatures\GhastPet;
 use BlockHorizons\BlockPets\pets\creatures\HorsePet;
@@ -46,6 +47,7 @@ use BlockHorizons\BlockPets\pets\creatures\SlimePet;
 use BlockHorizons\BlockPets\pets\creatures\SnowGolemPet;
 use BlockHorizons\BlockPets\pets\creatures\SpiderPet;
 use BlockHorizons\BlockPets\pets\creatures\StrayPet;
+use BlockHorizons\BlockPets\pets\creatures\VexPet;
 use BlockHorizons\BlockPets\pets\creatures\VillagerPet;
 use BlockHorizons\BlockPets\pets\creatures\VindicatorPet;
 use BlockHorizons\BlockPets\pets\creatures\WitchPet;
@@ -116,7 +118,9 @@ class Loader extends PluginBase {
 		"Slime",
 		"MagmaCube",
 		"Evoker",
-		"Vindicator"
+		"Vindicator",
+		"EvocationFangs",
+		"Vex"
 	];
 
 	const PET_CLASSES = [
@@ -158,8 +162,13 @@ class Loader extends PluginBase {
 		SlimePet::class,
 		RabbitPet::class,
 		EvokerPet::class,
-		VindicatorPet::class
+		VindicatorPet::class,
+		VexPet::class,
+		EvocationFangsPet::class
 	];
+
+	/** @var array */
+	public $selectingName = [];
 
 	private $bpConfig;
 	private $database;
