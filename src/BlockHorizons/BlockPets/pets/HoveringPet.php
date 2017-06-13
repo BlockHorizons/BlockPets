@@ -59,7 +59,7 @@ abstract class HoveringPet extends IrasciblePet {
 	public function doAttackingMovement() {
 		$target = $this->getTarget();
 
-		if(!$this->getTarget()->isAlive()) {
+		if(!$this->getTarget()->isAlive() || $this->getTarget() === null) {
 			$this->calmDown();
 		}
 
@@ -88,7 +88,7 @@ abstract class HoveringPet extends IrasciblePet {
 
 		if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0) {
 			$this->getLoader()->getServer()->getPluginManager()->callEvent($event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage()));
-			if(!$target->getHealth() - $event->getFinalDamage() <= 0) {
+			if($target->getHealth() - $event->getFinalDamage() <= 0) {
 				if($target instanceof Player) {
 					$this->addPetLevelPoints($this->getLoader()->getBlockPetsConfig()->getPlayerExperiencePoints());
 				} else {
@@ -101,8 +101,12 @@ abstract class HoveringPet extends IrasciblePet {
 
 			$this->waitingTime = 15;
 		}
-		if($this->distance($this->getPetOwner()) > 20 || $this->distance($this->getTarget()) > 15) {
+		if($this->getTarget() === null) {
 			$this->calmDown();
+		} else {
+			if($this->distance($this->getPetOwner()) > 25 || $this->distance($this->getTarget()) > 15) {
+				$this->calmDown();
+			}
 		}
 
 		$this->updateMovement();
