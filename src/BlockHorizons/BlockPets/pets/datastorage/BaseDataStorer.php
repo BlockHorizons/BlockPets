@@ -12,6 +12,11 @@ abstract class BaseDataStorer {
 	public function __construct(Loader $loader) {
 		$this->loader = $loader;
 
+		if($this->getLoader()->getBlockPetsConfig()->doHardReset()) {
+			$this->reset();
+			$this->getLoader()->getConfig()->set("Hard-Reset", false);
+		}
+
 		$this->prepare();
 	}
 
@@ -19,6 +24,11 @@ abstract class BaseDataStorer {
 	 * @return bool
 	 */
 	protected abstract function prepare(): bool;
+
+	/**
+	 * @return bool
+	 */
+	protected abstract function reset(): bool;
 
 	/**
 	 * @param BasePet $pet

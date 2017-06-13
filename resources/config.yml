@@ -37,7 +37,7 @@ Experience-Points-Per-Player-Kill: 15
 # The experience a pet gets each time it kills an entity.
 Experience-Points-Per-Entity-Kill: 10
 
-# Whether to give the pet some experience if it's being fed by the owner.
+# Whether to give the pet some experience if it's being fed by the owner or not.
 Give-Experience-For-Feeding: true
 
 # The database used to store data of pets in. This is only relevant if storage to database is turned to true.
@@ -59,4 +59,8 @@ Store-To-Database: true
 
 # Whether to use data from the database. Pets get saved using NBT by default, and do not necessarily need this.
 Fetch-From-Database: false
+
+# WARNING: This will delete all pets and pet data the next restart if set to true.
+# Use with caution!
+Hard-Reset: false
 ...

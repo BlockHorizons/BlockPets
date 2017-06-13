@@ -146,4 +146,11 @@ class BlockPetsConfig {
 	public function giveExperienceWhenFed(): bool {
 		return (bool) $this->settings["Give-Experience-For-Feeding"];
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function doHardReset(): bool {
+		return (bool) $this->settings["Hard-Reset"];
+	}
 }

@@ -100,4 +100,9 @@ class SQLiteDataStorer extends BaseDataStorer {
 		}
 		return false;
 	}
+
+	protected function reset(): bool {
+		$query = "DROP TABLE IF EXISTS Pets";
+		return $this->database->exec($query);
+	}
 }

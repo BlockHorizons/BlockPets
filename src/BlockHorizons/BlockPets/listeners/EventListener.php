@@ -98,7 +98,7 @@ class EventListener implements Listener {
 		if($this->getLoader()->getBlockPetsConfig()->fetchFromDatabase()) {
 			$petData = $this->getLoader()->getDatabase()->fetchAllPetData($event->getPlayer()->getName());
 			foreach($petData as $data) {
-				$this->getLoader()->createPet($data["EntityName"], $event->getPlayer(), $data["PetName"], $data["PetSize"], $data["IsBaby"], $data["PetLevel"], $data["LevelPoints"]);
+				$pets[] = $this->getLoader()->createPet($data["EntityName"], $event->getPlayer(), $data["PetName"], $data["PetSize"], $data["IsBaby"], $data["PetLevel"], $data["LevelPoints"]);
 			}
 		}
 		if(empty($pets)) {
@@ -107,6 +107,9 @@ class EventListener implements Listener {
 		foreach($pets as $pet) {
 			$pet->spawnToAll();
 			$pet->setDormant(false);
+			if($this->getLoader()->getBlockPetsConfig()->doHardReset()) {
+				$pet->close();
+			}
 		}
 	}
 
