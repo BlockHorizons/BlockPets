@@ -128,7 +128,7 @@ abstract class SwimmingPet extends BouncingPet {
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
 
 			if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0 && $target->isAlive()) {
-				$this->getLoader()->getServer()->getPluginManager()->callEvent($event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage()));
+				$event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage());
 				if($target->getHealth() - $event->getFinalDamage() <= 0) {
 					if($target instanceof Player) {
 						$this->addPetLevelPoints($this->getLoader()->getBlockPetsConfig()->getPlayerExperiencePoints());
@@ -142,7 +142,7 @@ abstract class SwimmingPet extends BouncingPet {
 
 				$this->waitingTime = 15;
 			}
-			if($this->getTarget() === null) {
+			if($this->getTarget() === null || !$this->getTarget()->isAlive()) {
 				$this->calmDown();
 			} else {
 				if($this->distance($this->getPetOwner()) > 25 || $this->distance($this->getTarget()) > 15) {

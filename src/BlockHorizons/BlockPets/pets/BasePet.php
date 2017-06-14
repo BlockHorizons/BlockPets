@@ -453,7 +453,7 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		$petOwner = $this->getPetOwner();
-		if(mt_rand(1, 7) === 7) {
+		if(mt_rand(1, 60) === 1) {
 			if($this->getHealth() !== $this->getMaxHealth()) {
 				$this->heal(1, new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
 				$this->calculator->updateNameTag();
