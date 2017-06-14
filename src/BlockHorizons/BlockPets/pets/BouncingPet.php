@@ -16,9 +16,14 @@ abstract class BouncingPet extends IrasciblePet {
 			return true;
 		}
 		if(parent::onUpdate($currentTick) === false) {
-			return false;
+			return true;
 		}
 		$petOwner = $this->getPetOwner();
+		if($petOwner === null) {
+			$this->despawnFromAll();
+			$this->setDormant();
+			return true;
+		}
 		if($this->isAngry()) {
 			$this->doAttackingMovement();
 			return true;
