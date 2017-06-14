@@ -449,26 +449,12 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	public function onUpdate($currentTick) {
-		if($this->closed || !$this->isAlive()) {
-			return false;
-		}
 		$petOwner = $this->getPetOwner();
 		if(mt_rand(1, 60) === 1) {
 			if($this->getHealth() !== $this->getMaxHealth()) {
 				$this->heal(1, new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
 				$this->calculator->updateNameTag();
 			}
-		}
-		if($this->isDormant()) {
-			$this->despawnFromAll();
-			return true;
-		}
-		if($petOwner === null) {
-			$this->ridden = false;
-			$this->rider = null;
-			$this->despawnFromAll();
-			$this->setDormant();
-			return false;
 		}
 		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
 			$this->getLoader()->createPet($this->getEntityType(), $this->getPetOwner(), $this->getPetName(), $this->getStartingScale(), $this->namedtag["isBaby"], $this->getPetLevel(), $this->getPetLevelPoints());
@@ -551,6 +537,23 @@ abstract class BasePet extends Creature implements Rideable {
 	public function fullHeal() {
 		$diff = $this->getMaxHealth() - $this->getHealth();
 		$this->heal($diff, new EntityRegainHealthEvent($this, $diff, EntityRegainHealthEvent::CAUSE_CUSTOM));
+	}
+
+	/**
+	 * @return bool
+	 */
+	protected function checkUpdateRequirements(): bool {
+		if($this->closed || !($this->isAlive()) || $this->isDormant() || $this->isRidden())  {
+			return false;
+		}
+		if($this->getPetOwner() === null) {
+			$this->ridden = false;
+			$this->rider = null;
+			$this->despawnFromAll();
+			$this->setDormant();
+			return false;
+		}
+		return true;
 	}
 
 	/**

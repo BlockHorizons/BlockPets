@@ -100,5 +100,20 @@ abstract class IrasciblePet extends BasePet {
 		$this->target = $entity;
 	}
 
+	/**
+	 * @return bool
+	 */
+	protected function checkAttackRequirements(): bool {
+		if($this->closed || !($this->isAlive()) || !($this->isAngry())) {
+			$this->calmDown();
+			return false;
+		}
+		if(!$this->getTarget()->isAlive()) {
+			$this->calmDown();
+			return false;
+		}
+		return true;
+	}
+
 	public abstract function doAttackingMovement();
 }

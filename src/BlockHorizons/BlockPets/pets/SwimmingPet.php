@@ -11,16 +11,13 @@ abstract class SwimmingPet extends BouncingPet {
 	protected $swimmingSpeed = 0.0;
 
 	public function onUpdate($currentTick) {
-		if($this->isRidden()) {
-			return true;
-		}
-		if(parent::parentOnUpdate($currentTick) === false) {
+		if(!$this->checkUpdateRequirements()) {
 			return true;
 		}
 		$petOwner = $this->getPetOwner();
-		if($petOwner === null) {
-			$this->despawnFromAll();
-			$this->setDormant();
+		parent::parentOnUpdate($currentTick);
+		if($this->isAngry()) {
+			$this->doAttackingMovement();
 			return true;
 		}
 		if($this->isInsideOfWater()) {
@@ -102,8 +99,7 @@ abstract class SwimmingPet extends BouncingPet {
 	public function doAttackingMovement() {
 		$target = $this->getTarget();
 
-		if(!$target->isAlive() || $target->closed || $this->getTarget() === null || $this->closed || !$this->isAlive()) {
-			$this->calmDown();
+		if(!$this->checkAttackRequirements()) {
 			return false;
 		}
 		if($this->isInsideOfWater()) {
@@ -127,7 +123,7 @@ abstract class SwimmingPet extends BouncingPet {
 			$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
 
-			if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0 && $target->isAlive()) {
+			if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0) {
 				$event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage());
 				if($target->getHealth() - $event->getFinalDamage() <= 0) {
 					if($target instanceof Player) {
@@ -142,7 +138,7 @@ abstract class SwimmingPet extends BouncingPet {
 
 				$this->waitingTime = 15;
 			}
-			if($this->getTarget() === null || !$this->getTarget()->isAlive()) {
+			if(!$this->getTarget()->isAlive()) {
 				$this->calmDown();
 			} else {
 				if($this->distance($this->getPetOwner()) > 25 || $this->distance($this->getTarget()) > 15) {

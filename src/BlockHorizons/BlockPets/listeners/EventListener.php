@@ -75,7 +75,7 @@ class EventListener implements Listener {
 		$delay = $this->getLoader()->getBlockPetsConfig()->getRespawnTime() * 20;
 		if($pet instanceof BasePet) {
 			$owner = $this->getLoader()->getServer()->getPlayer($pet->getPetOwnerName());
-			$newPet = $this->getLoader()->createPet($pet->getEntityType(), $owner, $pet->getPetName(), $pet->getStartingScale(), $pet->namedtag["isBaby"], $pet->getPetLevel(), $pet->getPetLevelPoints());
+			$newPet = $this->getLoader()->createPet($pet->getEntityType(), $owner, $pet->getPetName(), $pet->getStartingScale(), 0, $pet->getPetLevel(), $pet->getPetLevelPoints());
 			$this->getLoader()->getServer()->getPluginManager()->callEvent($ev = new PetRespawnEvent($this->getLoader(), $newPet, $delay));
 			if($ev->isCancelled()) {
 				return;
@@ -99,11 +99,11 @@ class EventListener implements Listener {
 		if($this->getLoader()->getBlockPetsConfig()->fetchFromDatabase()) {
 			$petData = $this->getLoader()->getDatabase()->fetchAllPetData($event->getPlayer()->getName());
 			foreach($petData as $data) {
+				if($this->getLoader()->getPetByName($data["EntityName"], $event->getPlayer()) === null) {
+					continue;
+				}
 				$pets[] = $this->getLoader()->createPet($data["EntityName"], $event->getPlayer(), $data["PetName"], $data["PetSize"], $data["IsBaby"], $data["PetLevel"], $data["LevelPoints"]);
 			}
-		}
-		if(empty($pets)) {
-			return;
 		}
 		foreach($pets as $pet) {
 			$pet->spawnToAll();

@@ -17,18 +17,11 @@ abstract class HoveringPet extends IrasciblePet {
 	private $waitingTime = 15;
 
 	public function onUpdate($currentTick) {
-		if($this->isRidden()) {
-			return true;
-		}
-		if(parent::onUpdate($currentTick) === false) {
+		if(!$this->checkUpdateRequirements()) {
 			return true;
 		}
 		$petOwner = $this->getPetOwner();
-		if($petOwner === null) {
-			$this->despawnFromAll();
-			$this->setDormant();
-			return true;
-		}
+		parent::onUpdate($currentTick);
 		if($this->isAngry()) {
 			$this->doAttackingMovement();
 			return true;
@@ -64,8 +57,7 @@ abstract class HoveringPet extends IrasciblePet {
 	public function doAttackingMovement() {
 		$target = $this->getTarget();
 
-		if(!$target->isAlive() || $target->closed || $this->getTarget() === null || $this->closed || !$this->isAlive()) {
-			$this->calmDown();
+		if(!$this->checkAttackRequirements()) {
 			return false;
 		}
 

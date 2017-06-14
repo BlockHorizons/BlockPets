@@ -12,18 +12,11 @@ abstract class WalkingPet extends IrasciblePet {
 	private $waitingTime = 15;
 
 	public function onUpdate($currentTick) {
-		if($this->isRidden()) {
+		if(!$this->checkUpdateRequirements()) {
 			return true;
 		}
-		if(parent::onUpdate($currentTick) === false) {
-			return true;
-		}
+		parent::onUpdate($currentTick);
 		$petOwner = $this->getPetOwner();
-		if($petOwner === null) {
-			$this->despawnFromAll();
-			$this->setDormant();
-			return true;
-		}
 		if($this->isAngry()) {
 			$this->doAttackingMovement();
 			return true;
@@ -66,10 +59,9 @@ abstract class WalkingPet extends IrasciblePet {
 		return true;
 	}
 
-	public function doAttackingMovement() {
+	public function doAttackingMovement(): bool {
 		$target = $this->getTarget();
-		if($target === null || $target->closed ||$this->getPetOwner() === null || $this->closed || $this->isAlive()) {
-			$this->calmDown();
+		if(!$this->checkAttackRequirements()) {
 			return false;
 		}
 
@@ -107,7 +99,7 @@ abstract class WalkingPet extends IrasciblePet {
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 
-		if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0 && $target->isAlive()) {
+		if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0) {
 			$event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage());
 			if($target->getHealth() - $event->getFinalDamage() <= 0) {
 				if($target instanceof Player) {
@@ -122,7 +114,7 @@ abstract class WalkingPet extends IrasciblePet {
 
 			$this->waitingTime = 15;
 		}
-		if($this->getTarget() === null || !$this->getTarget()->isAlive()) {
+		if(!$this->getTarget()->isAlive()) {
 			$this->calmDown();
 		} else {
 			if($this->distance($this->getPetOwner()) > 25 || $this->distance($this->getTarget()) > 15) {
