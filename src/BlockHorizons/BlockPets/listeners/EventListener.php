@@ -12,7 +12,7 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDeathEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
-use pocketmine\event\player\PlayerLoginEvent;
+use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
@@ -96,16 +96,13 @@ class EventListener implements Listener {
 	/**
 	 * Used to respawn pets to the player, and fetch pets from the database if this has been configured.
 	 *
-	 * @param PlayerLoginEvent $event
+	 * @param PlayerJoinEvent $event
 	 */
-	public function onPlayerLogin(PlayerLoginEvent $event) {
+	public function onPlayerJoin(PlayerJoinEvent $event) {
 		$pets = $this->getLoader()->getPetsFrom($event->getPlayer());
 		if($this->getLoader()->getBlockPetsConfig()->fetchFromDatabase()) {
 			$petData = $this->getLoader()->getDatabase()->fetchAllPetData($event->getPlayer()->getName());
 			foreach($petData as $data) {
-				if($this->getLoader()->getPetByName($data["EntityName"], $event->getPlayer()) === null) {
-					continue;
-				}
 				$pets[] = $this->getLoader()->createPet($data["EntityName"], $event->getPlayer(), $data["PetName"], $data["PetSize"], $data["IsBaby"], $data["PetLevel"], $data["LevelPoints"]);
 			}
 		}

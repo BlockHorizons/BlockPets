@@ -309,7 +309,7 @@ class Loader extends PluginBase {
 	 * Creates a new pet for the given player.
 	 *
 	 * @param string $entityName
-	 * @param Player $position
+	 * @param Player $player
 	 * @param string $name
 	 * @param float  $scale
 	 * @param bool   $isBaby
@@ -318,17 +318,17 @@ class Loader extends PluginBase {
 	 *
 	 * @return null|BasePet
 	 */
-	public function createPet(string $entityName, Player $position, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0) {
-		foreach($this->getPetsFrom($position) as $pet) {
+	public function createPet(string $entityName, Player $player, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0) {
+		foreach($this->getPetsFrom($player) as $pet) {
 			if($pet->getPetName() === $name) {
-				$this->removePet($pet->getPetName(), $position);
+				$this->removePet($pet->getPetName(), $player);
 			}
 		}
 		$nbt = new CompoundTag("", [
 			"Pos" => new ListTag("Pos", [
-				new DoubleTag("", $position->x),
-				new DoubleTag("", $position->y),
-				new DoubleTag("", $position->z)
+				new DoubleTag("", $player->x),
+				new DoubleTag("", $player->y),
+				new DoubleTag("", $player->z)
 			]),
 			"Motion" => new ListTag("Motion", [
 				new DoubleTag("", 0),
@@ -336,10 +336,10 @@ class Loader extends PluginBase {
 				new DoubleTag("", 0)
 			]),
 			"Rotation" => new ListTag("Rotation", [
-				new FloatTag("", $position->yaw),
-				new FloatTag("", $position->pitch)
+				new FloatTag("", $player->yaw),
+				new FloatTag("", $player->pitch)
 			]),
-			"petOwner" => new StringTag("petOwner", $position->getName()),
+			"petOwner" => new StringTag("petOwner", $player->getName()),
 			"scale" => new FloatTag("scale", $scale),
 			"petName" => new StringTag("petName", $name),
 			"petLevel" => new IntTag("petLevel", $level),
@@ -348,7 +348,7 @@ class Loader extends PluginBase {
 			"chested" => new ByteTag("chested", 0)
 		]);
 
-		$entity = Entity::createEntity($entityName . "Pet", $position->getLevel(), $nbt);
+		$entity = Entity::createEntity($entityName . "Pet", $player->getLevel(), $nbt);
 		if($entity instanceof BasePet) {
 			$this->getServer()->getPluginManager()->callEvent($ev = new PetSpawnEvent($this, $entity));
 			if($ev->isCancelled()) {
