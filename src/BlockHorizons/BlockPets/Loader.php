@@ -319,6 +319,11 @@ class Loader extends PluginBase {
 	 * @return null|BasePet
 	 */
 	public function createPet(string $entityName, Player $position, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0) {
+		foreach($this->getPetsFrom($position) as $pet) {
+			if($pet->getPetName() === $name) {
+				$this->removePet($pet->getPetName(), $position);
+			}
+		}
 		$nbt = new CompoundTag("", [
 			"Pos" => new ListTag("Pos", [
 				new DoubleTag("", $position->x),
