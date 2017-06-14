@@ -69,6 +69,9 @@ class EventListener implements Listener {
 	 * Used to respawn a pet after being killed.
 	 *
 	 * @param EntityDeathEvent $event
+	 * @priority HIGHEST
+	 *
+	 * Priority should be highest at all times to take care of plugins that use the entity before it gets closed.
 	 */
 	public function onPetDeath(EntityDeathEvent $event) {
 		$pet = $event->getEntity();

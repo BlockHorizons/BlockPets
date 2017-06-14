@@ -365,6 +365,7 @@ class Loader extends PluginBase {
 	 *
 	 * @param string $name
 	 * @param Player $player
+	 * @param bool   $forceClose
 	 *
 	 * @return bool
 	 */
