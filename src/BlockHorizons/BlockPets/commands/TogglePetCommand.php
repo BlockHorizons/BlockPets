@@ -38,7 +38,7 @@ class TogglePetCommand extends BaseCommand {
 				return true;
 			}
 			$this->getLoader()->togglePet($pet, $sender);
-			$sender->sendMessage(TF::GREEN . "Successfully toggled the pet " . TF::AQUA . $pet->getPetName() . TF::RESET . TF::GREEN . ($this->getLoader()->isPetToggledOn($pet, $sender) ? "on." : "off."));
+			$sender->sendMessage(TF::GREEN . "Successfully toggled the pet " . TF::AQUA . $pet->getPetName() . TF::RESET . TF::GREEN . ($this->getLoader()->isPetToggledOn($pet, $sender) ? "off." : "on."));
 		}
 		return true;
 	}

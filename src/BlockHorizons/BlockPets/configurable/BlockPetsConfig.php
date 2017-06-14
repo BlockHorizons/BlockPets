@@ -36,6 +36,13 @@ class BlockPetsConfig {
 	/**
 	 * @return bool
 	 */
+	public function doHardReset(): bool {
+		return (bool) $this->settings["Hard-Reset"];
+	}
+
+	/**
+	 * @return bool
+	 */
 	public function arePetsInvulnerable(): bool {
 		return (bool) $this->settings["Invulnerable-Pets"];
 	}
@@ -150,12 +157,5 @@ class BlockPetsConfig {
 	 */
 	public function giveExperienceWhenFed(): bool {
 		return (bool) $this->settings["Give-Experience-For-Feeding"];
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function doHardReset(): bool {
-		return (bool) $this->settings["Hard-Reset"];
 	}
 }

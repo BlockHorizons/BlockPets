@@ -106,7 +106,7 @@ abstract class WalkingPet extends IrasciblePet {
 		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
-		if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0) {
+		if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0 && $target->isAlive()) {
 			$this->getLoader()->getServer()->getPluginManager()->callEvent($event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage()));
 			if($target->getHealth() - $event->getFinalDamage() <= 0) {
 				if($target instanceof Player) {

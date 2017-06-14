@@ -499,12 +499,14 @@ class Loader extends PluginBase {
 			$this->toggledOff[$player->getName()] = true;
 			foreach($this->getPetsFrom($player) as $pet) {
 				$pet->despawnFromAll();
+				$pet->setDormant();
 			}
 			return false;
 		} else {
 			unset($this->toggledOff[$player->getName()]);
 			foreach($this->getPetsFrom($player) as $pet) {
 				$pet->spawnToAll();
+				$pet->setDormant(false);
 			}
 			return true;
 		}
@@ -533,11 +535,13 @@ class Loader extends PluginBase {
 		if(isset($this->toggledPets[$pet->getPetName()])) {
 			if($this->toggledPets[$pet->getPetName()] === $owner->getName()) {
 				$pet->spawnToAll();
+				$pet->setDormant(false);
 				unset($this->toggledPets[$pet->getPetName()]);
 				return true;
 			}
 		}
 		$pet->despawnFromAll();
+		$pet->setDormant();
 		$this->toggledPets[$pet->getPetName()] = $owner->getName();
 		return false;
 	}
