@@ -158,4 +158,11 @@ class BlockPetsConfig {
 	public function giveExperienceWhenFed(): bool {
 		return (bool) $this->settings["Give-Experience-For-Feeding"];
 	}
+
+	/**
+	 * @return float
+	 */
+	public function getMaxPetSize(): float {
+		return (float) $this->settings["Pet-Max-Size"];
+	}
 }

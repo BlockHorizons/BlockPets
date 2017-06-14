@@ -18,8 +18,15 @@ permissions:
                 description: "Allows access to all BlockPets command features."
                 children:
                     blockpets.command.spawnpet:
-                        default: op
+                        default: false
                         description: "Allows access to use the spawnpet command."
+                        children:
+                            blockpets.command.spawnpet.use:
+                                default: op
+                                description: "Allows access to use the spawnpet command for yourself."
+                            blockpets.command.spawnpet.others:
+                                default: op
+                                description: "Allows access to use the spawnpet command for other players."
                     blockpets.command.removepet:
                         default: op
                         description: "Allows access to use the removepet command."

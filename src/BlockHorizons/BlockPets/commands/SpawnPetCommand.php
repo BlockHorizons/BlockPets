@@ -11,7 +11,7 @@ class SpawnPetCommand extends BaseCommand {
 
 	public function __construct(Loader $loader) {
 		parent::__construct($loader, "spawnpet", "Spawn a pet for yourself or other players", "/spawnpet <petType> [name] [size] [baby] [player]", ["sp"]);
-		$this->setPermission("blockpets.command.spawnpet");
+		$this->setPermission("blockpets.command.spawnpet.use");
 	}
 
 	public function execute(CommandSender $sender, $commandLabel, array $args): bool {
@@ -41,11 +41,20 @@ class SpawnPetCommand extends BaseCommand {
 				$sender->sendMessage(TF::RED . "[Warning] That player isn't online.");
 				return true;
 			}
+			if(!$sender->hasPermission("blockpets.command.spawnpet.others")) {
+				$sender->sendMessage(TF::RED . "[Warning] You don't have permission to spawn pets to others.");
+				return true;
+			}
 		}
 
-		if(isset($args[2]) && !is_numeric($args[2])) {
-			$sender->sendMessage(TF::RED . "[Warning] The pet scale should be numeric.");
-			return true;
+		if(isset($args[2])) {
+			if(!is_numeric($args[2])) {
+				$sender->sendMessage(TF::RED . "[Warning] The pet scale should be numeric.");
+				return true;
+			}
+			if((float) $args[2] > $this->getLoader()->getBlockPetsConfig()->getMaxPetSize()) {
+				$args[2] = $this->getLoader()->getBlockPetsConfig()->getMaxPetSize();
+			}
 		}
 
 		if(isset($args[3])) {
