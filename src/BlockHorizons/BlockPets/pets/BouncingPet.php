@@ -69,7 +69,7 @@ abstract class BouncingPet extends IrasciblePet {
 	public function doAttackingMovement() {
 		$target = $this->getTarget();
 
-		if($target === null || $this->getPetOwner() === null || $this->closed || !$this->isAlive()) {
+		if($target === null || $target->closed || $this->getPetOwner() === null || $this->closed || !$this->isAlive()) {
 			$this->calmDown();
 			return false;
 		}

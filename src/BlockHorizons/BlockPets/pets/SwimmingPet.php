@@ -102,7 +102,7 @@ abstract class SwimmingPet extends BouncingPet {
 	public function doAttackingMovement() {
 		$target = $this->getTarget();
 
-		if(!$this->getTarget()->isAlive() || $this->getTarget() === null || $this->closed || !$this->isAlive()) {
+		if(!$target->isAlive() || $target->closed || $this->getTarget() === null || $this->closed || !$this->isAlive()) {
 			$this->calmDown();
 			return false;
 		}
