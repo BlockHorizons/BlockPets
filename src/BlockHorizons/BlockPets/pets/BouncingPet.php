@@ -9,7 +9,7 @@ use pocketmine\Player;
 abstract class BouncingPet extends IrasciblePet {
 
 	protected $jumpTicks = 0;
-	private $waitingTime = 15;
+	protected $waitingTime = 15;
 
 	public function onUpdate($currentTick) {
 		if($this->isRidden()) {
@@ -132,7 +132,7 @@ abstract class BouncingPet extends IrasciblePet {
 	public function jump() {
 		$this->motionY = $this->gravity * 12 * $this->getScale();
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
-		$this->jumpTicks = 7;
+		$this->jumpTicks = 10;
 	}
 
 	public function doRidingMovement($motionX, $motionZ) {
@@ -205,5 +205,14 @@ abstract class BouncingPet extends IrasciblePet {
 
 	public function generateCustomPetData() {
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_MOVING, true);
+	}
+
+	/**
+	 * @param int $currentTick
+	 *
+	 * @return bool
+	 */
+	public function parentOnUpdate(int $currentTick) {
+		return parent::onUpdate($currentTick);
 	}
 }

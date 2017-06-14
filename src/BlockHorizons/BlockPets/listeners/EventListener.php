@@ -74,8 +74,8 @@ class EventListener implements Listener {
 		$pet = $event->getEntity();
 		$delay = $this->getLoader()->getBlockPetsConfig()->getRespawnTime() * 20;
 		if($pet instanceof BasePet) {
-			$this->getLoader()->removePet($pet->getPetName(), $this->getLoader()->getServer()->getPlayer($pet->getPetOwnerName()));
-			$newPet = $this->getLoader()->createPet($pet->getEntityType(), $pet->getPetOwner(), $pet->getPetName(), $pet->getStartingScale(), $pet->namedtag["isBaby"], $pet->getPetLevel(), $pet->getPetLevelPoints());
+			$owner = $this->getLoader()->getServer()->getPlayer($pet->getPetOwnerName());
+			$newPet = $this->getLoader()->createPet($pet->getEntityType(), $owner, $pet->getPetName(), $pet->getStartingScale(), $pet->namedtag["isBaby"], $pet->getPetLevel(), $pet->getPetLevelPoints());
 			$this->getLoader()->getServer()->getPluginManager()->callEvent($ev = new PetRespawnEvent($this->getLoader(), $newPet, $delay));
 			if($ev->isCancelled()) {
 				return;
@@ -85,6 +85,7 @@ class EventListener implements Listener {
 			$this->getLoader()->getServer()->getScheduler()->scheduleDelayedTask(new PetRespawnTask($this->getLoader(), $newPet), $delay);
 			$newPet->despawnFromAll();
 			$newPet->setDormant();
+			$this->getLoader()->removePet($pet->getPetName(), $owner);
 		}
 	}
 

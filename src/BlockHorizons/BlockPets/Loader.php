@@ -24,6 +24,7 @@ use BlockHorizons\BlockPets\pets\creatures\ChickenPet;
 use BlockHorizons\BlockPets\pets\creatures\CowPet;
 use BlockHorizons\BlockPets\pets\creatures\CreeperPet;
 use BlockHorizons\BlockPets\pets\creatures\DonkeyPet;
+use BlockHorizons\BlockPets\pets\creatures\ElderGuardianPet;
 use BlockHorizons\BlockPets\pets\creatures\EnderCrystalPet;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use BlockHorizons\BlockPets\pets\creatures\EndermanPet;
@@ -31,6 +32,7 @@ use BlockHorizons\BlockPets\pets\creatures\EndermitePet;
 use BlockHorizons\BlockPets\pets\creatures\EvocationFangsPet;
 use BlockHorizons\BlockPets\pets\creatures\EvokerPet;
 use BlockHorizons\BlockPets\pets\creatures\GhastPet;
+use BlockHorizons\BlockPets\pets\creatures\GuardianPet;
 use BlockHorizons\BlockPets\pets\creatures\HorsePet;
 use BlockHorizons\BlockPets\pets\creatures\HuskPet;
 use BlockHorizons\BlockPets\pets\creatures\IronGolemPet;
@@ -49,6 +51,7 @@ use BlockHorizons\BlockPets\pets\creatures\SkeletonPet;
 use BlockHorizons\BlockPets\pets\creatures\SlimePet;
 use BlockHorizons\BlockPets\pets\creatures\SnowGolemPet;
 use BlockHorizons\BlockPets\pets\creatures\SpiderPet;
+use BlockHorizons\BlockPets\pets\creatures\SquidPet;
 use BlockHorizons\BlockPets\pets\creatures\StrayPet;
 use BlockHorizons\BlockPets\pets\creatures\VexPet;
 use BlockHorizons\BlockPets\pets\creatures\VillagerPet;
@@ -128,7 +131,10 @@ class Loader extends PluginBase {
 		"Mule",
 		"Donkey",
 		"SkeletonHorse",
-		"ZombieHorse"
+		"ZombieHorse",
+		"Squid",
+		"Guardian",
+		"ElderGuardian"
 	];
 
 	const PET_CLASSES = [
@@ -176,7 +182,10 @@ class Loader extends PluginBase {
 		MulePet::class,
 		DonkeyPet::class,
 		SkeletonHorsePet::class,
-		ZombieHorsePet::class
+		ZombieHorsePet::class,
+		SquidPet::class,
+		ElderGuardianPet::class,
+		GuardianPet::class
 	];
 
 	/** @var array */
