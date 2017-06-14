@@ -2,7 +2,6 @@
 
 namespace BlockHorizons\BlockPets\pets;
 
-
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\Player;

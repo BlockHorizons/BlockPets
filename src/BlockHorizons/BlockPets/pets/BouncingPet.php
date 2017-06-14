@@ -16,7 +16,7 @@ abstract class BouncingPet extends IrasciblePet {
 			return true;
 		}
 		if(parent::onUpdate($currentTick) === false) {
-			return true;
+			return false;
 		}
 		$petOwner = $this->getPetOwner();
 		if($this->isAngry()) {
