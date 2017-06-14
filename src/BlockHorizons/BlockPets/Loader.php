@@ -363,7 +363,7 @@ class Loader extends PluginBase {
 	 *
 	 * @return bool
 	 */
-	public function removePet(string $name, Player $player = null): bool {
+	public function removePet(string $name, Player $player = null, bool $forceClose = true): bool {
 		$foundPet = $this->getPetByName($name);
 		if($foundPet === null) {
 			return false;
@@ -375,7 +375,12 @@ class Loader extends PluginBase {
 					if($ev->isCancelled()) {
 						return false;
 					}
-					$pet->close();
+					if($pet->isRidden()) {
+						$pet->throwRiderOff();
+					}
+					if($forceClose) {
+						$pet->close();
+					}
 					$this->getDatabase()->unregisterPet($pet->getPetName(), $pet->getPetOwnerName());
 					return true;
 				}
@@ -386,7 +391,12 @@ class Loader extends PluginBase {
 		if($ev->isCancelled()) {
 			return false;
 		}
-		$foundPet->close();
+		if($foundPet->isRidden()) {
+			$foundPet->throwRiderOff();
+		}
+		if($forceClose) {
+			$foundPet->close();
+		}
 		$this->getDatabase()->unregisterPet($foundPet->getPetName(), $foundPet->getPetOwnerName());
 		return true;
 	}
