@@ -453,7 +453,7 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		$petOwner = $this->getPetOwner();
-		if(mt_rand() === 7) {
+		if(mt_rand(1, 7) === 7) {
 			if($this->getHealth() !== $this->getMaxHealth()) {
 				$this->heal(1, new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
 				$this->calculator->updateNameTag();
@@ -461,7 +461,7 @@ abstract class BasePet extends Creature implements Rideable {
 		}
 		if($this->isDormant()) {
 			$this->despawnFromAll();
-			return false;
+			return true;
 		}
 		if($petOwner === null) {
 			$this->ridden = false;
@@ -473,7 +473,7 @@ abstract class BasePet extends Creature implements Rideable {
 		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
 			$this->getLoader()->createPet($this->getEntityType(), $this->getPetOwner(), $this->getPetName(), $this->getStartingScale(), $this->namedtag["isBaby"], $this->getPetLevel(), $this->getPetLevelPoints());
 			$this->close();
-			return true;
+			return false;
 		}
 		if($this->distance($petOwner) >= 50) {
 			$this->teleport($petOwner);

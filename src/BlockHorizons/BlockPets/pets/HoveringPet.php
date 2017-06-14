@@ -18,7 +18,7 @@ abstract class HoveringPet extends IrasciblePet {
 
 	public function onUpdate($currentTick) {
 		if($this->isRidden()) {
-			return false;
+			return true;
 		}
 		if(parent::onUpdate($currentTick) === false) {
 			return false;
@@ -59,8 +59,9 @@ abstract class HoveringPet extends IrasciblePet {
 	public function doAttackingMovement() {
 		$target = $this->getTarget();
 
-		if(!$this->getTarget()->isAlive() || $this->getTarget() === null) {
+		if(!$this->getTarget()->isAlive() || $this->getTarget() === null || $this->closed || !$this->isAlive()) {
 			$this->calmDown();
+			return false;
 		}
 
 		$x = $target->x - $this->x;

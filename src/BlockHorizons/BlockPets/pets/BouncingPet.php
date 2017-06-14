@@ -13,10 +13,10 @@ abstract class BouncingPet extends IrasciblePet {
 
 	public function onUpdate($currentTick) {
 		if($this->isRidden()) {
-			return false;
+			return true;
 		}
 		if(parent::onUpdate($currentTick) === false) {
-			return false;
+			return true;
 		}
 		$petOwner = $this->getPetOwner();
 		if($this->isAngry()) {
@@ -63,6 +63,11 @@ abstract class BouncingPet extends IrasciblePet {
 
 	public function doAttackingMovement() {
 		$target = $this->getTarget();
+
+		if($target === null || $this->getPetOwner() === null || $this->closed || !$this->isAlive()) {
+			$this->calmDown();
+			return false;
+		}
 
 		if($this->jumpTicks > 0) {
 			$this->jumpTicks--;
