@@ -34,7 +34,7 @@ class CommandOverloads {
 				1 => [
 					"type" => "rawtext",
 					"name" => "name",
-					"optional" => false
+					"optional" => true
 				],
 				2 => [
 					"type" => "int",
