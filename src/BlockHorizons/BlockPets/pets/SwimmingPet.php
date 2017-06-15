@@ -59,9 +59,9 @@ abstract class SwimmingPet extends BouncingPet {
 			$this->pitch = $rider->pitch;
 			$this->yaw = $rider->yaw;
 
-			$x = $this->getDirectionVector()->x / 2 * $this->getSwimmingSpeed();
-			$z = $this->getDirectionVector()->z / 2 * $this->getSwimmingSpeed();
-			$y = $this->getDirectionVector()->y / 2 * $this->getSwimmingSpeed();
+			$x = $rider->getDirectionVector()->x / 2 * $this->getSwimmingSpeed();
+			$z = $rider->getDirectionVector()->z / 2 * $this->getSwimmingSpeed();
+			$y = $rider->getDirectionVector()->y / 2 * $this->getSwimmingSpeed();
 
 			$finalMotion = [0, 0];
 			switch($motionZ) {
@@ -81,7 +81,7 @@ abstract class SwimmingPet extends BouncingPet {
 					break;
 			}
 
-			if((float) $y !== 0.0) {
+			if(((float) $y) !== 0.0) {
 				$this->motionY = $this->getSwimmingSpeed() * 0.25 * $y;
 			}
 			if(abs($y < 0.1)) {

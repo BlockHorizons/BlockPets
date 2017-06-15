@@ -130,7 +130,7 @@ class EventListener implements Listener {
 			}
 			$data = $this->getLoader()->selectingName[$event->getPlayer()->getName()];
 
-			$this->getLoader()->createPet($data["petType"], $event->getPlayer(), $petName);
+			$this->getLoader()->createPet($data["petType"], $event->getPlayer(), $petName, $data["petSize"], $data["isBaby"]);
 			$event->getPlayer()->sendMessage(TextFormat::GREEN . "Successfully obtained a " . $data["petType"] . " with the name " . $event->getMessage());
 			unset($this->getLoader()->selectingName[$event->getPlayer()->getName()]);
 		}

@@ -59,12 +59,12 @@ class SpawnPetCommand extends BaseCommand {
 
 		if(isset($args[3])) {
 			if($args[3] === "false") {
-				$args[3] = 0;
+				$args[3] = false;
 			} else {
-				$args[3] = 1;
+				$args[3] = true;
 			}
 		} else {
-			$args[3] = 0;
+			$args[3] = false;
 		}
 		$petName = $this->getLoader()->getPet($args[0]);
 		if($petName === null) {
@@ -80,7 +80,10 @@ class SpawnPetCommand extends BaseCommand {
 				$sender->sendMessage(TF::GREEN . $player->getName() . " is now selecting a name for their pet.");
 			}
 			$player->sendMessage(TF::GREEN . "Please type a name for your pet in chat.");
-			$this->getLoader()->selectingName[$player->getName()] = ["petType" => $petName];
+			$this->getLoader()->selectingName[$player->getName()] = [
+				"petType" => $petName,
+				"scale" => isset($args[2]) ? (float) $args[2] : 1.0,
+				"isBaby" => isset($args[3]) ? (bool) $args[3] : false];
 			return true;
 		}
 		if($this->getLoader()->getPetByName($args[1], $sender) !== null) {

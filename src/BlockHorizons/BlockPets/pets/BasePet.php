@@ -300,6 +300,9 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->generateCustomPetData();
 		$this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, 1);
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_BABY, (bool) $this->namedtag["isBaby"]);
+		if((bool) $this->namedtag["isBaby"]) {
+			$this->setScale(0.5);
+		}
 	}
 
 	public function generateCustomPetData() {

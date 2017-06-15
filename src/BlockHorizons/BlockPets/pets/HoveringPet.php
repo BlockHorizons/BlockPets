@@ -5,7 +5,6 @@ namespace BlockHorizons\BlockPets\pets;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\math\Vector3;
 use pocketmine\Player;
 
 abstract class HoveringPet extends IrasciblePet {
@@ -28,7 +27,7 @@ abstract class HoveringPet extends IrasciblePet {
 		}
 
 		$x = $petOwner->x - $this->x;
-		$y = $petOwner->y - $this->y;
+		$y = $petOwner->y + 2 - $this->y;
 		$z = $petOwner->z - $this->z;
 
 		if($x * $x + $z * $z < 8 + $this->getScale()) {
@@ -39,7 +38,7 @@ abstract class HoveringPet extends IrasciblePet {
 			$this->motionZ = $this->getSpeed() * 0.25 * ($z / (abs($x) + abs($z)));
 		}
 
-		if($y > -5 && (float) $y !== 0.0) {
+		if((float) $y !== 0.0) {
 			$this->motionY = $this->getSpeed() * 0.25 * $y;
 		}
 
@@ -62,10 +61,10 @@ abstract class HoveringPet extends IrasciblePet {
 		}
 
 		$x = $target->x - $this->x;
-		$y = $target->y - $this->y;
+		$y = $target->y + 2 - $this->y;
 		$z = $target->z - $this->z;
 
-		if($x * $x + $z * $z < 1.2) {
+		if($x * $x + $z * $z < 0.8) {
 			$this->motionX = 0;
 			$this->motionZ = 0;
 		} else {
@@ -73,7 +72,7 @@ abstract class HoveringPet extends IrasciblePet {
 			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
 		}
 
-		if($y > -5 && (float) $y !== 0.0) {
+		if((float) $y !== 0.0) {
 			$this->motionY = $this->getSpeed() * 0.15 * $y;
 		}
 
@@ -84,7 +83,7 @@ abstract class HoveringPet extends IrasciblePet {
 		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 
-		if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0 && $target->isAlive()) {
+		if($this->distance($target) <= $this->scale + 1.1 && $this->waitingTime <= 0 && $target->isAlive()) {
 			$event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage());
 			if($target->getHealth() - $event->getFinalDamage() <= 0) {
 				if($target instanceof Player) {
@@ -113,9 +112,9 @@ abstract class HoveringPet extends IrasciblePet {
 		$this->pitch = $rider->pitch;
 		$this->yaw = $this->getNetworkId() === 53 ? $rider->yaw + 180 : $rider->yaw;
 
-		$x = $this->getDirectionVector()->x / 2 * $this->getSpeed();
-		$z = $this->getDirectionVector()->z / 2 * $this->getSpeed();
-		$y = $this->getDirectionVector()->y / 2 * $this->getSpeed();
+		$x = $rider->getDirectionVector()->x / 2 * $this->getSpeed();
+		$z = $rider->getDirectionVector()->z / 2 * $this->getSpeed();
+		$y = $rider->getDirectionVector()->y / 2 * $this->getSpeed();
 
 		$finalMotion = [0, 0];
 		switch($motionZ) {
@@ -138,8 +137,12 @@ abstract class HoveringPet extends IrasciblePet {
 			$finalMotion = [-$finalMotion[0], -$finalMotion[1]];
 		}
 
-		if((((float) $y) !== 0.0 && $this->distance(new Vector3($this->x, $this->level->getHighestBlockAt($this->x, $this->z), $this->z)) <= $this->flyHeight) || $y < 0) {
-			$this->motionY = $this->getSpeed() * 0.25 * $y;
+		if(((float) $y) !== 0.0) {
+			if($y < 0) {
+				$this->motionY = $this->getSpeed() * 0.25 * $y;
+			} elseif($this->y - $this->getLevel()->getHighestBlockAt($this->x, $this->z) < $this->flyHeight) {
+				$this->motionY = $this->getSpeed() * 0.25 * $y;
+			}
 		}
 		if(abs($y < 0.1)) {
 			$this->motionY = 0;
