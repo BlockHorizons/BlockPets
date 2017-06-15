@@ -114,7 +114,7 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
-	 * Returns the BlockPets Loader. Only for internal usage.
+	 * Returns the BlockPets Loader. For internal usage.
 	 *
 	 * @return Loader
 	 */

@@ -50,6 +50,9 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 	public function generateCustomCommandData(Player $player): array {
 		$commandData = parent::generateCustomCommandData($player);
 		$commandData["permission"] = $this->getPermission();
+		if($this->getName() === "spawnpet") {
+			return $commandData;
+		}
 		$commandData["overloads"]["default"]["input"]["parameters"] = CommandOverloads::getOverloads($this->getName());
 
 		return $commandData;
