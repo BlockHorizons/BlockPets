@@ -12,7 +12,10 @@ permissions:
         children:
             blockpets.bypass-limit:
                 default: op
-                description: "Allows bypassing the pet limit set in the config.yml"
+                description: "Allows bypassing the pet limit set in the config.yml."
+            blockpets.bypass-size-limit:
+                default: op
+                description: "Allows bypassing the maximum size of pets."
             blockpets.command:
                 default: false
                 description: "Allows access to all BlockPets command features."

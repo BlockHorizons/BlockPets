@@ -52,7 +52,7 @@ class SpawnPetCommand extends BaseCommand {
 				$sender->sendMessage(TF::RED . "[Warning] The pet scale should be numeric.");
 				return true;
 			}
-			if((float) $args[2] > $this->getLoader()->getBlockPetsConfig()->getMaxPetSize()) {
+			if((float) $args[2] > $this->getLoader()->getBlockPetsConfig()->getMaxPetSize() && !($sender->hasPermission("blockpets.bypass-size-limit"))) {
 				$args[2] = $this->getLoader()->getBlockPetsConfig()->getMaxPetSize();
 			}
 		}
