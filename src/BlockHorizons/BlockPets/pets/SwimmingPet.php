@@ -84,7 +84,7 @@ abstract class SwimmingPet extends BouncingPet {
 			if(((float) $y) !== 0.0) {
 				$this->motionY = $this->getSwimmingSpeed() * 0.25 * $y;
 			}
-			if(abs($y < 0.1)) {
+			if(abs($y) < 0.1) {
 				$this->motionY = 0;
 			}
 			$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);
