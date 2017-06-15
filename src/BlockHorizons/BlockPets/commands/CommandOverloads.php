@@ -138,6 +138,24 @@ class CommandOverloads {
 					"name" => "help page",
 					"optional" => true
 				]
+			],
+
+			"changepetname" => [
+				0 => [
+					"type" => "rawtext",
+					"name" => "old name",
+					"optional" => false
+				],
+				1 => [
+					"type" => "rawtext",
+					"name" => "new name",
+					"optional" => false
+				],
+				2 => [
+					"type" => "rawtext",
+					"name" => "player",
+					"optional" => true
+				]
 			]
 		];
 	}

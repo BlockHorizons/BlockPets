@@ -556,6 +556,13 @@ abstract class BasePet extends Creature implements Rideable {
 		return true;
 	}
 
+	public function changeName(string $newName) {
+		$this->getLoader()->getDatabase()->unregisterPet($this->getPetName(), $this->getPetOwner());
+		$this->petName = $newName;
+		$this->getLoader()->getDatabase()->registerPet($this);
+		$this->getCalculator()->updateNameTag();
+	}
+
 	/**
 	 * @param $motionX
 	 * @param $motionZ

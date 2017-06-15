@@ -35,7 +35,7 @@ class PetCommand extends BaseCommand {
 				if($args[1] > 2) {
 					$args[1] = 1;
 				}
-				$sender->sendMessage(TextFormat::GREEN . "--- BlockPets Help Page " . TextFormat::YELLOW . $args[1] . TextFormat::GREEN . " ---");
+				$sender->sendMessage(TextFormat::GREEN . "--- BlockPets Help Page " . TextFormat::YELLOW . $args[1] . "/2" .  TextFormat::GREEN . " ---");
 				switch($args[1]) {
 					case 1:
 						$sender->sendMessage(
@@ -49,7 +49,8 @@ class PetCommand extends BaseCommand {
 					case 2:
 						$sender->sendMessage(
 							TextFormat::GREEN . "/leveluppet <name> [amount] [player]: " . TextFormat::YELLOW . "Levels up the first pet with the given name by the amount, and checks for player if given." . PHP_EOL .
-							TextFormat::GREEN . "/clearpet <name>: " . TextFormat::YELLOW . "Clears one of your own pets with the given name."
+							TextFormat::GREEN . "/clearpet <name>: " . TextFormat::YELLOW . "Clears one of your own pets with the given name." . PHP_EOL .
+							TextFormat::GREEN . "/changepetname <old name> <new name> [player]: " . TextFormat::YELLOW . "Changes the name of one of your pets, or the pet of other players if specified."
 						);
 				}
 				break;

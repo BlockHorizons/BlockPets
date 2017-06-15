@@ -30,6 +30,16 @@ permissions:
                             blockpets.command.spawnpet.others:
                                 default: op
                                 description: "Allows access to use the spawnpet command for other players."
+                    blockpets.command.changepetname:
+                        default: false
+                        description: "Allows access to use the changepetname command."
+                        children:
+                            blockpets.command.changepetname.use:
+                                default: op
+                                description: "Allows access to use the changepetname command for yourself."
+                            blockpets.command.changepetname.others:
+                                default: op
+                                description: "Allows access to use the changepetname command for others."
                     blockpets.command.removepet:
                         default: op
                         description: "Allows access to use the removepet command."

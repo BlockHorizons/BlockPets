@@ -3,6 +3,7 @@
 namespace BlockHorizons\BlockPets;
 
 use BlockHorizons\BlockPets\commands\BaseCommand;
+use BlockHorizons\BlockPets\commands\ChangePetNameCommand;
 use BlockHorizons\BlockPets\commands\ClearPetCommand;
 use BlockHorizons\BlockPets\commands\CommandOverloads;
 use BlockHorizons\BlockPets\commands\HealPetCommand;
@@ -217,6 +218,7 @@ class Loader extends PluginBase {
 			new HealPetCommand($this),
 			new ClearPetCommand($this),
 			new TogglePetCommand($this),
+			new ChangePetNameCommand($this),
 			new PetCommand($this)
 		];
 		foreach($petCommands as $command) {
