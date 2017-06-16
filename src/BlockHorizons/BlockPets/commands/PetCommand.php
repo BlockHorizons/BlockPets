@@ -10,7 +10,7 @@ use pocketmine\utils\TextFormat;
 class PetCommand extends BaseCommand {
 
 	public function __construct(Loader $loader) {
-		parent::__construct($loader, "pet", "Show info or reload BlockPets", "/pet [help|info|reload]", []);
+		parent::__construct($loader, "pet", "Show info or reload BlockPets", "/pet [help|info|reload]", ["pets"]);
 		$this->setPermission("blockpets.command.pet");
 	}
 

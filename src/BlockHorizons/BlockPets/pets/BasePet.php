@@ -53,6 +53,7 @@ abstract class BasePet extends Creature implements Rideable {
 
 	private $dormant = false;
 	private $chested = false;
+	private $shouldClose = false;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
@@ -69,6 +70,9 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->chested = (bool) $this->namedtag["chested"];
 
 		$this->setScale($this->scale);
+		if((bool) $this->namedtag["isBaby"] === true) {
+			$this->setScale(0.5);
+		}
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_CHESTED, (bool) $this->isChested());
 
 		$this->levelUp(1, true);
@@ -177,7 +181,7 @@ abstract class BasePet extends Creature implements Rideable {
 				}
 				if($hand instanceof Food) {
 					$nutrition = $hand->getFoodRestore();
-					$heal = (int) ($nutrition / 30 * $this->getMaxHealth() + (2 + 2 / 3));
+					$heal = (int) ($nutrition / 40 * $this->getMaxHealth() + 2);
 					if($this->getHealth() + $heal > $this->getMaxHealth()) {
 						$heal = $this->getMaxHealth() - $this->getHealth();
 					}
@@ -188,7 +192,7 @@ abstract class BasePet extends Creature implements Rideable {
 					$this->getLevel()->addParticle(new HeartParticle($this->add(0, 2), 4));
 
 					if($this->getLoader()->getBlockPetsConfig()->giveExperienceWhenFed()) {
-						$this->addPetLevelPoints($nutrition / 20 * $this->getRequiredLevelPoints($this->getPetLevel()) + 1);
+						$this->addPetLevelPoints($nutrition / 20 * $this->getRequiredLevelPoints($this->getPetLevel()) + 0.5);
 					}
 
 					$this->calculator->updateNameTag();
@@ -300,9 +304,6 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->generateCustomPetData();
 		$this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, 1);
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_BABY, (bool) $this->namedtag["isBaby"]);
-		if((bool) $this->namedtag["isBaby"]) {
-			$this->setScale(0.5);
-		}
 	}
 
 	public function generateCustomPetData() {
@@ -457,8 +458,8 @@ abstract class BasePet extends Creature implements Rideable {
 			}
 		}
 		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
+			$this->getLoader()->removePet($this->getPetName(), $this->getPetOwner());
 			$this->getLoader()->createPet($this->getEntityType(), $this->getPetOwner(), $this->getPetName(), $this->getStartingScale(), $this->namedtag["isBaby"], $this->getPetLevel(), $this->getPetLevelPoints());
-			$this->close();
 			return false;
 		}
 		if($this->distance($petOwner) >= 50) {
@@ -543,7 +544,19 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	protected function checkUpdateRequirements(): bool {
-		if($this->closed || !($this->isAlive()) || $this->isDormant() || $this->isRidden())  {
+		if($this->closed || $this->isRidden()) {
+			return false;
+		}
+		if($this->shouldClose()) {
+			parent::close();
+			return false;
+		}
+		if($this->isDormant())  {
+			$this->despawnFromAll();
+			return false;
+		}
+		if(!$this->isAlive()) {
+			$this->close();
 			return false;
 		}
 		if($this->getPetOwner() === null) {
@@ -561,6 +574,17 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->petName = $newName;
 		$this->getLoader()->getDatabase()->registerPet($this);
 		$this->getCalculator()->updateNameTag();
+	}
+
+	public function close() {
+		$this->shouldClose = true;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function shouldClose(): bool {
+		return $this->shouldClose;
 	}
 
 	/**

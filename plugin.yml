@@ -113,7 +113,7 @@ permissions:
                     blockpets.pet.irongolem:
                         default: op
                         description: "Allows access to use the iron golem pet."
-                    blocksniper.pet.llama:
+                    blockpets.pet.llama:
                         default: op
                         description: "Allows access to use the llama pet."
                     blockpets.pet.magmacube:

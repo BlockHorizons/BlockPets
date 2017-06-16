@@ -5,7 +5,6 @@ namespace BlockHorizons\BlockPets\commands;
 use BlockHorizons\BlockPets\Loader;
 use pocketmine\command\CommandSender;
 use pocketmine\level\particle\HeartParticle;
-use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 
 class HealPetCommand extends BaseCommand {
@@ -18,11 +17,6 @@ class HealPetCommand extends BaseCommand {
 	public function execute(CommandSender $sender, $commandLabel, array $args): bool {
 		if(!$this->testPermission($sender)) {
 			$this->sendNoPermission($sender);
-			return true;
-		}
-
-		if(!$sender instanceof Player) {
-			$this->sendConsoleError($sender);
 			return true;
 		}
 

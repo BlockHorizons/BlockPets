@@ -29,13 +29,12 @@ class EventListener implements Listener {
 	 *
 	 * @param EntityDamageEvent $event
 	 *
-	 * @priority        MONITOR
+	 * @priority        HIGHEST
 	 * @ignoreCancelled true
 	 */
 	public function onEntityDamage(EntityDamageEvent $event) {
-		$petEntity = $event->getEntity();
-		if($petEntity instanceof Player) {
-			$player = $petEntity;
+		$player = $event->getEntity();
+		if($player instanceof Player) {
 			if($event->getCause() === $event::CAUSE_FALL) {
 				if($this->getLoader()->isRidingAPet($player)) {
 					$event->setCancelled();
