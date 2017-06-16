@@ -357,7 +357,7 @@ class Loader extends PluginBase {
 		if($entity instanceof BasePet) {
 			$this->getServer()->getPluginManager()->callEvent($ev = new PetSpawnEvent($this, $entity));
 			if($ev->isCancelled()) {
-				$entity->close();
+				$this->removePet($entity->getPetName(), $player);
 				return null;
 			}
 			return $entity;
@@ -388,8 +388,7 @@ class Loader extends PluginBase {
 					if($pet->isRidden()) {
 						$pet->throwRiderOff();
 					}
-					$pet->close();
-					$pet->setDormant();
+					$pet->closeDelayed();
 					$this->getDatabase()->unregisterPet($pet->getPetName(), $pet->getPetOwnerName());
 					return true;
 				}
@@ -403,8 +402,7 @@ class Loader extends PluginBase {
 		if($foundPet->isRidden()) {
 			$foundPet->throwRiderOff();
 		}
-		$foundPet->close();
-		$foundPet->setDormant();
+		$foundPet->closeDelayed();
 		$this->getDatabase()->unregisterPet($foundPet->getPetName(), $foundPet->getPetOwnerName());
 		return true;
 	}

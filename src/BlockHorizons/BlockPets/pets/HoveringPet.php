@@ -133,18 +133,15 @@ abstract class HoveringPet extends IrasciblePet {
 				$finalMotion = [-$z, $x];
 				break;
 		}
-		if($this instanceof EnderDragonPet) {
-			$finalMotion = [-$finalMotion[0], -$finalMotion[1]];
-		}
 
 		if(((float) $y) !== 0.0) {
 			if($y < 0) {
-				$this->motionY = $this->getSpeed() * 0.25 * $y;
+				$this->motionY = $this->getSpeed() * 0.3 * $y;
 			} elseif($this->y - $this->getLevel()->getHighestBlockAt($this->x, $this->z) < $this->flyHeight) {
-				$this->motionY = $this->getSpeed() * 0.25 * $y;
+				$this->motionY = $this->getSpeed() * 0.3 * $y;
 			}
 		}
-		if(abs($y) < 0.175) {
+		if(abs($y) < 0.2) {
 			$this->motionY = 0;
 		}
 		$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);

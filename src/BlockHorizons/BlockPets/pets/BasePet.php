@@ -458,8 +458,9 @@ abstract class BasePet extends Creature implements Rideable {
 			}
 		}
 		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
+			$this->getLoader()->removePet($this->getPetName(), $this->getPetOwner());
 			$this->getLoader()->createPet($this->getEntityType(), $petOwner, $this->getPetName(), $this->getStartingScale(), $this->namedtag["isBaby"], $this->getPetLevel(), $this->getPetLevelPoints());
-			return false;
+			return true;
 		}
 		if($this->distance($petOwner) >= 50) {
 			$this->teleport($petOwner);
@@ -555,7 +556,7 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		if(!$this->isAlive()) {
-			$this->close();
+			$this->closeDelayed();
 			return false;
 		}
 		if($this->getPetOwner() === null) {
@@ -575,7 +576,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->getCalculator()->updateNameTag();
 	}
 
-	public function close() {
+	public function closeDelayed() {
 		$this->shouldClose = true;
 	}
 
