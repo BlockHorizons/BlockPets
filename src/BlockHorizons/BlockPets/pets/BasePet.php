@@ -458,8 +458,7 @@ abstract class BasePet extends Creature implements Rideable {
 			}
 		}
 		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
-			$this->getLoader()->removePet($this->getPetName(), $this->getPetOwner());
-			$this->getLoader()->createPet($this->getEntityType(), $this->getPetOwner(), $this->getPetName(), $this->getStartingScale(), $this->namedtag["isBaby"], $this->getPetLevel(), $this->getPetLevelPoints());
+			$this->getLoader()->createPet($this->getEntityType(), $petOwner, $this->getPetName(), $this->getStartingScale(), $this->namedtag["isBaby"], $this->getPetLevel(), $this->getPetLevelPoints());
 			return false;
 		}
 		if($this->distance($petOwner) >= 50) {

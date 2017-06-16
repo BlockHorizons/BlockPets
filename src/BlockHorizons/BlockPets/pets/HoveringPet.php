@@ -110,7 +110,7 @@ abstract class HoveringPet extends IrasciblePet {
 		$rider = $this->getPetOwner();
 
 		$this->pitch = $rider->pitch;
-		$this->yaw = $this->getNetworkId() === 53 ? $rider->yaw + 180 : $rider->yaw;
+		$this->yaw = $this instanceof EnderDragonPet ? $rider->yaw + 180 : $rider->yaw;
 
 		$x = $rider->getDirectionVector()->x / 2 * $this->getSpeed();
 		$z = $rider->getDirectionVector()->z / 2 * $this->getSpeed();
@@ -144,7 +144,7 @@ abstract class HoveringPet extends IrasciblePet {
 				$this->motionY = $this->getSpeed() * 0.25 * $y;
 			}
 		}
-		if(abs($y) < 0.1) {
+		if(abs($y) < 0.175) {
 			$this->motionY = 0;
 		}
 		$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);
