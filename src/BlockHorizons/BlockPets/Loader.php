@@ -323,7 +323,7 @@ class Loader extends PluginBase {
 	public function createPet(string $entityName, Player $player, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0) {
 		foreach($this->getPetsFrom($player) as $pet) {
 			if($this->getPetByName($name, $player) !== null) {
-				$this->removePet($pet->getPetName(), $pet->getPetOwnerName());
+				$this->removePet($pet->getPetName(), $pet);
 			}
 		}
 		$nbt = new CompoundTag("", [
