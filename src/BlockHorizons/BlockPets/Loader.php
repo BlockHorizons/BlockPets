@@ -385,7 +385,7 @@ class Loader extends PluginBase {
 					if($pet->isRidden()) {
 						$pet->throwRiderOff();
 					}
-					$pet->kill();
+					$pet->kill(true);
 					return true;
 				}
 			}
@@ -398,7 +398,7 @@ class Loader extends PluginBase {
 		if($foundPet->isRidden()) {
 			$foundPet->throwRiderOff();
 		}
-		$foundPet->kill();
+		$foundPet->kill(true);
 		return true;
 	}
 

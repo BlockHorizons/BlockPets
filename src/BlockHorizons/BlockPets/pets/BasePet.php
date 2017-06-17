@@ -53,6 +53,7 @@ abstract class BasePet extends Creature implements Rideable {
 
 	private $dormant = false;
 	private $chested = false;
+	private $shouldIgnoreEvent = false;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
@@ -569,6 +570,18 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->petName = $newName;
 		$this->getLoader()->getDatabase()->registerPet($this);
 		$this->getCalculator()->updateNameTag();
+	}
+
+	public function kill($ignore = false) {
+		$this->shouldIgnoreEvent = $ignore;
+		parent::kill();
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function shouldIgnoreEvent(): bool {
+		return $this->shouldIgnoreEvent;
 	}
 
 	/**
