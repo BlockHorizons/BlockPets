@@ -175,11 +175,11 @@ abstract class BasePet extends Creature implements Rideable {
 			$player = $source->getDamager();
 			if($player instanceof Player) {
 				$hand = $player->getInventory()->getItemInHand();
-				if($this->getHealth() === $this->getMaxHealth()) {
-					parent::attack($damage, $source);
-					return;
-				}
 				if($hand instanceof Food) {
+					if($this->getHealth() === $this->getMaxHealth()) {
+						parent::attack($damage, $source);
+						return;
+					}
 					$nutrition = $hand->getFoodRestore();
 					$heal = (int) ($nutrition / 40 * $this->getMaxHealth() + 2);
 					if($this->getHealth() + $heal > $this->getMaxHealth()) {
@@ -192,7 +192,7 @@ abstract class BasePet extends Creature implements Rideable {
 					$this->getLevel()->addParticle(new HeartParticle($this->add(0, 2), 4));
 
 					if($this->getLoader()->getBlockPetsConfig()->giveExperienceWhenFed()) {
-						$this->addPetLevelPoints($nutrition / 20 * $this->getRequiredLevelPoints($this->getPetLevel()) + 0.5);
+						$this->addPetLevelPoints($nutrition / 30 * $this->getRequiredLevelPoints($this->getPetLevel()));
 					}
 
 					$this->calculator->updateNameTag();

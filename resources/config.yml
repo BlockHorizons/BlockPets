@@ -4,6 +4,9 @@
 # Whether to make pets invulnerable to any damage, or allow damaging them.
 Invulnerable-Pets: false
 
+# Whether to directly follow the player, or search random positions near the player.
+Stalk-Owner-Blindly: false
+
 # Whether to make the pet invulnerable to damage if the owner of it is or not.
 Invulnerable-If-Owner-Is: true
 
@@ -14,7 +17,7 @@ Pet-Respawn-Time: 10
 Attacking-Pets: true
 
 # The limit of pets per player by default.
-Pet-Limit: 2
+Pet-Limit: 3
 
 # The maximum size of pets which pets can be spawned with and gain through leveling up.
 Pet-Max-Size: 15
