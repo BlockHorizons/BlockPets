@@ -24,7 +24,7 @@ class SQLiteDataStorer extends BaseDataStorer {
 		$points = $pet->getPetLevelPoints();
 
 		if($this->petExists($petName, $playerName)) {
-			return false;
+			$this->unregisterPet($petName, $playerName);
 		}
 		$query = "INSERT INTO Pets(Player, PetName, EntityName, PetSize, IsBaby, PetLevel, LevelPoints) VALUES ('" . $this->escape($playerName) . "', '" . $this->escape($petName) . "', '" . $this->escape($entityName) . "', $size, $baby, $level, $points)";
 		return $this->database->exec($query);

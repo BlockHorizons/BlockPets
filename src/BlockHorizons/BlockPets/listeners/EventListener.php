@@ -68,16 +68,12 @@ class EventListener implements Listener {
 	 * Used to respawn a pet after being killed.
 	 *
 	 * @param EntityDeathEvent $event
-	 * @priority HIGHEST
-	 *
-	 * Priority should be highest at all times to take care of plugins that use the entity before it gets closed.
 	 */
 	public function onPetDeath(EntityDeathEvent $event) {
 		$pet = $event->getEntity();
 		$delay = $this->getLoader()->getBlockPetsConfig()->getRespawnTime() * 20;
 		if($pet instanceof BasePet) {
 			$owner = $this->getLoader()->getServer()->getPlayer($pet->getPetOwnerName());
-			$this->getLoader()->removePet($pet->getPetName(), $owner);
 
 			$newPet = $this->getLoader()->createPet($pet->getEntityType(), $owner, $pet->getPetName(), $pet->getStartingScale(), 0, $pet->getPetLevel(), $pet->getPetLevelPoints());
 			$this->getLoader()->getServer()->getPluginManager()->callEvent($ev = new PetRespawnEvent($this->getLoader(), $newPet, $delay));

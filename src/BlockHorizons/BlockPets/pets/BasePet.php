@@ -53,7 +53,6 @@ abstract class BasePet extends Creature implements Rideable {
 
 	private $dormant = false;
 	private $chested = false;
-	private $shouldClose = false;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
@@ -201,13 +200,11 @@ abstract class BasePet extends Creature implements Rideable {
 				} elseif($hand->getId() === Item::CHEST) {
 					if(!$this->isChested() && $this->getPetOwnerName() === $player->getName()) {
 						$this->getLoader()->getServer()->getPluginManager()->callEvent($ev = new PetInventoryInitializationEvent($this->getLoader(), $this));
-						if(!$ev->isCancelled()) {
-							$remainder = $hand;
-							$remainder->setCount($remainder->getCount() - 1);
-							$player->getInventory()->setItemInHand($remainder);
-							$this->setChested();
-							$source->setCancelled();
-						}
+						$remainder = $hand;
+						$remainder->setCount($remainder->getCount() - 1);
+						$player->getInventory()->setItemInHand($remainder);
+						$this->setChested();
+						$source->setCancelled();
 					}
 				}
 
@@ -544,11 +541,13 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	protected function checkUpdateRequirements(): bool {
-		if($this->closed || $this->isRidden() || !($this->isAlive())) {
+		if($this->closed || $this->isRidden()) {
 			return false;
 		}
-		if($this->shouldClose()) {
-			$this->close();
+		if(!$this->isAlive()) {
+			// All entities except players get closed automatically. No need to close it manually.
+			$this->getLoader()->getDatabase()->unregisterPet($this->getPetName(), $this->getPetOwnerName());
+
 			return false;
 		}
 		if($this->isDormant())  {
@@ -570,17 +569,6 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->petName = $newName;
 		$this->getLoader()->getDatabase()->registerPet($this);
 		$this->getCalculator()->updateNameTag();
-	}
-
-	public function closeDelayed() {
-		$this->shouldClose = true;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function shouldClose(): bool {
-		return $this->shouldClose;
 	}
 
 	/**

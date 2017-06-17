@@ -323,9 +323,6 @@ class Loader extends PluginBase {
 	public function createPet(string $entityName, Player $player, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0) {
 		foreach($this->getPetsFrom($player) as $pet) {
 			if($pet->getPetName() === $name) {
-				if($pet->shouldClose()) {
-					continue;
-				}
 				$this->removePet($pet->getPetName(), $player);
 			}
 		}
@@ -388,8 +385,7 @@ class Loader extends PluginBase {
 					if($pet->isRidden()) {
 						$pet->throwRiderOff();
 					}
-					$pet->closeDelayed();
-					$this->getDatabase()->unregisterPet($pet->getPetName(), $pet->getPetOwnerName());
+					$pet->kill();
 					return true;
 				}
 			}
@@ -402,8 +398,7 @@ class Loader extends PluginBase {
 		if($foundPet->isRidden()) {
 			$foundPet->throwRiderOff();
 		}
-		$foundPet->closeDelayed();
-		$this->getDatabase()->unregisterPet($foundPet->getPetName(), $foundPet->getPetOwnerName());
+		$foundPet->kill();
 		return true;
 	}
 

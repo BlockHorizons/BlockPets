@@ -16,14 +16,14 @@ class MySQLDataStorer extends BaseDataStorer {
 
 	public function registerPet(BasePet $pet): bool {
 		$petName = $pet->getPetName();
-		$playerName = strtolower($pet->getPetOwnerName());
+		$playerName = $pet->getPetOwnerName();
 		$entityName = $pet->getEntityType();
 		$size = $pet->getScale();
 		$baby = (int) $pet->namedtag["IsBaby"];
 		$level = $pet->getPetLevel();
 		$points = $pet->getPetLevelPoints();
 		if($this->petExists($petName, $playerName)) {
-			return false;
+			$this->unregisterPet($petName, $playerName);
 		}
 
 		$query = "INSERT INTO Pets(Player, PetName, EntityName, PetSize, IsBaby, PetLevel, LevelPoints) VALUES ('" . $this->escape($playerName) . "', '" . $this->escape($petName) . "', '" . $this->escape($entityName) . "', $size, $baby, $level, $points)";
