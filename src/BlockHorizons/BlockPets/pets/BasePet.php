@@ -549,7 +549,7 @@ abstract class BasePet extends Creature implements Rideable {
 			// All entities except players get closed automatically. No need to close it manually.
 			$this->getLoader()->getDatabase()->unregisterPet($this->getPetName(), $this->getPetOwnerName());
 
-			return false;
+			return true;
 		}
 		if($this->isDormant())  {
 			$this->despawnFromAll();

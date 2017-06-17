@@ -16,6 +16,9 @@ abstract class WalkingPet extends IrasciblePet {
 			return true;
 		}
 		parent::onUpdate($currentTick);
+		if(!$this->isAlive()) {
+			return true;
+		}
 		$petOwner = $this->getPetOwner();
 		if($this->isAngry()) {
 			$this->doAttackingMovement();
