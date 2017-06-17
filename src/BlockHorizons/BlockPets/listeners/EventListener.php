@@ -73,6 +73,9 @@ class EventListener implements Listener {
 		$pet = $event->getEntity();
 		$delay = $this->getLoader()->getBlockPetsConfig()->getRespawnTime() * 20;
 		if($pet instanceof BasePet) {
+			if($pet->shouldIgnoreEvent()) {
+				return;
+			}
 			$owner = $this->getLoader()->getServer()->getPlayer($pet->getPetOwnerName());
 
 			$this->getLoader()->removePet($pet->getPetName(), $pet->getPetOwner());
