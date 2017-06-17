@@ -16,7 +16,7 @@ class MySQLDataStorer extends BaseDataStorer {
 
 	public function registerPet(BasePet $pet): bool {
 		$petName = $pet->getPetName();
-		$playerName = $pet->getPetOwnerName();
+		$playerName = strtolower($pet->getPetOwnerName());
 		$entityName = $pet->getEntityType();
 		$size = $pet->getScale();
 		$baby = (int) $pet->namedtag["IsBaby"];
@@ -31,6 +31,7 @@ class MySQLDataStorer extends BaseDataStorer {
 	}
 
 	public function petExists(string $petName, string $ownerName): bool {
+		$ownerName = strtolower($ownerName);
 		$query = "SELECT * FROM Pets WHERE PetName = '" . $this->escape($petName) . "' AND Player = '" . $this->escape($ownerName) . "'";
 		return !empty($this->database->query($query)->fetch_assoc());
 	}
@@ -40,6 +41,7 @@ class MySQLDataStorer extends BaseDataStorer {
 	}
 
 	public function unregisterPet(string $petName, string $ownerName): bool {
+		$ownerName = strtolower($ownerName);
 		if(!$this->petExists($petName, $ownerName)) {
 			return false;
 		}
@@ -48,6 +50,7 @@ class MySQLDataStorer extends BaseDataStorer {
 	}
 
 	public function updatePetExperience(string $petName, string $ownerName, int $petLevel, int $levelPoints): bool {
+		$ownerName = strtolower($ownerName);
 		if(!$this->petExists($petName, $ownerName)) {
 			return false;
 		}
@@ -61,6 +64,7 @@ class MySQLDataStorer extends BaseDataStorer {
 
 	public function fetchAllPetData(string $ownerName): array {
 		$data = [];
+		$ownerName = strtolower($ownerName);
 		$query = "SELECT * FROM Pets WHERE Player = '" . $this->escape($ownerName) . "'";
 		$continue = true;
 		$return = $this->database->query($query);
