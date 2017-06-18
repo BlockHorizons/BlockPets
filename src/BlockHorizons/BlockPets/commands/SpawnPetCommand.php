@@ -15,6 +15,22 @@ class SpawnPetCommand extends BaseCommand {
 	}
 
 	public function execute(CommandSender $sender, $commandLabel, array $args): bool {
+		// WHAT THE HACK //
+
+		// MUST HAVE COMMAND OVERLOAD ENABLED FOR THIS TO WORK //
+		
+		if(count($args) > 1){
+			$a = $args;
+			$last = array_pop($a);
+			$pet = $this->getLoader()->getPet($last);
+			if($pet !== null){
+				$a1 = array_splice($args, -1);
+				$args = array_merge($a1, $args);
+			}
+		}
+
+		// WHAT THE HACK //
+		
 		if(!$this->testPermission($sender)) {
 			$this->sendNoPermission($sender);
 			return true;
