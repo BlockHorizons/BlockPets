@@ -41,7 +41,7 @@ abstract class BouncingPet extends IrasciblePet {
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 
 		$x = $petOwner->x + $this->xOffset - $this->x;
-		$y = $petOwner->y + $this->yOffset - $this->y;
+		$y = $petOwner->y - $this->y;
 		$z = $petOwner->z + $this->zOffset - $this->z;
 
 		if($x * $x + $z * $z < 9 + $this->getScale()) {

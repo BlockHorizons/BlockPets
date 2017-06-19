@@ -570,9 +570,9 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->positionSeekTick++;
 		if($this->shouldFindNewPosition()) {
 			if(!$this->getLoader()->getBlockPetsConfig()->shouldStalkPetOwner()) {
-				$this->xOffset = lcg_value() * 3;
-				$this->yOffset = lcg_value() * 3;
-				$this->zOffset = lcg_value() * 3;
+				$this->xOffset = lcg_value() * 3.5;
+				$this->yOffset = lcg_value() * 3.5;
+				$this->zOffset = lcg_value() * 3.5;
 			}
 		}
 		return true;
