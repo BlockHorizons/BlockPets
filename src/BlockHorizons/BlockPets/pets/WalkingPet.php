@@ -177,4 +177,12 @@ abstract class WalkingPet extends IrasciblePet {
 		$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);
 		$this->updateMovement();
 	}
+
+	/**
+	 * @param array $properties
+	 */
+	public function useProperties(array $properties) {
+		$this->speed = (float) $properties["Speed"];
+		$this->canBeRidden = (bool) $properties["Can-Be-Ridden"];
+	}
 }

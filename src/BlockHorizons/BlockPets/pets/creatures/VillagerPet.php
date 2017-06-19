@@ -10,7 +10,6 @@ class VillagerPet extends WalkingPet {
 	public $width = 0.8;
 
 	public $name = "Villager Pet";
-
 	public $networkId = 15;
 
 	public function generateCustomPetData() {

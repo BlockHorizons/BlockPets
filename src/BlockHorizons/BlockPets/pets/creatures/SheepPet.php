@@ -10,7 +10,6 @@ class SheepPet extends WalkingPet {
 	public $width = 0.8;
 
 	public $name = "Sheep Pet";
-
 	public $networkId = 13;
 
 	public function generateCustomPetData() {

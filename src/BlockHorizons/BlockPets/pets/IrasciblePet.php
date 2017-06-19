@@ -20,31 +20,6 @@ abstract class IrasciblePet extends BasePet {
 	}
 
 	/**
-	 * Calms down the pet, making it stop chasing it's target.
-	 */
-	public function calmDown() {
-		$this->target = null;
-	}
-
-	/**
-	 * Returns the current target of this pet.
-	 *
-	 * @return Living|null
-	 */
-	public function getTarget() {
-		return $this->target;
-	}
-
-	/**
-	 * Returns whether this pet is angry or not.
-	 *
-	 * @return bool
-	 */
-	public function isAngry(): bool {
-		return $this->target !== null;
-	}
-
-	/**
 	 * @param float             $damage
 	 * @param EntityDamageEvent $source
 	 */
@@ -80,7 +55,7 @@ abstract class IrasciblePet extends BasePet {
 					$this->setAngry($attacker);
 				}
 			}
-			if($attacker instanceof Player) {
+			if($attacker instanceof Player && $this->canBeRidden) {
 				if($attacker->getInventory()->getItemInHand()->getId() === Item::SADDLE) {
 					$this->setRider($attacker);
 					$attacker->sendTip(TextFormat::GRAY . "Crouch or jump to dismount...");
@@ -100,6 +75,8 @@ abstract class IrasciblePet extends BasePet {
 		$this->target = $entity;
 	}
 
+	public abstract function doAttackingMovement();
+
 	/**
 	 * @return bool
 	 */
@@ -115,5 +92,28 @@ abstract class IrasciblePet extends BasePet {
 		return true;
 	}
 
-	public abstract function doAttackingMovement();
+	/**
+	 * Returns whether this pet is angry or not.
+	 *
+	 * @return bool
+	 */
+	public function isAngry(): bool {
+		return $this->target !== null;
+	}
+
+	/**
+	 * Calms down the pet, making it stop chasing it's target.
+	 */
+	public function calmDown() {
+		$this->target = null;
+	}
+
+	/**
+	 * Returns the current target of this pet.
+	 *
+	 * @return Living|null
+	 */
+	public function getTarget() {
+		return $this->target;
+	}
 }

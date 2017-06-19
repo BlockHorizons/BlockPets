@@ -8,7 +8,6 @@ class VindicatorPet extends WalkingPet {
 
 	public $networkId = 57;
 	public $name = "Vindicator Pet";
-	public $tier = self::TIER_UNCOMMON;
 
 	public $width = 0.6;
 	public $height = 1.95;

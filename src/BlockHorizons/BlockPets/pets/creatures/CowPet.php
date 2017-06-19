@@ -10,6 +10,5 @@ class CowPet extends WalkingPet {
 	public $width = 0.9;
 
 	public $name = "Cow Pet";
-
 	public $networkId = 11;
 }

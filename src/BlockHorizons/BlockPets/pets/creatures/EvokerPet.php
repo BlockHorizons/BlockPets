@@ -8,8 +8,6 @@ class EvokerPet extends WalkingPet {
 
 	public $networkId = 104;
 	public $name = "Evoker Pet";
-	public $tier = self::TIER_SPECIAL;
-	public $speed = 1.4;
 
 	public $width = 0.6;
 	public $height = 1.95;

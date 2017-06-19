@@ -11,12 +11,7 @@ class VexPet extends HoveringPet implements SmallCreature {
 	public $width = 0.4;
 
 	public $name = "Vex Pet";
-	public $speed = 1.5;
-
 	public $networkId = 105;
-
-	protected $flyHeight = 25;
-	protected $tier = self::TIER_EPIC;
 
 	public function generateCustomPetData() {
 		$this->canCollide = false;

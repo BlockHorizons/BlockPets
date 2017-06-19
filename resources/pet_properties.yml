@@ -1,0 +1,165 @@
+---
+# Walking Pets
+CaveSpider:
+  Can-Be-Ridden: true
+  Speed: 1.4
+Chicken:
+  Can-Be-Ridden: true
+  Speed: 1.2
+Cow:
+  Can-Be-Ridden: true
+  Speed: 1
+Creeper:
+  Can-Be-Ridden: true
+  Speed: 1.2
+Donkey:
+  Can-Be-Ridden: true
+  Speed: 1.4
+Enderman:
+  Can-Be-Ridden: true
+  Speed: 1.4
+Endermite:
+  Can-Be-Ridden: true
+  Speed: 1.4
+Evoker:
+  Can-Be-Ridden: true
+  Speed: 1.4
+Horse:
+  Can-Be-Ridden: true
+  Speed: 1.8
+Husk:
+  Can-Be-Ridden: true
+  Speed: 1.2
+IronGolem:
+  Can-Be-Ridden: true
+  Speed: 1.4
+Llama:
+  Can-Be-Ridden: true
+  Speed: 1.4
+Mooshroom:
+  Can-Be-Ridden: true
+  Speed: 1.2
+Mule:
+  Can-Be-Ridden: true
+  Speed: 1.6
+Ocelot:
+  Can-Be-Ridden: true
+  Speed: 1.8
+Pig:
+  Can-Be-Ridden: true
+  Speed: 1
+PolarBear:
+  Can-Be-Ridden: true
+  Speed: 1.2
+Sheep:
+  Can-Be-Ridden: true
+  Speed: 1
+SilverFish:
+  Can-Be-Ridden: true
+  Speed: 1.2
+SkeletonHorse:
+  Can-Be-Ridden: true
+  Speed: 1.4
+Skeleton:
+  Can-Be-Ridden: true
+  Speed: 1
+SnowGolem:
+  Can-Be-Ridden: true
+  Speed: 1.2
+Spider:
+  Can-Be-Ridden: true
+  Speed: 1.4
+Stray:
+  Can-Be-Ridden: true
+  Speed: 1.2
+Villager:
+  Can-Be-Ridden: true
+  Speed: 1.2
+Vindicator:
+  Can-Be-Ridden: true
+  Speed: 1.2
+Witch:
+  Can-Be-Ridden: true
+  Speed: 1.2
+WitherSkeleton:
+  Can-Be-Ridden: true
+  Speed: 1.4
+Wolf:
+  Can-Be-Ridden: true
+  Speed: 1.6
+ZombieHorse:
+  Can-Be-Ridden: true
+  Speed: 1.4
+Zombie:
+  Can-Be-Ridden: true
+  Speed: 1
+ZombiePigman:
+  Can-Be-Ridden: true
+  Speed: 1.2
+ZombieVillager:
+  Can-Be-Ridden: true
+  Speed: 1.2
+
+# Flying Pets
+Bat:
+  Can-Be-Ridden: true
+  Speed: 1
+  Flying-Height: 8
+Blaze:
+  Can-Be-Ridden: true
+  Speed: 1.2
+  Flying-Height: 13
+EnderCrystal:
+  Can-Be-Ridden: true
+  Speed: 1.2
+  Flying-Height: 13
+EnderDragon:
+  Can-Be-Ridden: true
+  Speed: 1.8
+  Flying-Height: 60
+Ghast:
+  Can-Be-Ridden: true
+  Speed: 1.3
+  Flying-Height: 25
+Vex:
+  Can-Be-Ridden: true
+  Speed: 1.4
+  Flying-Height: 25
+Wither:
+  Can-Be-Ridden: true
+  Speed: 1.8
+  Flying-Height: 60
+WitherSkull:
+  Can-Be-Ridden: true
+  Speed: 1.2
+  Flying-Height: 13
+
+
+# Swimming Pets
+ElderGuardian:
+  Can-Be-Ridden: true
+  Speed: 1
+  Swimming-Speed: 2
+Guardian:
+  Can-Be-Ridden: true
+  Speed: 1
+  Swimming-Speed: 1.8
+Squid:
+  Can-Be-Ridden: true
+  Speed: 1
+  Swimming-Speed: 1.4
+
+# Bouncing Pets
+MagmaCube:
+  Can-Be-Ridden: true
+  Speed: 1.4
+  Jumping-Height: 0.1
+Rabbit:
+  Can-Be-Ridden: true
+  Speed: 1.2
+  Jumping-Height: 0.08
+Slime:
+  Can-Be-Ridden: true
+  Speed: 1.6
+  Jumping-Height: 0.1
+...

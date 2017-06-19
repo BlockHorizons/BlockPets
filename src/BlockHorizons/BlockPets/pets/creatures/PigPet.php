@@ -11,6 +11,5 @@ class PigPet extends WalkingPet implements SmallCreature {
 	public $width = 0.7;
 
 	public $name = "Pig Pet";
-
 	public $networkId = 12;
 }

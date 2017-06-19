@@ -12,7 +12,6 @@ class CaveSpiderPet extends WalkingPet implements SmallCreature {
 	public $width = 0.9;
 
 	public $name = "Cave Spider Pet";
-	public $tier = self::TIER_SPECIAL;
 
 	public $networkId = 40;
 

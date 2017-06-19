@@ -48,57 +48,6 @@ abstract class SwimmingPet extends BouncingPet {
 		}
 	}
 
-	/**
-	 * @return float
-	 */
-	public function getSwimmingSpeed(): float {
-		return $this->swimmingSpeed;
-	}
-
-	public function doRidingMovement($motionX, $motionZ) {
-		if($this->isInsideOfWater()) {
-			$rider = $this->getPetOwner();
-
-			$this->pitch = $rider->pitch;
-			$this->yaw = $rider->yaw;
-
-			$x = $rider->getDirectionVector()->x / 2 * $this->getSwimmingSpeed();
-			$z = $rider->getDirectionVector()->z / 2 * $this->getSwimmingSpeed();
-			$y = $rider->getDirectionVector()->y / 2 * $this->getSwimmingSpeed();
-
-			$finalMotion = [0, 0];
-			switch($motionZ) {
-				case 1:
-					$finalMotion = [$x, $z];
-					break;
-				case -1:
-					$finalMotion = [-$x, -$z];
-					break;
-			}
-			switch($motionX) {
-				case 1:
-					$finalMotion = [$z, -$x];
-					break;
-				case -1:
-					$finalMotion = [-$z, $x];
-					break;
-			}
-
-			if(((float) $y) !== 0.0) {
-				$this->motionY = $this->getSwimmingSpeed() * 0.25 * $y;
-			}
-			if(abs($y) < 0.1) {
-				$this->motionY = 0;
-			}
-			$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);
-
-			$this->updateMovement();
-			return true;
-		} else {
-			return parent::doRidingMovement($motionX, $motionZ);
-		}
-	}
-
 	public function doAttackingMovement() {
 		$target = $this->getTarget();
 
@@ -150,5 +99,65 @@ abstract class SwimmingPet extends BouncingPet {
 		} else {
 			return parent::doAttackingMovement();
 		}
+	}
+
+	/**
+	 * @return float
+	 */
+	public function getSwimmingSpeed(): float {
+		return $this->swimmingSpeed;
+	}
+
+	public function doRidingMovement($motionX, $motionZ) {
+		if($this->isInsideOfWater()) {
+			$rider = $this->getPetOwner();
+
+			$this->pitch = $rider->pitch;
+			$this->yaw = $rider->yaw;
+
+			$x = $rider->getDirectionVector()->x / 2 * $this->getSwimmingSpeed();
+			$z = $rider->getDirectionVector()->z / 2 * $this->getSwimmingSpeed();
+			$y = $rider->getDirectionVector()->y / 2 * $this->getSwimmingSpeed();
+
+			$finalMotion = [0, 0];
+			switch($motionZ) {
+				case 1:
+					$finalMotion = [$x, $z];
+					break;
+				case -1:
+					$finalMotion = [-$x, -$z];
+					break;
+			}
+			switch($motionX) {
+				case 1:
+					$finalMotion = [$z, -$x];
+					break;
+				case -1:
+					$finalMotion = [-$z, $x];
+					break;
+			}
+
+			if(((float) $y) !== 0.0) {
+				$this->motionY = $this->getSwimmingSpeed() * 0.25 * $y;
+			}
+			if(abs($y) < 0.1) {
+				$this->motionY = 0;
+			}
+			$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);
+
+			$this->updateMovement();
+			return true;
+		} else {
+			return parent::doRidingMovement($motionX, $motionZ);
+		}
+	}
+
+	/**
+	 * @param array $properties
+	 */
+	public function useProperties(array $properties) {
+		$this->speed = (float) $properties["Speed"];
+		$this->swimmingSpeed = (float) $properties["Swimming-Speed"];
+		$this->canBeRidden = (bool) $properties["Can-Be-Ridden"];
 	}
 }

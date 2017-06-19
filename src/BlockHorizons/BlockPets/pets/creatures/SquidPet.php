@@ -10,9 +10,5 @@ class SquidPet extends SwimmingPet {
 	public $height = 0.8;
 
 	public $name = "Squid Pet";
-	public $swimmingSpeed = 1.4;
-
 	public $networkId = 17;
-
-	protected $tier = self::TIER_UNCOMMON;
 }

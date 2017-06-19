@@ -10,9 +10,5 @@ class GuardianPet extends SwimmingPet {
 	public $height = 0.85;
 
 	public $name = "Guardian Pet";
-	public $swimmingSpeed = 1.8;
-
 	public $networkId = 49;
-
-	protected $tier = self::TIER_EPIC;
 }

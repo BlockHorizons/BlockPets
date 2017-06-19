@@ -10,10 +10,5 @@ class EnderCrystalPet extends HoveringPet {
 	public $height = 0.8;
 
 	public $name = "Ender Crystal Pet";
-
-	public $speed = 1;
 	public $networkId = 71;
-
-	protected $flyHeight = 13;
-	protected $tier = self::TIER_SPECIAL;
 }

@@ -37,17 +37,19 @@ abstract class BasePet extends Creature implements Rideable {
 	const TIER_LEGENDARY = 5;
 
 	public $name;
-	public $speed = 1.0;
 	public $scale = 1.0;
 	public $networkId;
 
-	protected $tier = self::TIER_COMMON;
 	protected $petOwner;
 	protected $petLevel = 0;
 	protected $petName = "";
 	protected $ridden = false;
 	protected $rider = null;
-	protected $attackDamage = 0;
+
+	protected $attackDamage = 4;
+	protected $speed = 1.0;
+	protected $canBeRidden = true;
+
 	protected $petLevelPoints = 0;
 	protected $calculator;
 
@@ -62,6 +64,7 @@ abstract class BasePet extends Creature implements Rideable {
 
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
+		$this->selectProperties();
 		$this->calculator = new Calculator($this);
 
 		$this->setNameTagVisible(true);
@@ -83,6 +86,47 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->levelUp(1, true);
 		$this->spawnToAll();
 	}
+
+	public function selectProperties() {
+		$properties = $this->getLoader()->getPetProperties()->getPropertiesFor($this->getEntityType());
+		$this->useProperties($properties);
+	}
+
+	/**
+	 * Returns the BlockPets Loader. For internal usage.
+	 *
+	 * @return Loader
+	 */
+	public function getLoader(): Loader {
+		$plugin = $this->getLevel()->getServer()->getPluginManager()->getPlugin("BlockPets");
+		if($plugin instanceof Loader) {
+			return $plugin;
+		}
+		return null;
+	}
+
+	/**
+	 * Internal.
+	 *
+	 * @return string
+	 */
+	public function getEntityType(): string {
+		return str_replace(" ", "", str_replace("Pet", "", $this->getName()));
+	}
+
+	/**
+	 * Returns the name of the pet type.
+	 *
+	 * @return string
+	 */
+	public function getName(): string {
+		return $this->name;
+	}
+
+	/**
+	 * @param array $properties
+	 */
+	public abstract function useProperties(array $properties);
 
 	/**
 	 * @return bool
@@ -120,19 +164,6 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->getPetOwner()->addTitle((TextFormat::GREEN . "Level Up!"), (TextFormat::AQUA . "Your pet " . $this->getPetName() . TextFormat::RESET . TextFormat::AQUA . " turned level " . $ev->getTo() . "!"));
 		}
 		return true;
-	}
-
-	/**
-	 * Returns the BlockPets Loader. For internal usage.
-	 *
-	 * @return Loader
-	 */
-	public function getLoader(): Loader {
-		$plugin = $this->getLevel()->getServer()->getPluginManager()->getPlugin("BlockPets");
-		if($plugin instanceof Loader) {
-			return $plugin;
-		}
-		return null;
 	}
 
 	/**
@@ -293,15 +324,6 @@ abstract class BasePet extends Creature implements Rideable {
 		return $this->getPetName();
 	}
 
-	/**
-	 * Returns the tier of the pet.
-	 *
-	 * @return int
-	 */
-	public function getTier(): int {
-		return $this->tier;
-	}
-
 	public function initEntity() {
 		parent::initEntity();
 		$this->generateCustomPetData();
@@ -311,13 +333,6 @@ abstract class BasePet extends Creature implements Rideable {
 
 	public function generateCustomPetData() {
 
-	}
-
-	/**
-	 * @return float
-	 */
-	public function getStartingScale(): float {
-		return $this->scale;
 	}
 
 	/**
@@ -366,6 +381,13 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function getSpeed(): float {
 		return $this->speed;
+	}
+
+	/**
+	 * @return float
+	 */
+	public function getStartingScale(): float {
+		return $this->scale;
 	}
 
 	/**
@@ -430,24 +452,6 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
-	 * Returns whether this pet is being ridden or not.
-	 *
-	 * @return bool
-	 */
-	public function isRidden(): bool {
-		return $this->ridden;
-	}
-
-	/**
-	 * Returns the calculator connected to this pet, used to recalculate health, size, experience etc.
-	 *
-	 * @return Calculator
-	 */
-	public function getCalculator(): Calculator {
-		return $this->calculator;
-	}
-
-	/**
 	 * @param $currentTick
 	 *
 	 * @return bool
@@ -472,42 +476,6 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->updateMovement();
 		parent::onUpdate($currentTick);
 		return true;
-	}
-
-	/**
-	 * Returns whether this pet is dormant or not. If this pet is dormant, it will not move.
-	 *
-	 * @return bool
-	 */
-	public function isDormant(): bool {
-		return $this->dormant;
-	}
-
-	/**
-	 * Sets the dormant state to this pet with the given value.
-	 *
-	 * @param bool $value
-	 */
-	public function setDormant(bool $value = true) {
-		$this->dormant = $value;
-	}
-
-	/**
-	 * Internal.
-	 *
-	 * @return string
-	 */
-	public function getEntityType(): string {
-		return str_replace(" ", "", str_replace("Pet", "", $this->getName()));
-	}
-
-	/**
-	 * Returns the name of the pet type.
-	 *
-	 * @return string
-	 */
-	public function getName(): string {
-		return $this->name;
 	}
 
 	/**
@@ -542,6 +510,42 @@ abstract class BasePet extends Creature implements Rideable {
 		$diff = $this->getMaxHealth() - $this->getHealth();
 		$this->heal($diff, new EntityRegainHealthEvent($this, $diff, EntityRegainHealthEvent::CAUSE_CUSTOM));
 	}
+
+	public function changeName(string $newName) {
+		$this->getLoader()->getDatabase()->unregisterPet($this->getPetName(), $this->getPetOwner());
+		$this->petName = $newName;
+		$this->getLoader()->getDatabase()->registerPet($this);
+		$this->getCalculator()->updateNameTag();
+	}
+
+	/**
+	 * Returns the calculator connected to this pet, used to recalculate health, size, experience etc.
+	 *
+	 * @return Calculator
+	 */
+	public function getCalculator(): Calculator {
+		return $this->calculator;
+	}
+
+	public function kill($ignore = false) {
+		$this->shouldIgnoreEvent = $ignore;
+		parent::kill();
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function shouldIgnoreEvent(): bool {
+		return $this->shouldIgnoreEvent;
+	}
+
+	/**
+	 * @param $motionX
+	 * @param $motionZ
+	 *
+	 * @return mixed
+	 */
+	public abstract function doRidingMovement($motionX, $motionZ);
 
 	/**
 	 * @return bool
@@ -578,23 +582,31 @@ abstract class BasePet extends Creature implements Rideable {
 		return true;
 	}
 
-	public function changeName(string $newName) {
-		$this->getLoader()->getDatabase()->unregisterPet($this->getPetName(), $this->getPetOwner());
-		$this->petName = $newName;
-		$this->getLoader()->getDatabase()->registerPet($this);
-		$this->getCalculator()->updateNameTag();
-	}
-
-	public function kill($ignore = false) {
-		$this->shouldIgnoreEvent = $ignore;
-		parent::kill();
+	/**
+	 * Returns whether this pet is being ridden or not.
+	 *
+	 * @return bool
+	 */
+	public function isRidden(): bool {
+		return $this->ridden;
 	}
 
 	/**
+	 * Returns whether this pet is dormant or not. If this pet is dormant, it will not move.
+	 *
 	 * @return bool
 	 */
-	public function shouldIgnoreEvent(): bool {
-		return $this->shouldIgnoreEvent;
+	public function isDormant(): bool {
+		return $this->dormant;
+	}
+
+	/**
+	 * Sets the dormant state to this pet with the given value.
+	 *
+	 * @param bool $value
+	 */
+	public function setDormant(bool $value = true) {
+		$this->dormant = $value;
 	}
 
 	/**
@@ -607,12 +619,4 @@ abstract class BasePet extends Creature implements Rideable {
 		}
 		return false;
 	}
-
-	/**
-	 * @param $motionX
-	 * @param $motionZ
-	 *
-	 * @return mixed
-	 */
-	public abstract function doRidingMovement($motionX, $motionZ);
 }

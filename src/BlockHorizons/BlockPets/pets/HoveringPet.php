@@ -162,4 +162,13 @@ abstract class HoveringPet extends IrasciblePet {
 		}
 		return parent::attack($damage, $source);
 	}
+
+	/**
+	 * @param array $properties
+	 */
+	public function useProperties(array $properties) {
+		$this->speed = (float) $properties["Speed"];
+		$this->flyHeight = (float) $properties["Flying-Height"];
+		$this->canBeRidden = (bool) $properties["Can-Be-Ridden"];
+	}
 }

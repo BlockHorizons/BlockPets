@@ -13,6 +13,7 @@ use BlockHorizons\BlockPets\commands\RemovePetCommand;
 use BlockHorizons\BlockPets\commands\SpawnPetCommand;
 use BlockHorizons\BlockPets\commands\TogglePetCommand;
 use BlockHorizons\BlockPets\configurable\BlockPetsConfig;
+use BlockHorizons\BlockPets\configurable\PetProperties;
 use BlockHorizons\BlockPets\events\PetRemoveEvent;
 use BlockHorizons\BlockPets\events\PetSpawnEvent;
 use BlockHorizons\BlockPets\listeners\EventListener;
@@ -127,7 +128,6 @@ class Loader extends PluginBase {
 		"MagmaCube",
 		"Evoker",
 		"Vindicator",
-		"EvocationFangs",
 		"Vex",
 		"Mule",
 		"Donkey",
@@ -179,7 +179,6 @@ class Loader extends PluginBase {
 		EvokerPet::class,
 		VindicatorPet::class,
 		VexPet::class,
-		EvocationFangsPet::class,
 		MulePet::class,
 		DonkeyPet::class,
 		SkeletonHorsePet::class,
@@ -193,6 +192,8 @@ class Loader extends PluginBase {
 	public $selectingName = [];
 
 	private $bpConfig;
+	private $pProperties;
+
 	private $database;
 	private $toggledOff = [];
 	private $toggledPets = [];
@@ -206,6 +207,7 @@ class Loader extends PluginBase {
 		$this->registerListeners();
 
 		$this->bpConfig = new BlockPetsConfig($this);
+		$this->pProperties = new PetProperties($this);
 		$this->selectDatabase();
 	}
 
@@ -363,6 +365,58 @@ class Loader extends PluginBase {
 	}
 
 	/**
+	 * Gets all currently available pets from the given player.
+	 *
+	 * @param Player $player
+	 *
+	 * @return BasePet[]
+	 */
+	public function getPetsFrom(Player $player): array {
+		$playerPets = [];
+		foreach($player->getLevel()->getEntities() as $entity) {
+			if($entity instanceof BasePet) {
+				if($entity->getPetOwner() === null || $entity->closed || !($entity->isAlive())) {
+					continue;
+				}
+				if($entity->getPetOwner()->getName() === $player->getName()) {
+					$playerPets[] = $entity;
+				}
+			}
+		}
+		return $playerPets;
+	}
+
+	/**
+	 * Returns the first pet found with the given name.
+	 *
+	 * @param string $name
+	 * @param Player $player
+	 *
+	 * @return BasePet|null
+	 */
+	public function getPetByName(string $name, Player $player = null) {
+		if($player !== null) {
+			foreach($this->getPetsFrom($player) as $pet) {
+				if(strpos(strtolower($pet->getPetName()), strtolower($name)) !== false) {
+					return $pet;
+				}
+			}
+			return null;
+		}
+		foreach($this->getServer()->getLevels() as $level) {
+			foreach($level->getEntities() as $entity) {
+				if(!$entity instanceof BasePet) {
+					continue;
+				}
+				if(strpos(strtolower($entity->getPetName()), strtolower($name)) !== false) {
+					return $entity;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Removes the first pet found with the given name, or the pet with the given name if playerName has been specified.
 	 *
 	 * @param string $name
@@ -400,58 +454,6 @@ class Loader extends PluginBase {
 		}
 		$foundPet->kill(true);
 		return true;
-	}
-
-	/**
-	 * Returns the first pet found with the given name.
-	 *
-	 * @param string $name
-	 * @param Player $player
-	 *
-	 * @return BasePet|null
-	 */
-	public function getPetByName(string $name, Player $player = null) {
-		if($player !== null) {
-			foreach($this->getPetsFrom($player) as $pet) {
-				if(strpos(strtolower($pet->getPetName()), strtolower($name)) !== false) {
-					return $pet;
-				}
-			}
-			return null;
-		}
-		foreach($this->getServer()->getLevels() as $level) {
-			foreach($level->getEntities() as $entity) {
-				if(!$entity instanceof BasePet) {
-					continue;
-				}
-				if(strpos(strtolower($entity->getPetName()), strtolower($name)) !== false) {
-					return $entity;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Gets all currently available pets from the given player.
-	 *
-	 * @param Player $player
-	 *
-	 * @return BasePet[]
-	 */
-	public function getPetsFrom(Player $player): array {
-		$playerPets = [];
-		foreach($player->getLevel()->getEntities() as $entity) {
-			if($entity instanceof BasePet) {
-				if($entity->getPetOwner() === null || $entity->closed || !($entity->isAlive())) {
-					continue;
-				}
-				if($entity->getPetOwner()->getName() === $player->getName()) {
-					$playerPets[] = $entity;
-				}
-			}
-		}
-		return $playerPets;
 	}
 
 	/**
@@ -568,5 +570,12 @@ class Loader extends PluginBase {
 			return $this->toggledPets[$pet->getPetName()] === $owner->getName();
 		}
 		return false;
+	}
+
+	/**
+	 * @return PetProperties
+	 */
+	public function getPetProperties(): PetProperties {
+		return $this->pProperties;
 	}
 }

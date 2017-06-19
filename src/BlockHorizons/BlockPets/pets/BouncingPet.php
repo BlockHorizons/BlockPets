@@ -10,6 +10,7 @@ abstract class BouncingPet extends IrasciblePet {
 
 	protected $jumpTicks = 0;
 	protected $waitingTime = 15;
+	protected $jumpHeight = 0.08;
 
 	public function onUpdate($currentTick) {
 		if(!$this->checkUpdateRequirements()) {
@@ -125,7 +126,7 @@ abstract class BouncingPet extends IrasciblePet {
 	}
 
 	public function jump() {
-		$this->motionY = $this->gravity * 12 * $this->getScale();
+		$this->motionY = $this->jumpHeight * 12 * $this->getScale();
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->jumpTicks = 10;
 	}
@@ -209,5 +210,14 @@ abstract class BouncingPet extends IrasciblePet {
 	 */
 	public function parentOnUpdate(int $currentTick) {
 		return parent::onUpdate($currentTick);
+	}
+
+	/**
+	 * @param array $properties
+	 */
+	public function useProperties(array $properties) {
+		$this->speed = (float) $properties["Speed"];
+		$this->jumpHeight = (float) $properties["Jumping-Height"];
+		$this->canBeRidden = (bool) $properties["Can-Be-Ridden"];
 	}
 }

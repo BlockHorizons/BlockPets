@@ -8,10 +8,7 @@ class PolarBearPet extends WalkingPet {
 
 	public $height = 1.4;
 	public $width = 1.3;
-	public $speed = 1.2;
 
 	public $name = "Polar Bear Pet";
-	public $tier = self::TIER_UNCOMMON;
-
 	public $networkId = 28;
 }
