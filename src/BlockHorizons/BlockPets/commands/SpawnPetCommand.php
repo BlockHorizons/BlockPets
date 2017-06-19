@@ -15,10 +15,10 @@ class SpawnPetCommand extends BaseCommand {
 	}
 
 	public function execute(CommandSender $sender, $commandLabel, array $args): bool {
-		// WHAT THE HACK //
-
-		// MUST HAVE COMMAND OVERLOAD ENABLED FOR THIS TO WORK //
-		
+		/*
+		 * Hack to make spawnpet command work, required because parameter ordering is messed up.
+		 * TODO: Remove
+		 */
 		if(count($args) > 1){
 			$a = $args;
 			$last = array_pop($a);
@@ -28,8 +28,6 @@ class SpawnPetCommand extends BaseCommand {
 				$args = array_merge($a1, $args);
 			}
 		}
-
-		// WHAT THE HACK //
 		
 		if(!$this->testPermission($sender)) {
 			$this->sendNoPermission($sender);

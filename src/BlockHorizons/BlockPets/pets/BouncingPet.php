@@ -40,17 +40,9 @@ abstract class BouncingPet extends IrasciblePet {
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 
-		$xOffset = 0;
-		$yOffset = 0;
-		$zOffset = 0;
-		if(!$this->getLoader()->getBlockPetsConfig()->shouldStalkPetOwner()) {
-			$xOffset = lcg_value() * 2;
-			$yOffset = lcg_value() * 2;
-			$zOffset = lcg_value() * 2;
-		}
-		$x = $petOwner->x + $xOffset - $this->x;
-		$y = $petOwner->y + $yOffset - $this->y;
-		$z = $petOwner->z + $zOffset - $this->z;
+		$x = $petOwner->x + $this->xOffset - $this->x;
+		$y = $petOwner->y + $this->yOffset - $this->y;
+		$z = $petOwner->z + $this->zOffset - $this->z;
 
 		if($x * $x + $z * $z < 9 + $this->getScale()) {
 			$this->motionX = 0;

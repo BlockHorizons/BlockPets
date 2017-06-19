@@ -51,9 +51,14 @@ abstract class BasePet extends Creature implements Rideable {
 	protected $petLevelPoints = 0;
 	protected $calculator;
 
+	protected $xOffset = 0;
+	protected $yOffset = 0;
+	protected $zOffset = 0;
+
 	private $dormant = false;
 	private $chested = false;
 	private $shouldIgnoreEvent = false;
+	private $positionSeekTick = 120;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
@@ -562,6 +567,14 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->setDormant();
 			return false;
 		}
+		$this->positionSeekTick++;
+		if($this->shouldFindNewPosition()) {
+			if(!$this->getLoader()->getBlockPetsConfig()->shouldStalkPetOwner()) {
+				$this->xOffset = lcg_value() * 3;
+				$this->yOffset = lcg_value() * 3;
+				$this->zOffset = lcg_value() * 3;
+			}
+		}
 		return true;
 	}
 
@@ -582,6 +595,17 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function shouldIgnoreEvent(): bool {
 		return $this->shouldIgnoreEvent;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function shouldFindNewPosition(): bool {
+		if($this->positionSeekTick >= 120) {
+			$this->positionSeekTick = 0;
+			return true;
+		}
+		return false;
 	}
 
 	/**
