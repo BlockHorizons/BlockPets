@@ -6,6 +6,7 @@ use BlockHorizons\BlockPets\events\PetInventoryInitializationEvent;
 use BlockHorizons\BlockPets\events\PetLevelUpEvent;
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
+use BlockHorizons\BlockPets\pets\datastorage\PetInventoryHolder;
 use pocketmine\entity\Creature;
 use pocketmine\entity\Rideable;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -44,6 +45,7 @@ abstract class BasePet extends Creature implements Rideable {
 	protected $petLevel = 0;
 	protected $petName = "";
 	protected $ridden = false;
+	/** @var null|Player */
 	protected $rider = null;
 
 	protected $attackDamage = 4;
@@ -61,11 +63,13 @@ abstract class BasePet extends Creature implements Rideable {
 	private $chested = false;
 	private $shouldIgnoreEvent = false;
 	private $positionSeekTick = 120;
+	private $inventory = null;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
 		$this->selectProperties();
 		$this->calculator = new Calculator($this);
+		$this->inventory = new PetInventoryHolder($this);
 
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
@@ -248,7 +252,7 @@ abstract class BasePet extends Creature implements Rideable {
 				if($player->getName() === $this->getPetOwnerName()) {
 					if($this->isChested() && $player->isSneaking()) {
 						$source->setCancelled();
-						// Open inventory here!
+						$this->getInventory()->openToOwner();
 					}
 				}
 			}
@@ -316,6 +320,15 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Returns the inventory holder of this pet.
+	 *
+	 * @return PetInventoryHolder
+	 */
+	public function getInventory(): PetInventoryHolder {
+		return $this->inventory;
+	}
+
+	/**
 	 * Internal.
 	 *
 	 * @return string
@@ -329,6 +342,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->generateCustomPetData();
 		$this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, 1);
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_BABY, (bool) $this->namedtag["isBaby"]);
+		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_TAMED, true);
 	}
 
 	public function generateCustomPetData() {
@@ -432,8 +446,8 @@ abstract class BasePet extends Creature implements Rideable {
 		} elseif($this instanceof SmallCreature) {
 			$this->getPetOwner()->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 0.78 + $this->getScale() * 0.9, -0.25]);
 		}
+		$player->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, true);
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_SADDLED, true);
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_TAMED, true);
 
 		$pk = new SetEntityLinkPacket();
 		$pk->to = $player->getId();
@@ -488,6 +502,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->to = $this->getPetOwner()->getId();
 		$pk->type = self::STATE_STANDING;
 		$this->ridden = false;
+		$rider = $this->rider;
 		$this->rider = null;
 		$this->getPetOwner()->canCollide = true;
 		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
@@ -498,7 +513,9 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->type = self::STATE_STANDING;
 		$this->getPetOwner()->dataPacket($pk);
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_SADDLED, false);
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_TAMED, true);
+		if($rider !== null) {
+			$rider->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, false);
+		}
 
 		if($this->getPetOwner()->isSurvival()) {
 			$this->getPetOwner()->setAllowFlight(false);
