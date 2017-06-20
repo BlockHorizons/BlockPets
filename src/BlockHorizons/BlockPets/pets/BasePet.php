@@ -433,6 +433,7 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->getPetOwner()->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 0.78 + $this->getScale() * 0.9, -0.25]);
 		}
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_SADDLED, true);
+		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_TAMED, true);
 
 		$pk = new SetEntityLinkPacket();
 		$pk->to = $player->getId();
@@ -497,6 +498,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->type = self::STATE_STANDING;
 		$this->getPetOwner()->dataPacket($pk);
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_SADDLED, false);
+		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_TAMED, true);
 
 		if($this->getPetOwner()->isSurvival()) {
 			$this->getPetOwner()->setAllowFlight(false);
