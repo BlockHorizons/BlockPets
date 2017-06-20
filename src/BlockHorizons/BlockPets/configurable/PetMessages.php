@@ -4,7 +4,7 @@ namespace BlockHorizons\BlockPets\configurable;
 
 use BlockHorizons\BlockPets\Loader;
 
-class PetMessage {
+class PetMessages {
 
 	private $loader;
 	private $messages = [];

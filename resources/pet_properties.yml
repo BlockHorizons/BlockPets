@@ -134,20 +134,22 @@ WitherSkull:
   Speed: 1.2
   Flying-Height: 13
 
-
 # Swimming Pets
 ElderGuardian:
   Can-Be-Ridden: true
   Speed: 1
   Swimming-Speed: 2
+  Jumping-Height: 0.12
 Guardian:
   Can-Be-Ridden: true
   Speed: 1
   Swimming-Speed: 1.8
+  Jumping-Height: 0.1
 Squid:
   Can-Be-Ridden: true
   Speed: 1
   Swimming-Speed: 1.4
+  Jumping-Height: 0.1
 
 # Bouncing Pets
 MagmaCube:

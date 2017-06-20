@@ -156,8 +156,7 @@ abstract class SwimmingPet extends BouncingPet {
 	 * @param array $properties
 	 */
 	public function useProperties(array $properties) {
-		$this->speed = (float) $properties["Speed"];
+		parent::useProperties($properties);
 		$this->swimmingSpeed = (float) $properties["Swimming-Speed"];
-		$this->canBeRidden = (bool) $properties["Can-Be-Ridden"];
 	}
 }
