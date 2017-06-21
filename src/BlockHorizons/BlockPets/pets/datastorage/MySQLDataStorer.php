@@ -4,6 +4,9 @@ namespace BlockHorizons\BlockPets\pets\datastorage;
 
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\BasePet;
+use pocketmine\item\Item;
+use pocketmine\nbt\NBT;
+use pocketmine\nbt\tag\ListTag;
 
 class MySQLDataStorer extends BaseDataStorer {
 
@@ -89,6 +92,41 @@ class MySQLDataStorer extends BaseDataStorer {
 		return $data;
 	}
 
+	public function updateInventory(string $petName, string $ownerName, string $contents): bool {
+		$ownerName = strtolower($ownerName);
+		if(!$this->petExists($petName, $ownerName)) {
+			return false;
+		}
+		$query = "UPDATE Pets SET Inventory = '" . $this->escape($contents) . "' WHERE PetName = '" . $this->escape($petName) . "' AND Player = '" . $this->escape($ownerName) . "'";
+		return $this->database->query($query);
+	}
+
+	public function getInventory(string $petName, string $ownerName): string {
+		$ownerName = strtolower($ownerName);
+		if(!$this->petExists($petName, $ownerName)) {
+			return "";
+		}
+		$query = "SELECT Inventory FROM Pets WHERE Player = '" . $this->escape($ownerName) . "' AND PetName = '" . $this->escape($petName) . "'";
+		$compressedContents = base64_decode($this->database->query($query)->fetch_assoc());
+
+		$nbt = new NBT(NBT::BIG_ENDIAN);
+		$nbt->readCompressed($compressedContents);
+		$nbt = $nbt->getData();
+		if(!isset($nbt->itemList)) {
+			return [];
+		}
+		/** @var ListTag $items */
+		$items = $nbt->ItemList;
+		$contents = [];
+		if(!empty($items)) {
+			$items = $items->getValue();
+			foreach($items as $slot => $compoundTag) {
+				$contents[$slot] = Item::nbtDeserialize($compoundTag);
+			}
+		}
+		return $contents;
+	}
+
 	protected function prepare(): bool {
 		$s = $this->getLoader()->getBlockPetsConfig()->getMySQLInfo();
 		$this->database = new \mysqli($s["Host"], $s["User"], $s["Password"], $s["Database"], $s["Port"]);
@@ -104,6 +142,7 @@ class MySQLDataStorer extends BaseDataStorer {
 			Chested INT,
 			PetLevel INT,
 			LevelPoints INT,
+			Inventory VARCHAR,
 			PRIMARY KEY(Player, PetName)
 		)";
 		return $this->database->query($query);

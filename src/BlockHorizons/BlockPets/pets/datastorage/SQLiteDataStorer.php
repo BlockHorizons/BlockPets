@@ -4,6 +4,9 @@ namespace BlockHorizons\BlockPets\pets\datastorage;
 
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\BasePet;
+use pocketmine\item\Item;
+use pocketmine\nbt\NBT;
+use pocketmine\nbt\tag\ListTag;
 
 class SQLiteDataStorer extends BaseDataStorer {
 
@@ -89,6 +92,41 @@ class SQLiteDataStorer extends BaseDataStorer {
 		return $data;
 	}
 
+	public function updateInventory(string $petName, string $ownerName, string $contents): bool {
+		$ownerName = strtolower($ownerName);
+		if(!$this->petExists($petName, $ownerName)) {
+			return false;
+		}
+		$query = "UPDATE Pets SET Inventory = '" . $this->escape($contents) . "' WHERE PetName = '" . $this->escape($petName) . "' AND Player = '" . $this->escape($ownerName) . "'";
+		return $this->database->exec($query);
+	}
+
+	public function getInventory(string $petName, string $ownerName): string {
+		$ownerName = strtolower($ownerName);
+		if(!$this->petExists($petName, $ownerName)) {
+			return [];
+		}
+		$query = "SELECT Inventory FROM Pets WHERE Player = '" . $this->escape($ownerName) . "' AND PetName = '" . $this->escape($petName) . "'";
+		$compressedContents = base64_decode($this->database->query($query)->fetchArray(SQLITE3_ASSOC));
+
+		$nbt = new NBT(NBT::BIG_ENDIAN);
+		$nbt->readCompressed($compressedContents);
+		$nbt = $nbt->getData();
+		if(!isset($nbt->itemList)) {
+			return [];
+		}
+		/** @var ListTag $items */
+		$items = $nbt->ItemList;
+		$contents = [];
+		if(!empty($items)) {
+			$items = $items->getValue();
+			foreach($items as $slot => $compoundTag) {
+				$contents[$slot] = Item::nbtDeserialize($compoundTag);
+			}
+		}
+		return $contents;
+	}
+
 	protected function prepare(): bool {
 		if(!file_exists($path = $this->getLoader()->getDataFolder() . "pets.sqlite3")) {
 			file_put_contents($path, "");
@@ -103,6 +141,7 @@ class SQLiteDataStorer extends BaseDataStorer {
 			Chested INT,
 			PetLevel INT,
 			LevelPoints INT,
+			Inventory VARCHAR,
 			PRIMARY KEY(Player, PetName)
 		)";
 		return $this->database->exec($query);

@@ -4,8 +4,11 @@ namespace BlockHorizons\BlockPets\pets\inventory;
 
 use BlockHorizons\BlockPets\pets\BasePet;
 use pocketmine\block\Block;
+use pocketmine\item\Item;
+use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
+use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\tile\Chest;
 use pocketmine\tile\Tile;
@@ -19,10 +22,12 @@ class PetInventoryHolder {
 	 */
 
 	private $pet;
+	/** @var Item[] */
 	private $items = [];
 
 	public function __construct(BasePet $pet) {
 		$this->pet = $pet;
+		$this->items = $pet->getLoader()->getDatabase()->getInventory($pet->getPetName(), $pet->getPetOwnerName());
 	}
 
 	/**
@@ -89,5 +94,21 @@ class PetInventoryHolder {
 		$inventory = new PetInventory($tile, $this->pet);
 		$inventory->setContents($this->items);
 		return $inventory;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function compressContents(): string {
+		$items = $this->items;
+		foreach($items as &$item) {
+			$item = $item->nbtSerialize(-1, "Item");
+		}
+		$nbt = new NBT(NBT::BIG_ENDIAN);
+		$compressedContents = new CompoundTag("Contents", [
+			new ListTag("ContentList", $items)
+		]);
+		$nbt->setData($compressedContents);
+		return base64_encode($nbt->writeCompressed(ZLIB_ENCODING_DEFLATE));
 	}
 }

@@ -86,6 +86,23 @@ abstract class BaseDataStorer {
 	public abstract function updateChested(string $petName, string $ownerName): bool;
 
 	/**
+	 * @param string $petName
+	 * @param string $ownerName
+	 * @param string $contents
+	 *
+	 * @return bool
+	 */
+	public abstract function updateInventory(string $petName, string $ownerName, string $contents): bool;
+
+	/**
+	 * @param string $petName
+	 * @param string $ownerName
+	 *
+	 * @return string
+	 */
+	public abstract function getInventory(string $petName, string $ownerName): string;
+
+	/**
 	 * @return bool
 	 */
 	protected abstract function close(): bool;
