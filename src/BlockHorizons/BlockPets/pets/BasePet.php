@@ -45,7 +45,7 @@ abstract class BasePet extends Creature implements Rideable {
 	protected $petLevel = 0;
 	protected $petName = "";
 	protected $ridden = false;
-	/** @var null|Player */
+	/** @var null|string */
 	protected $rider = null;
 
 	protected $attackDamage = 4;
@@ -423,6 +423,62 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * @param $currentTick
+	 *
+	 * @return bool
+	 */
+	public function onUpdate($currentTick) {
+		$petOwner = $this->getPetOwner();
+		if(mt_rand(1, 60) === 1) {
+			if($this->getHealth() !== $this->getMaxHealth()) {
+				$this->heal(1, new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
+				$this->calculator->updateNameTag();
+			}
+		}
+		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
+			$this->getLoader()->createPet($this->getEntityType(), $petOwner, $this->getPetName(), $this->getStartingScale(), $this->namedtag["isBaby"], $this->getPetLevel(), $this->getPetLevelPoints(), $this->isChested());
+			$this->close();
+			return true;
+		}
+		if($this->distance($petOwner) >= 50) {
+			$this->teleport($petOwner);
+			return true;
+		}
+		$this->updateMovement();
+		parent::onUpdate($currentTick);
+		return true;
+	}
+
+	/**
+	 * Detaches the rider from the pet.
+	 */
+	public function throwRiderOff() {
+		$pk = new SetEntityLinkPacket();
+		$pk->from = $this->getId();
+		$pk->to = $this->getPetOwner()->getId();
+		$pk->type = self::STATE_STANDING;
+		$this->ridden = false;
+		$rider = $this->rider;
+		$this->rider = null;
+		$this->getPetOwner()->canCollide = true;
+		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
+
+		$pk = new SetEntityLinkPacket();
+		$pk->from = $this->getPetOwner()->getId();
+		$pk->to = 0;
+		$pk->type = self::STATE_STANDING;
+		$this->getPetOwner()->dataPacket($pk);
+		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_SADDLED, false);
+		if($rider !== null) {
+			$this->getRider()->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, false);
+		}
+
+		if($this->getPetOwner()->isSurvival()) {
+			$this->getPetOwner()->setAllowFlight(false);
+		}
+	}
+
+	/**
 	 * Returns the rider of the pet if it has a rider, and null if this is not the case.
 	 *
 	 * @return Player|null
@@ -463,62 +519,6 @@ abstract class BasePet extends Creature implements Rideable {
 
 		if($this->getPetOwner()->isSurvival()) {
 			$this->getPetOwner()->setAllowFlight(true); // Set allow flight to true to prevent any 'kicked for flying' issues.
-		}
-	}
-
-	/**
-	 * @param $currentTick
-	 *
-	 * @return bool
-	 */
-	public function onUpdate($currentTick) {
-		$petOwner = $this->getPetOwner();
-		if(mt_rand(1, 60) === 1) {
-			if($this->getHealth() !== $this->getMaxHealth()) {
-				$this->heal(1, new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
-				$this->calculator->updateNameTag();
-			}
-		}
-		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
-			$this->getLoader()->createPet($this->getEntityType(), $petOwner, $this->getPetName(), $this->getStartingScale(), $this->namedtag["isBaby"], $this->getPetLevel(), $this->getPetLevelPoints());
-			$this->close();
-			return true;
-		}
-		if($this->distance($petOwner) >= 50) {
-			$this->teleport($petOwner);
-			return true;
-		}
-		$this->updateMovement();
-		parent::onUpdate($currentTick);
-		return true;
-	}
-
-	/**
-	 * Detaches the rider from the pet.
-	 */
-	public function throwRiderOff() {
-		$pk = new SetEntityLinkPacket();
-		$pk->from = $this->getId();
-		$pk->to = $this->getPetOwner()->getId();
-		$pk->type = self::STATE_STANDING;
-		$this->ridden = false;
-		$rider = $this->rider;
-		$this->rider = null;
-		$this->getPetOwner()->canCollide = true;
-		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
-
-		$pk = new SetEntityLinkPacket();
-		$pk->from = $this->getPetOwner()->getId();
-		$pk->to = 0;
-		$pk->type = self::STATE_STANDING;
-		$this->getPetOwner()->dataPacket($pk);
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_SADDLED, false);
-		if($rider !== null) {
-			$rider->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, false);
-		}
-
-		if($this->getPetOwner()->isSurvival()) {
-			$this->getPetOwner()->setAllowFlight(false);
 		}
 	}
 
