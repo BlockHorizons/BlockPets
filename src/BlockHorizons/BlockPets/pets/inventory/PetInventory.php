@@ -5,6 +5,7 @@ namespace BlockHorizons\BlockPets\pets\inventory;
 use BlockHorizons\BlockPets\pets\BasePet;
 use pocketmine\inventory\ChestInventory;
 use pocketmine\inventory\InventoryType;
+use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\tile\Chest;
 use pocketmine\tile\Tile;
@@ -36,9 +37,13 @@ class PetInventory extends ChestInventory {
 	}
 
 	public function save(): bool {
-		if(!empty($this->getContents())) {
+		foreach($this->getContents() as $item) {
+			if($item->getId() === Item::AIR) {
+				continue;
+			}
 			$this->pet->getInventory()->setInventoryContents($this->getContents());
 			$this->pet->getLoader()->getDatabase()->updateInventory($this->pet->getPetName(), $this->pet->getPetOwnerName(), $this->pet->getInventory()->compressContents());
+			break;
 		}
 		return true;
 	}
