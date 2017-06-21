@@ -69,7 +69,6 @@ abstract class BasePet extends Creature implements Rideable {
 		parent::__construct($level, $nbt);
 		$this->selectProperties();
 		$this->calculator = new Calculator($this);
-		$this->inventory = new PetInventoryHolder($this);
 
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
@@ -88,6 +87,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_CHESTED, (bool) $this->isChested());
 
 		$this->levelUp(1, true);
+		$this->inventory = new PetInventoryHolder($this);
 		$this->spawnToAll();
 	}
 

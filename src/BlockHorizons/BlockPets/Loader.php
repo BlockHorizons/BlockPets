@@ -379,7 +379,7 @@ class Loader extends PluginBase {
 				if($entity->getPetOwner() === null || $entity->closed || !($entity->isAlive())) {
 					continue;
 				}
-				if($entity->getPetOwner()->getName() === $player->getName()) {
+				if($entity->getPetOwnerName() === $player->getName()) {
 					$playerPets[] = $entity;
 				}
 			}
