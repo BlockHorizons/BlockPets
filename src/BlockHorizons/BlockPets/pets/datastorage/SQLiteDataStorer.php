@@ -108,17 +108,11 @@ class SQLiteDataStorer extends BaseDataStorer {
 		}
 		$query = "SELECT Inventory FROM Pets WHERE Player = '" . $this->escape($ownerName) . "' AND PetName = '" . $this->escape($petName) . "'";
 		$return = $this->database->query($query)->fetchArray(SQLITE3_ASSOC)["Inventory"];
-		if(empty($return)) {
-			return $return;
-		}
 		$compressedContents = base64_decode($return);
 
 		$nbt = new NBT(NBT::BIG_ENDIAN);
 		$nbt->readCompressed($compressedContents);
 		$nbt = $nbt->getData();
-		if(!isset($nbt->itemList)) {
-			return [];
-		}
 		/** @var ListTag $items */
 		$items = $nbt->ItemList ?? [];
 		$contents = [];
