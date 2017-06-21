@@ -101,15 +101,15 @@ class MySQLDataStorer extends BaseDataStorer {
 		return $this->database->query($query);
 	}
 
-	public function getInventory(string $petName, string $ownerName): string {
+	public function getInventory(string $petName, string $ownerName): array {
 		$ownerName = strtolower($ownerName);
 		if(!$this->petExists($petName, $ownerName)) {
-			return "";
+			return [];
 		}
 		$query = "SELECT Inventory FROM Pets WHERE Player = '" . $this->escape($ownerName) . "' AND PetName = '" . $this->escape($petName) . "'";
 		$return = $this->database->query($query)->fetch_assoc()["Inventory"];
 		if(empty($return)) {
-			return $return;
+			return [];
 		}
 		$compressedContents = base64_decode($return);
 		$nbt = new NBT(NBT::BIG_ENDIAN);
@@ -127,7 +127,7 @@ class MySQLDataStorer extends BaseDataStorer {
 				$contents[$slot] = Item::nbtDeserialize($compoundTag);
 			}
 		}
-		return $contents;
+		return $contents ?? [];
 	}
 
 	protected function prepare(): bool {

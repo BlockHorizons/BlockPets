@@ -101,7 +101,7 @@ class SQLiteDataStorer extends BaseDataStorer {
 		return $this->database->exec($query);
 	}
 
-	public function getInventory(string $petName, string $ownerName): string {
+	public function getInventory(string $petName, string $ownerName): array {
 		$ownerName = strtolower($ownerName);
 		if(!$this->petExists($petName, $ownerName)) {
 			return [];
@@ -128,7 +128,7 @@ class SQLiteDataStorer extends BaseDataStorer {
 				$contents[$slot] = Item::nbtDeserialize($compoundTag);
 			}
 		}
-		return $contents;
+		return $contents ?? [];
 	}
 
 	protected function prepare(): bool {

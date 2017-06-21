@@ -100,7 +100,7 @@ abstract class BaseDataStorer {
 	 *
 	 * @return string
 	 */
-	public abstract function getInventory(string $petName, string $ownerName): string;
+	public abstract function getInventory(string $petName, string $ownerName): array;
 
 	/**
 	 * @return bool

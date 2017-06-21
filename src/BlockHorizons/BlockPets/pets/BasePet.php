@@ -86,8 +86,8 @@ abstract class BasePet extends Creature implements Rideable {
 		}
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_CHESTED, (bool) $this->isChested());
 
-		$this->levelUp(1, true);
 		$this->inventory = new PetInventoryHolder($this);
+		$this->levelUp(1, true);
 		$this->spawnToAll();
 	}
 
