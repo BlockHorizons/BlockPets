@@ -55,7 +55,6 @@ class PetInventoryHolder {
 			return false;
 		}
 		if(!($inventory = $this->deployToOwner())) {
-			echo "Spawning chest failed.";
 			return false;
 		}
 
@@ -70,9 +69,6 @@ class PetInventoryHolder {
 	public function deployToOwner() {
 		$owner = $this->pet->getPetOwner();
 		if($owner === null) {
-			return false;
-		}
-		if(!$this->pet->distance($owner) <= 6) {
 			return false;
 		}
 		/** @var Chest $tile */

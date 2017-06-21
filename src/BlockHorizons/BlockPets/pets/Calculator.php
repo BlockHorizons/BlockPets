@@ -20,7 +20,6 @@ class Calculator {
 		$this->recalculateSize();
 		$this->recalculateDamage();
 		$this->updateNameTag();
-		$this->
 		$this->storeToDatabase();
 	}
 
