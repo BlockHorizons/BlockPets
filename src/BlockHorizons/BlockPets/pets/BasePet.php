@@ -250,7 +250,7 @@ abstract class BasePet extends Creature implements Rideable {
 				}
 
 				if($player->getName() === $this->getPetOwnerName()) {
-					if($this->isChested() && $player->isSneaking()) {
+					if($this->isChested() && $player->getInventory()->getItemInHand()->getId() === Item::AIR) {
 						$source->setCancelled();
 						$this->getInventory()->openToOwner();
 					}
