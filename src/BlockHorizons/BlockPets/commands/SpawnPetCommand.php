@@ -104,7 +104,7 @@ class SpawnPetCommand extends BaseCommand {
 			$sender->sendMessage(TF::RED . "[Warning] You already own a pet with that name.");
 			return true;
 		}
-		if($this->getLoader()->createPet((string) $petName, $player, (string) $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3] === null, 0, 0, false)) {
+		if($this->getLoader()->createPet((string) $petName, $player, (string) $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3] === null)) {
 			$sender->sendMessage(TF::RED . "[Warning] A plugin has cancelled spawning this pet.");
 			return true;
 		}
