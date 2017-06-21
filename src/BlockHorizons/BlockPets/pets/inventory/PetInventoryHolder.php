@@ -1,6 +1,6 @@
 <?php
 
-namespace BlockHorizons\BlockPets\pets\datastorage;
+namespace BlockHorizons\BlockPets\pets\inventory;
 
 use BlockHorizons\BlockPets\pets\BasePet;
 use pocketmine\block\Block;

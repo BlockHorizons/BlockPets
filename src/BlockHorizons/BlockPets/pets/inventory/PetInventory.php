@@ -1,6 +1,6 @@
 <?php
 
-namespace BlockHorizons\BlockPets\pets\datastorage;
+namespace BlockHorizons\BlockPets\pets\inventory;
 
 use BlockHorizons\BlockPets\pets\BasePet;
 use pocketmine\inventory\ChestInventory;
@@ -28,13 +28,14 @@ class PetInventory extends ChestInventory {
 		return $this->pet;
 	}
 
+	public function onClose(Player $player) {
+		$this->save();
+		$player->level->sendBlocks([$player], [$this->chestPos]);
+		$this->tile->close();
+	}
+
 	public function save(): bool {
 		$this->pet->getInventory()->setInventoryContents($this->getContents());
 		return true;
-	}
-
-	public function onClose(Player $player) {
-		$player->level->sendBlocks([$player], [$this->chestPos]);
-		$this->tile->close();
 	}
 }

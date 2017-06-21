@@ -6,7 +6,7 @@ use BlockHorizons\BlockPets\events\PetInventoryInitializationEvent;
 use BlockHorizons\BlockPets\events\PetLevelUpEvent;
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
-use BlockHorizons\BlockPets\pets\datastorage\PetInventoryHolder;
+use BlockHorizons\BlockPets\pets\inventory\PetInventoryHolder;
 use pocketmine\entity\Creature;
 use pocketmine\entity\Rideable;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
