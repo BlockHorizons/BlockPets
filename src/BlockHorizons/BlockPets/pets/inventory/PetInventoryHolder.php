@@ -105,8 +105,8 @@ class PetInventoryHolder {
 			$item = $item->nbtSerialize(-1, "Item");
 		}
 		$nbt = new NBT(NBT::BIG_ENDIAN);
-		$compressedContents = new CompoundTag("Contents", [
-			new ListTag("ItemList", (array) $items)
+		$compressedContents = new CompoundTag("Items", [
+			new ListTag("ItemList", $items)
 		]);
 		$nbt->setData($compressedContents);
 		return base64_encode($nbt->writeCompressed(ZLIB_ENCODING_DEFLATE));

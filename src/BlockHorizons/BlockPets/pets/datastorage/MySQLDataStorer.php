@@ -119,7 +119,7 @@ class MySQLDataStorer extends BaseDataStorer {
 			return [];
 		}
 		/** @var ListTag $items */
-		$items = $nbt->ItemList;
+		$items = $nbt->ItemList ?? [];
 		$contents = [];
 		if(!empty($items)) {
 			$items = $items->getValue();
@@ -127,7 +127,7 @@ class MySQLDataStorer extends BaseDataStorer {
 				$contents[$slot] = Item::nbtDeserialize($compoundTag);
 			}
 		}
-		return $contents ?? [];
+		return $contents;
 	}
 
 	protected function prepare(): bool {
