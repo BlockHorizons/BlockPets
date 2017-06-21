@@ -19,6 +19,7 @@ class PetInventory extends ChestInventory {
 	public function __construct(Chest $tile, BasePet $pet) {
 		parent::__construct($tile, InventoryType::get(InventoryType::CHEST));
 		$this->pet = $pet;
+		$this->tile = $tile;
 	}
 
 	/**
