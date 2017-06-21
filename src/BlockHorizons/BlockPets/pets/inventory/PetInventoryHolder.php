@@ -55,6 +55,7 @@ class PetInventoryHolder {
 			return false;
 		}
 		if(!($inventory = $this->deployToOwner())) {
+			echo "Spawning chest failed.";
 			return false;
 		}
 
@@ -74,6 +75,7 @@ class PetInventoryHolder {
 		if(!$this->pet->distance($owner) <= 6) {
 			return false;
 		}
+		/** @var Chest $tile */
 		$tile = Tile::createTile("PetInventory", $owner->level, new CompoundTag("", [
 			new StringTag("id", Tile::CHEST),
 			new StringTag("CustomName", ($this->pet->getPetName() . TextFormat::RESET . TextFormat::GREEN . "\'s Inventory")),
@@ -87,9 +89,6 @@ class PetInventoryHolder {
 		$block->setComponents((int) $tile->x, (int) $tile->y, (int) $tile->z);
 		$block->level = $tile->level;
 		$tile->level->sendBlocks([$owner], [$block]);
-		if(!$tile instanceof Chest) {
-			return false;
-		}
 		$tile->spawnTo($owner);
 		$inventory = new PetInventory($tile, $this->pet);
 		$inventory->setContents($this->items);

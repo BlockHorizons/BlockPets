@@ -145,6 +145,7 @@ abstract class BasePet extends Creature implements Rideable {
 	public function setChested(bool $value = true) {
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_CHESTED, $value);
 		$this->chested = $value;
+		$this->getLoader()->getDatabase()->updateChested($this->getPetName(), $this->getPetOwnerName());
 	}
 
 	/**
@@ -247,12 +248,11 @@ abstract class BasePet extends Creature implements Rideable {
 						$this->setChested();
 						$source->setCancelled();
 					}
-				}
 
-				if($player->getName() === $this->getPetOwnerName()) {
+				} elseif($player->getName() === $this->getPetOwnerName()) {
 					if($this->isChested() && $player->getInventory()->getItemInHand()->getId() === Item::AIR) {
 						$source->setCancelled();
-						$this->getInventory()->openToOwner();
+						var_dump($this->getInventory()->openToOwner());
 					}
 				}
 			}
