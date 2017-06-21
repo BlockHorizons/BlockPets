@@ -319,10 +319,11 @@ class Loader extends PluginBase {
 	 * @param bool   $isBaby
 	 * @param int    $level
 	 * @param int    $levelPoints
+	 * @param bool   $chested
 	 *
 	 * @return null|BasePet
 	 */
-	public function createPet(string $entityName, Player $player, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0) {
+	public function createPet(string $entityName, Player $player, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0, bool $chested) {
 		foreach($this->getPetsFrom($player) as $pet) {
 			if($this->getPetByName($name, $player) !== null) {
 				$this->removePet($pet->getPetName(), $player);
@@ -349,7 +350,7 @@ class Loader extends PluginBase {
 			"petLevel" => new IntTag("petLevel", $level),
 			"petLevelPoints" => new IntTag("petLevelPoints", $levelPoints),
 			"isBaby" => new ByteTag("isBaby", (int) $isBaby),
-			"chested" => new ByteTag("chested", 0)
+			"chested" => new ByteTag("chested", (int) $chested)
 		]);
 
 		$entity = Entity::createEntity($entityName . "Pet", $player->getLevel(), $nbt);

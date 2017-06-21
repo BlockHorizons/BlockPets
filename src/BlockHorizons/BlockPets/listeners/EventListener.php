@@ -102,7 +102,7 @@ class EventListener implements Listener {
 		if($this->getLoader()->getBlockPetsConfig()->fetchFromDatabase()) {
 			$petData = $this->getLoader()->getDatabase()->fetchAllPetData($event->getPlayer()->getName());
 			foreach($petData as $data) {
-				$pets[] = $this->getLoader()->createPet($data["EntityName"], $event->getPlayer(), $data["PetName"], $data["PetSize"], $data["IsBaby"], $data["PetLevel"], $data["LevelPoints"]);
+				$pets[] = $this->getLoader()->createPet($data["EntityName"], $event->getPlayer(), $data["PetName"], $data["PetSize"], $data["IsBaby"], $data["PetLevel"], $data["LevelPoints"], $data["Chested"]);
 			}
 		}
 		foreach($pets as $pet) {

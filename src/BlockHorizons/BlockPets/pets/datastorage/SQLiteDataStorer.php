@@ -22,11 +22,12 @@ class SQLiteDataStorer extends BaseDataStorer {
 		$baby = (int) $pet->namedtag["IsBaby"];
 		$level = $pet->getPetLevel();
 		$points = $pet->getPetLevelPoints();
-
+		$chested = (int) $pet->isChested();
 		if($this->petExists($petName, $playerName)) {
 			$this->unregisterPet($petName, $playerName);
 		}
-		$query = "INSERT INTO Pets(Player, PetName, EntityName, PetSize, IsBaby, PetLevel, LevelPoints) VALUES ('" . $this->escape($playerName) . "', '" . $this->escape($petName) . "', '" . $this->escape($entityName) . "', $size, $baby, $level, $points)";
+
+		$query = "INSERT INTO Pets(Player, PetName, EntityName, PetSize, IsBaby, Chested, PetLevel, LevelPoints) VALUES ('" . $this->escape($playerName) . "', '" . $this->escape($petName) . "', '" . $this->escape($entityName) . "', $size, $baby, $chested, $level, $points)";
 		return $this->database->exec($query);
 	}
 
@@ -62,6 +63,15 @@ class SQLiteDataStorer extends BaseDataStorer {
 		return $this->database->exec($query);
 	}
 
+	public function updateChested(string $petName, string $ownerName): bool {
+		$ownerName = strtolower($ownerName);
+		if(!$this->petExists($petName, $ownerName)) {
+			return false;
+		}
+		$query = "UPDATE Pets SET Chested = 1 WHERE Player = '" . $this->escape($ownerName) . "' AND PetName = '" . $this->escape($petName) . "'";
+		return $this->database->exec($query);
+	}
+
 	public function fetchAllPetData(string $ownerName): array {
 		$data = [];
 		$ownerName = strtolower($ownerName);
@@ -90,6 +100,7 @@ class SQLiteDataStorer extends BaseDataStorer {
 			EntityName VARCHAR(32),
 			PetSize FLOAT,
 			IsBaby INT,
+			Chested INT,
 			PetLevel INT,
 			LevelPoints INT,
 			PRIMARY KEY(Player, PetName)

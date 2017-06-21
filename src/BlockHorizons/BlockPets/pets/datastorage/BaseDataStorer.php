@@ -21,6 +21,11 @@ abstract class BaseDataStorer {
 	}
 
 	/**
+	 * @return bool
+	 */
+	protected abstract function prepare(): bool;
+
+	/**
 	 * @return Loader
 	 */
 	protected function getLoader(): Loader {
@@ -31,11 +36,6 @@ abstract class BaseDataStorer {
 	 * @return bool
 	 */
 	protected abstract function reset(): bool;
-
-	/**
-	 * @return bool
-	 */
-	protected abstract function prepare(): bool;
 
 	/**
 	 * @param BasePet $pet
@@ -76,6 +76,14 @@ abstract class BaseDataStorer {
 	 * @return array
 	 */
 	public abstract function fetchAllPetData(string $ownerName): array;
+
+	/**
+	 * @param string $petName
+	 * @param string $ownerName
+	 *
+	 * @return bool
+	 */
+	public abstract function updateChested(string $petName, string $ownerName): bool;
 
 	/**
 	 * @return bool

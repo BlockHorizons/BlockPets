@@ -19,7 +19,7 @@ class PetInventoryHolder {
 	 */
 
 	private $pet;
-	private $items;
+	private $items = [];
 
 	public function __construct(BasePet $pet) {
 		$this->pet = $pet;
@@ -78,11 +78,10 @@ class PetInventoryHolder {
 			new StringTag("id", Tile::CHEST),
 			new StringTag("CustomName", ($this->pet->getPetName() . TextFormat::RESET . TextFormat::GREEN . "\'s Inventory")),
 			new IntTag("x", (int) $owner->x),
-			new IntTag("y", (int) ($owner->y - 2)),
+			new IntTag("y", (int) ($owner->y + 2)),
 			new IntTag("z", (int) $owner->z)
 		]));
 		$this->chestPos = $tile->level->getBlock($tile);
-		$this->tile = $tile;
 
 		$block = Block::get(Block::CHEST);
 		$block->setComponents((int) $tile->x, (int) $tile->y, (int) $tile->z);
@@ -92,6 +91,8 @@ class PetInventoryHolder {
 			return false;
 		}
 		$tile->spawnTo($owner);
-		return new PetInventory($tile, $this->pet);
+		$inventory = new PetInventory($tile, $this->pet);
+		$inventory->setContents($this->items);
+		return $inventory;
 	}
 }
