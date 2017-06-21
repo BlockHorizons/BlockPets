@@ -36,8 +36,10 @@ class PetInventory extends ChestInventory {
 	}
 
 	public function save(): bool {
-		$this->pet->getInventory()->setInventoryContents($this->getContents());
-		$this->pet->getLoader()->getDatabase()->updateInventory($this->pet->getPetName(), $this->pet->getPetOwnerName(), $this->pet->getInventory()->compressContents());
+		if(!empty($this->getContents())) {
+			$this->pet->getInventory()->setInventoryContents($this->getContents());
+			$this->pet->getLoader()->getDatabase()->updateInventory($this->pet->getPetName(), $this->pet->getPetOwnerName(), $this->pet->getInventory()->compressContents());
+		}
 		return true;
 	}
 }
