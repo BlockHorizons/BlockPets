@@ -72,7 +72,7 @@ class PetInventoryHolder {
 			return false;
 		}
 		/** @var Chest $tile */
-		$tile = Tile::createTile("PetInventory", $owner->level, new CompoundTag("", [
+		$tile = Tile::createTile(Tile::CHEST, $owner->level, new CompoundTag("", [
 			new StringTag("id", Tile::CHEST),
 			new StringTag("CustomName", ($this->pet->getPetName() . TextFormat::RESET . TextFormat::GREEN . "\'s Inventory")),
 			new IntTag("x", (int) $owner->x),
