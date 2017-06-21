@@ -51,6 +51,7 @@ abstract class BasePet extends Creature implements Rideable {
 	protected $attackDamage = 4;
 	protected $speed = 1.0;
 	protected $canBeRidden = true;
+	protected $canBeChested = true;
 
 	protected $petLevelPoints = 0;
 	protected $calculator;
@@ -130,7 +131,11 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * @param array $properties
 	 */
-	public abstract function useProperties(array $properties);
+	public function useProperties(array $properties) {
+		$this->speed = (float) $properties["Speed"];
+		$this->canBeRidden = (bool) $properties["Can-Be-Ridden"];
+		$this->canBeChested = (bool) $properties["Can-Be-Chested"];
+	}
 
 	/**
 	 * @return bool
@@ -239,7 +244,7 @@ abstract class BasePet extends Creature implements Rideable {
 					$this->calculator->updateNameTag();
 					$source->setCancelled();
 
-				} elseif($hand->getId() === Item::CHEST) {
+				} elseif($hand->getId() === Item::CHEST && $this->canBeChested) {
 					if(!$this->isChested() && $this->getPetOwnerName() === $player->getName()) {
 						$this->getLoader()->getServer()->getPluginManager()->callEvent($ev = new PetInventoryInitializationEvent($this->getLoader(), $this));
 						$remainder = $hand;

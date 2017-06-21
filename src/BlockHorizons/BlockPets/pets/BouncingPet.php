@@ -216,8 +216,7 @@ abstract class BouncingPet extends IrasciblePet {
 	 * @param array $properties
 	 */
 	public function useProperties(array $properties) {
-		$this->speed = (float) $properties["Speed"];
+		parent::useProperties($properties);
 		$this->jumpHeight = (float) $properties["Jumping-Height"];
-		$this->canBeRidden = (bool) $properties["Can-Be-Ridden"];
 	}
 }

@@ -182,7 +182,6 @@ abstract class WalkingPet extends IrasciblePet {
 	 * @param array $properties
 	 */
 	public function useProperties(array $properties) {
-		$this->speed = (float) $properties["Speed"];
-		$this->canBeRidden = (bool) $properties["Can-Be-Ridden"];
+		parent::useProperties($properties);
 	}
 }
