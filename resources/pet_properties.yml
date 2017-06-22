@@ -134,6 +134,11 @@ ZombieVillager:
   Speed: 1.2
 
 # Flying Pets
+Arrow:
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Speed: 3
+  Flying-Height: 25
 Bat:
   Can-Be-Ridden: true
   Can-Be-Chested: true
@@ -200,15 +205,15 @@ MagmaCube:
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Speed: 1.4
-  Jumping-Height: 0.1
+  Jumping-Height: 0.12
 Rabbit:
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Speed: 1.2
-  Jumping-Height: 0.08
+  Jumping-Height: 0.09
 Slime:
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Speed: 1.6
-  Jumping-Height: 0.1
+  Jumping-Height: 0.12
 ...

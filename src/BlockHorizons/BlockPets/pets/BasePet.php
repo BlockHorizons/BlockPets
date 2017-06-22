@@ -5,6 +5,7 @@ namespace BlockHorizons\BlockPets\pets;
 use BlockHorizons\BlockPets\events\PetInventoryInitializationEvent;
 use BlockHorizons\BlockPets\events\PetLevelUpEvent;
 use BlockHorizons\BlockPets\Loader;
+use BlockHorizons\BlockPets\pets\creatures\ArrowPet;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use BlockHorizons\BlockPets\pets\inventory\PetInventoryHolder;
 use pocketmine\entity\Creature;
@@ -481,6 +482,9 @@ abstract class BasePet extends Creature implements Rideable {
 		if($this->getPetOwner()->isSurvival()) {
 			$rider->setAllowFlight(false);
 		}
+		if($this instanceof ArrowPet) {
+			$this->setCritical(false);
+		}
 	}
 
 	/**
@@ -524,6 +528,9 @@ abstract class BasePet extends Creature implements Rideable {
 
 		if($this->getPetOwner()->isSurvival()) {
 			$this->getPetOwner()->setAllowFlight(true); // Set allow flight to true to prevent any 'kicked for flying' issues.
+		}
+		if($this instanceof ArrowPet) {
+			$this->setCritical();
 		}
 	}
 

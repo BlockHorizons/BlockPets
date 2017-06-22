@@ -2,6 +2,7 @@
 
 namespace BlockHorizons\BlockPets\pets;
 
+use BlockHorizons\BlockPets\pets\creatures\ArrowPet;
 use pocketmine\entity\Living;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
@@ -73,6 +74,9 @@ abstract class IrasciblePet extends BasePet {
 	 */
 	public function setAngry(Living $entity) {
 		$this->target = $entity;
+		if($this instanceof ArrowPet) {
+			$this->setCritical();
+		}
 	}
 
 	public abstract function doAttackingMovement();
@@ -106,6 +110,9 @@ abstract class IrasciblePet extends BasePet {
 	 */
 	public function calmDown() {
 		$this->target = null;
+		if($this instanceof ArrowPet) {
+			$this->setCritical(false);
+		}
 	}
 
 	/**

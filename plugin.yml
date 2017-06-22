@@ -62,6 +62,9 @@ permissions:
                 default: false
                 description: "Allows access to all BlockPets pets."
                 children:
+                    blockpets.pet.arrow:
+                        default: op
+                        description: "Allows access to use the arrow pet."
                     blockpets.pet.bat:
                         default: op
                         description: "Allows access to use the bat pet."

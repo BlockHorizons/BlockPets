@@ -19,6 +19,7 @@ use BlockHorizons\BlockPets\events\PetSpawnEvent;
 use BlockHorizons\BlockPets\listeners\EventListener;
 use BlockHorizons\BlockPets\listeners\RidingListener;
 use BlockHorizons\BlockPets\pets\BasePet;
+use BlockHorizons\BlockPets\pets\creatures\ArrowPet;
 use BlockHorizons\BlockPets\pets\creatures\BatPet;
 use BlockHorizons\BlockPets\pets\creatures\BlazePet;
 use BlockHorizons\BlockPets\pets\creatures\CaveSpiderPet;
@@ -135,7 +136,8 @@ class Loader extends PluginBase {
 		"ZombieHorse",
 		"Squid",
 		"Guardian",
-		"ElderGuardian"
+		"ElderGuardian",
+		"Arrow"
 	];
 
 	const PET_CLASSES = [
@@ -185,7 +187,8 @@ class Loader extends PluginBase {
 		ZombieHorsePet::class,
 		SquidPet::class,
 		ElderGuardianPet::class,
-		GuardianPet::class
+		GuardianPet::class,
+		ArrowPet::class
 	];
 
 	/** @var array */
