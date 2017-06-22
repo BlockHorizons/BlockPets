@@ -245,9 +245,6 @@ class Loader extends PluginBase {
 	 * @return bool
 	 */
 	private function selectDatabase(): bool {
-		if(!$this->getBlockPetsConfig()->storeToDatabase()) {
-			return false;
-		}
 		switch(strtolower($this->getBlockPetsConfig()->getDatabase())) {
 			default:
 			case "mysql":

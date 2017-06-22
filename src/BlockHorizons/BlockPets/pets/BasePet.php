@@ -239,7 +239,7 @@ abstract class BasePet extends Creature implements Rideable {
 					$this->getLevel()->addParticle(new HeartParticle($this->add(0, 2), 4));
 
 					if($this->getLoader()->getBlockPetsConfig()->giveExperienceWhenFed()) {
-						$this->addPetLevelPoints($nutrition / 30 * $this->getRequiredLevelPoints($this->getPetLevel()));
+						$this->addPetLevelPoints($nutrition / 40 * $this->getRequiredLevelPoints($this->getPetLevel()));
 					}
 
 					$this->calculator->updateNameTag();
@@ -248,11 +248,13 @@ abstract class BasePet extends Creature implements Rideable {
 				} elseif($hand->getId() === Item::CHEST && $this->canBeChested) {
 					if(!$this->isChested() && $this->getPetOwnerName() === $player->getName()) {
 						$this->getLoader()->getServer()->getPluginManager()->callEvent($ev = new PetInventoryInitializationEvent($this->getLoader(), $this));
-						$remainder = $hand;
-						$remainder->setCount($remainder->getCount() - 1);
-						$player->getInventory()->setItemInHand($remainder);
-						$this->setChested();
-						$source->setCancelled();
+						if(!$ev->isCancelled()) {
+							$remainder = $hand;
+							$remainder->setCount($remainder->getCount() - 1);
+							$player->getInventory()->setItemInHand($remainder);
+							$this->setChested();
+							$source->setCancelled();
+						}
 					}
 
 				} elseif($player->getName() === $this->getPetOwnerName()) {
@@ -450,9 +452,28 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->teleport($petOwner);
 			return true;
 		}
+		$this->positionSeekTick++;
+		if($this->shouldFindNewPosition()) {
+			if(!$this->getLoader()->getBlockPetsConfig()->shouldStalkPetOwner()) {
+				$this->xOffset = lcg_value() * 3.5;
+				$this->yOffset = lcg_value() * 3.5;
+				$this->zOffset = lcg_value() * 3.5;
+			}
+		}
 		$this->updateMovement();
 		parent::onUpdate($currentTick);
 		return true;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function shouldFindNewPosition(): bool {
+		if($this->positionSeekTick >= 80) {
+			$this->positionSeekTick = 0;
+			return true;
+		}
+		return false;
 	}
 
 	public function kill($ignore = false) {
@@ -603,15 +624,10 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->rider = null;
 			$this->despawnFromAll();
 			$this->setDormant();
-			return false;
-		}
-		$this->positionSeekTick++;
-		if($this->shouldFindNewPosition()) {
-			if(!$this->getLoader()->getBlockPetsConfig()->shouldStalkPetOwner()) {
-				$this->xOffset = lcg_value() * 3.5;
-				$this->yOffset = lcg_value() * 3.5;
-				$this->zOffset = lcg_value() * 3.5;
+			if($this->getLoader()->getBlockPetsConfig()->fetchFromDatabase()) {
+				$this->close();
 			}
+			return false;
 		}
 		return true;
 	}
@@ -641,16 +657,5 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function setDormant(bool $value = true) {
 		$this->dormant = $value;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function shouldFindNewPosition(): bool {
-		if($this->positionSeekTick >= 80) {
-			$this->positionSeekTick = 0;
-			return true;
-		}
-		return false;
 	}
 }
