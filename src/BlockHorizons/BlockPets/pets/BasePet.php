@@ -443,7 +443,7 @@ abstract class BasePet extends Creature implements Rideable {
 		}
 		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
 			$this->getLoader()->createPet($this->getEntityType(), $petOwner, $this->getPetName(), $this->getStartingScale(), $this->namedtag["isBaby"], $this->getPetLevel(), $this->getPetLevelPoints(), $this->isChested());
-			$this->close();
+			$this->kill(true);
 			return true;
 		}
 		if($this->distance($petOwner) >= 50) {
@@ -453,6 +453,11 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->updateMovement();
 		parent::onUpdate($currentTick);
 		return true;
+	}
+
+	public function kill($ignore = false) {
+		$this->shouldIgnoreEvent = $ignore;
+		parent::kill();
 	}
 
 	/**
@@ -558,11 +563,6 @@ abstract class BasePet extends Creature implements Rideable {
 		return $this->calculator;
 	}
 
-	public function kill($ignore = false) {
-		$this->shouldIgnoreEvent = $ignore;
-		parent::kill();
-	}
-
 	/**
 	 * @return bool
 	 */
@@ -589,7 +589,7 @@ abstract class BasePet extends Creature implements Rideable {
 			// All entities except players get closed automatically. No need to close it manually.
 			$this->getLoader()->getDatabase()->unregisterPet($this->getPetName(), $this->getPetOwnerName());
 
-			return true;
+			return false;
 		}
 		if($this->isDormant())  {
 			$this->despawnFromAll();
@@ -640,11 +640,16 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->dormant = $value;
 	}
 
+	public function despawnFromAll() {
+		parent::despawnFromAll();
+		$this->getCalculator()->storeToDatabase();
+	}
+
 	/**
 	 * @return bool
 	 */
 	public function shouldFindNewPosition(): bool {
-		if($this->positionSeekTick >= 120) {
+		if($this->positionSeekTick >= 80) {
 			$this->positionSeekTick = 0;
 			return true;
 		}
