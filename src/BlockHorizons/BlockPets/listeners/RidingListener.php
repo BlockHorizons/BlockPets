@@ -84,7 +84,7 @@ class RidingListener implements Listener {
 			}
 			if($this->getLoader()->getBlockPetsConfig()->fetchFromDatabase()) {
 				$pet->getCalculator()->storeToDatabase();
-				$pet->kill(true);
+				$pet->close();
 			}
 		}
 	}

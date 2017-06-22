@@ -112,7 +112,7 @@ class EventListener implements Listener {
 			$pet->spawnToAll();
 			$pet->setDormant(false);
 			if($this->getLoader()->getBlockPetsConfig()->doHardReset()) {
-				$pet->kill(true);
+				$pet->close();
 			}
 		}
 	}
