@@ -469,7 +469,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	public function shouldFindNewPosition(): bool {
-		if($this->positionSeekTick >= 80) {
+		if($this->positionSeekTick >= 70) {
 			$this->positionSeekTick = 0;
 			return true;
 		}
@@ -625,6 +625,7 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->despawnFromAll();
 			$this->setDormant();
 			if($this->getLoader()->getBlockPetsConfig()->fetchFromDatabase()) {
+				$this->getCalculator()->storeToDatabase();
 				$this->close();
 			}
 			return false;

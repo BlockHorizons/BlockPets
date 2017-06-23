@@ -108,6 +108,9 @@ class MySQLDataStorer extends BaseDataStorer {
 		}
 		$query = "SELECT Inventory FROM Pets WHERE Player = '" . $this->escape($ownerName) . "' AND PetName = '" . $this->escape($petName) . "'";
 		$return = $this->database->query($query)->fetch_assoc()["Inventory"];
+		if(empty($return)) {
+			return [];
+		}
 		$compressedContents = base64_decode($return);
 		$nbt = new NBT(NBT::BIG_ENDIAN);
 		$nbt->readCompressed($compressedContents);
