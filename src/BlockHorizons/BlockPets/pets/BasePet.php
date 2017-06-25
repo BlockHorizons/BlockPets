@@ -30,7 +30,7 @@ use pocketmine\utils\TextFormat;
 abstract class BasePet extends Creature implements Rideable {
 
 	const STATE_SITTING = 1;
-	const STATE_STANDING = 3;
+	const STATE_STANDING = 0;
 
 	const TIER_COMMON = 1;
 	const TIER_UNCOMMON = 2;
@@ -64,7 +64,7 @@ abstract class BasePet extends Creature implements Rideable {
 	private $dormant = false;
 	private $chested = false;
 	private $shouldIgnoreEvent = false;
-	private $positionSeekTick = 120;
+	private $positionSeekTick = 60;
 	private $inventory = null;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
@@ -469,7 +469,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	public function shouldFindNewPosition(): bool {
-		if($this->positionSeekTick >= 70) {
+		if($this->positionSeekTick >= 60) {
 			$this->positionSeekTick = 0;
 			return true;
 		}
@@ -507,9 +507,6 @@ abstract class BasePet extends Creature implements Rideable {
 				$rider->setAllowFlight(false);
 			}
 		}
-		if($this instanceof ArrowPet) {
-			$this->setCritical(false);
-		}
 	}
 
 	/**
@@ -543,7 +540,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->to = $player->getId();
 		$pk->from = $this->getId();
 		$pk->type = self::STATE_SITTING;
-		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
+		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
 
 		$pk = new SetEntityLinkPacket();
 		$pk->to = 0;
@@ -553,9 +550,6 @@ abstract class BasePet extends Creature implements Rideable {
 
 		if($this->getPetOwner()->isSurvival()) {
 			$this->getPetOwner()->setAllowFlight(true); // Set allow flight to true to prevent any 'kicked for flying' issues.
-		}
-		if($this instanceof ArrowPet) {
-			$this->setCritical();
 		}
 	}
 

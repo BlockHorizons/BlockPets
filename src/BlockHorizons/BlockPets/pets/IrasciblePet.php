@@ -57,7 +57,7 @@ abstract class IrasciblePet extends BasePet {
 					$this->setAngry($attacker);
 				}
 			}
-			if($attacker instanceof Player && $this->canBeRidden) {
+			if($attacker instanceof Player && $this->canBeRidden && $attacker->getName() === $this->getPetOwnerName()) {
 				if($attacker->getInventory()->getItemInHand()->getId() === Item::SADDLE) {
 					$this->setRider($attacker);
 					$attacker->sendTip(TextFormat::GRAY . "Crouch or jump to dismount...");
