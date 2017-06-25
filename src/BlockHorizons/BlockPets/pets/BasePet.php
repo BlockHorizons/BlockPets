@@ -64,7 +64,7 @@ abstract class BasePet extends Creature implements Rideable {
 	private $dormant = false;
 	private $chested = false;
 	private $shouldIgnoreEvent = false;
-	private $positionSeekTick = 120;
+	private $positionSeekTick = 60;
 	private $inventory = null;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
@@ -469,7 +469,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	public function shouldFindNewPosition(): bool {
-		if($this->positionSeekTick >= 70) {
+		if($this->positionSeekTick >= 60) {
 			$this->positionSeekTick = 0;
 			return true;
 		}
