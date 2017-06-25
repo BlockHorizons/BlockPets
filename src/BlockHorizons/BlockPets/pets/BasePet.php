@@ -29,7 +29,7 @@ use pocketmine\utils\TextFormat;
 
 abstract class BasePet extends Creature implements Rideable {
 
-	const STATE_SITTING = 3;
+	const STATE_SITTING = 1;
 	const STATE_STANDING = 0;
 
 	const TIER_COMMON = 1;
@@ -543,7 +543,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->to = 0;
+		$pk->to = $player->getId();
 		$pk->from = $this->getId();
 		$pk->type = self::STATE_SITTING;
 		$player->dataPacket($pk);
