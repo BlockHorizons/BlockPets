@@ -29,8 +29,8 @@ use pocketmine\utils\TextFormat;
 
 abstract class BasePet extends Creature implements Rideable {
 
-	const STATE_SITTING = 0;
-	const STATE_STANDING = 3;
+	const STATE_SITTING = 3;
+	const STATE_STANDING = 0;
 
 	const TIER_COMMON = 1;
 	const TIER_UNCOMMON = 2;
@@ -507,9 +507,6 @@ abstract class BasePet extends Creature implements Rideable {
 				$rider->setAllowFlight(false);
 			}
 		}
-		if($this instanceof ArrowPet) {
-			$this->setCritical(false);
-		}
 	}
 
 	/**
@@ -553,9 +550,6 @@ abstract class BasePet extends Creature implements Rideable {
 
 		if($this->getPetOwner()->isSurvival()) {
 			$this->getPetOwner()->setAllowFlight(true); // Set allow flight to true to prevent any 'kicked for flying' issues.
-		}
-		if($this instanceof ArrowPet) {
-			$this->setCritical();
 		}
 	}
 
