@@ -21,7 +21,7 @@ class RidingListener implements Listener {
 	}
 
 	/**
-	 * Used for getting values of arrows clicked during the riding of a pet, and when dismounted.
+	 * Used for getting values of arrows clicked during the riding of a pet, and when dismounted, as well as throwing the rider off the vehicle when leaving.
 	 *
 	 * @param DataPacketReceiveEvent $event
 	 */

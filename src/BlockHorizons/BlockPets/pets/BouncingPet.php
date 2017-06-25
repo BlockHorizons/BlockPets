@@ -9,7 +9,6 @@ use pocketmine\Player;
 abstract class BouncingPet extends IrasciblePet {
 
 	protected $jumpTicks = 0;
-	protected $waitingTime = 15;
 	protected $jumpHeight = 0.08;
 
 	public function onUpdate($currentTick) {
@@ -116,7 +115,7 @@ abstract class BouncingPet extends IrasciblePet {
 			}
 			$target->attack($event->getFinalDamage(), $event);
 
-			$this->waitingTime = 15;
+			$this->waitingTime = 12;
 		} elseif($this->distance($this->getPetOwner()) > 25 || $this->distance($this->getTarget()) > 15) {
 			$this->calmDown();
 		}

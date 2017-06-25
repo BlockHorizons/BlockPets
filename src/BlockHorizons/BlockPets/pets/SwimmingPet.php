@@ -88,7 +88,7 @@ abstract class SwimmingPet extends BouncingPet {
 
 				$target->attack($event->getFinalDamage(), $event);
 
-				$this->waitingTime = 15;
+				$this->waitingTime = 12;
 			} elseif($this->distance($this->getPetOwner()) > 25 || $this->distance($this->getTarget()) > 15) {
 				$this->calmDown();
 			}

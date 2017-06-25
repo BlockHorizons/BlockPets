@@ -13,8 +13,6 @@ abstract class HoveringPet extends IrasciblePet {
 
 	protected $flyHeight = 0;
 
-	private $waitingTime = 15;
-
 	public function onUpdate($currentTick) {
 		if(!$this->checkUpdateRequirements()) {
 			return true;
@@ -99,7 +97,7 @@ abstract class HoveringPet extends IrasciblePet {
 
 			$target->attack($event->getFinalDamage(), $event);
 
-			$this->waitingTime = 15;
+			$this->waitingTime = 12;
 		} elseif($this->distance($this->getPetOwner()) > 25 || $this->distance($this->getTarget()) > 15) {
 			$this->calmDown();
 		}

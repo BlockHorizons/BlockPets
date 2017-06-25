@@ -29,7 +29,7 @@ use pocketmine\utils\TextFormat;
 
 abstract class BasePet extends Creature implements Rideable {
 
-	const STATE_SITTING = 2;
+	const STATE_SITTING = 1;
 	const STATE_STANDING = 3;
 
 	const TIER_COMMON = 1;
@@ -455,9 +455,9 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->positionSeekTick++;
 		if($this->shouldFindNewPosition()) {
 			if(!$this->getLoader()->getBlockPetsConfig()->shouldStalkPetOwner()) {
-				$this->xOffset = lcg_value() * 3.5;
-				$this->yOffset = lcg_value() * 3.5;
-				$this->zOffset = lcg_value() * 3.5;
+				$this->xOffset = lcg_value() * (3 + $this->getScale());
+				$this->yOffset = lcg_value() * (3 + $this->getScale());
+				$this->zOffset = lcg_value() * (3 + $this->getScale());
 			}
 		}
 		$this->updateMovement();
@@ -501,12 +501,11 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->type = self::STATE_STANDING;
 		$this->getPetOwner()->dataPacket($pk);
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_SADDLED, false);
-		if($rider !== null) {
+		if($this->getPetOwner() !== null) {
 			$rider->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, false);
-		}
-
-		if($this->getPetOwner()->isSurvival()) {
-			$rider->setAllowFlight(false);
+			if($this->getPetOwner()->isSurvival()) {
+				$rider->setAllowFlight(false);
+			}
 		}
 		if($this instanceof ArrowPet) {
 			$this->setCritical(false);
