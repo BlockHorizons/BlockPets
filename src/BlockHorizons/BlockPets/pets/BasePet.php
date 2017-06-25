@@ -29,7 +29,7 @@ use pocketmine\utils\TextFormat;
 
 abstract class BasePet extends Creature implements Rideable {
 
-	const STATE_SITTING = 1;
+	const STATE_SITTING = 0;
 	const STATE_STANDING = 3;
 
 	const TIER_COMMON = 1;
