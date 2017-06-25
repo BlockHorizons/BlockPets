@@ -51,10 +51,12 @@ abstract class BasePet extends Creature implements Rideable {
 
 	protected $attackDamage = 4;
 	protected $speed = 1.0;
+	protected $petLevelPoints = 0;
+
 	protected $canBeRidden = true;
 	protected $canBeChested = true;
+	protected $canAttack = true;
 
-	protected $petLevelPoints = 0;
 	protected $calculator;
 
 	protected $xOffset = 0;
@@ -136,6 +138,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->speed = (float) $properties["Speed"];
 		$this->canBeRidden = (bool) $properties["Can-Be-Ridden"];
 		$this->canBeChested = (bool) $properties["Can-Be-Chested"];
+		$this->canAttack = (bool) $properties["Can-Attack"];
 	}
 
 	/**

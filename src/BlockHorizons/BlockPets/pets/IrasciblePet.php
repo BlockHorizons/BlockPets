@@ -74,10 +74,14 @@ abstract class IrasciblePet extends BasePet {
 	 * @param Living $entity
 	 */
 	public function setAngry(Living $entity) {
+		if(!$this->canAttack) {
+			return false;
+		}
 		$this->target = $entity;
 		if($this instanceof ArrowPet) {
 			$this->setCritical();
 		}
+		return true;
 	}
 
 	public abstract function doAttackingMovement();
