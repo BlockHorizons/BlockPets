@@ -1,20 +1,48 @@
 ---
 # English messages file for BlockPets, a pets plugin by BlockHorizons.
-# TODO: replace § with &
+# TODO: replace § with &, add all language strings
 
 prefix:
-  warning: "[Warning]"
+  warning: "§c[§6Warning§c]"
 
 commands:
   errors:
     console-use: "That command can only be used by players."
     no-permission: "You don't have permission to use that command."
+    
+    pet:
+      doesnt-exist: "A pet with the given name doesn't exist."
+      numeric: "The pet scale should be numeric."
+      
     player:
       not-found: "The given player cannot be found."
       no-pet: "You do not own a pet with the given name."
       no-pet-other: "The given player does not own a pet with that name."
+      already-own-pet: "You already own a pet with that name."
          
   changepetname:
     no-permission: "You don't have permission to change the name of pets from other players."
     success: "Successfully changed the name of %s §r§ato %s."
+    
+  clearpet:
+    success: "Successfully cleared the pet §b%s§a."
+    
+  healpet:
+    success: "The pet %s §r§a has been healed successfully!"
+    
+  spawnpet:
+    no-permission: "You don't have permission to spawn that pet."
+    no-permission-others: "You don't have permission to spawn pets to others."
+    success: "Successfully spawned a pet with the name §b%s§a."
+    success-other: "You have received a pet with the name §b%s§a."
+    name: "Please type a name for your pet in chat"
+    selecting-name: "%s is now selecting a name for their pet."
+    exceeded-limit: "%s exceeded the pet limit."
+    
+  removepet:
+    success: "Succesfully removed the pet §b%s§a."
+    
+  togglepet:
+    success: "Successfully toggled your pets %s."
+    success-others: "Successfully toggle the pet §b%s §r§a %s."
 ...
