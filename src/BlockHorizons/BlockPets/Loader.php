@@ -280,9 +280,9 @@ class Loader extends PluginBase {
 	 */
 	public function translate(string $key, array $params = []) {
 	    if(!empty($params)) {
-	        return vsprintf($this->language->get($key), $params);
+	        return vsprintf($this->getLanguage()->get($key), $params);
 	    }
-	    return $this->language->get($key);
+	    return $this->getLanguage()->get($key);
 	}
 
 	/**
@@ -295,6 +295,13 @@ class Loader extends PluginBase {
 				$clearLaggPlugin->exemptEntity($event->getEntity());
 			}
 		}
+	}
+
+	/**
+	 * @return LanguageConfig
+	 */
+	public function getLanguage(): LanguageConfig {
+		return $this->language;
 	}
 
 	/**

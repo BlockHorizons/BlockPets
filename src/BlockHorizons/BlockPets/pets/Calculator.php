@@ -91,8 +91,4 @@ class Calculator {
 			}
 		}
 	}
-
-	public function saveInventory() {
-
-	}
 }
