@@ -1,6 +1,7 @@
 # BlockPets
+
+[![Join the chat at https://gitter.im/BlockHorizons/BlockPets](https://badges.gitter.im/BlockHorizons/BlockPets.svg)](https://gitter.im/BlockHorizons/BlockPets?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Poggit-CI](https://poggit.pmmp.io/ci.shield/BlockHorizons/BlockPets/BlockPets)](https://poggit.pmmp.io/ci/BlockHorizons/BlockPets/BlockPets)<br><br>
 An advanced pets plugin for PocketMine-MP.<br>
-[![Poggit-CI](https://poggit.pmmp.io/ci.shield/BlockHorizons/BlockPets/BlockPets)](https://poggit.pmmp.io/ci/BlockHorizons/BlockPets/BlockPets)
 
 ### Overview
 BlockPets is a pet plugin designed to bring every feature that should be included in a good pets plugin. This includes pets being able to level up, fight, smooth walking, riding and other essential features. A full list of features can be found below.
