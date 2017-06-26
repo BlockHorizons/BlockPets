@@ -1,6 +1,11 @@
 ---
 # Configuration file for BlockPets, a pets plugin by BlockHorizons.
 
+# The language to be used in messages in this plugin.
+# Available options:
+# - en
+Language: en
+
 # Whether to make pets invulnerable to any damage, or allow damaging them.
 Invulnerable-Pets: false
 
@@ -48,8 +53,8 @@ Give-Experience-For-Feeding: true
 
 # The database used to store data of pets in. This is only relevant if storage to database is turned to true.
 # Options:
-# MySQL
-# SQLite
+# - MySQL
+# - SQLite
 Database: SQLite
 
 # MySQL information. This is only relevant if database above is set to MySQL.

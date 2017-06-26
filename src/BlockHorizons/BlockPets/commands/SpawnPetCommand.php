@@ -30,7 +30,7 @@ class SpawnPetCommand extends BaseCommand {
 		}
 		
 		if(!$this->testPermission($sender)) {
-			$this->sendNoPermission($sender);
+			$this->sendPermissionMessage($sender);
 			return true;
 		}
 
@@ -45,25 +45,25 @@ class SpawnPetCommand extends BaseCommand {
 		}
 
 		if(!$sender->hasPermission("blockpets.pet." . strtolower($args[0]))) {
-			$sender->sendMessage(TF::RED . "[Warning] You don't have permission to spawn that pet.");
+			$this->sendPermissionMessage($sender);
 			return true;
 		}
 
 		$player = $sender;
 		if(isset($args[4])) {
 			if(($player = $this->getLoader()->getServer()->getPlayer($args[4])) === null) {
-				$sender->sendMessage(TF::RED . "[Warning] That player isn't online.");
+				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.not-found"));
 				return true;
 			}
 			if(!$sender->hasPermission("blockpets.command.spawnpet.others")) {
-				$sender->sendMessage(TF::RED . "[Warning] You don't have permission to spawn pets to others.");
+				$this->sendWarning($sender, $this->getLoader()->translate("commands.spawnpet.no-permission.others"));
 				return true;
 			}
 		}
 
 		if(isset($args[2])) {
 			if(!is_numeric($args[2])) {
-				$sender->sendMessage(TF::RED . "[Warning] The pet scale should be numeric.");
+				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.numeric"));
 				return true;
 			}
 			if((float) $args[2] > $this->getLoader()->getBlockPetsConfig()->getMaxPetSize() && !($sender->hasPermission("blockpets.bypass-size-limit"))) {
@@ -82,18 +82,20 @@ class SpawnPetCommand extends BaseCommand {
 		}
 		$petName = $this->getLoader()->getPet($args[0]);
 		if($petName === null) {
-			$sender->sendMessage(TF::RED . "[Warning] Pet type " . $args[0] . " does not exist!");
+			$this->sendWarning("Pet type " . $args[0] . " does not exist!");
 			return true;
 		}
 		if(count($this->getLoader()->getPetsFrom($player)) >= $this->getLoader()->getBlockPetsConfig()->getMaxPets() && !$player->hasPermission("blockpets.bypass-limit")) {
-			$sender->sendMessage(TF::RED . "[Warning] " . $player === $sender ? "You have " : "Your target has " . " exceeded the pet limit.");
+			$this->sendMessage($sender, $this->getLoader()->translate("commands.spawnpet.exceeded-limit", [
+			    $player === $sender ? "You have " : "Your target has "
+			]));
 			return true;
 		}
 		if(!isset($args[1]) || strtolower($args[1]) === "select") {
 			if($player !== $sender) {
-				$sender->sendMessage(TF::GREEN . $player->getName() . " is now selecting a name for their pet.");
+				$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.spawnpet.selecting-name", [$player->getName()]));
 			}
-			$player->sendMessage(TF::GREEN . "Please type a name for your pet in chat.");
+			$player->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.spawnpet.name"));
 			$this->getLoader()->selectingName[$player->getName()] = [
 				"petType" => $petName,
 				"scale" => isset($args[2]) ? (float) $args[2] : 1.0,
@@ -101,16 +103,16 @@ class SpawnPetCommand extends BaseCommand {
 			return true;
 		}
 		if($this->getLoader()->getPetByName($args[1], $sender) !== null) {
-			$sender->sendMessage(TF::RED . "[Warning] You already own a pet with that name.");
+			$sender->sendMessage($sender, $this->getLoader()->translate("commands.errors.player.already-own-pet"));
 			return true;
 		}
 		if($this->getLoader()->createPet((string) $petName, $player, (string) $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3]) === null) {
-			$sender->sendMessage(TF::RED . "[Warning] A plugin has cancelled spawning this pet.");
+			$this->sendWarning($sender, "A plugin has cancelled spawning this pet.");
 			return true;
 		}
-		$sender->sendMessage(TF::GREEN . "Successfully spawned a pet with the name: " . TF::AQUA . $args[1]);
+		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.spawnpet.success", [$args[1]]));
 		if($player->getName() !== $sender->getName()) {
-			$player->sendMessage(TF::GREEN . "You have received a pet with the name: " . TF::AQUA . $args[1]);
+			$player->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.spawnpet.success.other", [$args[1]]));
 		}
 		return true;
 	}

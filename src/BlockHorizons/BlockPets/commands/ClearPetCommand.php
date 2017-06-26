@@ -16,7 +16,7 @@ class ClearPetCommand extends BaseCommand {
 
 	public function execute(CommandSender $sender, $commandLabel, array $args): bool {
 		if(!$this->testPermission($sender)) {
-			$this->sendNoPermission($sender);
+			$this->sendPermissionMessage($sender);
 			return true;
 		}
 
@@ -26,15 +26,15 @@ class ClearPetCommand extends BaseCommand {
 		}
 
 		if(($pet = $this->getLoader()->getPetByName($args[0], $sender)) === null) {
-			$sender->sendMessage(TF::RED . "[Warning] A pet with that name doesn't exist.");
+		    $this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.doesnt-exist"));
 			return true;
 		}
 
 		if($this->getLoader()->removePet($pet->getPetName(), $sender) === false) {
-			$sender->sendMessage(TF::RED . "[Warning] A plugin has cancelled the removal of this pet.");
+			$this->sendWarning($sender, "A plugin has cancelled the removal of this pet.");
 			return true;
 		}
-		$sender->sendMessage(TF::GREEN . "Successfully cleared the pet: " . TF::AQUA . $pet->getPetName());
+		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.clearpet.success", [$pet->getPetName()]));
 		return true;
 	}
 }

@@ -20,30 +20,30 @@ class RemovePetCommand extends BaseCommand {
 		}
 
 		if(($pet = $this->getLoader()->getPetByName($args[0])) === null) {
-			$sender->sendMessage(TF::RED . "[Warning] A pet with that name doesn't exist.");
+			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.doesnt-exist"));
 			return true;
 		}
 		if(isset($args[1])) {
 			if(($player = $this->getLoader()->getServer()->getPlayer($args[1])) === null) {
-				$sender->sendMessage(TF::RED . "[Warning] The given player could not be found.");
+				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.not-found"));
 				return true;
 			}
 			if(($pet = $this->getLoader()->getPetByName($args[0], $player)) === null) {
-				$sender->sendMessage(TF::RED . "[Warning] The given player does not own a pet with that name.");
+				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.no-pet-other"));
 				return true;
 			}
 			if($this->getLoader()->removePet($pet->getPetName(), $player) === false) {
-				$sender->sendMessage(TF::RED . "[Warning] A plugin has cancelled the removal of this pet.");
+				$this->sendWarning($sender, "A plugin has cancelled the removal this pet.");
 				return true;
 			}
-			$sender->sendMessage(TF::GREEN . "Successfully removed the pet: " . TF::AQUA . $pet->getPetName());
+			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.removepet.success", [$pet->getPetName()]));
 			return true;
 		}
 
 		if($this->getLoader()->removePet($args[0])) {
-			$sender->sendMessage(TF::GREEN . "Successfully removed the pet: " . TF::AQUA . $pet->getPetName());
+			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.removepet.success", [$pet->getPetName()]));
 		} else {
-			$sender->sendMessage(TF::RED . "[Warning] A plugin has cancelled the removal this pet.");
+			$this->sendWarning($sender, "A plugin has cancelled the removal this pet.");
 		}
 		return true;
 	}
