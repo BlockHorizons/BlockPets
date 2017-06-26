@@ -31,18 +31,18 @@ class HealPetCommand extends BaseCommand {
 				return true;
 			}
 			if(($pet = $this->getLoader()->getPetByName($args[0], $player)) === null) {
-				$sender->sendMessage(TF::RED . "[Warning] The given player does not own a pet with that name.");
+				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.no-pet-other"));
 				return true;
 			}
 			$pet->fullHeal();
 			$pet->getLevel()->addParticle(new HeartParticle($pet->add(0, 2), 4));
-			$sender->sendMessage(TF::GREEN . "The pet " . $pet->getPetName() . TF::RESET . TF::GREEN . " has been healed successfully!");
+			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.healpet.success", [$pet->getPetName()]));
 			return true;
 		}
 
 		$pet->fullHeal();
 		$pet->getLevel()->addParticle(new HeartParticle($pet->add(0, 2), 4));
-		$sender->sendMessage(TF::GREEN . "The pet " . $pet->getPetName() . TF::RESET . TF::GREEN . " has been healed successfully!");
+		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.healpet.success", [$pet->getPetName()]));
 		return true;
 	}
 }

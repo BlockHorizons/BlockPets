@@ -24,13 +24,15 @@ class TogglePetCommand extends BaseCommand {
 			return true;
 		}
 		if(!isset($args[0])) {
-			$sender->sendMessage(TF::RED . "[Warning] You did not specify a pet to toggle.");
+			$this->sendWarning($sender, "You did not specify a pet to toggle.");
 			return true;
 		}
 
 		if(strtolower($args[0]) === "all") {
 			$this->getLoader()->togglePets($sender);
-			$sender->sendMessage(TF::GREEN . "Successfully toggled your pets " . ($this->getLoader()->arePetsToggledOn($sender) ? "on." : "off."));
+			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.togglepet.success", [
+			    ($this->getLoader()->arePetsToggledOn($sender) ? "on." : "off.")
+			]));
 		} else {
 			$pet = $this->getLoader()->getPetByName($args[0], $sender);
 			if($pet === null) {
@@ -38,7 +40,10 @@ class TogglePetCommand extends BaseCommand {
 				return true;
 			}
 			$this->getLoader()->togglePet($pet, $sender);
-			$sender->sendMessage(TF::GREEN . "Successfully toggled the pet " . TF::AQUA . $pet->getPetName() . TF::RESET . TF::GREEN . ($this->getLoader()->isPetToggledOn($pet, $sender) ? " off." : " on."));
+			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.togglepet.success", [
+			    $pet->getPetName(),
+			    ($this->getLoader()->isPetToggledOn($pet, $sender) ? " off." : " on.")
+			]));
 		}
 		return true;
 	}

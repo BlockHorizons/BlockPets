@@ -38,7 +38,14 @@ class LanguageConfig {
             "commands.changepetname.no-permission" => $language["commands"]["changepetname"]["no-permission"],
             "commands.changepetname.success" => $language["commands"]["changepetname"]["success"],
             
-            "commands.spawnpet.no-permission" => $language["commands"]["spawnpet"]["no-permission"]
+            "commands.healpet.success" => $language["commands"]["healpet"]["success"],
+            
+            "commands.spawnpet.no-permission" => $language["commands"]["spawnpet"]["no-permission"],
+           
+            "commands.removepet.success" => $language["commands"]["removepet"]["success"],
+            
+            "commands.togglepet.success" => $language["commands"]["togglepet"]["success"],
+            "commands.togglepet.success-other" => $language["commands"]["togglepet"]["success-other"]
         ];
     }
 

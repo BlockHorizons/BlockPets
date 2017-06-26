@@ -43,7 +43,7 @@ class LevelUpPetCommand extends BaseCommand {
 				return true;
 			}
 			if(($pet = $this->getLoader()->getPetByName($args[0], $player)) === null) {
-				$sender->sendMessage(TF::RED . "[Warning] The given player does not own a pet with that name.");
+				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.no-pet-other"));
 				return true;
 			}
 			$pet->levelUp($amount);
