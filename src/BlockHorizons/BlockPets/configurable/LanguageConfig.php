@@ -66,7 +66,7 @@ class LanguageConfig {
     /**
      * @param string $key
      *
-     * @return mixed|null
+     * @return string|null
      */
     public function get(string $key) {
         return $this->messages[$key] ?? null;

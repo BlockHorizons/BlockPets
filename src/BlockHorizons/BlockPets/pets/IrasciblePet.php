@@ -72,8 +72,10 @@ abstract class IrasciblePet extends BasePet {
 	 * Sets the pet angry and it's target to the given entity, making it chase the entity.
 	 *
 	 * @param Living $entity
+	 *
+	 * @return bool
 	 */
-	public function setAngry(Living $entity) {
+	public function setAngry(Living $entity): bool {
 		if(!$this->canAttack) {
 			return false;
 		}
