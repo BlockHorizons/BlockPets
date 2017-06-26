@@ -113,7 +113,7 @@ abstract class BouncingPet extends IrasciblePet {
 				}
 				$this->calmDown();
 			}
-			$target->attack($event->getFinalDamage(), $event);
+			$target->attack($event);
 
 			$this->waitingTime = 12;
 		} elseif($this->distance($this->getPetOwner()) > 25 || $this->distance($this->getTarget()) > 15) {
@@ -188,14 +188,13 @@ abstract class BouncingPet extends IrasciblePet {
 	}
 
 	/**
-	 * @param float             $damage
 	 * @param EntityDamageEvent $source
 	 */
-	public function attack($damage, EntityDamageEvent $source) {
+	public function attack(EntityDamageEvent $source) {
 		if($source->getCause() === $source::CAUSE_FALL) {
 			$source->setCancelled();
 		}
-		return parent::attack($damage, $source);
+		return parent::attack($source);
 	}
 
 	public function generateCustomPetData() {

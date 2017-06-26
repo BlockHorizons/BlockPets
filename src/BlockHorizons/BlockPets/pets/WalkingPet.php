@@ -112,7 +112,7 @@ abstract class WalkingPet extends IrasciblePet {
 				$this->calmDown();
 			}
 
-			$target->attack($event->getFinalDamage(), $event);
+			$target->attack($event);
 
 			$this->waitingTime = 12;
 		} elseif($this->distance($this->getPetOwner()) > 25 || $this->distance($this->getTarget()) > 15) {

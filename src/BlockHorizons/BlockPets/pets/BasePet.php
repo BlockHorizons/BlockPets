@@ -216,10 +216,9 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
-	 * @param float             $damage
 	 * @param EntityDamageEvent $source
 	 */
-	public function attack($damage, EntityDamageEvent $source) {
+	public function attack(EntityDamageEvent $source) {
 		if($source instanceof EntityDamageByEntityEvent) {
 			$player = $source->getDamager();
 			if($player instanceof Player) {
@@ -237,7 +236,7 @@ abstract class BasePet extends Creature implements Rideable {
 					$remainder = $hand;
 					$remainder->setCount($remainder->getCount() - 1);
 					$player->getInventory()->setItemInHand($remainder);
-					$this->heal($heal, new EntityRegainHealthEvent($this, $heal, EntityRegainHealthEvent::CAUSE_SATURATION));
+					$this->heal(new EntityRegainHealthEvent($this, $heal, EntityRegainHealthEvent::CAUSE_SATURATION));
 					$this->getLevel()->addParticle(new HeartParticle($this->add(0, 2), 4));
 
 					if($this->getLoader()->getBlockPetsConfig()->giveExperienceWhenFed()) {
@@ -268,7 +267,7 @@ abstract class BasePet extends Creature implements Rideable {
 			}
 		}
 		$this->calculator->updateNameTag();
-		parent::attack($damage, $source);
+		parent::attack($source);
 	}
 
 	/**
@@ -360,24 +359,6 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
-	 * @param Player $player
-	 */
-	public function spawnTo(Player $player) {
-		parent::spawnTo($player);
-		$pk = new AddEntityPacket();
-		$pk->entityRuntimeId = $this->getId();
-		$pk->type = $this->getNetworkId();
-		$pk->x = $this->x;
-		$pk->y = $this->y;
-		$pk->z = $this->z;
-		$pk->speedX = $pk->speedY = $pk->speedZ = 0.0;
-		$pk->yaw = $this->yaw;
-		$pk->pitch = $this->pitch;
-		$pk->metadata = $this->dataProperties;
-		$player->dataPacket($pk);
-	}
-
-	/**
 	 * Returns the network (entity) ID of the entity.
 	 *
 	 * @return int
@@ -441,7 +422,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$petOwner = $this->getPetOwner();
 		if(mt_rand(1, 60) === 1 && $this->isAlive()) {
 			if($this->getHealth() !== $this->getMaxHealth()) {
-				$this->heal(1, new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
+				$this->heal(new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
 				$this->calculator->updateNameTag();
 			}
 		}
@@ -565,7 +546,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function fullHeal() {
 		$diff = $this->getMaxHealth() - $this->getHealth();
-		$this->heal($diff, new EntityRegainHealthEvent($this, $diff, EntityRegainHealthEvent::CAUSE_CUSTOM));
+		$this->heal(new EntityRegainHealthEvent($this, $diff, EntityRegainHealthEvent::CAUSE_CUSTOM));
 	}
 
 	/**

@@ -22,10 +22,9 @@ abstract class IrasciblePet extends BasePet {
 	}
 
 	/**
-	 * @param float             $damage
 	 * @param EntityDamageEvent $source
 	 */
-	public function attack($damage, EntityDamageEvent $source) {
+	public function attack(EntityDamageEvent $source) {
 		if($this->closed || !$this->isAlive()) {
 			return;
 		}
@@ -65,7 +64,7 @@ abstract class IrasciblePet extends BasePet {
 				}
 			}
 		}
-		parent::attack($damage, $source);
+		parent::attack($source);
 	}
 
 	/**
