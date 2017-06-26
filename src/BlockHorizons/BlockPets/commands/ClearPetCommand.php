@@ -26,7 +26,7 @@ class ClearPetCommand extends BaseCommand {
 		}
 
 		if(($pet = $this->getLoader()->getPetByName($args[0], $sender)) === null) {
-		    $this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.doesnt-exist"));
+			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.doesnt-exist"));
 			return true;
 		}
 

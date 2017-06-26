@@ -19,16 +19,16 @@ class SpawnPetCommand extends BaseCommand {
 		 * Hack to make spawnpet command work, required because parameter ordering is messed up.
 		 * TODO: Remove
 		 */
-		if(count($args) > 1){
+		if(count($args) > 1) {
 			$a = $args;
 			$last = array_pop($a);
 			$pet = $this->getLoader()->getPet($last);
-			if($pet !== null){
+			if($pet !== null) {
 				$a1 = array_splice($args, -1);
 				$args = array_merge($a1, $args);
 			}
 		}
-		
+
 		if(!$this->testPermission($sender)) {
 			$this->sendPermissionMessage($sender);
 			return true;
@@ -87,7 +87,7 @@ class SpawnPetCommand extends BaseCommand {
 		}
 		if(count($this->getLoader()->getPetsFrom($player)) >= $this->getLoader()->getBlockPetsConfig()->getMaxPets() && !$player->hasPermission("blockpets.bypass-limit")) {
 			$this->sendMessage($sender, $this->getLoader()->translate("commands.spawnpet.exceeded-limit", [
-			    $player === $sender ? "You have " : "Your target has "
+				$player === $sender ? "You have " : "Your target has "
 			]));
 			return true;
 		}

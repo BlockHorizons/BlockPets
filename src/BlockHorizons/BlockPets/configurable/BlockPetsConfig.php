@@ -137,12 +137,12 @@ class BlockPetsConfig {
 	public function getDatabase(): string {
 		return (string) $this->settings["Database"] ?? "SQLite";
 	}
-	
+
 	/**
 	 * @return string
 	 */
 	public function getLanguage(): string {
-	    return (string) $this->settings["Language"] ?? "en";
+		return (string) $this->settings["Language"] ?? "en";
 	}
 
 	/**
@@ -173,7 +173,7 @@ class BlockPetsConfig {
 		return (float) $this->settings["Pet-Max-Size"] ?? 15.0;
 	}
 
-	/** 
+	/**
 	 * @return bool
 	 */
 	public function shouldStalkPetOwner(): bool {

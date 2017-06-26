@@ -13,8 +13,8 @@ use BlockHorizons\BlockPets\commands\RemovePetCommand;
 use BlockHorizons\BlockPets\commands\SpawnPetCommand;
 use BlockHorizons\BlockPets\commands\TogglePetCommand;
 use BlockHorizons\BlockPets\configurable\BlockPetsConfig;
-use BlockHorizons\BlockPets\configurable\PetProperties;
 use BlockHorizons\BlockPets\configurable\LanguageConfig;
+use BlockHorizons\BlockPets\configurable\PetProperties;
 use BlockHorizons\BlockPets\events\PetRemoveEvent;
 use BlockHorizons\BlockPets\events\PetSpawnEvent;
 use BlockHorizons\BlockPets\listeners\EventListener;
@@ -33,7 +33,6 @@ use BlockHorizons\BlockPets\pets\creatures\EnderCrystalPet;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use BlockHorizons\BlockPets\pets\creatures\EndermanPet;
 use BlockHorizons\BlockPets\pets\creatures\EndermitePet;
-use BlockHorizons\BlockPets\pets\creatures\EvocationFangsPet;
 use BlockHorizons\BlockPets\pets\creatures\EvokerPet;
 use BlockHorizons\BlockPets\pets\creatures\GhastPet;
 use BlockHorizons\BlockPets\pets\creatures\GuardianPet;
@@ -73,7 +72,6 @@ use BlockHorizons\BlockPets\pets\datastorage\BaseDataStorer;
 use BlockHorizons\BlockPets\pets\datastorage\MySQLDataStorer;
 use BlockHorizons\BlockPets\pets\datastorage\SQLiteDataStorer;
 use pocketmine\entity\Entity;
-use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
@@ -191,9 +189,9 @@ class Loader extends PluginBase {
 		GuardianPet::class,
 		ArrowPet::class
 	];
-	
+
 	public $availableLanguages = [
-	    "en"
+		"en"
 	];
 
 	/** @var array */
@@ -271,7 +269,7 @@ class Loader extends PluginBase {
 	public function getBlockPetsConfig(): BlockPetsConfig {
 		return $this->bpConfig;
 	}
-	
+
 	/**
 	 * @param string $key
 	 * @param array  $params
@@ -279,22 +277,10 @@ class Loader extends PluginBase {
 	 * @return string
 	 */
 	public function translate(string $key, array $params = []) {
-	    if(!empty($params)) {
-	        return vsprintf($this->getLanguage()->get($key), $params);
-	    }
-	    return $this->getLanguage()->get($key);
-	}
-
-	/**
-	 * @param EntitySpawnEvent $event
-	 */
-	public function onEntitySpawn(EntitySpawnEvent $event) {
-		if($event->getEntity() instanceof BasePet) {
-			$clearLaggPlugin = $this->getServer()->getPluginManager()->getPlugin("ClearLagg");
-			if($clearLaggPlugin !== null) {
-				$clearLaggPlugin->exemptEntity($event->getEntity());
-			}
+		if(!empty($params)) {
+			return vsprintf($this->getLanguage()->get($key), $params);
 		}
+		return $this->getLanguage()->get($key);
 	}
 
 	/**

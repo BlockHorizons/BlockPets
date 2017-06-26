@@ -10,6 +10,7 @@ use BlockHorizons\BlockPets\tasks\PetRespawnTask;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDeathEvent;
+use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerJoinEvent;
@@ -135,6 +136,18 @@ class EventListener implements Listener {
 			$this->getLoader()->createPet($data["petType"], $event->getPlayer(), $petName, $data["scale"], $data["isBaby"]);
 			$event->getPlayer()->sendMessage(TextFormat::GREEN . "Successfully obtained a " . $data["petType"] . " with the name " . $event->getMessage());
 			unset($this->getLoader()->selectingName[$event->getPlayer()->getName()]);
+		}
+	}
+
+	/**
+	 * @param EntitySpawnEvent $event
+	 */
+	public function onEntitySpawn(EntitySpawnEvent $event) {
+		if($event->getEntity() instanceof BasePet) {
+			$clearLaggPlugin = $this->getLoader()->getServer()->getPluginManager()->getPlugin("ClearLagg");
+			if($clearLaggPlugin !== null) {
+				$clearLaggPlugin->exemptEntity($event->getEntity());
+			}
 		}
 	}
 }

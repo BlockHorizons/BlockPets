@@ -5,7 +5,6 @@ namespace BlockHorizons\BlockPets\pets;
 use BlockHorizons\BlockPets\events\PetInventoryInitializationEvent;
 use BlockHorizons\BlockPets\events\PetLevelUpEvent;
 use BlockHorizons\BlockPets\Loader;
-use BlockHorizons\BlockPets\pets\creatures\ArrowPet;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use BlockHorizons\BlockPets\pets\inventory\PetInventoryHolder;
 use pocketmine\entity\Creature;
@@ -440,7 +439,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function onUpdate($currentTick) {
 		$petOwner = $this->getPetOwner();
-		if(mt_rand(1, 60) === 1) {
+		if(mt_rand(1, 60) === 1 && $this->isAlive()) {
 			if($this->getHealth() !== $this->getMaxHealth()) {
 				$this->heal(1, new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
 				$this->calculator->updateNameTag();
@@ -616,7 +615,7 @@ abstract class BasePet extends Creature implements Rideable {
 
 			return true;
 		}
-		if($this->isDormant())  {
+		if($this->isDormant()) {
 			$this->despawnFromAll();
 			return false;
 		}

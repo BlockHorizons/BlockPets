@@ -14,8 +14,8 @@ use pocketmine\utils\TextFormat;
 
 abstract class IrasciblePet extends BasePet {
 
-	private $target = null;
 	protected $waitingTime = 0;
+	private $target = null;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);

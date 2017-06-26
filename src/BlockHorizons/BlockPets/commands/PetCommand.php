@@ -35,7 +35,7 @@ class PetCommand extends BaseCommand {
 				if($args[1] > 2) {
 					$args[1] = 1;
 				}
-				$sender->sendMessage(TextFormat::GREEN . "--- BlockPets Help Page " . TextFormat::YELLOW . $args[1] . "/2" .  TextFormat::GREEN . " ---");
+				$sender->sendMessage(TextFormat::GREEN . "--- BlockPets Help Page " . TextFormat::YELLOW . $args[1] . "/2" . TextFormat::GREEN . " ---");
 				switch($args[1]) {
 					case 1:
 						$sender->sendMessage(

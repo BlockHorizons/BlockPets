@@ -42,9 +42,9 @@ class ChangePetNameCommand extends BaseCommand {
 			$oldName = $pet->getPetName();
 			$pet->changeName($newName);
 			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.changepetname.success", [
-			    $oldName,
-			    $newName
-			]));
+					$oldName,
+					$newName
+				]));
 			return true;
 		} else {
 			if(($pet = $this->getLoader()->getPetByName($args[0], $sender)) === null) {
@@ -56,9 +56,9 @@ class ChangePetNameCommand extends BaseCommand {
 		$oldName = $pet->getPetName();
 		$pet->changeName($newName);
 		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.changepetname.success", [
-                $oldName,
-                $newName
-        ]));
+				$oldName,
+				$newName
+			]));
 		return true;
 	}
 }
