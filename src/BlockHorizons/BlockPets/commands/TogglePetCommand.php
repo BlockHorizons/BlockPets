@@ -40,7 +40,7 @@ class TogglePetCommand extends BaseCommand {
 				return true;
 			}
 			$this->getLoader()->togglePet($pet, $sender);
-			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.togglepet.success", [
+			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.togglepet.success.other", [
 			    $pet->getPetName(),
 			    ($this->getLoader()->isPetToggledOn($pet, $sender) ? " off." : " on.")
 			]));

@@ -31,6 +31,7 @@ class LanguageConfig {
             "commands.errors.console-use" => $language["commands"]["errors"]["console-use"],
             "commands.errors.no-permission" => $language["commands"]["errors"]["no-permission"],
             "commands.errors.pet.doesnt-exist" => $language["commands"]["errors"]["pet"]["doesnt-exist"],
+            "commands.errors.pet.numeric" => $language["commands"]["errors"]["pet"]["numeric"],
             "commands.errors.player.not-found" => $language["commands"]["errors"]["player"]["not-found"],
             "commands.errors.player.no-pet" => $language["commands"]["errors"]["player"]["no-pet"],
             "commands.errors.player.no-pet-other" => $language["commands"]["errors"]["player"]["no-pet-other"],
@@ -41,11 +42,17 @@ class LanguageConfig {
             "commands.healpet.success" => $language["commands"]["healpet"]["success"],
             
             "commands.spawnpet.no-permission" => $language["commands"]["spawnpet"]["no-permission"],
+            "commands.spawnpet.no-permission.other" => $language["commands"]["spawnpet"]["no-permission-others"],
+            "commands.spawnpet.success" => $language["commands"]["spawnpet"]["success"],
+            "commands.spawnpet.success.other" => $language["commands"]["spawnpet"]["success-other"],
+            "commands.spawnpet.name" => $language["commands"]["spawnpet"]["name"],
+            "commands.spawnpet.selecting-name" => $language["commands"]["spawnpet"]["selecting-name"],
+            "commands.spawnpet.exceeded-limit" => $language["commands"]["spawnpet"]["exceeded-limit"],
            
             "commands.removepet.success" => $language["commands"]["removepet"]["success"],
             
             "commands.togglepet.success" => $language["commands"]["togglepet"]["success"],
-            "commands.togglepet.success-other" => $language["commands"]["togglepet"]["success-other"]
+            "commands.togglepet.success.other" => $language["commands"]["togglepet"]["success-others"]
         ];
     }
 
