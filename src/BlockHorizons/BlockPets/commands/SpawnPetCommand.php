@@ -30,7 +30,7 @@ class SpawnPetCommand extends BaseCommand {
 		}
 		
 		if(!$this->testPermission($sender)) {
-			$this->sendNoPermission($sender);
+			$this->sendPermissionMessage($sender);
 			return true;
 		}
 
@@ -45,14 +45,14 @@ class SpawnPetCommand extends BaseCommand {
 		}
 
 		if(!$sender->hasPermission("blockpets.pet." . strtolower($args[0]))) {
-			$sender->sendMessage(TF::RED . "[Warning] You don't have permission to spawn that pet.");
+			$this->sendPermissionMessage($sender);
 			return true;
 		}
 
 		$player = $sender;
 		if(isset($args[4])) {
 			if(($player = $this->getLoader()->getServer()->getPlayer($args[4])) === null) {
-				$sender->sendMessage(TF::RED . "[Warning] That player isn't online.");
+				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.not-found"));
 				return true;
 			}
 			if(!$sender->hasPermission("blockpets.command.spawnpet.others")) {

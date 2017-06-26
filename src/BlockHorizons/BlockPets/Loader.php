@@ -14,6 +14,7 @@ use BlockHorizons\BlockPets\commands\SpawnPetCommand;
 use BlockHorizons\BlockPets\commands\TogglePetCommand;
 use BlockHorizons\BlockPets\configurable\BlockPetsConfig;
 use BlockHorizons\BlockPets\configurable\PetProperties;
+use BlockHorizons\BlockPets\configurable\LanguageConfig;
 use BlockHorizons\BlockPets\events\PetRemoveEvent;
 use BlockHorizons\BlockPets\events\PetSpawnEvent;
 use BlockHorizons\BlockPets\listeners\EventListener;
@@ -190,12 +191,17 @@ class Loader extends PluginBase {
 		GuardianPet::class,
 		ArrowPet::class
 	];
+	
+	public $availableLanguages = [
+	    "en"
+	];
 
 	/** @var array */
 	public $selectingName = [];
 
 	private $bpConfig;
 	private $pProperties;
+	private $language;
 
 	private $database;
 	private $toggledOff = [];
@@ -211,6 +217,7 @@ class Loader extends PluginBase {
 
 		$this->bpConfig = new BlockPetsConfig($this);
 		$this->pProperties = new PetProperties($this);
+		$this->language = new LanguageConfig($this);
 		$this->selectDatabase();
 	}
 
@@ -263,6 +270,19 @@ class Loader extends PluginBase {
 	 */
 	public function getBlockPetsConfig(): BlockPetsConfig {
 		return $this->bpConfig;
+	}
+	
+	/**
+	 * @param string $key
+	 * @param array  $params
+	 *
+	 * @return string
+	 */
+	public function translate(string $key, array $params = []) {
+	    if(!empty($params)) {
+	        return vsprintf($this->language->get($key), $params);
+	    }
+	    return $this->language->get($key);
 	}
 
 	/**

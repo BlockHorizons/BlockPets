@@ -22,8 +22,23 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 	/**
 	 * @param CommandSender $sender
 	 */
-	public function sendConsoleError(CommandSender $sender) {
-		$sender->sendMessage(TF::RED . "[Warning] That command can only be used by players.");
+	public function sendConsoleError(CommandSender $sender) {   
+		$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.console-use"));
+	}
+	
+	/**
+	 * @param CommandSender $sender
+	 */
+	public function sendPermissionMessage(CommandSender $sender) {
+	    $this->sendWarning($sender, $this->getLoader()->translate("commands." . $this->getName() . ".no-permission") ?? $this->getLoader()->translate("commands.no-permission"));
+	}
+	
+	/**
+	 * @param CommandSender $sender
+	 * @param string        $text
+	 */
+	public function sendWarning(CommandSender $sender, string $text) {
+	    $sender->sendMessage(TF::RED . $this->getLoader()->translate("prefix.warning") . " " . $text);
 	}
 
 	/**
@@ -38,13 +53,6 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 	 */
 	public function getLoader(): Loader {
 		return $this->loader;
-	}
-
-	/**
-	 * @param CommandSender $sender
-	 */
-	public function sendNoPermission(CommandSender $sender) {
-		$sender->sendMessage(TF::RED . "[Warning] You don't have permission to use that command.");
 	}
 
 	public function generateCustomCommandData(Player $player): array {

@@ -16,7 +16,7 @@ class TogglePetCommand extends BaseCommand {
 
 	public function execute(CommandSender $sender, $commandLabel, array $args): bool {
 		if(!$this->testPermission($sender)) {
-			$this->sendNoPermission($sender);
+			$this->sendPermissionMessage($sender);
 			return true;
 		}
 		if(!$sender instanceof Player) {
@@ -34,7 +34,7 @@ class TogglePetCommand extends BaseCommand {
 		} else {
 			$pet = $this->getLoader()->getPetByName($args[0], $sender);
 			if($pet === null) {
-				$sender->sendMessage(TF::RED . "[Warning] You do not own a pet with the given name.");
+				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.no-pet"));
 				return true;
 			}
 			$this->getLoader()->togglePet($pet, $sender);

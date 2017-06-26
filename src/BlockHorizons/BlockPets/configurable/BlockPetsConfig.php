@@ -137,6 +137,13 @@ class BlockPetsConfig {
 	public function getDatabase(): string {
 		return (string) $this->settings["Database"] ?? "SQLite";
 	}
+	
+	/**
+	 * @return string
+	 */
+	public function getLanguage(): string {
+	    return (string) $this->settings["Language"] ?? "en";
+	}
 
 	/**
 	 * @return int

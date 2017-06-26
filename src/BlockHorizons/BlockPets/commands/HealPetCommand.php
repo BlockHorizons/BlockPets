@@ -16,18 +16,18 @@ class HealPetCommand extends BaseCommand {
 
 	public function execute(CommandSender $sender, $commandLabel, array $args): bool {
 		if(!$this->testPermission($sender)) {
-			$this->sendNoPermission($sender);
+			$this->sendPermissionMessage($sender);
 			return true;
 		}
 
 		if(($pet = $this->getLoader()->getPetByName($args[0])) === null) {
-			$sender->sendMessage(TF::RED . "[Warning] A pet with that name doesn't exist.");
+			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.doesnt-exist"));
 			return true;
 		}
 
 		if(isset($args[1])) {
 			if(($player = $this->getLoader()->getServer()->getPlayer($args[1])) === null) {
-				$sender->sendMessage(TF::RED . "[Warning] The given player could not be found.");
+				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.not-found"));
 				return true;
 			}
 			if(($pet = $this->getLoader()->getPetByName($args[0], $player)) === null) {

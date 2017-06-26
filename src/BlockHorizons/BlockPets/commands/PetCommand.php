@@ -16,7 +16,7 @@ class PetCommand extends BaseCommand {
 
 	public function execute(CommandSender $sender, $commandLabel, array $args): bool {
 		if(!$this->testPermission($sender)) {
-			$this->sendNoPermission($sender);
+			$this->sendPermissionMessage($sender);
 			return true;
 		}
 
