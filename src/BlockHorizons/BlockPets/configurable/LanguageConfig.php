@@ -24,7 +24,7 @@ class LanguageConfig {
             }
         }
         
-        // Don't look at this code, it harm you — or start a nuclear war. BlockHorizons and it's developers are not responsible for any physical damage as a result of staring at this code.
+        // Don't look at this code, it may harm you — or start a nuclear war. BlockHorizons and it's developers are not responsible for any physical damage received as a result of staring at this code. You have been warned.
         $this->messages = [
             "prefix.warning" => $language["prefix"]["warning"],
             
