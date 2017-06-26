@@ -1,4 +1,6 @@
 # BlockPets
+
+[![Join the chat at https://gitter.im/BlockHorizons/BlockPets](https://badges.gitter.im/BlockHorizons/BlockPets.svg)](https://gitter.im/BlockHorizons/BlockPets?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 An advanced pets plugin for PocketMine-MP.<br>
 [![Poggit-CI](https://poggit.pmmp.io/ci.shield/BlockHorizons/BlockPets/BlockPets)](https://poggit.pmmp.io/ci/BlockHorizons/BlockPets/BlockPets)
 
