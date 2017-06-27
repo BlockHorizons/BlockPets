@@ -1,0 +1,53 @@
+---
+# English messages file for BlockPets, a pets plugin by BlockHorizons.
+# TODO: replace § with &, add all language strings
+
+prefix:
+  warning: "§c[§6Waarschuwing§c]"
+
+commands:
+  errors:
+    console-use: "Dat commando kan alleen gebruikt worden door spelers."
+    no-permission: "Je hebt geen permissie om dat commando uit te voeren."
+    plugin-cancelled: "Een andere plugin heeft die actie onderbroken."
+
+    pet:
+      doesnt-exist: "Een huisdier type met die naam bestaat niet."
+      numeric: "De huisdier grootte moet numeriek zijn."
+
+    player:
+      not-found: "De gegeven speler kon niet gevonden worden."
+      no-pet: "Je beschikt niet over een huisdier met die naam."
+      no-pet-other: "De gegeven speler beschikt niet over een huisdier met die naam."
+      already-own-pet: "Je hebt al een huisdier met die naam."
+
+  changepetname:
+    no-permission: "Je hebt geen permissie om de naam van huisdieren van andere spelers te veranderen."
+    success: "Naam van %s §r§asuccesvol veranderd naar %s!"
+
+  clearpet:
+    success: "Huisdier §b%s§a verwijderen succesvol!"
+
+  healpet:
+    success: "Het huisdier %s §r§a genezen was succesvol!"
+
+  leveluppet:
+    success: "Huisdier niveau verhogen succesvol: §b%s §r§a %s!"
+
+  spawnpet:
+    no-permission: "Je hebt geen permissie om dat huisdier te gebruiken."
+    no-permission-others: "Je hebt geen permissie om ander spelers huisdieren te geven."
+    success: "Verschijnen van het huisdier §b%s §awas succesvol!"
+    success-other: "Je hebt een huisdier gekregen met de naam: §b%s§a!"
+    name: "Type alsjeblieft een naam voor je huisdier!"
+    selecting-name: "%s is nu een naam voor zijn huisdier aan het kiezen!"
+    exceeded-limit: "%s heeft de huisdier limiet overschreden."
+
+  removepet:
+    success: "Verwijderen van het huisdier §b%s §awas succesvol."
+
+  togglepet:
+    no-pet-specified: "Je hebt geen huisdier gekozen om aan/uit te zetten."
+    success: "Je hebt je huisdieren %s gezet!"
+    success-others: "Je hebt het huisdier §b%s §r§a %s gezet!"
+...

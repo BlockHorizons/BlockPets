@@ -59,7 +59,6 @@ class LanguageConfig {
 			"commands.spawnpet.name" => $language["commands"]["spawnpet"]["name"],
 			"commands.spawnpet.selecting-name" => $language["commands"]["spawnpet"]["selecting-name"],
 			"commands.spawnpet.exceeded-limit" => $language["commands"]["spawnpet"]["exceeded-limit"],
-			"commands.spawnpet.non-existing-type" => $language["commands"]["spawnpet"]["non-existing-type"],
 
 			"commands.removepet.success" => $language["commands"]["removepet"]["success"],
 

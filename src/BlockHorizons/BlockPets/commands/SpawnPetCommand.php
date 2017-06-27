@@ -82,7 +82,7 @@ class SpawnPetCommand extends BaseCommand {
 		}
 		$petName = $this->getLoader()->getPet($args[0]);
 		if($petName === null) {
-			$this->sendWarning($sender, $this->getLoader()->translate("commands.spawnpet.non-existing-type", [$args[0]]));
+			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.doesnt-exist", [$args[0]]));
 			return true;
 		}
 		if(count($this->getLoader()->getPetsFrom($player)) >= $this->getLoader()->getBlockPetsConfig()->getMaxPets() && !$player->hasPermission("blockpets.bypass-limit")) {
@@ -99,7 +99,8 @@ class SpawnPetCommand extends BaseCommand {
 			$this->getLoader()->selectingName[$player->getName()] = [
 				"petType" => $petName,
 				"scale" => isset($args[2]) ? (float) $args[2] : 1.0,
-				"isBaby" => isset($args[3]) ? (bool) $args[3] : false];
+				"isBaby" => isset($args[3]) ? (bool) $args[3] : false
+			];
 			return true;
 		}
 		if($this->getLoader()->getPetByName($args[1], $sender) !== null) {

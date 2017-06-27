@@ -561,6 +561,24 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * @param Player $player
+	 */
+	public function spawnTo(Player $player) {
+		parent::spawnTo($player);
+		$pk = new AddEntityPacket();
+		$pk->entityRuntimeId = $this->getId();
+		$pk->type = $this->getNetworkId();
+		$pk->x = $this->x;
+		$pk->y = $this->y;
+		$pk->z = $this->z;
+		$pk->speedX = $pk->speedY = $pk->speedZ = 0.0;
+		$pk->yaw = $this->yaw;
+		$pk->pitch = $this->pitch;
+		$pk->metadata = $this->dataProperties;
+		$player->dataPacket($pk);
+	}
+
+	/**
 	 * Returns the calculator connected to this pet, used to recalculate health, size, experience etc.
 	 *
 	 * @return Calculator
