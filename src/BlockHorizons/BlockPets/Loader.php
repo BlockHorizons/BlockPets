@@ -190,7 +190,7 @@ class Loader extends PluginBase {
 		ArrowPet::class
 	];
 
-	public $availableLanguages = [
+	private $availableLanguages = [
 		"en"
 	];
 
@@ -244,6 +244,13 @@ class Loader extends PluginBase {
 		foreach($listeners as $listener) {
 			$this->getServer()->getPluginManager()->registerEvents($listener, $this);
 		}
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getAvailableLanguages(): array {
+		return $this->availableLanguages;
 	}
 
 	/**

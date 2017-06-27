@@ -15,7 +15,7 @@ class RemovePetCommand extends BaseCommand {
 
 	public function execute(CommandSender $sender, $commandLabel, array $args): bool {
 		if(!$this->testPermission($sender)) {
-			$this->sendNoPermission($sender);
+			$this->sendPermissionMessage($sender);
 			return true;
 		}
 
@@ -33,7 +33,7 @@ class RemovePetCommand extends BaseCommand {
 				return true;
 			}
 			if($this->getLoader()->removePet($pet->getPetName(), $player) === false) {
-				$this->sendWarning($sender, "A plugin has cancelled the removal this pet.");
+				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.plugin-cancelled"));
 				return true;
 			}
 			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.removepet.success", [$pet->getPetName()]));
@@ -43,7 +43,7 @@ class RemovePetCommand extends BaseCommand {
 		if($this->getLoader()->removePet($args[0])) {
 			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.removepet.success", [$pet->getPetName()]));
 		} else {
-			$this->sendWarning($sender, "A plugin has cancelled the removal this pet.");
+			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.plugin-cancelled"));
 		}
 		return true;
 	}

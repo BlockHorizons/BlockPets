@@ -9,6 +9,7 @@ commands:
   errors:
     console-use: "That command can only be used by players."
     no-permission: "You don't have permission to use that command."
+    plugin-cancelled: "A plugin has cancelled that action."
     
     pet:
       doesnt-exist: "A pet with the given name doesn't exist."
@@ -29,10 +30,14 @@ commands:
     
   healpet:
     success: "The pet %s §r§a has been healed successfully!"
+
+  leveluppet:
+    success: "Successfully leveled up the pet: §b%s §r§a %s!"
     
   spawnpet:
     no-permission: "You don't have permission to spawn that pet."
     no-permission-others: "You don't have permission to spawn pets to others."
+    non-existing-type: "The pet type %s does not exist."
     success: "Successfully spawned a pet with the name §b%s§a."
     success-other: "You have received a pet with the name §b%s§a."
     name: "Please type a name for your pet in chat"
@@ -40,9 +45,10 @@ commands:
     exceeded-limit: "%s exceeded the pet limit."
     
   removepet:
-    success: "Succesfully removed the pet §b%s§a."
+    success: "Successfully removed the pet §b%s§a."
     
   togglepet:
+    no-pet-specified: "You did not specify a pet to toggle."
     success: "Successfully toggled your pets %s."
     success-others: "Successfully toggle the pet §b%s §r§a %s."
 ...

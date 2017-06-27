@@ -16,12 +16,19 @@ class LanguageConfig {
 	}
 
 	public function collectMessages() {
+		$languageSelected = false;
 		$language = [];
-		foreach($this->getLoader()->availableLanguages as $availableLanguage) {
+		foreach($this->getLoader()->getAvailableLanguages() as $availableLanguage) {
 			if($this->getLoader()->getBlockPetsConfig()->getLanguage() === $availableLanguage) {
 				$this->getLoader()->saveResource("languages/" . $availableLanguage . ".yml");
 				$language = yaml_parse_file($this->getLoader()->getDataFolder() . "languages/" . $availableLanguage . ".yml");
+				$languageSelected = true;
+				break;
 			}
+		}
+		if(!$languageSelected) {
+			$this->getLoader()->saveResource("languages/en.yml");
+			$language = yaml_parse_file($this->getLoader()->getDataFolder() . "languages/en.yml");
 		}
 
 		// Don't look at this code, it may harm you — or start a nuclear war. BlockHorizons and it's developers are not responsible for any physical damage received as a result of staring at this code. You have been warned.
@@ -30,6 +37,8 @@ class LanguageConfig {
 
 			"commands.errors.console-use" => $language["commands"]["errors"]["console-use"],
 			"commands.errors.no-permission" => $language["commands"]["errors"]["no-permission"],
+			"commands.errors.plugin-cancelled" => $language["commands"]["errors"]["plugin-cancelled"],
+
 			"commands.errors.pet.doesnt-exist" => $language["commands"]["errors"]["pet"]["doesnt-exist"],
 			"commands.errors.pet.numeric" => $language["commands"]["errors"]["pet"]["numeric"],
 			"commands.errors.player.not-found" => $language["commands"]["errors"]["player"]["not-found"],
@@ -41,6 +50,8 @@ class LanguageConfig {
 
 			"commands.healpet.success" => $language["commands"]["healpet"]["success"],
 
+			"commands.leveluppet.success" => $language["commands"]["leveluppet"]["success"],
+
 			"commands.spawnpet.no-permission" => $language["commands"]["spawnpet"]["no-permission"],
 			"commands.spawnpet.no-permission.other" => $language["commands"]["spawnpet"]["no-permission-others"],
 			"commands.spawnpet.success" => $language["commands"]["spawnpet"]["success"],
@@ -48,11 +59,13 @@ class LanguageConfig {
 			"commands.spawnpet.name" => $language["commands"]["spawnpet"]["name"],
 			"commands.spawnpet.selecting-name" => $language["commands"]["spawnpet"]["selecting-name"],
 			"commands.spawnpet.exceeded-limit" => $language["commands"]["spawnpet"]["exceeded-limit"],
+			"commands.spawnpet.non-existing-type" => $language["commands"]["spawnpet"]["non-existing-type"],
 
 			"commands.removepet.success" => $language["commands"]["removepet"]["success"],
 
 			"commands.togglepet.success" => $language["commands"]["togglepet"]["success"],
-			"commands.togglepet.success.other" => $language["commands"]["togglepet"]["success-others"]
+			"commands.togglepet.success.other" => $language["commands"]["togglepet"]["success-others"],
+			"commands.togglepet.no-pet-specified" => $language["commands"]["togglepet"]["no-pet-specified"]
 		];
 	}
 

@@ -31,7 +31,7 @@ class ClearPetCommand extends BaseCommand {
 		}
 
 		if($this->getLoader()->removePet($pet->getPetName(), $sender) === false) {
-			$this->sendWarning($sender, "A plugin has cancelled the removal of this pet.");
+			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.plugin-cancelled"));
 			return true;
 		}
 		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.clearpet.success", [$pet->getPetName()]));

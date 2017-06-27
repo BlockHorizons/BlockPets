@@ -47,12 +47,12 @@ class LevelUpPetCommand extends BaseCommand {
 				return true;
 			}
 			$pet->levelUp($amount);
-			$sender->sendMessage(TF::GREEN . "Successfully leveled up the pet: " . TF::AQUA . $pet->getPetName() . TF::GREEN . ($amount === 1 ? " once!" : " " . $amount . " times!"));
+			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.leveluppet.success", [$pet->getPetName(), ($amount === 1 ? " once" : " " . $amount . " times")]));
 			return true;
 		}
 
 		$pet->levelUp($amount);
-		$sender->sendMessage(TF::GREEN . "Successfully leveled up the pet: " . TF::AQUA . $pet->getPetName() . TF::GREEN . ($amount === 1 ? " once!" : " " . $amount . " times!"));
+		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.leveluppet.success", [$pet->getPetName(), ($amount === 1 ? " once" : " " . $amount . " times")]));
 		return true;
 	}
 }

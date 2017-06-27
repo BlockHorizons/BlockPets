@@ -82,11 +82,11 @@ class SpawnPetCommand extends BaseCommand {
 		}
 		$petName = $this->getLoader()->getPet($args[0]);
 		if($petName === null) {
-			$this->sendWarning("Pet type " . $args[0] . " does not exist!");
+			$this->sendWarning($sender, $this->getLoader()->translate("commands.spawnpet.non-existing-type", [$args[0]]));
 			return true;
 		}
 		if(count($this->getLoader()->getPetsFrom($player)) >= $this->getLoader()->getBlockPetsConfig()->getMaxPets() && !$player->hasPermission("blockpets.bypass-limit")) {
-			$this->sendMessage($sender, $this->getLoader()->translate("commands.spawnpet.exceeded-limit", [
+			$sender->sendMessage($sender, $this->getLoader()->translate("commands.spawnpet.exceeded-limit", [
 				$player === $sender ? "You have " : "Your target has "
 			]));
 			return true;
@@ -107,7 +107,7 @@ class SpawnPetCommand extends BaseCommand {
 			return true;
 		}
 		if($this->getLoader()->createPet((string) $petName, $player, (string) $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3]) === null) {
-			$this->sendWarning($sender, "A plugin has cancelled spawning this pet.");
+			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.plugin-cancelled"));
 			return true;
 		}
 		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.spawnpet.success", [$args[1]]));

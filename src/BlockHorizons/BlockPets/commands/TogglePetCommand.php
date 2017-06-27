@@ -24,7 +24,7 @@ class TogglePetCommand extends BaseCommand {
 			return true;
 		}
 		if(!isset($args[0])) {
-			$this->sendWarning($sender, "You did not specify a pet to toggle.");
+			$this->sendWarning($sender, $this->getLoader()->translate("commands.togglepet.no-pet-specified"));
 			return true;
 		}
 

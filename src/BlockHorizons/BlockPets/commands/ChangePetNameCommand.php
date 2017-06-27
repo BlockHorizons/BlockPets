@@ -16,7 +16,7 @@ class ChangePetNameCommand extends BaseCommand {
 
 	public function execute(CommandSender $sender, $commandLabel, array $args) {
 		if(!$this->testPermission($sender)) {
-			$this->sendNoPermission($sender);
+			$this->sendPermissionMessage($sender);
 			return true;
 		}
 
