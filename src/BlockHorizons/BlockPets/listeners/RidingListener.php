@@ -9,6 +9,7 @@ use pocketmine\event\player\cheat\PlayerIllegalMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\InteractPacket;
+use pocketmine\network\mcpe\protocol\PlayerActionPacket;
 use pocketmine\network\mcpe\protocol\PlayerInputPacket;
 use pocketmine\Player;
 
@@ -37,6 +38,14 @@ class RidingListener implements Listener {
 					$this->getLoader()->getRiddenPet($event->getPlayer())->throwRiderOff();
 				}
 			}
+		} elseif($packet instanceof PlayerActionPacket) {
+			if($packet->action === $packet::ACTION_JUMP) {
+				foreach($this->getLoader()->getPetsFrom($event->getPlayer()) as $pet) {
+					if($pet->isRiding()) {
+						$pet->dismountFromOwner();
+					}
+				}
+			}
 		}
 	}
 
@@ -57,6 +66,9 @@ class RidingListener implements Listener {
 		if($player instanceof Player) {
 			if($this->getLoader()->isRidingAPet($player)) {
 				$this->getLoader()->getRiddenPet($player)->throwRiderOff();
+				foreach($this->getLoader()->getPetsFrom($player) as $pet) {
+					$pet->dismountFromOwner();
+				}
 			}
 		}
 	}

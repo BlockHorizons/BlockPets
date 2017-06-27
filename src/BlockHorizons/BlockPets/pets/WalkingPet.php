@@ -14,6 +14,12 @@ abstract class WalkingPet extends IrasciblePet {
 		if(!$this->checkUpdateRequirements()) {
 			return true;
 		}
+		if($this->isRiding()) {
+			$this->yaw = $this->getPetOwner()->yaw;
+			$this->pitch = $this->getPetOwner()->pitch;
+			$this->updateMovement();
+			return parent::onUpdate($currentTick);
+		}
 		parent::onUpdate($currentTick);
 		if(!$this->isAlive()) {
 			return true;

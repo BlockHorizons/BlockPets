@@ -48,6 +48,8 @@ abstract class BasePet extends Creature implements Rideable {
 	/** @var null|string */
 	protected $rider = null;
 
+	protected $riding = false;
+
 	protected $attackDamage = 4;
 	protected $speed = 1.0;
 	protected $petLevelPoints = 0;
@@ -55,6 +57,7 @@ abstract class BasePet extends Creature implements Rideable {
 	protected $canBeRidden = true;
 	protected $canBeChested = true;
 	protected $canAttack = true;
+	protected $canRide = true;
 
 	protected $calculator;
 
@@ -138,6 +141,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->canBeRidden = (bool) $properties["Can-Be-Ridden"];
 		$this->canBeChested = (bool) $properties["Can-Be-Chested"];
 		$this->canAttack = (bool) $properties["Can-Attack"];
+		$this->canRide = (bool) $properties["Can-Ride-On-Owner"];
 	}
 
 	/**
@@ -260,15 +264,27 @@ abstract class BasePet extends Creature implements Rideable {
 					}
 
 				} elseif($player->getName() === $this->getPetOwnerName()) {
-					if($this->isChested() && $player->getInventory()->getItemInHand()->getId() === Item::AIR) {
+					if($this->isChested() && $hand->getId() === Item::AIR) {
 						$source->setCancelled();
 						$this->getInventory()->openToOwner();
+					} elseif($player->isSneaking() && $this->canRide) {
+						foreach($this->getLoader()->getPetsFrom($player) as $pet) {
+							$pet->dismountFromOwner();
+						}
+						$this->sitOnOwner();
 					}
 				}
 			}
 		}
 		$this->calculator->updateNameTag();
 		parent::attack($damage, $source);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isRiding(): bool {
+		return $this->riding;
 	}
 
 	/**
@@ -622,6 +638,7 @@ abstract class BasePet extends Creature implements Rideable {
 		if($this->getPetOwner() === null) {
 			$this->ridden = false;
 			$this->rider = null;
+			$this->riding = false;
 			$this->despawnFromAll();
 			$this->setDormant();
 			if($this->getLoader()->getBlockPetsConfig()->fetchFromDatabase()) {
@@ -658,5 +675,34 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function setDormant(bool $value = true) {
 		$this->dormant = $value;
+	}
+
+	/**
+	 * Sets the pet sitting on top of the owner's head.
+	 */
+	public function sitOnOwner() {
+		$this->riding = true;
+		$this->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 2.1 + $this->getScale() * 0.9, -0.25]);
+		$this->getPetOwner()->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, true);
+
+		$pk = new SetEntityLinkPacket();
+		$pk->to = $this->getId();
+		$pk->from = $this->getPetOwner()->getId();
+		$pk->type = self::STATE_SITTING;
+		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
+	}
+
+	/**
+	 * Dismounts the pet sitting on top of the owner's head.
+	 */
+	public function dismountFromOwner() {
+		$this->riding = false;
+		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, false);
+
+		$pk = new SetEntityLinkPacket();
+		$pk->to = $this->getId();
+		$pk->from = $this->getPetOwner()->getId();
+		$pk->type = self::STATE_STANDING;
+		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
 	}
 }

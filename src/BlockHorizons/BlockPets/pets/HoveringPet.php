@@ -18,6 +18,12 @@ abstract class HoveringPet extends IrasciblePet {
 			return true;
 		}
 		$petOwner = $this->getPetOwner();
+		if($this->isRiding()) {
+			$this->yaw = $this->getPetOwner()->yaw;
+			$this->pitch = $this->getPetOwner()->pitch;
+			$this->updateMovement();
+			return parent::onUpdate($currentTick);
+		}
 		parent::onUpdate($currentTick);
 		if(!$this->isAlive()) {
 			return true;

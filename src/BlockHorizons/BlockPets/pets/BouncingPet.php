@@ -15,6 +15,12 @@ abstract class BouncingPet extends IrasciblePet {
 		if(!$this->checkUpdateRequirements()) {
 			return true;
 		}
+		if($this->isRiding()) {
+			$this->yaw = $this->getPetOwner()->yaw;
+			$this->pitch = $this->getPetOwner()->pitch;
+			$this->updateMovement();
+			return parent::onUpdate($currentTick);
+		}
 		$petOwner = $this->getPetOwner();
 		parent::onUpdate($currentTick);
 		if(!$this->isAlive()) {

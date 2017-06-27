@@ -15,6 +15,9 @@ abstract class SwimmingPet extends BouncingPet {
 			return true;
 		}
 		$petOwner = $this->getPetOwner();
+		if($this->isRiding()) {
+			return parent::onUpdate($currentTick);
+		}
 		parent::onUpdate($currentTick);
 		if(!$this->isAlive()) {
 			return true;
