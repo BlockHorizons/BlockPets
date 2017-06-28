@@ -11,8 +11,8 @@ Stable releases of BlockPets will be drafted at the Release tab with a pre-built
 To install:
 - Download one of the pre-built phar files from either releases or the Poggit button below.
 - Drop the phar file in the plugins folder of your server.
-- Restart the server, and enjoy.
-[![Poggit-CI](https://poggit.pmmp.io/ci.shield/BlockHorizons/BlockPets/BlockPets)](https://poggit.pmmp.io/ci/BlockHorizons/BlockPets/BlockPets)<br><br>
+- Restart the server, and enjoy.<br>
+[![Poggit-CI](https://poggit.pmmp.io/ci.shield/BlockHorizons/BlockPets/BlockPets)](https://poggit.pmmp.io/ci/BlockHorizons/BlockPets/BlockPets)<br>
 
 ### Translation
 BlockPets has a language system so everybody can use the plugin in the language they prefer. You can change language to one of the available languages in the plugin.yml. Of course, not every language file exists. If you want to help translate, don't hesitate to add a new file and copy the english translations in it, then translate them. Any help is greatly appreciated.
@@ -32,9 +32,9 @@ BlockPets has a language system so everybody can use the plugin in the language 
 - Pets can sit on your head by tapping them while sneaking.
 
 ### Commands and Permissions
-BlockPets has permissions for every pet and command, to wall off the permissions for players but still allow them to have at least some way to spawn pets. The most up to date list of permissions can be found in the [plugin.yml file](https://github.com/BlockHorizons/BlockPets/blob/master/plugin.yml)<br><br>
+BlockPets has permissions for every pet and command, to wall off the permissions for players but still allow them to have at least some way to spawn pets. The most up to date list of permissions can be found in the [plugin.yml file](https://github.com/BlockHorizons/BlockPets/blob/master/plugin.yml)<br>
 
-BlockPets contains a hand full of commands to modify, create and remove pets. These commands can be found using the /pet \<help\> command. This command will list all BlockPets commands, and can show other information.
+>BlockPets contains a hand full of commands to modify, create and remove pets. These commands can be found using the /pet \<help\> command. This command will list all BlockPets commands, and can show other information.
 
 ### Feedback
 We'd like to keep our issue tracker as clean as possible, so please take the following in consideration when opening a new issue in the issue tracker:
