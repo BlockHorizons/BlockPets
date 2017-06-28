@@ -71,7 +71,7 @@ class MySQLDataStorer extends BaseDataStorer {
 		if(!$this->petExists($petName, $ownerName)) {
 			return false;
 		}
-		$chested = (int) $this->loader->getPetByName($petName, $ownerName)->isChested();
+		$chested = (int) $this->loader->getPetByName($petName, $this->loader->getServer()->getPlayer($ownerName))->isChested();
 		$query = "UPDATE Pets SET Chested = $chested WHERE Player = '" . $this->escape($ownerName) . "' AND PetName = '" . $this->escape($petName) . "'";
 		return $this->database->query($query);
 	}
