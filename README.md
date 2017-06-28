@@ -11,11 +11,11 @@ Stable releases of BlockPets will be drafted at the Release tab with a pre-built
 To install:
 - Download one of the pre-built phar files from either releases or the Poggit button below.
 - Drop the phar file in the plugins folder of your server.
-- Restart the server, and enjoy.<br>
+- Restart the server, and enjoy.<br><br>
 [![Poggit-CI](https://poggit.pmmp.io/ci.shield/BlockHorizons/BlockPets/BlockPets)](https://poggit.pmmp.io/ci/BlockHorizons/BlockPets/BlockPets)<br>
 
 ### Translation
-BlockPets has a language system so everybody can use the plugin in the language they prefer. You can change language to one of the available languages in the plugin.yml. Of course, not every language file exists. If you want to help translate, don't hesitate to add a new file and copy the english translations in it, then translate them. Any help is greatly appreciated.
+BlockPets has a language system so everybody can use the plugin in the language they prefer. You can change language to one of the available languages in the config.yml. Of course, not every language file exists. If you want to help translate, don't hesitate to add a new file and copy the english translations in it, then translate them. Any help is greatly appreciated.
 
 ### Features
 - Pet spawning of most monster types and being able to remove them.
