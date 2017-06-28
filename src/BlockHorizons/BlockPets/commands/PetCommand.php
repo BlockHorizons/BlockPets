@@ -61,7 +61,7 @@ class PetCommand extends BaseCommand {
 					TextFormat::GREEN . "Version: " . TextFormat::YELLOW . Loader::VERSION . "\n" .
 					TextFormat::GREEN . "Target API: " . TextFormat::YELLOW . Loader::API_TARGET . "\n" .
 					TextFormat::GREEN . "Organization: " . TextFormat::YELLOW . "BlockHorizons (https://github.com/BlockHorizons/BlockPets)\n" .
-					TextFormat::GREEN . "Authors: " . TextFormat::YELLOW . "Sandertv (@Sandertv)");
+					TextFormat::GREEN . "Authors: " . TextFormat::YELLOW . "Sandertv (@Sandertv), TheDiamondYT (@TheDiamondYT1)");
 				break;
 
 			case "reload":
