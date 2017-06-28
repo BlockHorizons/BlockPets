@@ -141,7 +141,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->canBeRidden = (bool) $properties["Can-Be-Ridden"];
 		$this->canBeChested = (bool) $properties["Can-Be-Chested"];
 		$this->canAttack = (bool) $properties["Can-Attack"];
-		$this->canRide = (bool) $properties["Can-Ride-On-Owner"];
+		$this->canRide = (bool) $properties["Can-Sit-On-Owner"];
 	}
 
 	/**
