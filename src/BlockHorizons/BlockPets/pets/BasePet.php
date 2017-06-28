@@ -682,7 +682,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function sitOnOwner() {
 		$this->riding = true;
-		$this->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 2.1 + $this->getScale() * 0.9, -0.25]);
+		$this->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, $this->getScale() * 0.5, -0.25]);
 		$this->getPetOwner()->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, true);
 
 		$pk = new SetEntityLinkPacket();
