@@ -485,7 +485,7 @@ class Loader extends PluginBase {
 	 */
 	public function getDatabase(): BaseDataStorer {
 		if($this->database === null) {
-			throw new \RuntimeException("Attempted to retrieve the database while database storing was disabled.");
+			throw new \RuntimeException("Attempted to retrieve the database while database storing was unavailable.");
 		}
 		return $this->database;
 	}
