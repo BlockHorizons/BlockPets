@@ -5,6 +5,7 @@
 # Available options:
 # - en (English)
 # - nl (Dutch)
+# - vi
 Language: en
 
 # Whether to make pets invulnerable to any damage, or allow damaging them.
