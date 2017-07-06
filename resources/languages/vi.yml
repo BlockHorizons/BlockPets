@@ -1,0 +1,53 @@
+---
+# Vietnamese messages file for BlockPets, a pets plugin by BlockHorizons.
+# TODO: replace § with &, add all language strings
+
+prefix:
+  warning: "§c[§6Cảnh báo§c]"
+
+commands:
+  errors:
+    console-use: "Chạy command trong server!"
+    no-permission: "Bạn không có quyền sử dụng lệnh này!"
+    plugin-cancelled: "Plugin đã hủy hành động này!"
+    
+    pet:
+      doesnt-exist: "Không tồn tại tên Pet!"
+      numeric: "Tên Pet không được phép để kí tự hay chữ số"
+      
+    player:
+      not-found: "Không tìm thấy người chơi"
+      no-pet: "Bạn không sở hữu pet với cái tên này!"
+      no-pet-other: "Người chơi này không sở hữu pet với cái tên này!"
+      already-own-pet: "Bạn đã sử dụng tên này!"
+         
+  changepetname:
+    no-permission: "Bạn không có quyền đổi tên pet của người khác!"
+    success: "Đổi tên Pet %s §r§asang %s thành công!"
+    
+  clearpet:
+    success: "Hủy bỏ Pet §b%s§a thành công!"
+    
+  healpet:
+    success: "Pet %s §r§a đã được hồi máu!"
+
+  leveluppet:
+    success: "Pet đã được thăng cấp: §b%s §r§a %s!"
+    
+  spawnpet:
+    no-permission: "Bạn không có quyền spawn pet!"
+    no-permission-others: "Bạn không có quyền spawn pet cho người khác"
+    success: "Spawn pet thành công với tên: §b%s§a!"
+    success-other: "Bạn đã nhận được Pet với tên: §b%s§a!"
+    name: "Vui lòng đặt tên Pet cho bạn một lần chat (không ghi màu)"
+    selecting-name: "%s đang chọn tên cho Pet của họ"
+    exceeded-limit: "%s đã dùng quá số lượng Pet"
+    
+  removepet:
+    success: "Hủy bỏ Pet thành công §b%s§a!"
+    
+  togglepet:
+    no-pet-specified: "Bạn chưa xác định tên Pet để mở!"
+    success: "Mở Pet thành công %s!"
+    success-others: "Mở Pet cho người khác thành công §b%s §r§a %s!"
+...
