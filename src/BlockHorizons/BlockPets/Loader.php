@@ -192,7 +192,8 @@ class Loader extends PluginBase {
 
 	private $availableLanguages = [
 		"en",
-		"nl"
+		"nl",
+		"vi
 	];
 
 	/** @var array */
