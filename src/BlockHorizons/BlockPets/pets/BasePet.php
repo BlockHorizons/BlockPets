@@ -431,6 +431,15 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Performs a special action of a pet every tick.
+	 *
+	 * @return bool
+	 */
+	public function doTickAction(): bool {
+		return false;
+	}
+
+	/**
 	 * @param $currentTick
 	 *
 	 * @return bool
@@ -469,6 +478,7 @@ abstract class BasePet extends Creature implements Rideable {
 				$this->zOffset = lcg_value() * $multiplicationValue * (3 + $this->getScale());
 			}
 		}
+		$this->doTickAction();
 		$this->updateMovement();
 		parent::onUpdate($currentTick);
 		return true;

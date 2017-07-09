@@ -2,7 +2,7 @@
 name: "BlockPets"
 author: "BlockHorizons"
 version: 0.99.0
-api: [3.0.0-ALPHA5]
+api: [3.0.0-ALPHA6]
 main: BlockHorizons\BlockPets\Loader
 
 permissions:

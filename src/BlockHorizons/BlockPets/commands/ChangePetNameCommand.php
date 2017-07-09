@@ -14,7 +14,7 @@ class ChangePetNameCommand extends BaseCommand {
 		$this->setPermission("blockpets.command.changepetname.use");
 	}
 
-	public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
+	public function execute(CommandSender $sender, $commandLabel, array $args): bool {
 		if(!$this->testPermission($sender)) {
 			$this->sendPermissionMessage($sender);
 			return true;
