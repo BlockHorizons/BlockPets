@@ -4,4 +4,7 @@ branches:
 projects:
   BlockPets:
     path: ""
+    libs:
+      - src: Falkirks/spoondetecctor/spoondetector
+        version: ^0
 ...

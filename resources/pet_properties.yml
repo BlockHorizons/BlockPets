@@ -6,198 +6,231 @@ CaveSpider:
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.4
+  Max-Size: 10
 Chicken:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.2
+  Max-Size: 10
 Cow:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1
+  Max-Size: 10
 Creeper:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.2
+  Max-Size: 10
 Donkey:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.4
+  Max-Size: 10
 Enderman:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.4
+  Max-Size: 10
 Endermite:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.4
+  Max-Size: 10
 Evoker:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.4
+  Max-Size: 10
 Horse:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.8
+  Max-Size: 10
 Husk:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.2
+  Max-Size: 10
 IronGolem:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.4
+  Max-Size: 10
 Llama:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.4
+  Max-Size: 10
 Mooshroom:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.2
+  Max-Size: 10
 Mule:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.6
+  Max-Size: 10
 Ocelot:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.8
+  Max-Size: 10
 Pig:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1
+  Max-Size: 10
 PolarBear:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.2
+  Max-Size: 10
 Sheep:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1
+  Max-Size: 10
 SilverFish:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.2
+  Max-Size: 10
 SkeletonHorse:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.4
+  Max-Size: 10
 Skeleton:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1
+  Max-Size: 10
 SnowGolem:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.2
+  Max-Size: 10
 Spider:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.4
+  Max-Size: 10
 Stray:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.2
+  Max-Size: 10
 Villager:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.2
+  Max-Size: 10
 Vindicator:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.2
+  Max-Size: 10
 Witch:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.2
+  Max-Size: 10
 WitherSkeleton:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.4
+  Max-Size: 10
 Wolf:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.6
+  Max-Size: 10
 ZombieHorse:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.4
+  Max-Size: 10
 Zombie:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1
+  Max-Size: 10
 ZombiePigman:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.2
+  Max-Size: 10
 ZombieVillager:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.2
+  Max-Size: 10
 
 # Flying Pets
 Arrow:
@@ -207,6 +240,7 @@ Arrow:
   Can-Sit-On-Owner: true
   Speed: 3
   Flying-Height: 25
+  Max-Size: 10
 Bat:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -214,6 +248,7 @@ Bat:
   Can-Sit-On-Owner: true
   Speed: 1
   Flying-Height: 8
+  Max-Size: 10
 Blaze:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -221,6 +256,7 @@ Blaze:
   Can-Sit-On-Owner: true
   Speed: 1.2
   Flying-Height: 13
+  Max-Size: 10
 EnderCrystal:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -228,6 +264,7 @@ EnderCrystal:
   Can-Sit-On-Owner: true
   Speed: 1.2
   Flying-Height: 13
+  Max-Size: 10
 EnderDragon:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -235,6 +272,7 @@ EnderDragon:
   Can-Sit-On-Owner: true
   Speed: 1.8
   Flying-Height: 60
+  Max-Size: 5
 Ghast:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -242,6 +280,7 @@ Ghast:
   Can-Sit-On-Owner: true
   Speed: 1.3
   Flying-Height: 25
+  Max-Size: 10
 Vex:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -249,6 +288,7 @@ Vex:
   Can-Sit-On-Owner: true
   Speed: 1.4
   Flying-Height: 25
+  Max-Size: 10
 Wither:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -256,6 +296,7 @@ Wither:
   Can-Sit-On-Owner: true
   Speed: 1.8
   Flying-Height: 60
+  Max-Size: 10
 WitherSkull:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -263,6 +304,7 @@ WitherSkull:
   Can-Sit-On-Owner: true
   Speed: 1.2
   Flying-Height: 13
+  Max-Size: 10
 
 # Swimming Pets
 ElderGuardian:
@@ -273,6 +315,7 @@ ElderGuardian:
   Speed: 1
   Swimming-Speed: 2
   Jumping-Height: 0.12
+  Max-Size: 10
 Guardian:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -281,6 +324,7 @@ Guardian:
   Speed: 1
   Swimming-Speed: 1.8
   Jumping-Height: 0.1
+  Max-Size: 10
 Squid:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -289,6 +333,7 @@ Squid:
   Speed: 1
   Swimming-Speed: 1.4
   Jumping-Height: 0.1
+  Max-Size: 10
 
 # Bouncing Pets
 MagmaCube:
@@ -298,6 +343,7 @@ MagmaCube:
   Can-Sit-On-Owner: true
   Speed: 1.4
   Jumping-Height: 0.14
+  Max-Size: 10
 Rabbit:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -305,6 +351,7 @@ Rabbit:
   Can-Sit-On-Owner: true
   Speed: 1.2
   Jumping-Height: 0.1
+  Max-Size: 10
 Slime:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -312,4 +359,5 @@ Slime:
   Can-Sit-On-Owner: true
   Speed: 1.6
   Jumping-Height: 0.14
+  Max-Size: 10
 ...

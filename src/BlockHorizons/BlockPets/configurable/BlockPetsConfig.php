@@ -167,13 +167,6 @@ class BlockPetsConfig {
 	}
 
 	/**
-	 * @return float
-	 */
-	public function getMaxPetSize(): float {
-		return (float) $this->settings["Pet-Max-Size"] ?? 15.0;
-	}
-
-	/**
 	 * @return bool
 	 */
 	public function shouldStalkPetOwner(): bool {

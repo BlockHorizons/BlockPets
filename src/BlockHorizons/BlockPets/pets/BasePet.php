@@ -70,6 +70,7 @@ abstract class BasePet extends Creature implements Rideable {
 	private $shouldIgnoreEvent = false;
 	private $positionSeekTick = 60;
 	private $inventory = null;
+	private $maxSize = 10;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
@@ -142,6 +143,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->canBeChested = (bool) $properties["Can-Be-Chested"];
 		$this->canAttack = (bool) $properties["Can-Attack"];
 		$this->canRide = (bool) $properties["Can-Sit-On-Owner"];
+		$this->maxSize = (float) $properties["Max-Size"];
 	}
 
 	/**
@@ -723,5 +725,12 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->type = self::STATE_STANDING;
 		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
 		$this->teleport($this->getPetOwner());
+	}
+
+	/**
+	 * @return float
+	 */
+	public function getMaxSize(): float {
+		return $this->maxSize;
 	}
 }

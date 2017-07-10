@@ -81,11 +81,12 @@ use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
+use spoondetector\SpoonDetector;
 
 class Loader extends PluginBase {
 
-	const VERSION = "0.99.0";
-	const API_TARGET = "3.0.0-ALPHA5";
+	const VERSION = "1.0.0";
+	const API_TARGET = "3.0.0-ALPHA6";
 
 	const PETS = [
 		"Ghast",
@@ -208,6 +209,10 @@ class Loader extends PluginBase {
 	private $toggledPets = [];
 
 	public function onEnable() {
+		if(!is_dir($this->getDataFolder())) {
+			mkdir($this->getDataFolder());
+		}
+		SpoonDetector::printSpoon($this);
 		CommandOverloads::initialize();
 		foreach(self::PET_CLASSES as $petClass) {
 			Entity::registerEntity($petClass, true);

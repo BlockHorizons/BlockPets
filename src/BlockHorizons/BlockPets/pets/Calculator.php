@@ -50,8 +50,8 @@ class Calculator {
 		$scalingSize = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetSizePerLevel();
 
 		$this->getPet()->setScale((float) ($this->getPet()->getStartingScale() + $scalingSize * $petLevel));
-		if($this->getPet()->getScale() > $this->getPet()->getLoader()->getBlockPetsConfig()->getMaxPetSize() && !($this->getPet()->getPetOwner()->hasPermission("blockpets.bypass-size-limit"))) {
-			$this->getPet()->setScale($this->getPet()->getLoader()->getBlockPetsConfig()->getMaxPetSize());
+		if($this->getPet()->getScale() > $this->getPet()->getMaxSize() && !($this->getPet()->getPetOwner()->hasPermission("blockpets.bypass-size-limit"))) {
+			$this->getPet()->setScale($this->getPet()->getMaxSize());
 		}
 	}
 

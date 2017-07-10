@@ -26,9 +26,6 @@ Attacking-Pets: true
 # The limit of pets per player by default.
 Pet-Limit: 3
 
-# The maximum size of pets which pets can be spawned with and gain through leveling up.
-Pet-Max-Size: 15
-
 # The base health a pet will be spawned with. This is equal to the health of a pet with level 0.
 Pet-Base-Health: 20
 
