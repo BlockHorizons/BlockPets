@@ -25,7 +25,7 @@ class SheepPet extends WalkingPet {
 			return false;
 		}
 		if($this->getDataProperty(self::DATA_COLOUR) === 15) {
-			$colour = 0;
+			$colour = 1;
 		} else {
 			$colour = $this->getDataProperty(self::DATA_COLOUR);
 			$colour++;

@@ -636,7 +636,11 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	protected function checkUpdateRequirements(): bool {
-		if($this->closed || $this->isRidden()) {
+		if($this->closed) {
+			return false;
+		}
+		if($this->isRidden()) {
+			$this->doTickAction();
 			return false;
 		}
 		if(!$this->isAlive()) {
