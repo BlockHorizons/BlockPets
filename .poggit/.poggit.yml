@@ -5,6 +5,6 @@ projects:
   BlockPets:
     path: ""
     libs:
-      - src: Falkirks/spoondetecctor/spoondetector
+      - src: Falkirks/spoondetector/spoondetector
         version: ^0
 ...
