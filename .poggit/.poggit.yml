@@ -4,6 +4,7 @@ branches:
 projects:
   BlockPets:
     path: ""
+    icon: resources/BlockPetsLogo.png
     libs:
       - src: Falkirks/spoondetector/spoondetector
         version: ^0
