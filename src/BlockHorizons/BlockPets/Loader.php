@@ -352,7 +352,7 @@ class Loader extends PluginBase {
 	 */
 	public function createPet(string $entityName, Player $player, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0, bool $chested = false) {
 		foreach($this->getPetsFrom($player) as $pet) {
-			if($this->getPetByName($name, $player) !== null) {
+			if($pet->getPetName() === $name) {
 				$this->removePet($pet->getPetName(), $player);
 			}
 		}

@@ -638,7 +638,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	protected function checkUpdateRequirements(): bool {
-		if($this->closed || !$this->getPetOwner()->isAlive()) {
+		if($this->closed) {
 			return false;
 		}
 		if($this->isRidden()) {
@@ -665,6 +665,9 @@ abstract class BasePet extends Creature implements Rideable {
 				$this->getCalculator()->storeToDatabase();
 				$this->close();
 			}
+			return false;
+		}
+		if(!$this->getPetOwner()->isAlive()) {
 			return false;
 		}
 		return true;

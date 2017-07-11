@@ -44,6 +44,7 @@ class LanguageConfig {
 			"commands.errors.player.not-found" => $language["commands"]["errors"]["player"]["not-found"],
 			"commands.errors.player.no-pet" => $language["commands"]["errors"]["player"]["no-pet"],
 			"commands.errors.player.no-pet-other" => $language["commands"]["errors"]["player"]["no-pet-other"],
+			"commands.errors.player.already-own-pet" => $language["commands"]["errors"]["player"]["already-own-pet"],
 
 			"commands.changepetname.no-permission" => $language["commands"]["changepetname"]["no-permission"],
 			"commands.changepetname.success" => $language["commands"]["changepetname"]["success"],

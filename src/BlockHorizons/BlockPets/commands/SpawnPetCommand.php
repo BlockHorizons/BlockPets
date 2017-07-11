@@ -66,9 +66,6 @@ class SpawnPetCommand extends BaseCommand {
 				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.numeric"));
 				return true;
 			}
-			if((float) $args[2] > $this->getLoader()->getBlockPetsConfig()->getMaxPetSize() && !($sender->hasPermission("blockpets.bypass-size-limit"))) {
-				$args[2] = $this->getLoader()->getBlockPetsConfig()->getMaxPetSize();
-			}
 		}
 
 		if(isset($args[3])) {
