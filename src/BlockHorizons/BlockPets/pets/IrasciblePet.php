@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace BlockHorizons\BlockPets\pets;
 
 use BlockHorizons\BlockPets\pets\creatures\ArrowPet;
@@ -14,7 +16,9 @@ use pocketmine\utils\TextFormat;
 
 abstract class IrasciblePet extends BasePet {
 
+	/** @var int */
 	protected $waitingTime = 0;
+	/** @var Living|null */
 	private $target = null;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
@@ -85,7 +89,10 @@ abstract class IrasciblePet extends BasePet {
 		return true;
 	}
 
-	public abstract function doAttackingMovement();
+	/**
+	 * @return bool
+	 */
+	public abstract function doAttackingMovement(): bool;
 
 	/**
 	 * @return bool

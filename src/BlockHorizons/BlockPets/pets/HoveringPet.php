@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace BlockHorizons\BlockPets\pets;
 
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
@@ -9,11 +11,12 @@ use pocketmine\Player;
 
 abstract class HoveringPet extends IrasciblePet {
 
+	/** @var float */
 	public $gravity = 0;
-
+	/** @var int */
 	protected $flyHeight = 0;
 
-	public function onUpdate($currentTick) {
+	public function onUpdate($currentTick): bool {
 		if(!$this->checkUpdateRequirements()) {
 			return true;
 		}
@@ -26,11 +29,10 @@ abstract class HoveringPet extends IrasciblePet {
 		}
 		parent::onUpdate($currentTick);
 		if(!$this->isAlive()) {
-			return true;
+			return false;
 		}
 		if($this->isAngry()) {
-			$this->doAttackingMovement();
-			return true;
+			return $this->doAttackingMovement();
 		}
 
 		$x = $petOwner->x + $this->xOffset - $this->x;
@@ -57,10 +59,10 @@ abstract class HoveringPet extends IrasciblePet {
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 
 		$this->updateMovement();
-		return true;
+		return $this->isAlive();
 	}
 
-	public function doAttackingMovement() {
+	public function doAttackingMovement(): bool {
 		$target = $this->getTarget();
 
 		if(!$this->checkAttackRequirements()) {
@@ -110,10 +112,10 @@ abstract class HoveringPet extends IrasciblePet {
 
 		$this->updateMovement();
 		$this->waitingTime--;
-		return true;
+		return $this->isAlive();
 	}
 
-	public function doRidingMovement($motionX, $motionZ) {
+	public function doRidingMovement(float $motionX, float $motionZ): bool {
 		$rider = $this->getPetOwner();
 
 		$this->pitch = $rider->pitch;
@@ -154,6 +156,7 @@ abstract class HoveringPet extends IrasciblePet {
 		$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);
 
 		$this->updateMovement();
+		return $this->isAlive();
 	}
 
 	/**

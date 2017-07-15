@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace BlockHorizons\BlockPets\pets\inventory;
 
 use BlockHorizons\BlockPets\pets\BasePet;
@@ -21,6 +23,7 @@ class PetInventoryHolder {
 	 * Make sure to look at his PlayerVaults plugin too.
 	 */
 
+	/** @var BasePet */
 	private $pet;
 	/** @var Item[] */
 	private $items = [];
@@ -38,14 +41,14 @@ class PetInventoryHolder {
 	}
 
 	/**
-	 * @return array
+	 * @return Item[]
 	 */
 	public function getInventoryContents(): array {
 		return $this->items;
 	}
 
 	/**
-	 * @param array $contents
+	 * @param Item[] $contents
 	 */
 	public function setInventoryContents(array $contents) {
 		$this->items = $contents;

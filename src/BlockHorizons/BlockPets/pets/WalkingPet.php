@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace BlockHorizons\BlockPets\pets;
 
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -8,9 +10,10 @@ use pocketmine\Player;
 
 abstract class WalkingPet extends IrasciblePet {
 
+	/** @var int */
 	protected $jumpTicks = 0;
 
-	public function onUpdate($currentTick) {
+	public function onUpdate($currentTick): bool {
 		if(!$this->checkUpdateRequirements()) {
 			return true;
 		}
@@ -22,12 +25,11 @@ abstract class WalkingPet extends IrasciblePet {
 		}
 		parent::onUpdate($currentTick);
 		if(!$this->isAlive()) {
-			return true;
+			return false;
 		}
 		$petOwner = $this->getPetOwner();
 		if($this->isAngry()) {
-			$this->doAttackingMovement();
-			return true;
+			return $this->doAttackingMovement();
 		}
 
 		if($this->jumpTicks > 0) {
@@ -64,7 +66,7 @@ abstract class WalkingPet extends IrasciblePet {
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->updateMovement();
-		return true;
+		return $this->isAlive();
 	}
 
 	public function doAttackingMovement(): bool {
@@ -126,7 +128,7 @@ abstract class WalkingPet extends IrasciblePet {
 		}
 		$this->updateMovement();
 		$this->waitingTime--;
-		return true;
+		return $this->isAlive();
 	}
 
 	public function jump() {
@@ -135,7 +137,7 @@ abstract class WalkingPet extends IrasciblePet {
 		$this->jumpTicks = 5;
 	}
 
-	public function doRidingMovement($motionX, $motionZ) {
+	public function doRidingMovement(float $motionX, float $motionZ): bool {
 		$rider = $this->getPetOwner();
 
 		$this->pitch = $rider->pitch;

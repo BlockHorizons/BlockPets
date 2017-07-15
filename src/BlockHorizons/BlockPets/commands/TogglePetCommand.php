@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
@@ -14,7 +16,7 @@ class TogglePetCommand extends BaseCommand {
 		$this->setPermission("blockpets.command.togglepet");
 	}
 
-	public function execute(CommandSender $sender, $commandLabel, array $args): bool {
+	public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
 		if(!$this->testPermission($sender)) {
 			$this->sendPermissionMessage($sender);
 			return true;
@@ -31,7 +33,7 @@ class TogglePetCommand extends BaseCommand {
 		if(strtolower($args[0]) === "all") {
 			$this->getLoader()->togglePets($sender);
 			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.togglepet.success", [
-					($this->getLoader()->arePetsToggledOn($sender) ? "on." : "off.")
+					($this->getLoader()->arePetsToggledOn($sender) ? "on" : "off")
 				]));
 		} else {
 			$pet = $this->getLoader()->getPetByName($args[0], $sender);
@@ -42,7 +44,7 @@ class TogglePetCommand extends BaseCommand {
 			$this->getLoader()->togglePet($pet, $sender);
 			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.togglepet.success.other", [
 					$pet->getPetName(),
-					($this->getLoader()->isPetToggledOn($pet, $sender) ? " off." : " on.")
+					($this->getLoader()->isPetToggledOn($pet, $sender) ? " off" : " on")
 				]));
 		}
 		return true;

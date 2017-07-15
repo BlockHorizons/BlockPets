@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace BlockHorizons\BlockPets\pets;
 
 use pocketmine\utils\TextFormat;
 
 class Calculator {
 
+	/** @var BasePet */
 	private $pet;
 
 	public function __construct(BasePet $pet) {

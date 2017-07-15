@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace BlockHorizons\BlockPets\pets;
 
 use BlockHorizons\BlockPets\events\PetInventoryInitializationEvent;
@@ -37,40 +39,64 @@ abstract class BasePet extends Creature implements Rideable {
 	const TIER_EPIC = 4;
 	const TIER_LEGENDARY = 5;
 
-	public $name;
+	/** @var string */
+	public $name = "";
+	/** @var float */
 	public $scale = 1.0;
-	public $networkId;
+	/** @var int */
+	public $networkId = 0;
 
-	protected $petOwner;
+	/** @var string */
+	protected $petOwner = "";
+	/** @var int */
 	protected $petLevel = 0;
+	/** @var string */
 	protected $petName = "";
+	/** @var bool */
 	protected $ridden = false;
 	/** @var null|string */
 	protected $rider = null;
-
+	/** @var bool */
 	protected $riding = false;
 
+	/** @var int */
 	protected $attackDamage = 4;
+	/** @var float */
 	protected $speed = 1.0;
+	/** @var int */
 	protected $petLevelPoints = 0;
 
+	/** @var bool */
 	protected $canBeRidden = true;
+	/** @var bool */
 	protected $canBeChested = true;
+	/** @var bool */
 	protected $canAttack = true;
+	/** @var bool */
 	protected $canRide = true;
 
-	protected $calculator;
+	/** @var Calculator */
+	protected $calculator = null;
 
-	protected $xOffset = 0;
-	protected $yOffset = 0;
-	protected $zOffset = 0;
+	/** @var float */
+	protected $xOffset = 0.0;
+	/** @var float */
+	protected $yOffset = 0.0;
+	/** @var float */
+	protected $zOffset = 0.0;
 
+	/** @var bool */
 	private $dormant = false;
+	/** @var bool */
 	private $chested = false;
+	/** @var bool */
 	private $shouldIgnoreEvent = false;
+	/** @var int */
 	private $positionSeekTick = 60;
+	/** @var PetInventoryHolder */
 	private $inventory = null;
-	private $maxSize = 10;
+	/** @var float */
+	private $maxSize = 10.0;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
@@ -312,9 +338,9 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * Returns the pet's current experience level points.
 	 *
-	 * @return float
+	 * @return int
 	 */
-	public function getPetLevelPoints(): float {
+	public function getPetLevelPoints(): int {
 		return $this->petLevelPoints;
 	}
 
@@ -334,7 +360,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @return int
 	 */
-	public function getRequiredLevelPoints(int $level) {
+	public function getRequiredLevelPoints(int $level): int {
 		return (int) (20 + $level / 1.5 * $level);
 	}
 
@@ -446,7 +472,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @return bool
 	 */
-	public function onUpdate($currentTick) {
+	public function onUpdate($currentTick): bool {
 		$petOwner = $this->getPetOwner();
 		if(mt_rand(1, 60) === 1 && $this->isAlive()) {
 			if($this->getHealth() !== $this->getMaxHealth()) {
@@ -455,13 +481,12 @@ abstract class BasePet extends Creature implements Rideable {
 			}
 		}
 		if(!$this->isAlive()) {
-			parent::onUpdate($currentTick);
-			return true;
+			return parent::onUpdate($currentTick);
 		}
 		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
-			$this->getLoader()->createPet($this->getEntityType(), $petOwner, $this->getPetName(), $this->getStartingScale(), $this->namedtag["isBaby"], $this->getPetLevel(), $this->getPetLevelPoints(), $this->isChested());
+			$this->getLoader()->createPet($this->getEntityType(), $petOwner, $this->getPetName(), $this->getStartingScale(), (bool) $this->namedtag["isBaby"], $this->getPetLevel(), $this->getPetLevelPoints(), $this->isChested());
 			$this->close();
-			return true;
+			return false;
 		}
 		if($this->distance($petOwner) >= 50 && !$this->isDormant()) {
 			$this->teleport($petOwner);
@@ -483,7 +508,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->doTickAction();
 		$this->updateMovement();
 		parent::onUpdate($currentTick);
-		return true;
+		return $this->isAlive();
 	}
 
 	/**
@@ -497,6 +522,9 @@ abstract class BasePet extends Creature implements Rideable {
 		return false;
 	}
 
+	/**
+	 * @param bool $ignore
+	 */
 	public function kill($ignore = false) {
 		$this->shouldIgnoreEvent = $ignore;
 		parent::kill();
@@ -504,8 +532,13 @@ abstract class BasePet extends Creature implements Rideable {
 
 	/**
 	 * Detaches the rider from the pet.
+	 *
+	 * @return bool
 	 */
-	public function throwRiderOff() {
+	public function throwRiderOff(): bool {
+		if(!$this->ridden) {
+			return false;
+		}
 		$pk = new SetEntityLinkPacket();
 		$pk->from = $this->getId();
 		$pk->to = $this->getPetOwner()->getId();
@@ -528,6 +561,7 @@ abstract class BasePet extends Creature implements Rideable {
 				$rider->setAllowFlight(false);
 			}
 		}
+		return true;
 	}
 
 	/**
@@ -535,7 +569,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @return Player|null
 	 */
-	public function getRider() {
+	public function getRider(): Player {
 		return $this->getLevel()->getServer()->getPlayer($this->rider);
 	}
 
@@ -543,8 +577,13 @@ abstract class BasePet extends Creature implements Rideable {
 	 * Sets the given player as rider on the pet, connecting it to it and initializing some things.
 	 *
 	 * @param Player $player
+	 *
+	 * @return bool
 	 */
-	public function setRider(Player $player) {
+	public function setRider(Player $player): bool {
+		if($this->ridden) {
+			return false;
+		}
 		$this->ridden = true;
 		$this->rider = $player->getName();
 		$player->canCollide = false;
@@ -572,21 +611,26 @@ abstract class BasePet extends Creature implements Rideable {
 		if($this->getPetOwner()->isSurvival()) {
 			$this->getPetOwner()->setAllowFlight(true); // Set allow flight to true to prevent any 'kicked for flying' issues.
 		}
+		return true;
 	}
 
 	/**
 	 * Heals the current pet back to full health.
 	 */
-	public function fullHeal() {
+	public function fullHeal(): bool {
+		if($this->getHealth() === $this->getMaxHealth()) {
+			return false;
+		}
 		$diff = $this->getMaxHealth() - $this->getHealth();
 		$this->heal($diff, new EntityRegainHealthEvent($this, $diff, EntityRegainHealthEvent::CAUSE_CUSTOM));
+		return true;
 	}
 
 	/**
 	 * @param string $newName
 	 */
 	public function changeName(string $newName) {
-		$this->getLoader()->getDatabase()->unregisterPet($this->getPetName(), $this->getPetOwner());
+		$this->getLoader()->getDatabase()->unregisterPet($this->getPetName(), $this->getPetOwnerName());
 		$this->petName = $newName;
 		$this->getLoader()->getDatabase()->registerPet($this);
 		$this->getCalculator()->updateNameTag();
@@ -627,12 +671,12 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
-	 * @param $motionX
-	 * @param $motionZ
+	 * @param float $motionX
+	 * @param float $motionZ
 	 *
-	 * @return mixed
+	 * @return bool
 	 */
-	public abstract function doRidingMovement($motionX, $motionZ);
+	public abstract function doRidingMovement(float $motionX, float $motionZ): bool;
 
 	/**
 	 * @return bool
@@ -701,9 +745,12 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
-	 * Sets the pet sitting on top of the owner's head.
+	 * @return bool
 	 */
-	public function sitOnOwner() {
+	public function sitOnOwner(): bool {
+		if($this->riding) {
+			return false;
+		}
 		$this->riding = true;
 		$this->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, $this->getScale() * 0.4 - 0.3, 0]);
 		$this->getPetOwner()->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, true);
@@ -713,12 +760,16 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->from = $this->getPetOwner()->getId();
 		$pk->type = self::STATE_SITTING;
 		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
+		return true;
 	}
 
 	/**
-	 * Dismounts the pet sitting on top of the owner's head.
+	 * @return bool
 	 */
-	public function dismountFromOwner() {
+	public function dismountFromOwner(): bool {
+		if(!$this->riding) {
+			return false;
+		}
 		$this->riding = false;
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, false);
 
@@ -728,6 +779,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->type = self::STATE_STANDING;
 		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
 		$this->teleport($this->getPetOwner());
+		return true;
 	}
 
 	/**

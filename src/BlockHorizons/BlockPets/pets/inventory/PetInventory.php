@@ -1,24 +1,30 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace BlockHorizons\BlockPets\pets\inventory;
 
 use BlockHorizons\BlockPets\pets\BasePet;
+use pocketmine\block\Block;
 use pocketmine\inventory\ChestInventory;
 use pocketmine\inventory\InventoryType;
 use pocketmine\item\Item;
+use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\tile\Chest;
 use pocketmine\tile\Tile;
 
 class PetInventory extends ChestInventory {
 
+	/** @var BasePet */
 	private $pet;
+	/** @var null|Block */
 	private $chestPos = null;
 	/** @var null|Tile */
 	private $tile = null;
 
 	public function __construct(Chest $tile, BasePet $pet) {
-		parent::__construct($tile, InventoryType::get(InventoryType::CHEST));
+		parent::__construct($tile);
 		$this->pet = $pet;
 		$this->tile = $tile;
 	}
@@ -37,6 +43,7 @@ class PetInventory extends ChestInventory {
 	}
 
 	public function save(): bool {
+		/** @var Item $item */
 		foreach($this->getContents() as $item) {
 			if($item->getId() === Item::AIR) {
 				continue;

@@ -1,7 +1,8 @@
 <?php
 
-namespace BlockHorizons\BlockPets\pets;
+declare(strict_types = 1);
 
+namespace BlockHorizons\BlockPets\pets;
 
 interface SmallCreature {
 

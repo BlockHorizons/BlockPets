@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
@@ -14,7 +16,7 @@ class SpawnPetCommand extends BaseCommand {
 		$this->setPermission("blockpets.command.spawnpet.use");
 	}
 
-	public function execute(CommandSender $sender, $commandLabel, array $args): bool {
+	public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
 		/*
 		 * Hack to make spawnpet command work, required because parameter ordering is messed up.
 		 * TODO: Remove

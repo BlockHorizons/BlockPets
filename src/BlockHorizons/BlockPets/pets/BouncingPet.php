@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace BlockHorizons\BlockPets\pets;
 
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -8,12 +10,14 @@ use pocketmine\Player;
 
 abstract class BouncingPet extends IrasciblePet {
 
+	/** @var int */
 	protected $jumpTicks = 0;
+	/** @var float */
 	protected $jumpHeight = 0.08;
 
-	public function onUpdate($currentTick) {
+	public function onUpdate($currentTick): bool {
 		if(!$this->checkUpdateRequirements()) {
-			return true;
+			return false;
 		}
 		if($this->isRiding()) {
 			$this->yaw = $this->getPetOwner()->yaw;
@@ -24,11 +28,10 @@ abstract class BouncingPet extends IrasciblePet {
 		$petOwner = $this->getPetOwner();
 		parent::onUpdate($currentTick);
 		if(!$this->isAlive()) {
-			return true;
+			return false;
 		}
 		if($this->isAngry()) {
-			$this->doAttackingMovement();
-			return true;
+			return $this->doAttackingMovement();
 		}
 		if($this->jumpTicks > 0) {
 			$this->jumpTicks--;
@@ -65,10 +68,10 @@ abstract class BouncingPet extends IrasciblePet {
 
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->updateMovement();
-		return true;
+		return $this->isAlive();
 	}
 
-	public function doAttackingMovement() {
+	public function doAttackingMovement(): bool {
 		$target = $this->getTarget();
 
 		if(!$this->checkAttackRequirements()) {
@@ -127,7 +130,7 @@ abstract class BouncingPet extends IrasciblePet {
 		}
 		$this->updateMovement();
 		$this->waitingTime--;
-		return true;
+		return $this->isAlive();
 	}
 
 	public function jump() {
@@ -136,7 +139,7 @@ abstract class BouncingPet extends IrasciblePet {
 		$this->jumpTicks = 10;
 	}
 
-	public function doRidingMovement($motionX, $motionZ) {
+	public function doRidingMovement(float $motionX, float $motionZ): bool {
 		$rider = $this->getPetOwner();
 
 		$this->pitch = $rider->pitch;
@@ -191,6 +194,7 @@ abstract class BouncingPet extends IrasciblePet {
 
 		$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);
 		$this->updateMovement();
+		return $this->isAlive();
 	}
 
 	/**
@@ -201,10 +205,6 @@ abstract class BouncingPet extends IrasciblePet {
 			$source->setCancelled();
 		}
 		return parent::attack($damage, $source);
-	}
-
-	public function generateCustomPetData() {
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_MOVING, true);
 	}
 
 	/**

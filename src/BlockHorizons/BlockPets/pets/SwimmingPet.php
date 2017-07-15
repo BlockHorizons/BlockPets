@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace BlockHorizons\BlockPets\pets;
 
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -8,9 +10,10 @@ use pocketmine\Player;
 
 abstract class SwimmingPet extends BouncingPet {
 
+	/** @var float */
 	protected $swimmingSpeed = 0.0;
 
-	public function onUpdate($currentTick) {
+	public function onUpdate($currentTick): bool {
 		if(!$this->checkUpdateRequirements()) {
 			return true;
 		}
@@ -20,11 +23,10 @@ abstract class SwimmingPet extends BouncingPet {
 		}
 		parent::onUpdate($currentTick);
 		if(!$this->isAlive()) {
-			return true;
+			return false;
 		}
 		if($this->isAngry()) {
-			$this->doAttackingMovement();
-			return true;
+			return $this->doAttackingMovement();
 		}
 		if($this->isInsideOfWater()) {
 			$x = $petOwner->x + $this->xOffset - $this->x;
@@ -45,13 +47,13 @@ abstract class SwimmingPet extends BouncingPet {
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
 
 			$this->updateMovement();
-			return true;
+			return $this->isAlive();
 		} else {
 			return parent::onUpdate($currentTick);
 		}
 	}
 
-	public function doAttackingMovement() {
+	public function doAttackingMovement(): bool {
 		$target = $this->getTarget();
 
 		if(!$this->checkAttackRequirements()) {
@@ -111,7 +113,7 @@ abstract class SwimmingPet extends BouncingPet {
 		return $this->swimmingSpeed;
 	}
 
-	public function doRidingMovement($motionX, $motionZ) {
+	public function doRidingMovement(float $motionX, float $motionZ): bool {
 		if($this->isInsideOfWater()) {
 			$rider = $this->getPetOwner();
 
@@ -149,7 +151,7 @@ abstract class SwimmingPet extends BouncingPet {
 			$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);
 
 			$this->updateMovement();
-			return true;
+			return $this->isAlive();
 		} else {
 			return parent::doRidingMovement($motionX, $motionZ);
 		}

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace BlockHorizons\BlockPets\pets\datastorage;
 
 use BlockHorizons\BlockPets\Loader;
@@ -7,6 +9,7 @@ use BlockHorizons\BlockPets\pets\BasePet;
 
 abstract class BaseDataStorer {
 
+	/** @var Loader */
 	protected $loader;
 
 	public function __construct(Loader $loader) {

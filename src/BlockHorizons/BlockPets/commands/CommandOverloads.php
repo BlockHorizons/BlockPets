@@ -1,7 +1,8 @@
 <?php
 
-namespace BlockHorizons\BlockPets\commands;
+declare(strict_types = 1);
 
+namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
 

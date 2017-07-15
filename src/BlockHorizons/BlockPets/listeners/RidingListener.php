@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace BlockHorizons\BlockPets\listeners;
 
 use BlockHorizons\BlockPets\Loader;
@@ -27,7 +29,8 @@ class RidingListener implements Listener {
 	 * @param DataPacketReceiveEvent $event
 	 */
 	public function ridePet(DataPacketReceiveEvent $event) {
-		if(($packet = $event->getPacket()) instanceof PlayerInputPacket) {
+		$packet = $event->getPacket();
+		if($packet instanceof PlayerInputPacket) {
 			if($this->getLoader()->isRidingAPet($event->getPlayer())) {
 				$pet = $this->getLoader()->getRiddenPet($event->getPlayer());
 				$pet->doRidingMovement($packet->motionX, $packet->motionY);
@@ -57,7 +60,7 @@ class RidingListener implements Listener {
 	}
 
 	/**
-	 * Used to dismount the player if it teleports, just like it does in vanilla.
+	 * Used to dismount the player if it warps, just like it does in vanilla.
 	 *
 	 * @param EntityTeleportEvent $event
 	 */

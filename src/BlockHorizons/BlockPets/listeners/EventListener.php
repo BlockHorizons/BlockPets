@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace BlockHorizons\BlockPets\listeners;
 
 use BlockHorizons\BlockPets\events\PetRespawnEvent;
@@ -19,6 +21,7 @@ use pocketmine\utils\TextFormat;
 
 class EventListener implements Listener {
 
+	/** @var Loader */
 	private $loader;
 
 	public function __construct(Loader $loader) {
@@ -80,7 +83,7 @@ class EventListener implements Listener {
 			$owner = $this->getLoader()->getServer()->getPlayer($pet->getPetOwnerName());
 
 			$this->getLoader()->removePet($pet->getPetName(), $pet->getPetOwner());
-			$newPet = $this->getLoader()->createPet($pet->getEntityType(), $owner, $pet->getPetName(), $pet->getStartingScale(), 0, $pet->getPetLevel(), $pet->getPetLevelPoints(), $pet->isChested());
+			$newPet = $this->getLoader()->createPet($pet->getEntityType(), $owner, $pet->getPetName(), $pet->getStartingScale(), false, $pet->getPetLevel(), $pet->getPetLevelPoints(), $pet->isChested());
 			$this->getLoader()->getServer()->getPluginManager()->callEvent($ev = new PetRespawnEvent($this->getLoader(), $newPet, $delay));
 			if($ev->isCancelled()) {
 				return;

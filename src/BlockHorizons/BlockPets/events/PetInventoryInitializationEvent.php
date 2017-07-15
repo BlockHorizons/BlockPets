@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace BlockHorizons\BlockPets\events;
 
 use BlockHorizons\BlockPets\Loader;
@@ -18,7 +20,7 @@ class PetInventoryInitializationEvent extends BlockPetsEvent implements Cancella
 	}
 
 	/**
-	 * Returns the pet whom's inventory is about to be intialized.
+	 * Returns the pet whom's inventory is about to be initialized.
 	 *
 	 * @return BasePet
 	 */

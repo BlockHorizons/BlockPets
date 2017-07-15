@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace BlockHorizons\BlockPets;
 
 use BlockHorizons\BlockPets\commands\BaseCommand;
@@ -15,6 +17,7 @@ use BlockHorizons\BlockPets\commands\TogglePetCommand;
 use BlockHorizons\BlockPets\configurable\BlockPetsConfig;
 use BlockHorizons\BlockPets\configurable\LanguageConfig;
 use BlockHorizons\BlockPets\configurable\PetProperties;
+use BlockHorizons\BlockPets\events\BlockPetsEvent;
 use BlockHorizons\BlockPets\events\PetRemoveEvent;
 use BlockHorizons\BlockPets\events\PetSpawnEvent;
 use BlockHorizons\BlockPets\listeners\EventListener;
@@ -85,8 +88,8 @@ use spoondetector\SpoonDetector;
 
 class Loader extends PluginBase {
 
-	const VERSION = "1.0.0";
-	const API_TARGET = "3.0.0-ALPHA6";
+	const VERSION = "1.1.0";
+	const API_TARGET = "3.0.0-ALPHA7";
 
 	const PETS = [
 		"Ghast",
@@ -200,12 +203,18 @@ class Loader extends PluginBase {
 	/** @var array */
 	public $selectingName = [];
 
+	/** @var BlockPetsConfig */
 	private $bpConfig;
+	/** @var PetProperties */
 	private $pProperties;
+	/** @var LanguageConfig */
 	private $language;
 
+	/** @var BaseDataStorer */
 	private $database;
+	/** @var array */
 	private $toggledOff = [];
+	/** @var array */
 	private $toggledPets = [];
 
 	public function onEnable() {

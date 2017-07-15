@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace BlockHorizons\BlockPets\tasks;
 
 use BlockHorizons\BlockPets\Loader;
@@ -14,7 +16,7 @@ class PetRespawnTask extends BaseTask {
 		$this->pet = $pet;
 	}
 
-	public function onRun($currentTick) {
+	public function onRun(int $currentTick) {
 		$this->pet->spawnToAll();
 		$this->pet->setDormant(false);
 	}
