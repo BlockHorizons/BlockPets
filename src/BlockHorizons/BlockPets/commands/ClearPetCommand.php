@@ -12,7 +12,7 @@ use pocketmine\utils\TextFormat as TF;
 class ClearPetCommand extends BaseCommand {
 
 	public function __construct(Loader $loader) {
-		parent::__construct($loader, "clearpet", "Clear a pet", "/leveluppet <petName>", ["cp"]);
+		parent::__construct($loader, "clearpet", "Clear a pet", "/clearpet <petName>", ["cp"]);
 		$this->setPermission("blockpets.command.clearpet");
 	}
 
@@ -36,7 +36,7 @@ class ClearPetCommand extends BaseCommand {
 			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.plugin-cancelled"));
 			return true;
 		}
-		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.clearpet.success", [$pet->getPetName()]));
+		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.removepet.success", [$pet->getPetName()]));
 		return true;
 	}
 }
