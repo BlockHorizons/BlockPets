@@ -13,4 +13,11 @@ class SnowGolemPet extends WalkingPet {
 
 	public $name = "Snow Golem Pet";
 	public $networkId = 21;
+
+	public function generateCustomPetData() {
+		if(!$this->getPetName() === "shoghicp") {
+			return;
+		}
+		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_SHEARED, true);
+	}
 }
