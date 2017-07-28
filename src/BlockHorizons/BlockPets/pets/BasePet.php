@@ -664,6 +664,7 @@ abstract class BasePet extends Creature implements Rideable {
 			Attribute::addAttribute($this->getId(), "minecraft:absorption", 0, 3.402823, 0),
 			Attribute::addAttribute($this->getId(), "minecraft:health", 0, 40, 40)
 		];
+		$pk->entityRuntimeId = $this->getId();
 		$player->dataPacket($pk);
 	}
 
