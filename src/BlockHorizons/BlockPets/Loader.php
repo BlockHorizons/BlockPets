@@ -220,7 +220,7 @@ class Loader extends PluginBase {
 		if(!is_dir($this->getDataFolder())) {
 			mkdir($this->getDataFolder());
 		}
-		//SpoonDetector::printSpoon($this);
+		SpoonDetector::printSpoon($this);
 		CommandOverloads::initialize();
 		foreach(self::PET_CLASSES as $petClass) {
 			Entity::registerEntity($petClass, true);
