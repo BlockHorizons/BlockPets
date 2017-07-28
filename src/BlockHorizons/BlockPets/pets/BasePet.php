@@ -26,7 +26,6 @@ use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
 use pocketmine\network\mcpe\protocol\SetEntityLinkPacket;
-use pocketmine\network\mcpe\protocol\UpdateAttributesPacket;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
@@ -653,20 +652,14 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->yaw = $this->yaw;
 		$pk->pitch = $this->pitch;
 		$pk->metadata = $this->dataProperties;
-		$player->dataPacket($pk);
-
-		$entry = [];
-		$entry[] = Attribute::addAttribute($this->getId(), "minecraft:horse.jump_strength", 0, 3 /*3*/, 0.6679779);
-		$entry[] = Attribute::addAttribute($this->getId(), "minecraft:fall_damage", 0, 3.402823, 1);
-		$entry[] = Attribute::addAttribute($this->getId(), "minecraft:luck", -1024, 1024, 0);
-		$entry[] = Attribute::addAttribute($this->getId(), "minecraft:movement", 0, 3.402823, 0.223);
-		$entry[] = Attribute::addAttribute($this->getId(), "minecraft:absorption", 0, 3.402823, 0);
-		$entry[] = Attribute::addAttribute($this->getId(), "minecraft:health", 0, 40, 40);
-
-		$pk = new UpdateAttributesPacket();
-		$pk->entries = $entry;
-		$pk->entityRuntimeId = $this->getId();
-		$player->dataPacket($pk);
+		$pk->attributes = [
+			Attribute::addAttribute($this->getId(), "minecraft:horse.jump_strength", 0, 3 /*3*/, 0.6679779),
+			Attribute::addAttribute($this->getId(), "minecraft:fall_damage", 0, 3.402823, 1),
+			Attribute::addAttribute($this->getId(), "minecraft:luck", -1024, 1024, 0),
+			Attribute::addAttribute($this->getId(), "minecraft:movement", 0, 3.402823, 0.223),
+			Attribute::addAttribute($this->getId(), "minecraft:absorption", 0, 3.402823, 0),
+			Attribute::addAttribute($this->getId(), "minecraft:health", 0, 40, 40)
+		];
 	}
 
 	/**

@@ -40,7 +40,7 @@ abstract class WalkingPet extends IrasciblePet {
 			if($this->motionY > -$this->gravity * 4) {
 				$this->motionY = -$this->gravity * 4;
 			} else {
-				$this->motionY -= $this->gravity;
+				$this->motionY += $this->isInsideOfWater() ? $this->gravity : -$this->gravity;
 			}
 		} else {
 			$this->motionY -= $this->gravity;
