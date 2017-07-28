@@ -26,6 +26,7 @@ use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
 use pocketmine\network\mcpe\protocol\SetEntityLinkPacket;
+use pocketmine\network\mcpe\protocol\UpdateAttributesPacket;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
@@ -652,7 +653,10 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->yaw = $this->yaw;
 		$pk->pitch = $this->pitch;
 		$pk->metadata = $this->dataProperties;
-		$pk->attributes = [
+		$player->dataPacket($pk);
+
+		$pk = new UpdateAttributesPacket();
+		$pk->entries = [
 			Attribute::addAttribute($this->getId(), "minecraft:horse.jump_strength", 0, 3 /*3*/, 0.6679779),
 			Attribute::addAttribute($this->getId(), "minecraft:fall_damage", 0, 3.402823, 1),
 			Attribute::addAttribute($this->getId(), "minecraft:luck", -1024, 1024, 0),
