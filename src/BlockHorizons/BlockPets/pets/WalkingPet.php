@@ -168,6 +168,8 @@ abstract class WalkingPet extends IrasciblePet {
 			case 1:
 				$finalMotion = [$x, $z];
 				break;
+			case 0:
+				break;
 			case -1:
 				$finalMotion = [-$x, -$z];
 				break;
@@ -178,6 +180,8 @@ abstract class WalkingPet extends IrasciblePet {
 		switch($motionX) {
 			case 1:
 				$finalMotion = [$z, -$x];
+				break;
+			case 0:
 				break;
 			case -1:
 				$finalMotion = [-$z, $x];
