@@ -146,7 +146,7 @@ abstract class HoveringPet extends IrasciblePet {
 		if(((float) $y) !== 0.0) {
 			if($y < 0) {
 				$this->motionY = $this->getSpeed() * 0.3 * $y;
-			} elseif($this->y - $this->getLevel()->getHighestBlockAt($this->x, $this->z) < $this->flyHeight) {
+			} elseif($this->y - $this->getLevel()->getHighestBlockAt((int) $this->x, (int) $this->z) < $this->flyHeight) {
 				$this->motionY = $this->getSpeed() * 0.3 * $y;
 			}
 		}
