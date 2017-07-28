@@ -56,7 +56,7 @@ abstract class IrasciblePet extends BasePet {
 				if($nameTag === $this->getPetOwnerName()) {
 					$source->setCancelled();
 				}
-				if($this->getLoader()->getBlockPetsConfig()->petsDoAttack() && !$source->isCancelled()) {
+				if($this->getLoader()->getBlockPetsConfig()->petsDoAttack() && $attacker instanceof Living && !$source->isCancelled()) {
 					$this->setAngry($attacker);
 				}
 			}
