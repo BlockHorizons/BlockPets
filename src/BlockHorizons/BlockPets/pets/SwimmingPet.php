@@ -39,8 +39,8 @@ abstract class SwimmingPet extends BouncingPet {
 			} else {
 				$this->motionX = $this->getSwimmingSpeed() * 0.25 * ($x / (abs($x) + abs($z)));
 				$this->motionZ = $this->getSwimmingSpeed() * 0.25 * ($z / (abs($x) + abs($z)));
-				$this->motionY = $this->getSwimmingSpeed() * 0.25 * $y;
 			}
+			$this->motionY = $this->getSwimmingSpeed() * 0.25 * $y;
 			$this->yaw = rad2deg(atan2(-$x, $z));
 			$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
 
