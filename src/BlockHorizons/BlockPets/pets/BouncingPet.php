@@ -176,16 +176,28 @@ abstract class BouncingPet extends IrasciblePet {
 					$this->jump();
 				}
 				break;
+			default:
+				$finalMotion[0] = $z * $motionZ;
+				if($this->isOnGround()) {
+					$this->jump();
+				}
+				break;
 		}
 		switch($motionX) {
 			case 1:
-				$finalMotion = [$z, -$x];
+				$finalMotion = [-$x, $z];
 				if($this->isOnGround()) {
 					$this->jump();
 				}
 				break;
 			case -1:
-				$finalMotion = [-$z, $x];
+				$finalMotion = [$x, -$z];
+				if($this->isOnGround()) {
+					$this->jump();
+				}
+				break;
+			default:
+				$finalMotion[1] = $x * $motionX;
 				if($this->isOnGround()) {
 					$this->jump();
 				}

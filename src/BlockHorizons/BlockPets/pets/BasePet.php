@@ -563,6 +563,7 @@ abstract class BasePet extends Creature implements Rideable {
 				$rider->setAllowFlight(false);
 			}
 		}
+		$rider->onGround = true;
 		return true;
 	}
 

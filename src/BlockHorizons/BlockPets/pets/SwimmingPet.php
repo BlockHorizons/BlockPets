@@ -132,13 +132,19 @@ abstract class SwimmingPet extends BouncingPet {
 				case -1:
 					$finalMotion = [-$x, -$z];
 					break;
+				default:
+					$finalMotion[0] = $z * $motionZ;
+					break;
 			}
 			switch($motionX) {
 				case 1:
-					$finalMotion = [$z, -$x];
+					$finalMotion = [-$x, $z];
 					break;
 				case -1:
-					$finalMotion = [-$z, $x];
+					$finalMotion = [$x, -$z];
+					break;
+				default:
+					$finalMotion[1] = $x * $motionX;
 					break;
 			}
 
