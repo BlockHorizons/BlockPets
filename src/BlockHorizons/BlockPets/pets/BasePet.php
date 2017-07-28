@@ -9,6 +9,7 @@ use BlockHorizons\BlockPets\events\PetLevelUpEvent;
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use BlockHorizons\BlockPets\pets\inventory\PetInventoryHolder;
+use pocketmine\entity\Attribute;
 use pocketmine\entity\Creature;
 use pocketmine\entity\Rideable;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -25,6 +26,7 @@ use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
 use pocketmine\network\mcpe\protocol\SetEntityLinkPacket;
+use pocketmine\network\mcpe\protocol\UpdateAttributesPacket;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
@@ -101,6 +103,7 @@ abstract class BasePet extends Creature implements Rideable {
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
 		$this->selectProperties();
+
 		$this->calculator = new Calculator($this);
 
 		$this->setNameTagVisible(true);
@@ -118,6 +121,8 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->setScale(0.5);
 		}
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_CHESTED, (bool) $this->isChested());
+		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_BABY, (bool) $this->namedtag["isBaby"]);
+		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_TAMED, true);
 
 		$this->inventory = new PetInventoryHolder($this);
 		$this->levelUp(1, true);
@@ -395,8 +400,6 @@ abstract class BasePet extends Creature implements Rideable {
 		parent::initEntity();
 		$this->generateCustomPetData();
 		$this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, 1);
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_BABY, (bool) $this->namedtag["isBaby"]);
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_TAMED, true);
 	}
 
 	public function generateCustomPetData() {
@@ -589,12 +592,15 @@ abstract class BasePet extends Creature implements Rideable {
 		$player->canCollide = false;
 		$this->getPetOwner()->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 1.8 + $this->getScale() * 0.9, -0.25]);
 		if($this instanceof EnderDragonPet) {
-			$this->getPetOwner()->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 2.65 + $this->getScale(), -1.7]);
+			$player->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 2.65 + $this->getScale(), -1.7]);
 		} elseif($this instanceof SmallCreature) {
-			$this->getPetOwner()->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 0.78 + $this->getScale() * 0.9, -0.25]);
+			$player->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 0.78 + $this->getScale() * 0.9, -0.25]);
 		}
 		$player->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, true);
+
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_SADDLED, true);
+		$this->setDataProperty(self::DATA_CONTROLLING_RIDER_SEAT_NUMBER, self::DATA_TYPE_BYTE, $player->getId());
+		$this->setDataProperty(self::DATA_OWNER_EID, self::DATA_TYPE_BYTE, $player->getId());
 
 		$pk = new SetEntityLinkPacket();
 		$pk->to = $player->getId();
@@ -651,6 +657,19 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->yaw = $this->yaw;
 		$pk->pitch = $this->pitch;
 		$pk->metadata = $this->dataProperties;
+		$player->dataPacket($pk);
+
+		$entry = [];
+		$entry[] = Attribute::addAttribute($this->getId(), "minecraft:horse.jump_strength", 0, 3 /*3*/, 0.6679779);
+		$entry[] = Attribute::addAttribute($this->getId(), "minecraft:fall_damage", 0, 3.402823, 1);
+		$entry[] = Attribute::addAttribute($this->getId(), "minecraft:luck", -1024, 1024, 0);
+		$entry[] = Attribute::addAttribute($this->getId(), "minecraft:movement", 0, 3.402823, 0.223);
+		$entry[] = Attribute::addAttribute($this->getId(), "minecraft:absorption", 0, 3.402823, 0);
+		$entry[] = Attribute::addAttribute($this->getId(), "minecraft:health", 0, 40, 40);
+
+		$pk = new UpdateAttributesPacket();
+		$pk->entries = $entry;
+		$pk->entityRuntimeId = $this->getId();
 		$player->dataPacket($pk);
 	}
 

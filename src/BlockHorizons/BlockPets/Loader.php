@@ -17,7 +17,6 @@ use BlockHorizons\BlockPets\commands\TogglePetCommand;
 use BlockHorizons\BlockPets\configurable\BlockPetsConfig;
 use BlockHorizons\BlockPets\configurable\LanguageConfig;
 use BlockHorizons\BlockPets\configurable\PetProperties;
-use BlockHorizons\BlockPets\events\BlockPetsEvent;
 use BlockHorizons\BlockPets\events\PetRemoveEvent;
 use BlockHorizons\BlockPets\events\PetSpawnEvent;
 use BlockHorizons\BlockPets\listeners\EventListener;

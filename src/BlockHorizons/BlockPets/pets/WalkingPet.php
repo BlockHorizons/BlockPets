@@ -183,6 +183,7 @@ abstract class WalkingPet extends IrasciblePet {
 
 		$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);
 		$this->updateMovement();
+		return $this->isAlive();
 	}
 
 	/**
