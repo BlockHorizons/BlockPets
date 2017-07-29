@@ -130,22 +130,24 @@ abstract class HoveringPet extends IrasciblePet {
 			case 1:
 				$finalMotion = [$x, $z];
 				break;
+			case 0:
+				break;
 			case -1:
 				$finalMotion = [-$x, -$z];
 				break;
 			default:
-				$finalMotion[0] = $z * $motionZ;
+				$average = $x + $z / 2;
+				$finalMotion = [$average / 1.414 * $motionZ, $average / 1.414 * $motionX];
 				break;
 		}
 		switch($motionX) {
 			case 1:
 				$finalMotion = [$z, -$x];
 				break;
+			case 0:
+				break;
 			case -1:
 				$finalMotion = [-$z, $x];
-				break;
-			default:
-				$finalMotion[1] = $x * $motionX;
 				break;
 		}
 

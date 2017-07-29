@@ -174,7 +174,8 @@ abstract class WalkingPet extends IrasciblePet {
 				$finalMotion = [-$x, -$z];
 				break;
 			default:
-				$finalMotion[0] = $z * $motionZ;
+				$average = $x + $z / 2;
+				$finalMotion = [$average / 1.414 * $motionZ, $average / 1.414 * $motionX];
 				break;
 		}
 		switch($motionX) {
@@ -185,9 +186,6 @@ abstract class WalkingPet extends IrasciblePet {
 				break;
 			case -1:
 				$finalMotion = [-$z, $x];
-				break;
-			default:
-				$finalMotion[1] = $x * $motionX;
 				break;
 		}
 
