@@ -354,7 +354,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @param int $points
 	 */
-	public function setPetLevelPoints(float $points) {
+	public function setPetLevelPoints(int $points) {
 		$this->petLevelPoints = $points;
 	}
 
