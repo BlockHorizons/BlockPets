@@ -47,8 +47,13 @@ class Calculator {
 
 	/**
 	 * Recalculates size that the pet should have according to its configuration scalings.
+	 *
+	 * @return bool
 	 */
-	public function recalculateSize() {
+	public function recalculateSize(): bool {
+		if($this->getPet()->getPetOwner() === null) {
+			return false;
+		}
 		$petLevel = $this->getPet()->getPetLevel();
 		$scalingSize = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetSizePerLevel();
 
@@ -56,6 +61,7 @@ class Calculator {
 		if($this->getPet()->getScale() > $this->getPet()->getMaxSize() && !($this->getPet()->getPetOwner()->hasPermission("blockpets.bypass-size-limit"))) {
 			$this->getPet()->setScale($this->getPet()->getMaxSize());
 		}
+		return true;
 	}
 
 	/**
