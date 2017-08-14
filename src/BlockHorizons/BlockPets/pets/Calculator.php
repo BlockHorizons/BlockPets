@@ -81,7 +81,7 @@ class Calculator {
 	public function updateNameTag() {
 		$percentage = round($this->getPet()->getPetLevelPoints() / $this->getPet()->getRequiredLevelPoints($this->getPet()->getPetLevel()) * 100, 1);
 		$this->getPet()->setNameTag(
-			$this->getPet()->getPetName() . PHP_EOL .
+			$this->getPet()->getPetName() . "\n" .
 			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $this->getPet()->getPetLevel() . TextFormat::GRAY . " (" . TextFormat::YELLOW . $percentage . TextFormat::GRAY . "%) " . TextFormat::GRAY . $this->getPet()->getName() .
 			TextFormat::RED . " (" . $this->getPet()->getHealth() . "/" . $this->getPet()->getMaxHealth() . ")"
 		);
