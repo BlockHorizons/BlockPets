@@ -27,7 +27,9 @@ abstract class HoveringPet extends IrasciblePet {
 			$this->updateMovement();
 			return parent::onUpdate($currentTick);
 		}
-		parent::onUpdate($currentTick);
+		if(!parent::onUpdate($currentTick)) {
+			return false;
+		}
 		if(!$this->isAlive()) {
 			return false;
 		}
