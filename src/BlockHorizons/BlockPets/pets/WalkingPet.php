@@ -13,7 +13,7 @@ abstract class WalkingPet extends IrasciblePet {
 	/** @var int */
 	protected $jumpTicks = 0;
 
-	public function onUpdate($currentTick): bool {
+	public function onUpdate(int $currentTick): bool {
 		if(!$this->checkUpdateRequirements()) {
 			return true;
 		}

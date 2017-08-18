@@ -13,7 +13,7 @@ abstract class SwimmingPet extends BouncingPet {
 	/** @var float */
 	protected $swimmingSpeed = 0.0;
 
-	public function onUpdate($currentTick): bool {
+	public function onUpdate(int $currentTick): bool {
 		if(!$this->checkUpdateRequirements()) {
 			return true;
 		}
@@ -50,9 +50,8 @@ abstract class SwimmingPet extends BouncingPet {
 
 			$this->updateMovement();
 			return $this->isAlive();
-		} else {
-			return parent::onUpdate($currentTick);
 		}
+		return parent::onUpdate($currentTick);
 	}
 
 	public function doAttackingMovement(): bool {
@@ -103,9 +102,8 @@ abstract class SwimmingPet extends BouncingPet {
 			$this->updateMovement();
 			$this->waitingTime--;
 			return true;
-		} else {
-			return parent::doAttackingMovement();
 		}
+		return parent::doAttackingMovement();
 	}
 
 	/**
@@ -162,9 +160,8 @@ abstract class SwimmingPet extends BouncingPet {
 
 			$this->updateMovement();
 			return $this->isAlive();
-		} else {
-			return parent::doRidingMovement($motionX, $motionZ);
 		}
+		return parent::doRidingMovement($motionX, $motionZ);
 	}
 
 	/**

@@ -333,11 +333,10 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->setPetLevelPoints($totalPoints - $this->getRequiredLevelPoints($this->getPetLevel()));
 			$this->levelUp();
 			return true;
-		} else {
-			$this->setPetLevelPoints($totalPoints);
-			$this->calculator->updateNameTag();
-			return false;
 		}
+		$this->setPetLevelPoints($totalPoints);
+		$this->calculator->updateNameTag();
+		return false;
 	}
 
 	/**
@@ -475,9 +474,9 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @return bool
 	 */
-	public function onUpdate($currentTick): bool {
+	public function onUpdate(int $currentTick): bool {
 		$petOwner = $this->getPetOwner();
-		if(mt_rand(1, 60) === 1 && $this->isAlive()) {
+		if(random_int(1, 60) === 1 && $this->isAlive()) {
 			if($this->getHealth() !== $this->getMaxHealth()) {
 				$this->heal(1, new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
 				$this->calculator->updateNameTag();
@@ -498,7 +497,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->positionSeekTick++;
 		if($this->shouldFindNewPosition()) {
 			if(!$this->getLoader()->getBlockPetsConfig()->shouldStalkPetOwner()) {
-				if(rand(0, 1) === 1) {
+				if((bool) random_int(0, 1)) {
 					$multiplicationValue = 1;
 				} else {
 					$multiplicationValue = -1;

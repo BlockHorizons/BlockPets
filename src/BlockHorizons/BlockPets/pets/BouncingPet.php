@@ -15,7 +15,7 @@ abstract class BouncingPet extends IrasciblePet {
 	/** @var float */
 	protected $jumpHeight = 0.08;
 
-	public function onUpdate($currentTick): bool {
+	public function onUpdate(int $currentTick): bool {
 		if(!$this->checkUpdateRequirements()) {
 			return false;
 		}
