@@ -50,7 +50,7 @@ class PetInventoryHolder {
 	/**
 	 * @param Item[] $contents
 	 */
-	public function setInventoryContents(array $contents) {
+	public function setInventoryContents(array $contents): void {
 		$this->items = $contents;
 	}
 
@@ -72,12 +72,12 @@ class PetInventoryHolder {
 	}
 
 	/**
-	 * @return PetInventory|bool
+	 * @return PetInventory|null
 	 */
-	public function deployToOwner() {
+	public function deployToOwner(): ?PetInventory {
 		$owner = $this->pet->getPetOwner();
 		if($owner === null) {
-			return false;
+			return null;
 		}
 		/** @var Chest $tile */
 		$tile = Tile::createTile(Tile::CHEST, $owner->level, new CompoundTag("", [

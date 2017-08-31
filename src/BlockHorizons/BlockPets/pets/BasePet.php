@@ -129,7 +129,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->spawnToAll();
 	}
 
-	public function selectProperties() {
+	public function selectProperties(): void {
 		$properties = $this->getLoader()->getPetProperties()->getPropertiesFor($this->getEntityType());
 		$this->useProperties($properties);
 	}
@@ -168,7 +168,7 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * @param array $properties
 	 */
-	public function useProperties(array $properties) {
+	public function useProperties(array $properties): void {
 		$this->speed = (float) $properties["Speed"];
 		$this->canBeRidden = (bool) $properties["Can-Be-Ridden"];
 		$this->canBeChested = (bool) $properties["Can-Be-Chested"];
@@ -187,7 +187,7 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * @param bool $value
 	 */
-	public function setChested(bool $value = true) {
+	public function setChested(bool $value = true): void {
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_CHESTED, $value);
 		$this->chested = $value;
 		$this->getLoader()->getDatabase()->updateChested($this->getPetName(), $this->getPetOwnerName());
@@ -230,7 +230,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @param int $petLevel
 	 */
-	public function setPetLevel(int $petLevel) {
+	public function setPetLevel(int $petLevel): void {
 		$this->petLevel = $petLevel;
 	}
 
@@ -239,7 +239,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @return Player|null
 	 */
-	public function getPetOwner() {
+	public function getPetOwner(): ?Player {
 		return $this->getLoader()->getServer()->getPlayer($this->petOwner);
 	}
 
@@ -253,9 +253,10 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * @param float             $damage
 	 * @param EntityDamageEvent $source
 	 */
-	public function attack(EntityDamageEvent $source) {
+	public function attack(EntityDamageEvent $source): void {
 		if($source instanceof EntityDamageByEntityEvent) {
 			$player = $source->getDamager();
 			if($player instanceof Player) {
@@ -273,7 +274,7 @@ abstract class BasePet extends Creature implements Rideable {
 					$remainder = $hand;
 					$remainder->setCount($remainder->getCount() - 1);
 					$player->getInventory()->setItemInHand($remainder);
-					$this->heal(new EntityRegainHealthEvent($this, $heal, EntityRegainHealthEvent::CAUSE_SATURATION));
+					$this->heal($heal, new EntityRegainHealthEvent($this, $heal, EntityRegainHealthEvent::CAUSE_SATURATION));
 					$this->getLevel()->addParticle(new HeartParticle($this->add(0, 2), 4));
 
 					if($this->getLoader()->getBlockPetsConfig()->giveExperienceWhenFed()) {
@@ -352,7 +353,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @param int $points
 	 */
-	public function setPetLevelPoints(int $points) {
+	public function setPetLevelPoints(int $points): void {
 		$this->petLevelPoints = $points;
 	}
 
@@ -400,7 +401,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, 1);
 	}
 
-	public function generateCustomPetData() {
+	public function generateCustomPetData(): void {
 
 	}
 
@@ -413,7 +414,7 @@ abstract class BasePet extends Creature implements Rideable {
 		return $this->networkId;
 	}
 
-	public function saveNBT() {
+	public function saveNBT(): void {
 		parent::saveNBT();
 		$this->namedtag->petOwner = new StringTag("petOwner", (string) $this->getPetOwnerName());
 		$this->namedtag->petName = new StringTag("petName", (string) $this->getPetName());
@@ -455,7 +456,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @param int $amount
 	 */
-	public function setAttackDamage(int $amount) {
+	public function setAttackDamage(int $amount): void {
 		$this->attackDamage = $amount;
 	}
 
@@ -477,7 +478,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$petOwner = $this->getPetOwner();
 		if(random_int(1, 60) === 1 && $this->isAlive()) {
 			if($this->getHealth() !== $this->getMaxHealth()) {
-				$this->heal(new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
+				$this->heal(1, new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
 				$this->calculator->updateNameTag();
 			}
 		}
@@ -526,7 +527,7 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * @param bool $ignore
 	 */
-	public function kill($ignore = false) {
+	public function kill($ignore = false): void {
 		$this->shouldIgnoreEvent = $ignore;
 		parent::kill();
 	}
@@ -570,7 +571,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @return Player|null
 	 */
-	public function getRider(): Player {
+	public function getRider(): ?Player {
 		return $this->getLevel()->getServer()->getPlayer($this->rider);
 	}
 
@@ -623,14 +624,14 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		$diff = $this->getMaxHealth() - $this->getHealth();
-		$this->heal(new EntityRegainHealthEvent($this, $diff, EntityRegainHealthEvent::CAUSE_CUSTOM));
+		$this->heal($diff, new EntityRegainHealthEvent($this, $diff, EntityRegainHealthEvent::CAUSE_CUSTOM));
 		return true;
 	}
 
 	/**
 	 * @param string $newName
 	 */
-	public function changeName(string $newName) {
+	public function changeName(string $newName): void {
 		$this->getLoader()->getDatabase()->unregisterPet($this->getPetName(), $this->getPetOwnerName());
 		$this->petName = $newName;
 		$this->getLoader()->getDatabase()->registerPet($this);
@@ -640,7 +641,7 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * @param Player $player
 	 */
-	public function spawnTo(Player $player) {
+	public function spawnTo(Player $player): void {
 		parent::spawnTo($player);
 		$pk = new AddEntityPacket();
 		$pk->entityRuntimeId = $this->getId();
@@ -753,7 +754,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @param bool $value
 	 */
-	public function setDormant(bool $value = true) {
+	public function setDormant(bool $value = true): void {
 		$this->dormant = $value;
 	}
 

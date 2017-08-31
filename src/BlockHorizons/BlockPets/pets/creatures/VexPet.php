@@ -15,7 +15,7 @@ class VexPet extends HoveringPet implements SmallCreature {
 	public $name = "Vex Pet";
 	public $networkId = 105;
 
-	public function generateCustomPetData() {
+	public function generateCustomPetData(): void {
 		$this->canCollide = false;
 	}
 }

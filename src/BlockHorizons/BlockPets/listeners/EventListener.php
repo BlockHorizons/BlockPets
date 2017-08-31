@@ -9,6 +9,7 @@ use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\BasePet;
 use BlockHorizons\BlockPets\pets\IrasciblePet;
 use BlockHorizons\BlockPets\tasks\PetRespawnTask;
+use pocketmine\entity\Living;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDeathEvent;
@@ -36,7 +37,7 @@ class EventListener implements Listener {
 	 * @priority        HIGHEST
 	 * @ignoreCancelled true
 	 */
-	public function onEntityDamage(EntityDamageEvent $event) {
+	public function onEntityDamage(EntityDamageEvent $event): void {
 		$player = $event->getEntity();
 		if($player instanceof Player) {
 			if($event->getCause() === $event::CAUSE_FALL) {
@@ -54,7 +55,10 @@ class EventListener implements Listener {
 						if(!$pet instanceof IrasciblePet) {
 							continue;
 						}
-						$pet->setAngry($event->getDamager());
+						$attacker = $event->getDamager();
+						if($attacker instanceof Living) {
+							$pet->setAngry($attacker);
+						}
 					}
 				}
 			}
@@ -73,7 +77,7 @@ class EventListener implements Listener {
 	 *
 	 * @param EntityDeathEvent $event
 	 */
-	public function onPetDeath(EntityDeathEvent $event) {
+	public function onPetDeath(EntityDeathEvent $event): void {
 		$pet = $event->getEntity();
 		$delay = $this->getLoader()->getBlockPetsConfig()->getRespawnTime();
 		if($pet instanceof BasePet) {
@@ -104,7 +108,7 @@ class EventListener implements Listener {
 	 *
 	 * @param PlayerJoinEvent $event
 	 */
-	public function onPlayerJoin(PlayerJoinEvent $event) {
+	public function onPlayerJoin(PlayerJoinEvent $event): void {
 		$pets = $this->getLoader()->getPetsFrom($event->getPlayer());
 		if($this->getLoader()->getBlockPetsConfig()->fetchFromDatabase()) {
 			$petData = $this->getLoader()->getDatabase()->fetchAllPetData($event->getPlayer()->getName());
@@ -126,7 +130,7 @@ class EventListener implements Listener {
 	 *
 	 * @param PlayerChatEvent $event
 	 */
-	public function onChat(PlayerChatEvent $event) {
+	public function onChat(PlayerChatEvent $event): void {
 		if(isset($this->getLoader()->selectingName[$event->getPlayer()->getName()])) {
 			$petName = $event->getMessage();
 			$event->setCancelled();
@@ -145,7 +149,7 @@ class EventListener implements Listener {
 	/**
 	 * @param EntitySpawnEvent $event
 	 */
-	public function onEntitySpawn(EntitySpawnEvent $event) {
+	public function onEntitySpawn(EntitySpawnEvent $event): void {
 		if($event->getEntity() instanceof BasePet) {
 			$clearLaggPlugin = $this->getLoader()->getServer()->getPluginManager()->getPlugin("ClearLagg");
 			if($clearLaggPlugin !== null) {

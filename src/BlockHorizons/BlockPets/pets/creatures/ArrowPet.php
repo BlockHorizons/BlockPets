@@ -15,7 +15,7 @@ class ArrowPet extends HoveringPet implements SmallCreature {
 	public $width = 0.5;
 	public $height = 0.5;
 
-	public function setCritical(bool $value = true) {
+	public function setCritical(bool $value = true): void {
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_CRITICAL, $value);
 	}
 }

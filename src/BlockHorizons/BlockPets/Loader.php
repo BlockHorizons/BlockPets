@@ -299,7 +299,7 @@ class Loader extends PluginBase {
 	 *
 	 * @return string
 	 */
-	public function translate(string $key, array $params = []) {
+	public function translate(string $key, array $params = []): string {
 		if(!empty($params)) {
 			return vsprintf($this->getLanguage()->get($key), $params);
 		}
@@ -320,7 +320,7 @@ class Loader extends PluginBase {
 	 *
 	 * @return bool
 	 */
-	public function petExists(string $entityName) {
+	public function petExists(string $entityName): bool {
 		foreach(self::PETS as $pet) {
 			if(strtolower($pet) === strtolower($entityName)) {
 				return true;
@@ -336,7 +336,7 @@ class Loader extends PluginBase {
 	 *
 	 * @return string|null
 	 */
-	public function getPet(string $entityName) {
+	public function getPet(string $entityName): ?string {
 		foreach(self::PETS as $pet) {
 			if(strtolower($pet) === strtolower($entityName)) {
 				return $pet;
@@ -359,7 +359,7 @@ class Loader extends PluginBase {
 	 *
 	 * @return null|BasePet
 	 */
-	public function createPet(string $entityName, Player $player, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0, bool $chested = false) {
+	public function createPet(string $entityName, Player $player, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0, bool $chested = false): ?BasePet {
 		foreach($this->getPetsFrom($player) as $pet) {
 			if($pet->getPetName() === $name) {
 				$this->removePet($pet->getPetName(), $player);
@@ -431,7 +431,7 @@ class Loader extends PluginBase {
 	 *
 	 * @return BasePet|null
 	 */
-	public function getPetByName(string $name, Player $player = null) {
+	public function getPetByName(string $name, Player $player = null): ?BasePet {
 		if($player !== null) {
 			foreach($this->getPetsFrom($player) as $pet) {
 				if(strpos(strtolower($pet->getPetName()), strtolower($name)) !== false) {

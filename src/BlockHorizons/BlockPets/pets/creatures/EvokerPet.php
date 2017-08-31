@@ -14,8 +14,8 @@ class EvokerPet extends WalkingPet {
 	public $width = 0.6;
 	public $height = 1.95;
 
-	public function generateCustomPetData() {
-		$isCasting = mt_rand(0, 1);
+	public function generateCustomPetData(): void {
+		$isCasting = random_int(0, 1);
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_EVOKER_SPELL, (bool) $isCasting);
 	}
 }

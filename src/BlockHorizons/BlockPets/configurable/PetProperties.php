@@ -19,7 +19,7 @@ class PetProperties {
 		$this->collectProperties();
 	}
 
-	public function collectProperties() {
+	public function collectProperties(): void {
 		$data = yaml_parse_file($this->getLoader()->getDataFolder() . "pet_properties.yml");
 		$this->properties = $data;
 	}

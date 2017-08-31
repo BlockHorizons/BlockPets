@@ -18,7 +18,7 @@ class Calculator {
 	/**
 	 * Recalculates every property of the pet and saves/updates it to the database.
 	 */
-	public function recalculateAll() {
+	public function recalculateAll(): void {
 		$this->recalculateHealth();
 		$this->recalculateSize();
 		$this->recalculateDamage();
@@ -29,7 +29,7 @@ class Calculator {
 	/**
 	 * Recalculates maximum health that the pet should have according to its configuration scalings.
 	 */
-	public function recalculateHealth() {
+	public function recalculateHealth(): void {
 		$petLevel = $this->getPet()->getPetLevel();
 		$baseHealth = $this->getPet()->getLoader()->getBlockPetsConfig()->getBasePetHealth();
 		$scalingHealth = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetHealthPerLevel();
@@ -67,7 +67,7 @@ class Calculator {
 	/**
 	 * Recalculates attack damage that the pet should have according to its configuration attack damage.
 	 */
-	public function recalculateDamage() {
+	public function recalculateDamage(): void {
 		$petLevel = $this->getPet()->getPetLevel();
 		$baseDamage = $this->getPet()->getLoader()->getBlockPetsConfig()->getBasePetDamage();
 		$scalingDamage = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetDamagePerLevel();
@@ -78,7 +78,7 @@ class Calculator {
 	/**
 	 * Updates the name tag to include the latest data like level, level points etc.
 	 */
-	public function updateNameTag() {
+	public function updateNameTag(): void {
 		$percentage = round($this->getPet()->getPetLevelPoints() / $this->getPet()->getRequiredLevelPoints($this->getPet()->getPetLevel()) * 100, 1);
 		$this->getPet()->setNameTag(
 			$this->getPet()->getPetName() . "\n" .
@@ -90,7 +90,7 @@ class Calculator {
 	/**
 	 * Stores the pet to the database, or updates level and level points if the pet has already been added to the database.
 	 */
-	public function storeToDatabase() {
+	public function storeToDatabase(): void {
 		if($this->getPet()->getLoader()->getBlockPetsConfig()->storeToDatabase()) {
 			if($this->getPet()->getLoader()->getDatabase()->petExists($this->getPet()->getPetName(), $this->getPet()->getPetOwnerName())) {
 				$this->getPet()->getLoader()->getDatabase()->updatePetExperience($this->getPet()->getPetName(), $this->getPet()->getPetOwnerName(), $this->getPet()->getPetLevel(), $this->getPet()->getPetLevelPoints());

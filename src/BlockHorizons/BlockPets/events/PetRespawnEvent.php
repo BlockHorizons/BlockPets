@@ -44,7 +44,7 @@ class PetRespawnEvent extends BlockPetsEvent implements Cancellable {
 	 *
 	 * @param int $secondsDelay
 	 */
-	public function setDelay(int $secondsDelay) {
+	public function setDelay(int $secondsDelay): void {
 		$this->delay = $secondsDelay;
 	}
 }

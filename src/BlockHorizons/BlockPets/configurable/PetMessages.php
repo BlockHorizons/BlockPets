@@ -15,7 +15,7 @@ class PetMessages {
 		$this->loader = $loader;
 	}
 
-	public function collectMessages() {
+	public function collectMessages(): void {
 		$data = yaml_parse_file($this->getLoader()->getDataFolder() . "pet_messages.yml");
 		$this->messages = $data;
 	}
