@@ -274,7 +274,7 @@ abstract class BasePet extends Creature implements Rideable {
 					$remainder = $hand;
 					$remainder->setCount($remainder->getCount() - 1);
 					$player->getInventory()->setItemInHand($remainder);
-					$this->heal($heal, new EntityRegainHealthEvent($this, $heal, EntityRegainHealthEvent::CAUSE_SATURATION));
+					$this->heal(new EntityRegainHealthEvent($this, $heal, EntityRegainHealthEvent::CAUSE_SATURATION));
 					$this->getLevel()->addParticle(new HeartParticle($this->add(0, 2), 4));
 
 					if($this->getLoader()->getBlockPetsConfig()->giveExperienceWhenFed()) {
@@ -478,7 +478,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$petOwner = $this->getPetOwner();
 		if(random_int(1, 60) === 1 && $this->isAlive()) {
 			if($this->getHealth() !== $this->getMaxHealth()) {
-				$this->heal(1, new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
+				$this->heal(new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
 				$this->calculator->updateNameTag();
 			}
 		}
@@ -624,7 +624,7 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		$diff = $this->getMaxHealth() - $this->getHealth();
-		$this->heal($diff, new EntityRegainHealthEvent($this, $diff, EntityRegainHealthEvent::CAUSE_CUSTOM));
+		$this->heal(new EntityRegainHealthEvent($this, $diff, EntityRegainHealthEvent::CAUSE_CUSTOM));
 		return true;
 	}
 
