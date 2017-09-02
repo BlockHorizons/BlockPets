@@ -23,7 +23,7 @@ class ElderGuardianPet extends SwimmingPet {
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_ELDER, true);
 	}
 
-	public function attack($damage, EntityDamageEvent $source) {
+	public function attack(EntityDamageEvent $source) {
 		if($source instanceof EntityDamageByEntityEvent) {
 			$attacker = $source->getDamager();
 			if($attacker instanceof Player && mt_rand(0, 1) === 1) {
@@ -33,6 +33,6 @@ class ElderGuardianPet extends SwimmingPet {
 				$attacker->dataPacket($pk);
 			}
 		}
-		return parent::attack($damage, $source);
+		return parent::attack($source);
 	}
 }
