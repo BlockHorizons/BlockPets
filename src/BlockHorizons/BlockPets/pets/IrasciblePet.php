@@ -133,7 +133,7 @@ abstract class IrasciblePet extends BasePet {
 	 *
 	 * @return Living|null
 	 */
-	public function getTarget(): void {
+	public function getTarget(): ?Living {
 		return $this->target;
 	}
 }

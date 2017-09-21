@@ -34,7 +34,7 @@ class Calculator {
 		$baseHealth = $this->getPet()->getLoader()->getBlockPetsConfig()->getBasePetHealth();
 		$scalingHealth = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetHealthPerLevel();
 
-		$this->getPet()->setMaxHealth((int) $baseHealth + $scalingHealth * $petLevel);
+		$this->getPet()->setMaxHealth((int) floor($baseHealth + $scalingHealth * $petLevel));
 		$this->getPet()->fullHeal();
 	}
 
