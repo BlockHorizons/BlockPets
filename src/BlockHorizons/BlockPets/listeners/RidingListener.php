@@ -28,7 +28,7 @@ class RidingListener implements Listener {
 	 *
 	 * @param DataPacketReceiveEvent $event
 	 */
-	public function ridePet(DataPacketReceiveEvent $event) {
+	public function ridePet(DataPacketReceiveEvent $event): void {
 		$packet = $event->getPacket();
 		if($packet instanceof PlayerInputPacket) {
 			if($this->getLoader()->isRidingAPet($event->getPlayer())) {
@@ -67,7 +67,7 @@ class RidingListener implements Listener {
 	 *
 	 * @param EntityTeleportEvent $event
 	 */
-	public function onTeleport(EntityTeleportEvent $event) {
+	public function onTeleport(EntityTeleportEvent $event): void {
 		$player = $event->getEntity();
 		if($player instanceof Player) {
 			if($this->getLoader()->isRidingAPet($player)) {
@@ -84,7 +84,7 @@ class RidingListener implements Listener {
 	 *
 	 * @param PlayerIllegalMoveEvent $event
 	 */
-	public function disableRidingMovementRevert(PlayerIllegalMoveEvent $event) {
+	public function disableRidingMovementRevert(PlayerIllegalMoveEvent $event): void {
 		if($this->getLoader()->isRidingAPet($event->getPlayer())) {
 			$event->setCancelled();
 		}
@@ -95,7 +95,7 @@ class RidingListener implements Listener {
 	 *
 	 * @param PlayerQuitEvent $event
 	 */
-	public function onPlayerQuit(PlayerQuitEvent $event) {
+	public function onPlayerQuit(PlayerQuitEvent $event): void {
 		foreach($this->getLoader()->getPetsFrom($event->getPlayer()) as $pet) {
 			if($pet->isRidden()) {
 				$pet->throwRiderOff();

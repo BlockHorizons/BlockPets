@@ -28,7 +28,7 @@ abstract class IrasciblePet extends BasePet {
 	/**
 	 * @param EntityDamageEvent $source
 	 */
-	public function attack(EntityDamageEvent $source) {
+	public function attack(EntityDamageEvent $source): void {
 		if($this->closed || !$this->isAlive()) {
 			return;
 		}
@@ -121,7 +121,7 @@ abstract class IrasciblePet extends BasePet {
 	/**
 	 * Calms down the pet, making it stop chasing it's target.
 	 */
-	public function calmDown() {
+	public function calmDown(): void {
 		$this->target = null;
 		if($this instanceof ArrowPet) {
 			$this->setCritical(false);
@@ -133,7 +133,7 @@ abstract class IrasciblePet extends BasePet {
 	 *
 	 * @return Living|null
 	 */
-	public function getTarget() {
+	public function getTarget(): ?Living {
 		return $this->target;
 	}
 }

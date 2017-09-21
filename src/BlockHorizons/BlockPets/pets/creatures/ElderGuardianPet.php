@@ -18,21 +18,21 @@ class ElderGuardianPet extends SwimmingPet {
 	public $name = "Elder Guardian Pet";
 	public $networkId = 50;
 
-	public function generateCustomPetData() {
+	public function generateCustomPetData(): void {
 		parent::generateCustomPetData();
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_ELDER, true);
 	}
 
-	public function attack(EntityDamageEvent $source) {
+	public function attack(EntityDamageEvent $source): void {
 		if($source instanceof EntityDamageByEntityEvent) {
 			$attacker = $source->getDamager();
-			if($attacker instanceof Player && mt_rand(0, 1) === 1) {
+			if($attacker instanceof Player && random_int(0, 1) === 1) {
 				$pk = new LevelEventPacket();
 				$pk->evid = 2006;
 				$pk->data = 0;
 				$attacker->dataPacket($pk);
 			}
 		}
-		return parent::attack($source);
+		parent::attack($source);
 	}
 }

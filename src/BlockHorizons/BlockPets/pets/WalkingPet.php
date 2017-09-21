@@ -133,7 +133,7 @@ abstract class WalkingPet extends IrasciblePet {
 		return $this->isAlive();
 	}
 
-	public function jump() {
+	public function jump(): void {
 		$this->motionY = $this->gravity * 8;
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->jumpTicks = 5;
@@ -194,12 +194,5 @@ abstract class WalkingPet extends IrasciblePet {
 		$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);
 		$this->updateMovement();
 		return $this->isAlive();
-	}
-
-	/**
-	 * @param array $properties
-	 */
-	public function useProperties(array $properties) {
-		parent::useProperties($properties);
 	}
 }

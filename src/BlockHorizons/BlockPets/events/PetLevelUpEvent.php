@@ -55,7 +55,7 @@ class PetLevelUpEvent extends BlockPetsEvent implements Cancellable {
 	 *
 	 * @param int $to
 	 */
-	public function setTo(int $to) {
+	public function setTo(int $to): void {
 		$this->to = $to;
 	}
 }

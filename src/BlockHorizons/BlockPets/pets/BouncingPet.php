@@ -135,7 +135,7 @@ abstract class BouncingPet extends IrasciblePet {
 		return $this->isAlive();
 	}
 
-	public function jump() {
+	public function jump(): void {
 		$this->motionY = $this->jumpHeight * 12 * $this->getScale();
 		$this->move($this->motionX, $this->motionY, $this->motionZ);
 		$this->jumpTicks = 10;
@@ -219,11 +219,11 @@ abstract class BouncingPet extends IrasciblePet {
 	/**
 	 * @param EntityDamageEvent $source
 	 */
-	public function attack(EntityDamageEvent $source) {
+	public function attack(EntityDamageEvent $source): void {
 		if($source->getCause() === $source::CAUSE_FALL) {
 			$source->setCancelled();
 		}
-		return parent::attack($source);
+		parent::attack($source);
 	}
 
 	/**
@@ -231,14 +231,14 @@ abstract class BouncingPet extends IrasciblePet {
 	 *
 	 * @return bool
 	 */
-	public function parentOnUpdate(int $currentTick) {
+	public function parentOnUpdate(int $currentTick): bool {
 		return parent::onUpdate($currentTick);
 	}
 
 	/**
 	 * @param array $properties
 	 */
-	public function useProperties(array $properties) {
+	public function useProperties(array $properties): void {
 		parent::useProperties($properties);
 		$this->jumpHeight = (float) $properties["Jumping-Height"];
 	}

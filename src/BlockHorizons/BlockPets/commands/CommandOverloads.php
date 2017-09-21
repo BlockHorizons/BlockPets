@@ -19,7 +19,7 @@ class CommandOverloads {
 		return self::$commandOverloads[$command];
 	}
 
-	public static function initialize() {
+	public static function initialize(): void {
 		$pets = Loader::PETS;
 		foreach($pets as $key => $pet) {
 			$pets[$key] = strtolower($pet);

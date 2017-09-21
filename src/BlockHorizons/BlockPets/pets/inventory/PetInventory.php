@@ -9,7 +9,6 @@ use pocketmine\block\Block;
 use pocketmine\inventory\ChestInventory;
 use pocketmine\inventory\InventoryType;
 use pocketmine\item\Item;
-use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\tile\Chest;
 use pocketmine\tile\Tile;
@@ -36,7 +35,7 @@ class PetInventory extends ChestInventory {
 		return $this->pet;
 	}
 
-	public function onClose(Player $player) {
+	public function onClose(Player $player): void {
 		$this->save();
 		$player->level->sendBlocks([$player], [$this->chestPos]);
 		$this->tile->close();

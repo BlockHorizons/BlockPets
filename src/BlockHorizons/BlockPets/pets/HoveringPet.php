@@ -172,17 +172,17 @@ abstract class HoveringPet extends IrasciblePet {
 	/**
 	 * @param EntityDamageEvent $source
 	 */
-	public function attack(EntityDamageEvent $source) {
+	public function attack(EntityDamageEvent $source): void {
 		if($source->getCause() === $source::CAUSE_FALL) {
 			$source->setCancelled();
 		}
-		return parent::attack($source);
+		parent::attack($source);
 	}
 
 	/**
 	 * @param array $properties
 	 */
-	public function useProperties(array $properties) {
+	public function useProperties(array $properties): void {
 		parent::useProperties($properties);
 		$this->flyHeight = (float) $properties["Flying-Height"];
 	}

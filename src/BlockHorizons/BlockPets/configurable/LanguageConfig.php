@@ -17,7 +17,7 @@ class LanguageConfig {
 		$this->collectMessages();
 	}
 
-	public function collectMessages() {
+	public function collectMessages(): void {
 		$languageSelected = false;
 		$language = [];
 		foreach($this->getLoader()->getAvailableLanguages() as $availableLanguage) {
@@ -81,9 +81,9 @@ class LanguageConfig {
 	/**
 	 * @param string $key
 	 *
-	 * @return string|null
+	 * @return string
 	 */
-	public function get(string $key) {
-		return $this->messages[$key] ?? null;
+	public function get(string $key): string {
+		return $this->messages[$key] ?? "";
 	}
 }

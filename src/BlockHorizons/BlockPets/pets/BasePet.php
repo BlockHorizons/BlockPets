@@ -29,6 +29,7 @@ use pocketmine\network\mcpe\protocol\SetEntityLinkPacket;
 use pocketmine\network\mcpe\protocol\UpdateAttributesPacket;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
+use pocketmine\math\Vector3;
 
 abstract class BasePet extends Creature implements Rideable {
 
@@ -129,7 +130,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->spawnToAll();
 	}
 
-	public function selectProperties() {
+	public function selectProperties(): void {
 		$properties = $this->getLoader()->getPetProperties()->getPropertiesFor($this->getEntityType());
 		$this->useProperties($properties);
 	}
@@ -168,7 +169,7 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * @param array $properties
 	 */
-	public function useProperties(array $properties) {
+	public function useProperties(array $properties): void {
 		$this->speed = (float) $properties["Speed"];
 		$this->canBeRidden = (bool) $properties["Can-Be-Ridden"];
 		$this->canBeChested = (bool) $properties["Can-Be-Chested"];
@@ -187,7 +188,7 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * @param bool $value
 	 */
-	public function setChested(bool $value = true) {
+	public function setChested(bool $value = true): void {
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_CHESTED, $value);
 		$this->chested = $value;
 		$this->getLoader()->getDatabase()->updateChested($this->getPetName(), $this->getPetOwnerName());
@@ -230,7 +231,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @param int $petLevel
 	 */
-	public function setPetLevel(int $petLevel) {
+	public function setPetLevel(int $petLevel): void {
 		$this->petLevel = $petLevel;
 	}
 
@@ -239,7 +240,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @return Player|null
 	 */
-	public function getPetOwner() {
+	public function getPetOwner(): ?Player {
 		return $this->getLoader()->getServer()->getPlayer($this->petOwner);
 	}
 
@@ -253,9 +254,10 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * @param float             $damage
 	 * @param EntityDamageEvent $source
 	 */
-	public function attack(EntityDamageEvent $source) {
+	public function attack(EntityDamageEvent $source): void {
 		if($source instanceof EntityDamageByEntityEvent) {
 			$player = $source->getDamager();
 			if($player instanceof Player) {
@@ -352,7 +354,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @param int $points
 	 */
-	public function setPetLevelPoints(int $points) {
+	public function setPetLevelPoints(int $points): void {
 		$this->petLevelPoints = $points;
 	}
 
@@ -400,7 +402,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, 1);
 	}
 
-	public function generateCustomPetData() {
+	public function generateCustomPetData(): void {
 
 	}
 
@@ -413,7 +415,7 @@ abstract class BasePet extends Creature implements Rideable {
 		return $this->networkId;
 	}
 
-	public function saveNBT() {
+	public function saveNBT(): void {
 		parent::saveNBT();
 		$this->namedtag->petOwner = new StringTag("petOwner", (string) $this->getPetOwnerName());
 		$this->namedtag->petName = new StringTag("petName", (string) $this->getPetName());
@@ -455,7 +457,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @param int $amount
 	 */
-	public function setAttackDamage(int $amount) {
+	public function setAttackDamage(int $amount): void {
 		$this->attackDamage = $amount;
 	}
 
@@ -526,7 +528,7 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * @param bool $ignore
 	 */
-	public function kill($ignore = false) {
+	public function kill($ignore = false): void {
 		$this->shouldIgnoreEvent = $ignore;
 		parent::kill();
 	}
@@ -541,9 +543,7 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		$pk = new SetEntityLinkPacket();
-		$pk->from = $this->getId();
-		$pk->to = $this->getPetOwner()->getId();
-		$pk->type = self::STATE_STANDING;
+		$pk->link = [$this->getId(), $this->getPetOwner()->getId(), self::STATE_STANDING];
 		$this->ridden = false;
 		$rider = $this->getRider();
 		$this->rider = null;
@@ -551,9 +551,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->from = $this->getPetOwner()->getId();
-		$pk->to = 0;
-		$pk->type = self::STATE_STANDING;
+		$pk->link = [$this->getPetOwner()->getId(), 0, self::STATE_STANDING];
 		$this->getPetOwner()->dataPacket($pk);
 		if($this->getPetOwner() !== null) {
 			$rider->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, false);
@@ -570,7 +568,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @return Player|null
 	 */
-	public function getRider(): Player {
+	public function getRider(): ?Player {
 		return $this->getLevel()->getServer()->getPlayer($this->rider);
 	}
 
@@ -598,15 +596,11 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_SADDLED, true);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->to = $player->getId();
-		$pk->from = $this->getId();
-		$pk->type = self::STATE_SITTING;
+		$pk->link = [$this->getId(), $player->getId(), self::STATE_SITTING];
 		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->to = 0;
-		$pk->from = $this->getId();
-		$pk->type = self::STATE_SITTING;
+		$pk->link = [$this->getId(), 0, self::STATE_SITTING];
 		$player->dataPacket($pk);
 
 		if($this->getPetOwner()->isSurvival()) {
@@ -630,7 +624,7 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * @param string $newName
 	 */
-	public function changeName(string $newName) {
+	public function changeName(string $newName): void {
 		$this->getLoader()->getDatabase()->unregisterPet($this->getPetName(), $this->getPetOwnerName());
 		$this->petName = $newName;
 		$this->getLoader()->getDatabase()->registerPet($this);
@@ -640,15 +634,13 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * @param Player $player
 	 */
-	public function spawnTo(Player $player) {
+	public function spawnTo(Player $player): void {
 		parent::spawnTo($player);
 		$pk = new AddEntityPacket();
 		$pk->entityRuntimeId = $this->getId();
 		$pk->type = $this->getNetworkId();
-		$pk->x = $this->x;
-		$pk->y = $this->y;
-		$pk->z = $this->z;
-		$pk->speedX = $pk->speedY = $pk->speedZ = 0.0;
+		$pk->position = new Vector3($this->x, $this->y, $this->z);
+		$pk->motion = new Vector3(0.0, 0.0, 0.0);
 		$pk->yaw = $this->yaw;
 		$pk->pitch = $this->pitch;
 		$pk->metadata = $this->dataProperties;
@@ -753,7 +745,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @param bool $value
 	 */
-	public function setDormant(bool $value = true) {
+	public function setDormant(bool $value = true): void {
 		$this->dormant = $value;
 	}
 
@@ -769,9 +761,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->getPetOwner()->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, true);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->to = $this->getId();
-		$pk->from = $this->getPetOwner()->getId();
-		$pk->type = self::STATE_SITTING;
+		$pk->link = [$this->getPetOwner()->getId(), $this->getId(), self::STATE_SITTING];
 		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
 		return true;
 	}
@@ -787,9 +777,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, false);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->to = $this->getId();
-		$pk->from = $this->getPetOwner()->getId();
-		$pk->type = self::STATE_STANDING;
+		$pk->link = [$this->getPetOwner()->getId(), $this->getId() , self::STATE_STANDING];
 		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
 		$this->teleport($this->getPetOwner());
 		return true;

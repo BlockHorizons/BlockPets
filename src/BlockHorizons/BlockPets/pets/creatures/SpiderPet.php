@@ -15,7 +15,7 @@ class SpiderPet extends WalkingPet implements SmallCreature {
 	public $name = "Spider Pet";
 	public $networkId = 35;
 
-	public function generateCustomPetData() {
+	public function generateCustomPetData(): void {
 		$this->setDataProperty(self::DATA_FLAGS, self::DATA_FLAG_CAN_CLIMB, true);
 	}
 }
