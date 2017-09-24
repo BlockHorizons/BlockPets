@@ -543,7 +543,7 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		$pk = new SetEntityLinkPacket();
-		$pk->link = [$this->getId(), $this->getPetOwner()->getId(), self::STATE_STANDING];
+		$pk->link = [$this->getId(), $this->getPetOwner()->getId(), self::STATE_STANDING, 0];
 		$this->ridden = false;
 		$rider = $this->getRider();
 		$this->rider = null;
@@ -551,7 +551,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->link = [$this->getPetOwner()->getId(), 0, self::STATE_STANDING];
+		$pk->link = [$this->getPetOwner()->getId(), 0, self::STATE_STANDING, 0];
 		$this->getPetOwner()->dataPacket($pk);
 		if($this->getPetOwner() !== null) {
 			$rider->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, false);
@@ -596,11 +596,11 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_SADDLED, true);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->link = [$this->getId(), $player->getId(), self::STATE_SITTING];
+		$pk->link = [$this->getId(), $player->getId(), self::STATE_SITTING, 0];
 		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->link = [$this->getId(), 0, self::STATE_SITTING];
+		$pk->link = [$this->getId(), 0, self::STATE_SITTING, 0];
 		$player->dataPacket($pk);
 
 		if($this->getPetOwner()->isSurvival()) {
@@ -761,7 +761,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->getPetOwner()->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, true);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->link = [$this->getPetOwner()->getId(), $this->getId(), self::STATE_SITTING];
+		$pk->link = [$this->getPetOwner()->getId(), $this->getId(), self::STATE_SITTING, 0];
 		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
 		return true;
 	}
@@ -777,7 +777,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, false);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->link = [$this->getPetOwner()->getId(), $this->getId() , self::STATE_STANDING];
+		$pk->link = [$this->getPetOwner()->getId(), $this->getId() , self::STATE_STANDING, 0];
 		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
 		$this->teleport($this->getPetOwner());
 		return true;
