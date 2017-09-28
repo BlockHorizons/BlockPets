@@ -198,7 +198,8 @@ class Loader extends PluginBase {
 		"nl",
 		"vi",
 		"gr",
-		"ko"
+		"ko",
+		"de"
 	];
 
 	/** @var array */
