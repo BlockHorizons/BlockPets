@@ -35,7 +35,7 @@ class LevelUpPetCommand extends BaseCommand {
 		$amount = 1;
 		if(isset($args[1])) {
 			if(is_numeric($args[1])) {
-				$amount = $args[1];
+				$amount = (int) $args[1];
 			}
 		}
 
