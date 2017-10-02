@@ -1,6 +1,8 @@
 # BlockPets
 
-[![Join the chat at https://gitter.im/BlockHorizons/BlockPets](https://badges.gitter.im/BlockHorizons/BlockPets.svg)](https://gitter.im/BlockHorizons/BlockPets?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)<br><br>
+[![Join the chat at https://gitter.im/BlockHorizons/BlockPets](https://badges.gitter.im/BlockHorizons/BlockPets.svg)](https://gitter.im/BlockHorizons/BlockPets?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Chat](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://discord.gg/YynM57V)
+<br><br>
 An advanced pets plugin for PocketMine-MP, a server software for Minecraft PE servers in PHP. Implements highly customizable pets with interesting features.<br>
 > Third party versions, forks or spoons of PocketMine-MP are **not** supported.
 >
