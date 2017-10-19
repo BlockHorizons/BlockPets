@@ -26,6 +26,7 @@ use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
 use pocketmine\network\mcpe\protocol\SetEntityLinkPacket;
+use pocketmine\network\mcpe\protocol\types\EntityLink;
 use pocketmine\network\mcpe\protocol\UpdateAttributesPacket;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
@@ -545,7 +546,13 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		$pk = new SetEntityLinkPacket();
-		$pk->link = [$this->getId(), $this->getPetOwner()->getId(), self::STATE_STANDING, 0];
+		$link = new EntityLink();
+		$link->fromEntityUniqueId = $this->getId();
+		$link->type = self::STATE_STANDING;
+		$link->toEntityUniqueId = $this->getPetOwner()->getId();
+		$link->byte2 = 1;
+
+		$pk->link = $link;
 		$this->ridden = false;
 		$rider = $this->getRider();
 		$this->rider = null;
@@ -553,7 +560,14 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->link = [$this->getPetOwner()->getId(), 0, self::STATE_STANDING, 0];
+
+		$link = new EntityLink();
+		$link->fromEntityUniqueId = $this->getPetOwner()->getId();
+		$link->type = self::STATE_STANDING;
+		$link->toEntityUniqueId = 0;
+		$link->byte2 = 1;
+
+		$pk->link = $link;
 		$this->getPetOwner()->dataPacket($pk);
 		if($this->getPetOwner() !== null) {
 			$rider->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, false);
@@ -598,11 +612,23 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_SADDLED, true);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->link = [$this->getId(), $player->getId(), self::STATE_SITTING, 0];
+		$link = new EntityLink();
+		$link->fromEntityUniqueId = $this->getId();
+		$link->type = self::STATE_SITTING;
+		$link->toEntityUniqueId = $player->getId();
+		$link->byte2 = 1;
+
+		$pk->link = $link;
 		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->link = [$this->getId(), 0, self::STATE_SITTING, 0];
+		$link = new EntityLink();
+		$link->fromEntityUniqueId = $this->getId();
+		$link->type = self::STATE_SITTING;
+		$link->toEntityUniqueId = 0;
+		$link->byte2 = 1;
+
+		$pk->link = $link;
 		$player->dataPacket($pk);
 
 		if($this->getPetOwner()->isSurvival()) {
@@ -756,7 +782,13 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->getPetOwner()->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, true);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->link = [$this->getPetOwner()->getId(), $this->getId(), self::STATE_SITTING, 0];
+		$link = new EntityLink();
+		$link->fromEntityUniqueId = $this->getPetOwner()->getId();
+		$link->type = self::STATE_SITTING;
+		$link->toEntityUniqueId = $this->getId();
+		$link->byte2 = 1;
+
+		$pk->link = $link;
 		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
 		return true;
 	}
@@ -772,7 +804,13 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, false);
 
 		$pk = new SetEntityLinkPacket();
-		$pk->link = [$this->getPetOwner()->getId(), $this->getId() , self::STATE_STANDING, 0];
+		$link = new EntityLink();
+		$link->fromEntityUniqueId = $this->getPetOwner()->getId();
+		$link->type = self::STATE_STANDING;
+		$link->toEntityUniqueId = $this->getId();
+		$link->byte2 = 1;
+
+		$pk->link = $link;
 		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
 		$this->teleport($this->getPetOwner());
 		return true;
