@@ -17,20 +17,6 @@ class SpawnPetCommand extends BaseCommand {
 	}
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
-		/*
-		 * Hack to make spawnpet command work, required because parameter ordering is messed up.
-		 * TODO: Remove
-		 */
-		if(count($args) > 1) {
-			$a = $args;
-			$last = array_pop($a);
-			$pet = $this->getLoader()->getPet($last);
-			if($pet !== null) {
-				$a1 = array_splice($args, -1);
-				$args = array_merge($a1, $args);
-			}
-		}
-
 		if(!$this->testPermission($sender)) {
 			$this->sendPermissionMessage($sender);
 			return true;
@@ -71,7 +57,7 @@ class SpawnPetCommand extends BaseCommand {
 		}
 
 		if(isset($args[3])) {
-			if($args[3] === "false") {
+			if($args[3] === "false" || $args === "no" ) {
 				$args[3] = false;
 			} else {
 				$args[3] = true;

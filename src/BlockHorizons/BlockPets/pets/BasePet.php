@@ -128,6 +128,8 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->inventory = new PetInventoryHolder($this);
 		$this->levelUp(1, true);
 		$this->spawnToAll();
+
+		$this->getAttributeMap()->addAttribute(Attribute::getAttribute(20));
 	}
 
 	public function selectProperties(): void {
@@ -647,14 +649,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$player->dataPacket($pk);
 
 		$pk = new UpdateAttributesPacket();
-		$pk->entries = [
-			Attribute::addAttribute($this->getId(), "minecraft:horse.jump_strength", 0, 3 /*3*/, 0.6679779),
-			Attribute::addAttribute($this->getId(), "minecraft:fall_damage", 0, 3.402823, 1),
-			Attribute::addAttribute($this->getId(), "minecraft:luck", -1024, 1024, 0),
-			Attribute::addAttribute($this->getId(), "minecraft:movement", 0, 3.402823, 0.223),
-			Attribute::addAttribute($this->getId(), "minecraft:absorption", 0, 3.402823, 0),
-			Attribute::addAttribute($this->getId(), "minecraft:health", 0, 40, 40)
-		];
+		$pk->entries = $this->getAttributeMap()->getAll();
 		$pk->entityRuntimeId = $this->getId();
 		$player->dataPacket($pk);
 	}

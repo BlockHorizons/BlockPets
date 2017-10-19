@@ -42,15 +42,9 @@ class PetInventory extends ChestInventory {
 	}
 
 	public function save(): bool {
-		/** @var Item $item */
-		foreach($this->getContents() as $item) {
-			if($item->getId() === Item::AIR) {
-				continue;
-			}
-			$this->pet->getInventory()->setInventoryContents($this->getContents());
-			$this->pet->getLoader()->getDatabase()->updateInventory($this->pet->getPetName(), $this->pet->getPetOwnerName(), $this->pet->getInventory()->compressContents());
-			break;
-		}
+		$this->pet->getInventory()->setInventoryContents($this->getContents());
+		$this->pet->getLoader()->getDatabase()->updateInventory($this->pet->getPetName(), $this->pet->getPetOwnerName(), $this->pet->getInventory()->compressContents());
+
 		return true;
 	}
 }

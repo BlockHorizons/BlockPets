@@ -73,6 +73,7 @@ use BlockHorizons\BlockPets\pets\creatures\ZombieVillagerPet;
 use BlockHorizons\BlockPets\pets\datastorage\BaseDataStorer;
 use BlockHorizons\BlockPets\pets\datastorage\MySQLDataStorer;
 use BlockHorizons\BlockPets\pets\datastorage\SQLiteDataStorer;
+use pocketmine\entity\Attribute;
 use pocketmine\entity\Entity;
 use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\CompoundTag;
@@ -224,7 +225,6 @@ class Loader extends PluginBase {
 			mkdir($this->getDataFolder());
 		}
 		SpoonDetector::printSpoon($this);
-		CommandOverloads::initialize();
 		foreach(self::PET_CLASSES as $petClass) {
 			Entity::registerEntity($petClass, true);
 		}
@@ -235,6 +235,7 @@ class Loader extends PluginBase {
 		$this->pProperties = new PetProperties($this);
 		$this->language = new LanguageConfig($this);
 		$this->selectDatabase();
+		Attribute::addAttribute(20, "minecraft:horse.jump_strength", 0, 3, 0.6679779);
 	}
 
 	public function registerCommands() {

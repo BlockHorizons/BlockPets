@@ -57,12 +57,4 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 	public function getPlugin(): Plugin {
 		return $this->loader;
 	}
-
-	public function generateCustomCommandData(Player $player): array {
-		$commandData = parent::generateCustomCommandData($player);
-		$commandData["permission"] = $this->getPermission();
-		$commandData["overloads"]["default"]["input"]["parameters"] = CommandOverloads::getOverloads($this->getName());
-
-		return $commandData;
-	}
 }
