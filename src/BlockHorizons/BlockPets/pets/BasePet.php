@@ -420,13 +420,13 @@ abstract class BasePet extends Creature implements Rideable {
 
 	public function saveNBT(): void {
 		parent::saveNBT();
-		$this->namedtag->petOwner = new StringTag("petOwner", (string) $this->getPetOwnerName());
-		$this->namedtag->petName = new StringTag("petName", (string) $this->getPetName());
-		$this->namedtag->speed = new FloatTag("speed", (float) $this->getSpeed());
-		$this->namedtag->scale = new FloatTag("scale", (float) $this->getStartingScale());
-		$this->namedtag->networkId = new IntTag("networkId", (int) $this->getNetworkId());
-		$this->namedtag->petLevel = new IntTag("petLevel", (int) $this->getPetLevel());
-		$this->namedtag->petLevelPoints = new IntTag("petLevelPoints", (int) $this->getPetLevelPoints());
+		$this->namedtag->petOwner = new StringTag("petOwner", $this->getPetOwnerName());
+		$this->namedtag->petName = new StringTag("petName", $this->getPetName());
+		$this->namedtag->speed = new FloatTag("speed", $this->getSpeed());
+		$this->namedtag->scale = new FloatTag("scale", $this->getStartingScale());
+		$this->namedtag->networkId = new IntTag("networkId", $this->getNetworkId());
+		$this->namedtag->petLevel = new IntTag("petLevel", $this->getPetLevel());
+		$this->namedtag->petLevelPoints = new IntTag("petLevelPoints", $this->getPetLevelPoints());
 		$this->namedtag->chested = new ByteTag("chested", (int) $this->isChested());
 	}
 
@@ -780,7 +780,7 @@ abstract class BasePet extends Creature implements Rideable {
 		}
 		$this->riding = true;
 		$this->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, $this->getScale() * 0.4 - 0.3, 0]);
-		$this->getPetOwner()->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, true);
+		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, true);
 
 		$pk = new SetEntityLinkPacket();
 		$link = new EntityLink();
