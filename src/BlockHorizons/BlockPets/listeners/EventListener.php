@@ -88,6 +88,7 @@ class EventListener implements Listener {
 
 			$this->getLoader()->removePet($pet->getPetName(), $pet->getPetOwner());
 			$newPet = $this->getLoader()->createPet($pet->getEntityType(), $owner, $pet->getPetName(), $pet->getStartingScale(), false, $pet->getPetLevel(), $pet->getPetLevelPoints(), $pet->isChested());
+			$newPet->getInventory()->setInventoryContents($pet->getInventory()->getInventoryContents());
 			$this->getLoader()->getServer()->getPluginManager()->callEvent($ev = new PetRespawnEvent($this->getLoader(), $newPet, $delay));
 			if($ev->isCancelled()) {
 				return;

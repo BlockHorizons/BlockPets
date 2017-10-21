@@ -490,7 +490,8 @@ abstract class BasePet extends Creature implements Rideable {
 			return parent::onUpdate($currentTick);
 		}
 		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
-			$this->getLoader()->createPet($this->getEntityType(), $petOwner, $this->getPetName(), $this->getStartingScale(), (bool) $this->namedtag["isBaby"], $this->getPetLevel(), $this->getPetLevelPoints(), $this->isChested());
+			$newPet = $this->getLoader()->createPet($this->getEntityType(), $petOwner, $this->getPetName(), $this->getStartingScale(), (bool) $this->namedtag["isBaby"], $this->getPetLevel(), $this->getPetLevelPoints(), $this->isChested());
+			$newPet->getInventory()->setInventoryContents($this->getInventory()->getInventoryContents());
 			$this->close();
 			return false;
 		}
