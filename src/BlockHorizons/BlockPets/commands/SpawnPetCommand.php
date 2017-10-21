@@ -49,6 +49,10 @@ class SpawnPetCommand extends BaseCommand {
 			}
 		}
 
+		if(empty(trim($args[1]))) {
+			$args[1] = $player->getDisplayName();
+		}
+
 		if(isset($args[2])) {
 			if(!is_numeric($args[2])) {
 				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.numeric"));
@@ -84,7 +88,7 @@ class SpawnPetCommand extends BaseCommand {
 			$this->getLoader()->selectingName[$player->getName()] = [
 				"petType" => $petName,
 				"scale" => isset($args[2]) ? (float) $args[2] : 1.0,
-				"isBaby" => isset($args[3]) ? (bool) $args[3] : false
+				"isBaby" => isset($args[3]) ? $args[3] : false
 			];
 			return true;
 		}
@@ -92,7 +96,7 @@ class SpawnPetCommand extends BaseCommand {
 			$sender->sendMessage($sender, $this->getLoader()->translate("commands.errors.player.already-own-pet"));
 			return true;
 		}
-		if($this->getLoader()->createPet((string) $petName, $player, (string) $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3]) === null) {
+		if($this->getLoader()->createPet((string) $petName, $player, $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3]) === null) {
 			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.plugin-cancelled"));
 			return true;
 		}

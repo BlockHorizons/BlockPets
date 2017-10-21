@@ -26,6 +26,9 @@ class ChangePetNameCommand extends BaseCommand {
 			$this->sendConsoleError($sender);
 			return true;
 		}
+		if(empty(trim($args[1]))) {
+			$this->sendWarning($sender, "The name you entered is invalid.");
+		}
 		$newName = $args[1];
 
 		if(isset($args[2])) {
