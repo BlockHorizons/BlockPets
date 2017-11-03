@@ -93,7 +93,7 @@ class SpawnPetCommand extends BaseCommand {
 			return true;
 		}
 		if($this->getLoader()->getPetByName($args[1], $sender) !== null) {
-			$sender->sendMessage($sender, $this->getLoader()->translate("commands.errors.player.already-own-pet"));
+			$sender->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.already-own-pet"));
 			return true;
 		}
 		if($this->getLoader()->createPet((string) $petName, $player, $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3]) === null) {
