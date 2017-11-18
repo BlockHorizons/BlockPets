@@ -23,7 +23,7 @@ commands:
          
   changepetname:
     no-permission: "다른 플레이어의 펫의 이름을 변경할 수 있는 권한이 없습니다."
-    success: "이름을 %s§r§a에서 %s(으)로 변경했습니다!"
+    success: "성공적으로 %s의 이름을 %s(으)로 변경했습니다!"
     
   clearpet:
     success: "펫 §b%s§a을(를) 제거했습니다!"
@@ -49,5 +49,5 @@ commands:
   togglepet:
     no-pet-specified: "토글할 펫을 선택하지 않았습니다."
     success: "펫을 %s 토글했습니다."
-    success-others: "펫 §b%s §r§a을(를) %s 토글했습니다!"
+    success-others: "펫 §b%s§r§a을(를) %s 토글했습니다!"
 ...
