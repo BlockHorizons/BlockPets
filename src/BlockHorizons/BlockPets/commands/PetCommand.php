@@ -43,7 +43,7 @@ class PetCommand extends BaseCommand {
 						$sender->sendMessage(
 							TextFormat::GREEN . "/spawnpet <petType> [petName|select] [size] [isBaby] [player]: " . TextFormat::YELLOW . "Spawns a new pet with the given data." . PHP_EOL .
 							TextFormat::GREEN . "/removepet <name> [player]: " . TextFormat::YELLOW . "Removes the first pet with the given name, and checks for a player if given." . PHP_EOL .
-							TextFormat::GREEN . "/togglepet [all/name]: " . TextFormat::YELLOW . "Toggles your pets on/off, depending on the current state." . PHP_EOL .
+							TextFormat::GREEN . "/togglepet <pet name> [player]: " . TextFormat::YELLOW . "Toggles a pet on/off, depending on the current state." . PHP_EOL .
 							TextFormat::GREEN . "/healpet <name> [player]: " . TextFormat::YELLOW . "Heals the first pet with the given name, and checks for a player if given."
 						);
 						break;

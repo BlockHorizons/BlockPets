@@ -22,8 +22,14 @@ class ChangePetNameCommand extends BaseCommand {
 			return true;
 		}
 
-		if(!$sender instanceof Player) {
+		if(!isset($args[0])){
+			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
+			return true;
+		}
+
+		if(!$sender instanceof Player && count($args) != 3) {
 			$this->sendConsoleError($sender);
+			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
 			return true;
 		}
 		if(empty(trim($args[1]))) {
@@ -32,7 +38,7 @@ class ChangePetNameCommand extends BaseCommand {
 		$newName = $args[1];
 
 		if(isset($args[2])) {
-			if($sender->hasPermission("blockpets.command.changepetname.others")) {
+			if($sender instanceof Player && $sender->hasPermission("blockpets.command.changepetname.others")) {
 				$this->sendPermissionMessage($sender);
 				return true;
 			}

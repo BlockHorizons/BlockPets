@@ -22,34 +22,39 @@ class SpawnPetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(!$sender instanceof Player) {
+		if(!$sender instanceof Player && count($args) != 5) {
 			$this->sendConsoleError($sender);
-			return true;
-		}
-
-		if(count($args) > 5 || count($args) < 1) {
+			//$sender->sendMessage(TF::RED . "When using spawnpet from the console, all arguments must be provided.");
 			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
 			return true;
 		}
 
-		if(!$sender->hasPermission("blockpets.pet." . strtolower($args[0]))) {
-			$this->sendPermissionMessage($sender);
-			return true;
+		if($sender instanceof Player){
+
+			if(count($args) > 5 || count($args) < 1){
+				$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
+				return true;
+			}
+
+			if(!$sender->hasPermission("blockpets.pet." . strtolower($args[0]))){
+				$this->sendPermissionMessage($sender);
+				return true;
+			}
 		}
 
 		$player = $sender;
-		if(isset($args[4])) {
-			if(($player = $this->getLoader()->getServer()->getPlayer($args[4])) === null) {
+		if(isset($args[4])){
+			if(($player = $this->getLoader()->getServer()->getPlayer($args[4])) === null){
 				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.not-found"));
 				return true;
 			}
-			if(!$sender->hasPermission("blockpets.command.spawnpet.others")) {
+			if(!$sender->hasPermission("blockpets.command.spawnpet.others")){
 				$this->sendWarning($sender, $this->getLoader()->translate("commands.spawnpet.no-permission.others"));
 				return true;
 			}
 		}
 
-		if(empty(trim($args[1]))) {
+		if(empty(trim($args[1]))){
 			$args[1] = $player->getDisplayName();
 		}
 
@@ -92,7 +97,7 @@ class SpawnPetCommand extends BaseCommand {
 			];
 			return true;
 		}
-		if($this->getLoader()->getPetByName($args[1], $sender) !== null) {
+		if($this->getLoader()->getPetByName($args[1], $player) !== null) {
 			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.already-own-pet"));
 			return true;
 		}

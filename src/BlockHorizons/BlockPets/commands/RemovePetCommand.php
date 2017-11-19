@@ -21,11 +21,12 @@ class RemovePetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(($pet = $this->getLoader()->getPetByName($args[0])) === null) {
-			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.doesnt-exist"));
+		if(!isset($args[0])) {
+			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
 			return true;
 		}
-		if(isset($args[1])) {
+
+		if(count($args) > 1 && isset($args[1])) {
 			if(($player = $this->getLoader()->getServer()->getPlayer($args[1])) === null) {
 				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.not-found"));
 				return true;
@@ -39,6 +40,11 @@ class RemovePetCommand extends BaseCommand {
 				return true;
 			}
 			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.removepet.success", [$pet->getPetName()]));
+			return true;
+		}
+
+		if(($pet = $this->getLoader()->getPetByName($args[0])) === null) {
+			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.doesnt-exist"));
 			return true;
 		}
 

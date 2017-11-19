@@ -22,8 +22,8 @@ class LevelUpPetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(!$sender instanceof Player) {
-			$this->sendConsoleError($sender);
+		if(!isset($args[0])){
+			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
 			return true;
 		}
 
