@@ -22,7 +22,7 @@ class LevelUpPetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(!isset($args[0])){
+		if(!isset($args[0])) {
 			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
 			return true;
 		}

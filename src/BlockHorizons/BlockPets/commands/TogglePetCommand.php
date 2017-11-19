@@ -12,7 +12,7 @@ use pocketmine\utils\TextFormat as TF;
 class TogglePetCommand extends BaseCommand {
 
 	public function __construct(Loader $loader) {
-		parent::__construct($loader, "togglepet", "Toggle pets on/off", "/togglepet <pet name> [player]", ["togglep"]);
+		parent::__construct($loader, "togglepet", "Toggle pets on/off", "/togglepet <all | pet name> [player]", ["togglep"]);
 		$this->setPermission("blockpets.command.togglepet");
 	}
 
@@ -41,7 +41,7 @@ class TogglePetCommand extends BaseCommand {
 				return true;
 			}
 		}
-		if (strtolower($args[0]) === "all") {
+		if(strtolower($args[0]) === "all") {
 			$this->getLoader()->togglePets($player);
 			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.togglepet.success", [
 					($this->getLoader()->arePetsToggledOn($sender) ? "on" : "off")
