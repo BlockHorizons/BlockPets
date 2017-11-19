@@ -12,7 +12,7 @@ use pocketmine\utils\TextFormat as TF;
 class TogglePetCommand extends BaseCommand {
 
 	public function __construct(Loader $loader) {
-		parent::__construct($loader, "togglepet", "Toggle pets on/off", "/togglepet <all | pet name> [player]", ["togglep"]);
+		parent::__construct($loader, "togglepet", "Toggle pets on/off", "/togglepet <all/pet name> [player]", ["togglep"]);
 		$this->setPermission("blockpets.command.togglepet");
 	}
 
