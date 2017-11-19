@@ -1,5 +1,5 @@
 ---
-# English messages file for BlockPets, a pets plugin by BlockHorizons.
+# Dutch messages file for BlockPets, a pets plugin by BlockHorizons.
 # TODO: replace § with &, add all language strings
 
 prefix:
@@ -7,7 +7,8 @@ prefix:
 
 commands:
   errors:
-    console-use: "Dat commando kan alleen gebruikt worden door spelers."
+    console-use: "Wanneer u die opdracht vanuit de console gebruikt, moeten alle argumenten worden opgegeven."
+    no-console-use: "Dat commando kan alleen gebruikt worden door spelers."
     no-permission: "Je hebt geen permissie om dat commando uit te voeren."
     plugin-cancelled: "Een andere plugin heeft die actie onderbroken."
 

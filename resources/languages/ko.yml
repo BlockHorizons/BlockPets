@@ -9,7 +9,8 @@ prefix:
 
 commands:
   errors:
-    console-use: "인게임 내에서 실행하세요."
+    console-use: "콘솔에서 해당 명령을 사용할 때 모든 인수가 제공되어야합니다."
+    no-console-use: "인게임 내에서 실행하세요."
     no-permission: "명령어를 실행할 권한이 없습니다."
     plugin-cancelled: "플러그인 작동이 취소되었습니다."
     

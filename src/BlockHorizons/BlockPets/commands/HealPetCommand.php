@@ -22,6 +22,11 @@ class HealPetCommand extends BaseCommand {
 			return true;
 		}
 
+		if(!isset($args[0])) {
+			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
+			return true;
+		}
+
 		if(($pet = $this->getLoader()->getPetByName($args[0])) === null) {
 			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.doesnt-exist"));
 			return true;
@@ -36,10 +41,6 @@ class HealPetCommand extends BaseCommand {
 				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.no-pet-other"));
 				return true;
 			}
-			$pet->fullHeal();
-			$pet->getLevel()->addParticle(new HeartParticle($pet->add(0, 2), 4));
-			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.healpet.success", [$pet->getPetName()]));
-			return true;
 		}
 
 		$pet->fullHeal();

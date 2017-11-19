@@ -38,6 +38,7 @@ class LanguageConfig {
 			"prefix.warning" => $language["prefix"]["warning"],
 
 			"commands.errors.console-use" => $language["commands"]["errors"]["console-use"],
+			"commands.errors.no-console-use" => $language["commands"]["errors"]["no-console-use"],
 			"commands.errors.no-permission" => $language["commands"]["errors"]["no-permission"],
 			"commands.errors.plugin-cancelled" => $language["commands"]["errors"]["plugin-cancelled"],
 

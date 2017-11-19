@@ -23,7 +23,12 @@ class ClearPetCommand extends BaseCommand {
 		}
 
 		if(!$sender instanceof Player) {
-			$this->sendConsoleError($sender);
+			$this->sendConsoleError($sender, true);
+			return true;
+		}
+
+		if(!isset($args[0])) {
+			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
 			return true;
 		}
 
