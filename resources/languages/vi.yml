@@ -7,7 +7,8 @@ prefix:
 
 commands:
   errors:
-    console-use: "Chạy command trong server!"
+    console-use: "Khi sử dụng lệnh đó từ giao diện điều khiển, tất cả các đối số phải được cung cấp."
+    no-console-use: "Chạy command trong server!"
     no-permission: "Bạn không có quyền sử dụng lệnh này!"
     plugin-cancelled: "Plugin đã hủy hành động này!"
     

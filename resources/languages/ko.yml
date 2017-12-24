@@ -7,7 +7,8 @@ prefix:
 
 commands:
   errors:
-    console-use: "그 명령어는 플레이어만 사용할 수 있습니다."
+    console-use: "그 명령어를 콘솔에서 사용할 때는 모든 매개변수가 제공되어야 합니다."
+    no-console-use: "그 명령어는 플레이어만 사용할 수 있습니다."
     no-permission: "그 명령어를 사용할 수 있는 권한이 없습니다."
     plugin-cancelled: "플러그인이 그 작업을 취소했습니다."
     
@@ -23,7 +24,7 @@ commands:
          
   changepetname:
     no-permission: "다른 플레이어의 펫의 이름을 변경할 수 있는 권한이 없습니다."
-    success: "성공적으로 %s의 이름을 %s(으)로 변경했습니다!"
+    success: "성공적으로 %s의 이름§r§a을 %s(으)로 변경했습니다!"
     
   clearpet:
     success: "펫 §b%s§a을(를) 제거했습니다!"

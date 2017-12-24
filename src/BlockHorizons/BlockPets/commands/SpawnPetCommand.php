@@ -22,19 +22,24 @@ class SpawnPetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(!$sender instanceof Player) {
+		if(!$sender instanceof Player && count($args) != 5) {
 			$this->sendConsoleError($sender);
-			return true;
-		}
-
-		if(count($args) > 5 || count($args) < 1) {
+			//$sender->sendMessage(TF::RED . "When using spawnpet from the console, all arguments must be provided.");
 			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
 			return true;
 		}
 
-		if(!$sender->hasPermission("blockpets.pet." . strtolower($args[0]))) {
-			$this->sendPermissionMessage($sender);
-			return true;
+		if($sender instanceof Player) {
+
+			if(count($args) > 5 || count($args) < 1) {
+				$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
+				return true;
+			}
+
+			if(!$sender->hasPermission("blockpets.pet." . strtolower($args[0]))) {
+				$this->sendPermissionMessage($sender);
+				return true;
+			}
 		}
 
 		$player = $sender;
@@ -61,7 +66,7 @@ class SpawnPetCommand extends BaseCommand {
 		}
 
 		if(isset($args[3])) {
-			if($args[3] === "false" || $args === "no" ) {
+			if($args[3] === "false" || $args === "no") {
 				$args[3] = false;
 			} else {
 				$args[3] = true;
@@ -92,7 +97,7 @@ class SpawnPetCommand extends BaseCommand {
 			];
 			return true;
 		}
-		if($this->getLoader()->getPetByName($args[1], $sender) !== null) {
+		if($this->getLoader()->getPetByName($args[1], $player) !== null) {
 			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.already-own-pet"));
 			return true;
 		}

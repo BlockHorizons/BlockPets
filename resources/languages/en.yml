@@ -7,7 +7,8 @@ prefix:
 
 commands:
   errors:
-    console-use: "That command can only be used by players."
+    console-use: "When using that command from the console, all arguments must be provided."
+    no-console-use: "That command can only be used by players."
     no-permission: "You don't have permission to use that command."
     plugin-cancelled: "A plugin has cancelled that action."
     

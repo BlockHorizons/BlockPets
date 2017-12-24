@@ -25,7 +25,11 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 	/**
 	 * @param CommandSender $sender
 	 */
-	public function sendConsoleError(CommandSender $sender): void {
+	public function sendConsoleError(CommandSender $sender, bool $noConsoleUse = false): void {
+		if($noConsoleUse) {
+			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.no-console-use"));
+			return;
+		}
 		$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.console-use"));
 	}
 
