@@ -7,10 +7,10 @@ prefix:
 
 commands:
   errors:
-    console-use: "그 명령어를 콘솔에서 사용할 때는 모든 매개변수가 제공되어야 합니다."
-    no-console-use: "그 명령어는 플레이어만 사용할 수 있습니다."
-    no-permission: "그 명령어를 사용할 수 있는 권한이 없습니다."
-    plugin-cancelled: "플러그인이 그 작업을 취소했습니다."
+    console-use: "해당 명령어를 콘솔에서 사용할 때는 모든 매개변수가 제공되어야 합니다."
+    no-console-use: "해당 명령어는 플레이어만 사용할 수 있습니다."
+    no-permission: "해당 명령어를 사용할 수 있는 권한이 없습니다."
+    plugin-cancelled: "플러그인이 해당 작업을 취소했습니다."
     
     pet:
       doesnt-exist: "주어진 이름의 펫은 없습니다."
