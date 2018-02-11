@@ -402,7 +402,7 @@ abstract class BasePet extends Creature implements Rideable {
 	public function initEntity() {
 		parent::initEntity();
 		$this->generateCustomPetData();
-		$this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, 1);
+		$this->propertyManager->setPropertyValue(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, 1);
 	}
 
 	public function generateCustomPetData(): void {
@@ -603,11 +603,11 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->ridden = true;
 		$this->rider = $player->getName();
 		$player->canCollide = false;
-		$this->getPetOwner()->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 1.8 + $this->getScale() * 0.9, -0.25]);
+		$this->getPetOwner()->propertyManager->setPropertyValue(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 1.8 + $this->getScale() * 0.9, -0.25]);
 		if($this instanceof EnderDragonPet) {
-			$player->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 2.65 + $this->getScale(), -1.7]);
+			$player->propertyManager->setPropertyValue(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 2.65 + $this->getScale(), -1.7]);
 		} elseif($this instanceof SmallCreature) {
-			$player->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 0.78 + $this->getScale() * 0.9, -0.25]);
+			$player->propertyManager->setPropertyValue(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, 0.78 + $this->getScale() * 0.9, -0.25]);
 		}
 		$player->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, true);
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_SADDLED, true);
@@ -779,7 +779,7 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		$this->riding = true;
-		$this->setDataProperty(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, $this->getScale() * 0.4 - 0.3, 0]);
+		$this->propertyManager->setPropertyValue(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, [0, $this->getScale() * 0.4 - 0.3, 0]);
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, true);
 
 		$pk = new SetEntityLinkPacket();
@@ -792,6 +792,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->link = $link;
 		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
 		return true;
+
 	}
 
 	/**

@@ -16,6 +16,6 @@ class LlamaPet extends WalkingPet {
 
 	public function generateCustomPetData(): void {
 		$randomVariant = random_int(0, 3);
-		$this->setDataProperty(self::DATA_VARIANT, self::DATA_TYPE_INT, $randomVariant);
+		$this->propertyManager->setPropertyValue(self::DATA_VARIANT, self::DATA_TYPE_INT, $randomVariant);
 	}
 }

@@ -18,6 +18,6 @@ class CaveSpiderPet extends WalkingPet implements SmallCreature {
 	public $networkId = 40;
 
 	public function generateCustomPetData(): void {
-		$this->setDataProperty(self::DATA_FLAGS, self::DATA_FLAG_CAN_CLIMB, true);
+		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_CAN_CLIMB, true);
 	}
 }
