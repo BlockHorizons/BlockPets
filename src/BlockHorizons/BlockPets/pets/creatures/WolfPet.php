@@ -6,7 +6,6 @@ namespace BlockHorizons\BlockPets\pets\creatures;
 
 use BlockHorizons\BlockPets\pets\SmallCreature;
 use BlockHorizons\BlockPets\pets\WalkingPet;
-use pocketmine\Player;
 
 class WolfPet extends WalkingPet implements SmallCreature {
 
