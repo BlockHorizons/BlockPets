@@ -19,6 +19,7 @@ use BlockHorizons\BlockPets\configurable\LanguageConfig;
 use BlockHorizons\BlockPets\configurable\PetProperties;
 use BlockHorizons\BlockPets\events\PetRemoveEvent;
 use BlockHorizons\BlockPets\events\PetSpawnEvent;
+use BlockHorizons\BlockPets\items\Saddle;
 use BlockHorizons\BlockPets\listeners\EventListener;
 use BlockHorizons\BlockPets\listeners\RidingListener;
 use BlockHorizons\BlockPets\pets\BasePet;
@@ -75,6 +76,8 @@ use BlockHorizons\BlockPets\pets\datastorage\MySQLDataStorer;
 use BlockHorizons\BlockPets\pets\datastorage\SQLiteDataStorer;
 use pocketmine\entity\Attribute;
 use pocketmine\entity\Entity;
+use pocketmine\item\Item;
+use pocketmine\item\ItemFactory;
 use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
@@ -228,6 +231,9 @@ class Loader extends PluginBase {
 		foreach(self::PET_CLASSES as $petClass) {
 			Entity::registerEntity($petClass, true);
 		}
+		ItemFactory::registerItem(new Saddle, true);
+		$saddle = Item::get(Saddle::SADDLE);
+		Item::addCreativeItem($saddle);
 		$this->registerCommands();
 		$this->registerListeners();
 
