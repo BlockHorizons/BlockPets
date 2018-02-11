@@ -7,7 +7,7 @@ namespace BlockHorizons\BlockPets\pets\datastorage;
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\BasePet;
 use pocketmine\item\Item;
-use pocketmine\nbt\NBT;
+use pocketmine\nbt\BigEndianNBTStream;
 use pocketmine\nbt\tag\ListTag;
 
 class SQLiteDataStorer extends BaseDataStorer {
@@ -116,7 +116,7 @@ class SQLiteDataStorer extends BaseDataStorer {
 		}
 		$compressedContents = base64_decode($return);
 
-		$nbt = new NBT(NBT::BIG_ENDIAN);
+		$nbt = new BigEndianNBTStream;
 		$nbt->readCompressed($compressedContents);
 		$nbt = $nbt->getData();
 		/** @var ListTag $items */
