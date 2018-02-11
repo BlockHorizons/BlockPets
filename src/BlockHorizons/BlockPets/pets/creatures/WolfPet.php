@@ -17,6 +17,8 @@ class WolfPet extends WalkingPet implements SmallCreature {
 
 	public function generateCustomPetData(): void {
 		$randomColour = random_int(0, 15);
+		$eid = 123456789123456789;
+		$this->propertyManager->setPropertyValue(self::DATA_OWNER_EID, self::DATA_TYPE_LONG, $eid);
 		$this->propertyManager->setPropertyValue(self::DATA_COLOUR, self::DATA_TYPE_BYTE, $randomColour);
 	}
 }
