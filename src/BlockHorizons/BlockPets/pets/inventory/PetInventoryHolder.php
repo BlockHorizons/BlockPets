@@ -7,6 +7,7 @@ namespace BlockHorizons\BlockPets\pets\inventory;
 use BlockHorizons\BlockPets\pets\BasePet;
 use pocketmine\block\Block;
 use pocketmine\item\Item;
+use pocketmine\nbt\BigEndianNBTStream;
 use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
@@ -107,7 +108,7 @@ class PetInventoryHolder {
 		foreach($items as &$item) {
 			$item = $item->nbtSerialize(-1, "Item");
 		}
-		$nbt = new NBT(NBT::BIG_ENDIAN);
+		$nbt = new BigEndianNBTStream();
 		$compressedContents = new CompoundTag("Items", [
 			new ListTag("ItemList", $items)
 		]);
