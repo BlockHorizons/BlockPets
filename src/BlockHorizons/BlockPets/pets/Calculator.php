@@ -91,13 +91,9 @@ class Calculator {
 	 * Stores the pet to the database, or updates level and level points if the pet has already been added to the database.
 	 */
 	public function storeToDatabase(): void {
-		if($this->getPet()->getLoader()->getBlockPetsConfig()->storeToDatabase()) {
-			if($this->getPet()->getLoader()->getDatabase()->petExists($this->getPet()->getPetName(), $this->getPet()->getPetOwnerName())) {
-				$this->getPet()->getLoader()->getDatabase()->updatePetExperience($this->getPet()->getPetName(), $this->getPet()->getPetOwnerName(), $this->getPet()->getPetLevel(), $this->getPet()->getPetLevelPoints());
-				$this->getPet()->getLoader()->getDatabase()->updateChested($this->getPet()->getPetName(), $this->getPet()->getPetOwnerName());
-			} else {
-				$this->getPet()->getLoader()->getDatabase()->registerPet($this->getPet());
-			}
-		}
+		$pet = $this->getPet();
+		$database = $pet->getLoader()->getDatabase();
+		$database->updateExperience($pet);
+		$database->updateChested($pet);
 	}
 }

@@ -4,15 +4,12 @@ declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\listeners;
 
-use BlockHorizons\BlockPets\events\PetRespawnEvent;
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\BasePet;
 use BlockHorizons\BlockPets\pets\IrasciblePet;
-use BlockHorizons\BlockPets\tasks\PetRespawnTask;
 use pocketmine\entity\Living;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\event\entity\EntityDeathEvent;
 use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
@@ -40,7 +37,7 @@ class EventListener implements Listener {
 	public function onEntityDamage(EntityDamageEvent $event): void {
 		$player = $event->getEntity();
 		if($player instanceof Player) {
-			if($event->getCause() === $event::CAUSE_FALL) {
+			if($event->getCause() === EntityDamageEvent::CAUSE_FALL) {
 				if($this->getLoader()->isRidingAPet($player)) {
 					$event->setCancelled();
 					return;
@@ -52,7 +49,7 @@ class EventListener implements Listener {
 				}
 				if(!empty($this->getLoader()->getPetsFrom($player))) {
 					foreach($this->getLoader()->getPetsFrom($player) as $pet) {
-						if(!$pet instanceof IrasciblePet) {
+						if(!($pet instanceof IrasciblePet)) {
 							continue;
 						}
 						$attacker = $event->getDamager();
@@ -73,59 +70,30 @@ class EventListener implements Listener {
 	}
 
 	/**
-	 * Used to respawn a pet after being killed.
-	 *
-	 * @param EntityDeathEvent $event
-	 */
-	public function onPetDeath(EntityDeathEvent $event): void {
-		$pet = $event->getEntity();
-		$delay = $this->getLoader()->getBlockPetsConfig()->getRespawnTime();
-		if($pet instanceof BasePet) {
-			if($pet->shouldIgnoreEvent()) {
-				return;
-			}
-			$owner = $this->getLoader()->getServer()->getPlayerExact($pet->getPetOwnerName());
-
-			$this->getLoader()->removePet($pet->getPetName(), $pet->getPetOwner());
-			$newPet = $this->getLoader()->createPet($pet->getEntityType(), $owner, $pet->getPetName(), $pet->getStartingScale(), false, $pet->getPetLevel(), $pet->getPetLevelPoints(), $pet->isChested());
-			$newPet->getInventory()->setInventoryContents($pet->getInventory()->getInventoryContents());
-			$this->getLoader()->getServer()->getPluginManager()->callEvent($ev = new PetRespawnEvent($this->getLoader(), $newPet, $delay));
-			if($ev->isCancelled()) {
-				return;
-			}
-			$delay = $ev->getDelay() * 20;
-
-			$this->getLoader()->getServer()->getScheduler()->scheduleDelayedTask(new PetRespawnTask($this->getLoader(), $newPet), $delay);
-			$newPet->despawnFromAll();
-			$newPet->setDormant();
-			if($this->getLoader()->getBlockPetsConfig()->storeToDatabase()) {
-				$newPet->getCalculator()->storeToDatabase();
-			}
-		}
-	}
-
-	/**
 	 * Used to respawn pets to the player, and fetch pets from the database if this has been configured.
 	 *
 	 * @param PlayerJoinEvent $event
 	 */
 	public function onPlayerJoin(PlayerJoinEvent $event): void {
-		$pets = $this->getLoader()->getPetsFrom($event->getPlayer());
-		if($this->getLoader()->getBlockPetsConfig()->fetchFromDatabase()) {
-			$petData = $this->getLoader()->getDatabase()->fetchAllPetData($event->getPlayer()->getName());
-			foreach($petData as $data) {
-				if(empty($data["EntityName"])) {
-					continue;
+		$player = $event->getPlayer();
+		$loader = $this->getLoader();
+		$pets = $loader->getPetsFrom($player);
+
+		if($loader->getBlockPetsConfig()->fetchFromDatabase()) {
+			$loader->getDatabase()->load(
+				$player->getName(),
+				function(array $petData) use($player, $loader): void {
+					$hard_reset = $loader->getBlockPetsConfig()->doHardReset();
+					foreach($petData as $data) {
+						$pet = $loader->createPet($data["EntityName"], $player, $data["PetName"], $data["PetSize"], (bool) $data["IsBaby"], $data["PetLevel"], $data["LevelPoints"], (bool) $data["Chested"], $data["Inventory"]);
+						$pet->spawnToAll();
+						$pet->setDormant(false);
+						if($hard_reset) {
+							$pet->close();
+						}
+					}
 				}
-				$pets[] = $this->getLoader()->createPet($data["EntityName"], $event->getPlayer(), $data["PetName"], $data["PetSize"], (bool) $data["IsBaby"], $data["PetLevel"], $data["LevelPoints"], (bool) $data["Chested"]);
-			}
-		}
-		foreach($pets as $pet) {
-			$pet->spawnToAll();
-			$pet->setDormant(false);
-			if($this->getLoader()->getBlockPetsConfig()->doHardReset()) {
-				$pet->close();
-			}
+			);
 		}
 	}
 

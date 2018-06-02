@@ -101,11 +101,14 @@ class SpawnPetCommand extends BaseCommand {
 			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.already-own-pet"));
 			return true;
 		}
-		if($this->getLoader()->createPet((string) $petName, $player, $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3]) === null) {
+
+		$pet = $this->getLoader()->createPet((string) $petName, $player, $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3]);
+		if($pet === null) {
 			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.plugin-cancelled"));
 			return true;
 		}
 		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.spawnpet.success", [$args[1]]));
+		$pet->register();
 		if($player->getName() !== $sender->getName()) {
 			$player->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.spawnpet.success.other", [$args[1]]));
 		}

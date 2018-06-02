@@ -74,6 +74,7 @@ use BlockHorizons\BlockPets\pets\creatures\ZombieVillagerPet;
 use BlockHorizons\BlockPets\pets\datastorage\BaseDataStorer;
 use BlockHorizons\BlockPets\pets\datastorage\MySQLDataStorer;
 use BlockHorizons\BlockPets\pets\datastorage\SQLiteDataStorer;
+use BlockHorizons\BlockPets\pets\inventory\PetInventoryManager;
 use pocketmine\entity\Attribute;
 use pocketmine\entity\Entity;
 use pocketmine\item\Item;
@@ -220,6 +221,15 @@ class Loader extends PluginBase {
 		if(!is_dir($this->getDataFolder())) {
 			mkdir($this->getDataFolder());
 		}
+
+		$database_stmts = $this->getDataFolder() . "database_stmts/";
+		if(!is_dir($database_stmts)) {
+			mkdir($database_stmts);
+		}
+
+		$this->saveResource("database_stmts/mysql.sql", true);
+		$this->saveResource("database_stmts/sqlite.sql", true);
+
 		SpoonDetector::printSpoon($this);
 		foreach(self::PET_CLASSES as $petClass) {
 			Entity::registerEntity($petClass, true);
@@ -229,6 +239,7 @@ class Loader extends PluginBase {
 		Item::addCreativeItem($saddle);
 		$this->registerCommands();
 		$this->registerListeners();
+		PetInventoryManager::init($this);
 
 		$this->bpConfig = new BlockPetsConfig($this);
 		$this->pProperties = new PetProperties($this);
@@ -237,7 +248,7 @@ class Loader extends PluginBase {
 		Attribute::addAttribute(20, "minecraft:horse.jump_strength", 0, 3, 0.6679779);
 	}
 
-	public function registerCommands() {
+	public function registerCommands(): void {
 		/** @var BaseCommand[] $petCommands */
 		$petCommands = [
 			new SpawnPetCommand($this),
@@ -254,7 +265,7 @@ class Loader extends PluginBase {
 		}
 	}
 
-	public function registerListeners() {
+	public function registerListeners(): void {
 		$listeners = [
 			new EventListener($this),
 			new RidingListener($this)
@@ -280,8 +291,8 @@ class Loader extends PluginBase {
 			case "mysql":
 				$this->database = new MySQLDataStorer($this);
 				break;
-			case "sqlite3":
 			case "sqlite":
+			case "sqlite3":
 				$this->database = new SQLiteDataStorer($this);
 				break;
 		}
@@ -358,10 +369,11 @@ class Loader extends PluginBase {
 	 * @param int    $level
 	 * @param int    $levelPoints
 	 * @param bool   $chested
+	 * @param string|null $inventory
 	 *
 	 * @return null|BasePet
 	 */
-	public function createPet(string $entityName, Player $player, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0, bool $chested = false): ?BasePet {
+	public function createPet(string $entityName, Player $player, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0, bool $chested = false, ?string $inventory = null): ?BasePet {
 		foreach($this->getPetsFrom($player) as $pet) {
 			if($pet->getPetName() === $name) {
 				$this->removePet($pet->getPetName(), $player);
@@ -379,6 +391,10 @@ class Loader extends PluginBase {
 
 		$entity = Entity::createEntity($entityName . "Pet", $player->getLevel(), $nbt);
 		if($entity instanceof BasePet) {
+			if(!empty($inventory)) {
+				$entity->getInventoryManager()->load($inventory);
+			}
+
 			$this->getServer()->getPluginManager()->callEvent($ev = new PetSpawnEvent($this, $entity));
 			if($ev->isCancelled()) {
 				$this->removePet($entity->getPetName(), $player);
@@ -390,20 +406,35 @@ class Loader extends PluginBase {
 	}
 
 	/**
+	 * Creates a copy of the given pet and returns it.
+	 *
+	 * @param BasePet $pet
+	 *
+	 * @return BasePet
+	 */
+	public function clonePet(BasePet $pet): BasePet {
+		$clone = $this->createPet($pet->getEntityType(), $pet->getPetOwner(), $pet->getPetName(), $pet->getStartingScale(), $pet->isBaby(), $pet->getPetLevel(), $pet->getPetLevelPoints(), $pet->isChested());
+		$clone->getInventory()->setContents($pet->getInventory()->getContents());
+		return $clone;
+	}
+
+	/**
 	 * Gets all currently available pets from the given player.
 	 *
 	 * @param Player $player
+	 * @param bool $search_dead
 	 *
 	 * @return BasePet[]
 	 */
-	public function getPetsFrom(Player $player): array {
+	public function getPetsFrom(Player $player, bool $search_dead = false): array {
 		$playerPets = [];
+		$name = $player->getLowerCaseName();
 		foreach($player->getLevel()->getEntities() as $entity) {
 			if($entity instanceof BasePet) {
-				if($entity->getPetOwner() === null || $entity->isClosed() || !($entity->isAlive())) {
+				if(!$search_dead && !$entity->isAlive()) {
 					continue;
 				}
-				if($entity->getPetOwnerName() === $player->getName()) {
+				if(strtolower($entity->getPetOwnerName()) === $name) {
 					$playerPets[] = $entity;
 				}
 			}
@@ -455,8 +486,9 @@ class Loader extends PluginBase {
 			return false;
 		}
 		if($player !== null) {
-			foreach($this->getPetsFrom($player) as $pet) {
-				if(strpos(strtolower($pet->getPetName()), strtolower($name)) !== false) {
+			$name = strtolower($name);
+			foreach($this->getPetsFrom($player, true) as $pet) {
+				if(strpos(strtolower($pet->getPetName()), $name) !== false) {
 					$this->getServer()->getPluginManager()->callEvent($ev = new PetRemoveEvent($this, $pet));
 					if($ev->isCancelled()) {
 						return false;

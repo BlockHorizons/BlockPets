@@ -23,9 +23,11 @@ abstract class BaseDataStorer {
 	}
 
 	/**
-	 * @return bool
+	 * Called during class construction to let
+	 * databases create and initialize their
+	 * instances.
 	 */
-	protected abstract function prepare(): bool;
+	protected abstract function prepare(): void;
 
 	/**
 	 * @return Loader
@@ -35,77 +37,65 @@ abstract class BaseDataStorer {
 	}
 
 	/**
-	 * @return bool
+	 * Resets all values in the database.
 	 */
-	protected abstract function reset(): bool;
+	protected abstract function reset(): void;
 
 	/**
+	 * Registers pet to the database.
+	 * If the pet's entry already exists in the
+	 * database, the database will perform an
+	 * UPDATE-ALL-VALUES instead.
+	 *
 	 * @param BasePet $pet
-	 *
-	 * @return bool
 	 */
-	public abstract function registerPet(BasePet $pet): bool;
+	public abstract function registerPet(BasePet $pet): void;
 
 	/**
-	 * @param string $petName
+	 * Deletes the pet's entry from the database
+	 * if exists.
+	 *
+	 * @param BasePet $pet
+	 */
+	public abstract function unregisterPet(BasePet $pet): void;
+
+	/**
+	 * Updates pet's level and level points if it's
+	 * entry exists in the database.
+	 *
+	 * @param BasePet $pet
+	 */
+	public abstract function updateExperience(BasePet $pet): void;
+
+	/**
+	 * Retrieves all of the owner's pets from the
+	 * database and then calls the optional callable
+	 * to initialize the fetched entries.
+	 *
 	 * @param string $ownerName
-	 *
-	 * @return bool
+	 * @param callable|null $callable
 	 */
-	public abstract function petExists(string $petName, string $ownerName): bool;
+	public abstract function load(string $ownerName, ?callable $callable = null): void;
 
 	/**
-	 * @param string $petName
-	 * @param string $ownerName
+	 * Updates the database with whether the pet is
+	 * chested or not.
 	 *
-	 * @return bool
+	 * @param BasePet $pet
 	 */
-	public abstract function unregisterPet(string $petName, string $ownerName): bool;
+	public abstract function updateChested(BasePet $pet): void;
 
 	/**
-	 * @param string $petName
-	 * @param string $ownerName
-	 * @param int    $petLevel
-	 * @param int    $levelPoints
+	 * Updates the database with the pet's inventory
+	 * contents.
 	 *
-	 * @return bool
+	 * @param BasePet $pet
 	 */
-	public abstract function updatePetExperience(string $petName, string $ownerName, int $petLevel, int $levelPoints): bool;
+	public abstract function updateInventory(BasePet $pet): void;
 
 	/**
-	 * @param string $ownerName
-	 *
-	 * @return array
+	 * Called during plugin disable to let databases
+	 * close their instances.
 	 */
-	public abstract function fetchAllPetData(string $ownerName): array;
-
-	/**
-	 * @param string $petName
-	 * @param string $ownerName
-	 *
-	 * @return bool
-	 */
-	public abstract function updateChested(string $petName, string $ownerName): bool;
-
-	/**
-	 * @param string $petName
-	 * @param string $ownerName
-	 * @param string $contents
-	 *
-	 * @return bool
-	 */
-	public abstract function updateInventory(string $petName, string $ownerName, string $contents): bool;
-
-	/**
-	 * @param string $petName
-	 * @param string $ownerName
-	 *
-	 * @return string
-	 */
-	public abstract function getInventory(string $petName, string $ownerName): array;
-
-	/**
-	 * @return bool
-	 */
-	protected abstract function close(): bool;
+	protected abstract function close(): void;
 }
