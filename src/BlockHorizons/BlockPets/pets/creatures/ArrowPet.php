@@ -9,13 +9,14 @@ use BlockHorizons\BlockPets\pets\SmallCreature;
 
 class ArrowPet extends HoveringPet implements SmallCreature {
 
-	public $networkId = 80;
+	const NETWORK_ID = self::ARROW;
+
 	public $name = "Arrow Pet";
 
 	public $width = 0.5;
 	public $height = 0.5;
 
 	public function setCritical(bool $value = true): void {
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_CRITICAL, $value);
+		$this->setGenericFlag(self::DATA_FLAG_CRITICAL, $value);
 	}
 }

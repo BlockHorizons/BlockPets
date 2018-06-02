@@ -22,7 +22,7 @@ class SpawnPetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(!$sender instanceof Player && count($args) != 5) {
+		if(!($sender instanceof Player) && count($args) !== 5) {
 			$this->sendConsoleError($sender);
 			//$sender->sendMessage(TF::RED . "When using spawnpet from the console, all arguments must be provided.");
 			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
@@ -54,7 +54,7 @@ class SpawnPetCommand extends BaseCommand {
 			}
 		}
 
-		if(empty(trim($args[1]))) {
+		if(!isset($args[1]) || empty(trim($args[1]))) {
 			$args[1] = $player->getDisplayName();
 		}
 
@@ -85,7 +85,7 @@ class SpawnPetCommand extends BaseCommand {
 			]));
 			return true;
 		}
-		if(!isset($args[1]) || strtolower($args[1]) === "select") {
+		if(strtolower($args[1]) === "select") {
 			if($player !== $sender) {
 				$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.spawnpet.selecting-name", [$player->getName()]));
 			}
@@ -93,7 +93,7 @@ class SpawnPetCommand extends BaseCommand {
 			$this->getLoader()->selectingName[$player->getName()] = [
 				"petType" => $petName,
 				"scale" => isset($args[2]) ? (float) $args[2] : 1.0,
-				"isBaby" => isset($args[3]) ? $args[3] : false
+				"isBaby" => $args[3] ?? false
 			];
 			return true;
 		}

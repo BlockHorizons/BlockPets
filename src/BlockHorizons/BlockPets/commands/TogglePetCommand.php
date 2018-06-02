@@ -28,7 +28,7 @@ class TogglePetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(!$sender instanceof Player && count($args) != 2) {
+		if(!($sender instanceof Player) && count($args) !== 2) {
 			$this->sendConsoleError($sender);
 			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
 			return true;

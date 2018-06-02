@@ -78,13 +78,6 @@ use pocketmine\entity\Attribute;
 use pocketmine\entity\Entity;
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
-use pocketmine\nbt\tag\ByteTag;
-use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\tag\DoubleTag;
-use pocketmine\nbt\tag\FloatTag;
-use pocketmine\nbt\tag\IntTag;
-use pocketmine\nbt\tag\ListTag;
-use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use spoondetector\SpoonDetector;
@@ -374,29 +367,15 @@ class Loader extends PluginBase {
 				$this->removePet($pet->getPetName(), $player);
 			}
 		}
-		$nbt = new CompoundTag("", [
-			"Pos" => new ListTag("Pos", [
-				new DoubleTag("", $player->x),
-				new DoubleTag("", $player->y),
-				new DoubleTag("", $player->z)
-			]),
-			"Motion" => new ListTag("Motion", [
-				new DoubleTag("", 0),
-				new DoubleTag("", 0),
-				new DoubleTag("", 0)
-			]),
-			"Rotation" => new ListTag("Rotation", [
-				new FloatTag("", $player->yaw),
-				new FloatTag("", $player->pitch)
-			]),
-			"petOwner" => new StringTag("petOwner", $player->getName()),
-			"scale" => new FloatTag("scale", $scale),
-			"petName" => new StringTag("petName", $name),
-			"petLevel" => new IntTag("petLevel", $level),
-			"petLevelPoints" => new IntTag("petLevelPoints", $levelPoints),
-			"isBaby" => new ByteTag("isBaby", (int) $isBaby),
-			"chested" => new ByteTag("chested", (int) $chested)
-		]);
+
+		$nbt = Entity::createBaseNBT($player, null, $player->yaw, $player->pitch);
+		$nbt->setString("petOwner", $player->getName());
+		$nbt->setFloat("scale", $scale);
+		$nbt->setString("petName", $name);
+		$nbt->setInt("petLevel", $level);
+		$nbt->setInt("petLevelPoints", $levelPoints);
+		$nbt->setByte("isBaby", (int) $isBaby);
+		$nbt->setByte("chested", (int) $chested);
 
 		$entity = Entity::createEntity($entityName . "Pet", $player->getLevel(), $nbt);
 		if($entity instanceof BasePet) {
@@ -451,7 +430,7 @@ class Loader extends PluginBase {
 		}
 		foreach($this->getServer()->getLevels() as $level) {
 			foreach($level->getEntities() as $entity) {
-				if(!$entity instanceof BasePet) {
+				if(!($entity instanceof BasePet)) {
 					continue;
 				}
 				if(strpos(strtolower($entity->getPetName()), strtolower($name)) !== false) {

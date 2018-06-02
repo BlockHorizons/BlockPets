@@ -9,15 +9,15 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class CaveSpiderPet extends WalkingPet implements SmallCreature {
 
+	const NETWORK_ID = self::CAVE_SPIDER;
+
 	public $speed = 1.4;
 	public $height = 0.8;
 	public $width = 0.9;
 
 	public $name = "Cave Spider Pet";
 
-	public $networkId = 40;
-
 	public function generateCustomPetData(): void {
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_CAN_CLIMB, true);
+		$this->setGenericFlag(self::DATA_FLAG_CAN_CLIMB, true);
 	}
 }

@@ -12,21 +12,22 @@ use pocketmine\Player;
 
 class ElderGuardianPet extends SwimmingPet {
 
+	const NETWORK_ID = self::ELDER_GUARDIAN;
+
 	public $width = 1.9975;
 	public $height = 1.9975;
 
 	public $name = "Elder Guardian Pet";
-	public $networkId = 50;
 
 	public function generateCustomPetData(): void {
 		parent::generateCustomPetData();
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_ELDER, true);
+		$this->setGenericFlag(self::DATA_FLAG_ELDER, true);
 	}
 
 	public function attack(EntityDamageEvent $source): void {
 		if($source instanceof EntityDamageByEntityEvent) {
 			$attacker = $source->getDamager();
-			if($attacker instanceof Player && random_int(0, 1) === 1) {
+			if($attacker instanceof Player && random_int(0, 1)) {
 				$pk = new LevelEventPacket();
 				$pk->evid = 2006;
 				$pk->data = 0;

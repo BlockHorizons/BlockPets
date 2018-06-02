@@ -42,23 +42,23 @@ abstract class HoveringPet extends IrasciblePet {
 		$z = $petOwner->z + $this->zOffset - $this->z;
 
 		if($x * $x + $z * $z < 8 + $this->getScale()) {
-			$this->motionX = 0;
-			$this->motionZ = 0;
+			$this->motion->x = 0;
+			$this->motion->z = 0;
 		} else {
-			$this->motionX = $this->getSpeed() * 0.25 * ($x / (abs($x) + abs($z)));
-			$this->motionZ = $this->getSpeed() * 0.25 * ($z / (abs($x) + abs($z)));
+			$this->motion->x = $this->getSpeed() * 0.25 * ($x / (abs($x) + abs($z)));
+			$this->motion->z = $this->getSpeed() * 0.25 * ($z / (abs($x) + abs($z)));
 		}
 
 		if((float) $y !== 0.0) {
-			$this->motionY = $this->getSpeed() * 0.25 * $y;
+			$this->motion->y = $this->getSpeed() * 0.25 * $y;
 		}
 
 		$this->yaw = rad2deg(atan2(-$x, $z));
-		if($this->getNetworkId() === 53) {
+		if($this->getNetworkId() === self::ENDER_DRAGON) {
 			$this->yaw += 180;
 		}
 		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
-		$this->move($this->motionX, $this->motionY, $this->motionZ);
+		$this->move($this->motion->x, $this->motion->y, $this->motion->z);
 
 		$this->updateMovement();
 		return $this->isAlive();
@@ -76,23 +76,23 @@ abstract class HoveringPet extends IrasciblePet {
 		$z = $target->z - $this->z;
 
 		if($x * $x + $z * $z < 0.8) {
-			$this->motionX = 0;
-			$this->motionZ = 0;
+			$this->motion->x = 0;
+			$this->motion->z = 0;
 		} else {
-			$this->motionX = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
-			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
+			$this->motion->x = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
+			$this->motion->z = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
 		}
 
 		if((float) $y !== 0.0) {
-			$this->motionY = $this->getSpeed() * 0.15 * $y;
+			$this->motion->y = $this->getSpeed() * 0.15 * $y;
 		}
 
 		$this->yaw = rad2deg(atan2(-$x, $z));
-		if($this->getNetworkId() === 53) {
+		if($this->getNetworkId() === self::ENDER_DRAGON) {
 			$this->yaw += 180;
 		}
 		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
-		$this->move($this->motionX, $this->motionY, $this->motionZ);
+		$this->move($this->motion->x, $this->motion->y, $this->motion->z);
 
 		if($this->distance($target) <= $this->scale + 1.1 && $this->waitingTime <= 0 && $target->isAlive()) {
 			$event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage());
@@ -123,47 +123,54 @@ abstract class HoveringPet extends IrasciblePet {
 		$this->pitch = $rider->pitch;
 		$this->yaw = $this instanceof EnderDragonPet ? $rider->yaw + 180 : $rider->yaw;
 
-		$x = $rider->getDirectionVector()->x / 2 * $this->getSpeed();
-		$z = $rider->getDirectionVector()->z / 2 * $this->getSpeed();
-		$y = $rider->getDirectionVector()->y / 2 * $this->getSpeed();
+		$rider_directionvec = $rider->getDirectionVector();
+		$x = $rider_directionvec->x / 2 * $this->getSpeed();
+		$z = $rider_directionvec->z / 2 * $this->getSpeed();
+		$y = $rider_directionvec->y / 2 * $this->getSpeed();
 
-		$finalMotion = [0, 0];
+		$finalMotionX = 0;
+		$finalMotionZ = 0;
 		switch($motionZ) {
 			case 1:
-				$finalMotion = [$x, $z];
+				$finalMotionX = $x;
+				$finalMotionZ = $z;
 				break;
 			case 0:
 				break;
 			case -1:
-				$finalMotion = [-$x, -$z];
+				$finalMotionX = -$x;
+				$finalMotionZ = -$z;
 				break;
 			default:
 				$average = $x + $z / 2;
-				$finalMotion = [$average / 1.414 * $motionZ, $average / 1.414 * $motionX];
+				$finalMotionX = $average / 1.414 * $motionZ;
+				$finalMotionZ = $average / 1.414 * $motionX;
 				break;
 		}
 		switch($motionX) {
 			case 1:
-				$finalMotion = [$z, -$x];
+				$finalMotionX = $z;
+				$finalMotionZ = -$x;
 				break;
 			case 0:
 				break;
 			case -1:
-				$finalMotion = [-$z, $x];
+				$finalMotionX = -$z;
+				$finalMotionZ = $x;
 				break;
 		}
 
 		if(((float) $y) !== 0.0) {
 			if($y < 0) {
-				$this->motionY = $this->getSpeed() * 0.3 * $y;
+				$this->motion->y = $this->getSpeed() * 0.3 * $y;
 			} elseif($this->y - $this->getLevel()->getHighestBlockAt((int) $this->x, (int) $this->z) < $this->flyHeight) {
-				$this->motionY = $this->getSpeed() * 0.3 * $y;
+				$this->motion->y = $this->getSpeed() * 0.3 * $y;
 			}
 		}
 		if(abs($y) < 0.2) {
-			$this->motionY = 0;
+			$this->motion->y = 0;
 		}
-		$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);
+		$this->move($finalMotionX, $this->motion->y, $finalMotionZ);
 
 		$this->updateMovement();
 		return $this->isAlive();

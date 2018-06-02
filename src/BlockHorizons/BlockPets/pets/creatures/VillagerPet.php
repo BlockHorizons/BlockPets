@@ -8,14 +8,15 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class VillagerPet extends WalkingPet {
 
+	const NETWORK_ID = self::VILLAGER;
+
 	public $height = 1.8;
 	public $width = 0.8;
 
 	public $name = "Villager Pet";
-	public $networkId = 15;
 
 	public function generateCustomPetData(): void {
 		$randomVariant = random_int(0, 5);
-		$this->propertyManager->setPropertyValue(self::DATA_VARIANT, self::DATA_TYPE_INT, $randomVariant);
+		$this->getDataPropertyManager()->setInt(self::DATA_VARIANT, $randomVariant);
 	}
 }

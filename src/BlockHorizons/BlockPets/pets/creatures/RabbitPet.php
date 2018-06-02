@@ -9,11 +9,12 @@ use BlockHorizons\BlockPets\pets\SmallCreature;
 
 class RabbitPet extends BouncingPet implements SmallCreature {
 
+	const NETWORK_ID = self::RABBIT;
+
 	public $height = 0.5;
 	public $width = 0.4;
 
 	public $name = "Rabbit Pet";
-	public $networkId = 18;
 
 	public function generateCustomPetData(): void {
 		parent::generateCustomPetData();
@@ -21,6 +22,6 @@ class RabbitPet extends BouncingPet implements SmallCreature {
 			0, 1, 2, 3, 4, 5, 99
 		];
 		$randomVariant = $variants[array_rand($variants)];
-		$this->propertyManager->setPropertyValue(self::DATA_VARIANT, self::DATA_TYPE_INT, $randomVariant);
+		$this->getDataPropertyManager()->setInt(self::DATA_VARIANT, $randomVariant);
 	}
 }

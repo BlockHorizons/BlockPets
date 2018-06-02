@@ -30,11 +30,9 @@ class PetCommand extends BaseCommand {
 			case "help":
 				if(!isset($args[1])) {
 					$args[1] = 1;
-				}
-				if(!is_numeric($args[1])) {
+				}elseif(!is_numeric($args[1])) {
 					$args[1] = 1;
-				}
-				if($args[1] > 2) {
+				}elseif($args[1] > 2) {
 					$args[1] = 1;
 				}
 				$sender->sendMessage(TextFormat::GREEN . "--- BlockPets Help Page " . TextFormat::YELLOW . $args[1] . "/2" . TextFormat::GREEN . " ---");

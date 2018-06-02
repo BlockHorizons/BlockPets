@@ -8,10 +8,10 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class CreeperPet extends WalkingPet {
 
+	const NETWORK_ID = self::CREEPER;
+
 	public $height = 1.8;
 	public $width = 0.72;
 
 	public $name = "Creeper Pet";
-
-	public $networkId = 33;
 }

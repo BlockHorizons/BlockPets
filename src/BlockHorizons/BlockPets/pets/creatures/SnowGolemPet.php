@@ -8,16 +8,17 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class SnowGolemPet extends WalkingPet {
 
+	const NETWORK_ID = self::SNOW_GOLEM;
+
 	public $height = 1.7;
 	public $width = 0.9;
 
 	public $name = "Snow Golem Pet";
-	public $networkId = 21;
 
 	public function generateCustomPetData(): void {
 		if($this->getPetName() !== "shoghicp") {
 			return;
 		}
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_SHEARED, true);
+		$this->setGenericFlag(self::DATA_FLAG_SHEARED, true);
 	}
 }

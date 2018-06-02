@@ -84,7 +84,7 @@ class EventListener implements Listener {
 			if($pet->shouldIgnoreEvent()) {
 				return;
 			}
-			$owner = $this->getLoader()->getServer()->getPlayer($pet->getPetOwnerName());
+			$owner = $this->getLoader()->getServer()->getPlayerExact($pet->getPetOwnerName());
 
 			$this->getLoader()->removePet($pet->getPetName(), $pet->getPetOwner());
 			$newPet = $this->getLoader()->createPet($pet->getEntityType(), $owner, $pet->getPetName(), $pet->getStartingScale(), false, $pet->getPetLevel(), $pet->getPetLevelPoints(), $pet->isChested());

@@ -22,7 +22,7 @@ class ClearPetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(!$sender instanceof Player) {
+		if(!($sender instanceof Player)) {
 			$this->sendConsoleError($sender, true);
 			return true;
 		}

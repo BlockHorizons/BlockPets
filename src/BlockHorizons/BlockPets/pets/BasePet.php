@@ -19,15 +19,9 @@ use pocketmine\item\Food;
 use pocketmine\item\Item;
 use pocketmine\level\Level;
 use pocketmine\level\particle\HeartParticle;
-use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\tag\FloatTag;
-use pocketmine\nbt\tag\IntTag;
-use pocketmine\nbt\tag\StringTag;
-use pocketmine\network\mcpe\protocol\AddEntityPacket;
 use pocketmine\network\mcpe\protocol\SetEntityLinkPacket;
 use pocketmine\network\mcpe\protocol\types\EntityLink;
-use pocketmine\network\mcpe\protocol\UpdateAttributesPacket;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use pocketmine\math\Vector3;
@@ -46,9 +40,7 @@ abstract class BasePet extends Creature implements Rideable {
 	/** @var string */
 	public $name = "";
 	/** @var float */
-	public $scale = 1.0;
-	/** @var int */
-	public $networkId = 0;
+	public $scale = 0.0;
 
 	/** @var string */
 	protected $petOwner = "";
@@ -111,20 +103,22 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
 
-		$this->petLevel = $this->namedtag["petLevel"] - 1;
-		$this->petOwner = $this->namedtag["petOwner"];
-		$this->scale = $this->namedtag["scale"];
-		$this->petName = $this->namedtag["petName"];
-		$this->petLevelPoints = $this->namedtag["petLevelPoints"];
-		$this->chested = (bool) $this->namedtag["chested"];
+		$this->petLevel = $this->namedtag->getInt("petLevel") - 1;
+		$this->petOwner = $this->namedtag->getString("petOwner");
+		$this->scale = $this->namedtag->getFloat("scale");
+		$this->petName = $this->namedtag->getString("petName");
+		$this->petLevelPoints = $this->namedtag->getInt("petLevelPoints");
+		$this->chested = (bool) $this->namedtag->getByte("chested");
 
-		$this->setScale($this->scale);
-		if((bool) $this->namedtag["isBaby"] === true) {
+		if($this->namedtag->getByte("isBaby", 0)) {
 			$this->setScale(0.5);
+		}else{
+			$this->setScale($this->scale);
 		}
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_CHESTED, (bool) $this->isChested());
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_BABY, (bool) $this->namedtag["isBaby"]);
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_TAMED, true);
+
+		$this->setGenericFlag(self::DATA_FLAG_CHESTED, (bool) $this->isChested());
+		$this->setGenericFlag(self::DATA_FLAG_BABY, (bool) $this->namedtag->getByte("isBaby", 0));
+		$this->setGenericFlag(self::DATA_FLAG_TAMED, true);
 
 		$this->inventory = new PetInventoryHolder($this);
 		$this->levelUp(1, true);
@@ -144,7 +138,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return Loader
 	 */
 	public function getLoader(): Loader {
-		$plugin = $this->getLevel()->getServer()->getPluginManager()->getPlugin("BlockPets");
+		$plugin = $this->server->getPluginManager()->getPlugin("BlockPets");
 		if($plugin instanceof Loader) {
 			return $plugin;
 		}
@@ -192,7 +186,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @param bool $value
 	 */
 	public function setChested(bool $value = true): void {
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_CHESTED, $value);
+		$this->setGenericFlag(self::DATA_FLAG_CHESTED, $value);
 		$this->chested = $value;
 		$this->getLoader()->getDatabase()->updateChested($this->getPetName(), $this->getPetOwnerName());
 	}
@@ -206,7 +200,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	public function levelUp(int $amount = 1, bool $silent = false): bool {
-		$this->getLoader()->getServer()->getPluginManager()->callEvent($ev = new PetLevelUpEvent($this->getLoader(), $this, $this->getPetLevel(), $this->getPetLevel() + $amount));
+		$this->server->getPluginManager()->callEvent($ev = new PetLevelUpEvent($this->getLoader(), $this, $this->getPetLevel(), $this->getPetLevel() + $amount));
 		if($ev->isCancelled()) {
 			return false;
 		}
@@ -244,7 +238,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return Player|null
 	 */
 	public function getPetOwner(): ?Player {
-		return $this->getLoader()->getServer()->getPlayer($this->petOwner);
+		return $this->server->getPlayerExact($this->petOwner);
 	}
 
 	/**
@@ -290,7 +284,7 @@ abstract class BasePet extends Creature implements Rideable {
 
 				} elseif($hand->getId() === Item::CHEST && $this->canBeChested) {
 					if(!$this->isChested() && $this->getPetOwnerName() === $player->getName()) {
-						$this->getLoader()->getServer()->getPluginManager()->callEvent($ev = new PetInventoryInitializationEvent($this->getLoader(), $this));
+						$this->server->getPluginManager()->callEvent($ev = new PetInventoryInitializationEvent($this->getLoader(), $this));
 						if(!$ev->isCancelled()) {
 							$remainder = $hand;
 							$remainder->setCount($remainder->getCount() - 1);
@@ -399,10 +393,10 @@ abstract class BasePet extends Creature implements Rideable {
 		return $this->getPetName();
 	}
 
-	public function initEntity() {
+	public function initEntity(): void {
 		parent::initEntity();
 		$this->generateCustomPetData();
-		$this->propertyManager->setPropertyValue(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, 1);
+		$this->setImmobile();
 	}
 
 	public function generateCustomPetData(): void {
@@ -414,20 +408,19 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @return int
 	 */
-	public function getNetworkId(): int {
-		return $this->networkId;
+	final public function getNetworkId(): int {
+		return static::NETWORK_ID;
 	}
 
 	public function saveNBT(): void {
 		parent::saveNBT();
-		$this->namedtag->petOwner = new StringTag("petOwner", $this->getPetOwnerName());
-		$this->namedtag->petName = new StringTag("petName", $this->getPetName());
-		$this->namedtag->speed = new FloatTag("speed", $this->getSpeed());
-		$this->namedtag->scale = new FloatTag("scale", $this->getStartingScale());
-		$this->namedtag->networkId = new IntTag("networkId", $this->getNetworkId());
-		$this->namedtag->petLevel = new IntTag("petLevel", $this->getPetLevel());
-		$this->namedtag->petLevelPoints = new IntTag("petLevelPoints", $this->getPetLevelPoints());
-		$this->namedtag->chested = new ByteTag("chested", (int) $this->isChested());
+		$this->namedtag->setString("petOwner", $this->getPetOwnerName());
+		$this->namedtag->setString("petName", $this->getPetName());
+		$this->namedtag->setFloat("speed", $this->getSpeed());
+		$this->namedtag->setFloat("scale", $this->getStartingScale());
+		$this->namedtag->setInt("petLevel", $this->getPetLevel());
+		$this->namedtag->setInt("petLevelPoints", $this->getPetLevelPoints());
+		$this->namedtag->setByte("chested", (int) $this->isChested());
 	}
 
 	/**
@@ -490,7 +483,7 @@ abstract class BasePet extends Creature implements Rideable {
 			return parent::onUpdate($currentTick);
 		}
 		if($this->getLevel()->getId() !== $petOwner->getLevel()->getId()) {
-			$newPet = $this->getLoader()->createPet($this->getEntityType(), $petOwner, $this->getPetName(), $this->getStartingScale(), (bool) $this->namedtag["isBaby"], $this->getPetLevel(), $this->getPetLevelPoints(), $this->isChested());
+			$newPet = $this->getLoader()->createPet($this->getEntityType(), $petOwner, $this->getPetName(), $this->getStartingScale(), (bool) $this->namedtag->getByte("isBaby"), $this->getPetLevel(), $this->getPetLevelPoints(), $this->isChested());
 			$newPet->getInventory()->setInventoryContents($this->getInventory()->getInventoryContents());
 			$this->close();
 			return false;
@@ -558,7 +551,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$rider = $this->getRider();
 		$this->rider = null;
 		$this->getPetOwner()->canCollide = true;
-		$this->server->broadcastPacket($this->level->getPlayers(), $pk);
+		$this->server->broadcastPacket($this->getViewers(), $pk);
 
 		$pk = new SetEntityLinkPacket();
 
@@ -571,7 +564,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->link = $link;
 		$this->getPetOwner()->dataPacket($pk);
 		if($this->getPetOwner() !== null) {
-			$rider->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, false);
+			$rider->setGenericFlag(self::DATA_FLAG_RIDING, false);
 			if($this->getPetOwner()->isSurvival()) {
 				$rider->setAllowFlight(false);
 			}
@@ -586,7 +579,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return Player|null
 	 */
 	public function getRider(): ?Player {
-		return $this->getLevel()->getServer()->getPlayer($this->rider);
+		return $this->server->getPlayerExact($this->rider);
 	}
 
 	/**
@@ -603,14 +596,14 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->ridden = true;
 		$this->rider = $player->getName();
 		$player->canCollide = false;
-		$this->getPetOwner()->propertyManager->setPropertyValue(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, new Vector3(0, 1.8 + $this->getScale() * 0.9, -0.25));
+		$this->getPetOwner()->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, new Vector3(0, 1.8 + $this->getScale() * 0.9, -0.25));
 		if($this instanceof EnderDragonPet) {
-			$player->propertyManager->setPropertyValue(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, new Vector3(0, 2.65 + $this->getScale(), -1.7));
+			$player->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, new Vector3(0, 2.65 + $this->getScale(), -1.7));
 		} elseif($this instanceof SmallCreature) {
-			$player->propertyManager->setPropertyValue(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, new Vector3(0, 0.78 + $this->getScale() * 0.9, -0.25));
+			$player->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, new Vector3(0, 0.78 + $this->getScale() * 0.9, -0.25));
 		}
-		$player->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, true);
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_SADDLED, true);
+		$player->setGenericFlag(self::DATA_FLAG_RIDING, true);
+		$this->setGenericFlag(self::DATA_FLAG_SADDLED, true);
 
 		$pk = new SetEntityLinkPacket();
 		$link = new EntityLink();
@@ -620,7 +613,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$link->bool1 = true;
 
 		$pk->link = $link;
-		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
+		$this->server->broadcastPacket($this->getViewers(), $pk);
 
 		$pk = new SetEntityLinkPacket();
 		$link = new EntityLink();
@@ -658,27 +651,6 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->petName = $newName;
 		$this->getLoader()->getDatabase()->registerPet($this);
 		$this->getCalculator()->updateNameTag();
-	}
-
-	/**
-	 * @param Player $player
-	 */
-	public function spawnTo(Player $player): void {
-		parent::spawnTo($player);
-		$pk = new AddEntityPacket();
-		$pk->entityRuntimeId = $this->getId();
-		$pk->type = $this->getNetworkId();
-		$pk->position = new Vector3($this->x, $this->y, $this->z);
-		$pk->motion = new Vector3(0.0, 0.0, 0.0);
-		$pk->yaw = $this->yaw;
-		$pk->pitch = $this->pitch;
-		$pk->metadata = $this->propertyManager->getAll();
-		$player->dataPacket($pk);
-
-		$pk = new UpdateAttributesPacket();
-		$pk->entries = $this->getAttributeMap()->getAll();
-		$pk->entityRuntimeId = $this->getId();
-		$player->dataPacket($pk);
 	}
 
 	/**
@@ -779,8 +751,8 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		$this->riding = true;
-		$this->propertyManager->setPropertyValue(self::DATA_RIDER_SEAT_POSITION, self::DATA_TYPE_VECTOR3F, new Vector3(0, $this->getScale() * 0.4 - 0.3, 0));
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, true);
+		$this->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, new Vector3(0, $this->getScale() * 0.4 - 0.3, 0));
+		$this->setGenericFlag(self::DATA_FLAG_RIDING, true);
 
 		$pk = new SetEntityLinkPacket();
 		$link = new EntityLink();
@@ -790,7 +762,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$link->bool1 = true;
 
 		$pk->link = $link;
-		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
+		$this->server->broadcastPacket($this->getViewers(), $pk);
 		return true;
 
 	}
@@ -803,7 +775,7 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		$this->riding = false;
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, false);
+		$this->setGenericFlag(self::DATA_FLAG_RIDING, false);
 
 		$pk = new SetEntityLinkPacket();
 		$link = new EntityLink();
@@ -813,7 +785,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$link->bool1 = true;
 
 		$pk->link = $link;
-		$this->server->broadcastPacket($this->server->getOnlinePlayers(), $pk);
+		$this->server->broadcastPacket($this->getViewers(), $pk);
 		$this->teleport($this->getPetOwner());
 		return true;
 	}

@@ -9,7 +9,8 @@ use BlockHorizons\BlockPets\pets\SmallCreature;
 
 class BatPet extends HoveringPet implements SmallCreature {
 
-	public $networkId = 19;
+	const NETWORK_ID = self::BAT;
+
 	public $name = "Bat Pet";
 
 	public $width = 0.3;

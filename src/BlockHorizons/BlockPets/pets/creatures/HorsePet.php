@@ -8,7 +8,7 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class HorsePet extends WalkingPet {
 
-	public $networkId = 23;
+	const NETWORK_ID = self::HORSE;
 
 	public $name = "Horse Pet";
 
@@ -24,6 +24,6 @@ class HorsePet extends WalkingPet {
 			1024, 1025, 1026, 1027, 1028, 1029, 1030
 		];
 		$randomVariant = $variants[array_rand($variants)];
-		$this->propertyManager->setPropertyValue(self::DATA_VARIANT, self::DATA_TYPE_INT, $randomVariant);
+		$this->getDataPropertyManager()->setInt(self::DATA_VARIANT, $randomVariant);
 	}
 }

@@ -39,34 +39,34 @@ abstract class WalkingPet extends IrasciblePet {
 		}
 
 		if(!$this->isOnGround()) {
-			if($this->motionY > -$this->gravity * 4) {
-				$this->motionY = -$this->gravity * 4;
+			if($this->motion->y > -$this->gravity * 4) {
+				$this->motion->y = -$this->gravity * 4;
 			} else {
-				$this->motionY += $this->isInsideOfWater() ? $this->gravity : -$this->gravity;
+				$this->motion->y += $this->isUnderwater() ? $this->gravity : -$this->gravity;
 			}
 		} else {
-			$this->motionY -= $this->gravity;
+			$this->motion->y -= $this->gravity;
 		}
 		if($this->isCollidedHorizontally && $this->jumpTicks === 0) {
 			$this->jump();
 		}
-		$this->move($this->motionX, $this->motionY, $this->motionZ);
+		$this->move($this->motion->x, $this->motion->y, $this->motion->z);
 
 		$x = $petOwner->x + $this->xOffset - $this->x;
 		$y = $petOwner->y - $this->y;
 		$z = $petOwner->z + $this->zOffset - $this->z;
 
 		if($x * $x + $z * $z < 4 + $this->getScale()) {
-			$this->motionX = 0;
-			$this->motionZ = 0;
+			$this->motion->x = 0;
+			$this->motion->z = 0;
 		} else {
-			$this->motionX = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
-			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
+			$this->motion->x = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
+			$this->motion->z = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
 		}
 		$this->yaw = rad2deg(atan2(-$x, $z));
 		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
 
-		$this->move($this->motionX, $this->motionY, $this->motionZ);
+		$this->move($this->motion->x, $this->motion->y, $this->motion->z);
 		$this->updateMovement();
 		return $this->isAlive();
 	}
@@ -82,34 +82,34 @@ abstract class WalkingPet extends IrasciblePet {
 		}
 
 		if(!$this->isOnGround()) {
-			if($this->motionY > -$this->gravity * 4) {
-				$this->motionY = -$this->gravity * 4;
+			if($this->motion->y > -$this->gravity * 4) {
+				$this->motion->y = -$this->gravity * 4;
 			} else {
-				$this->motionY += $this->isInsideOfWater() ? $this->gravity : -$this->gravity;
+				$this->motion->y += $this->isUnderwater() ? $this->gravity : -$this->gravity;
 			}
 		} else {
-			$this->motionY -= $this->gravity;
+			$this->motion->y -= $this->gravity;
 		}
 		if($this->isCollidedHorizontally && $this->jumpTicks === 0) {
 			$this->jump();
 		}
-		$this->move($this->motionX, $this->motionY, $this->motionZ);
+		$this->move($this->motion->x, $this->motion->y, $this->motion->z);
 
 		$x = $target->x - $this->x;
 		$y = $target->y - $this->y;
 		$z = $target->z - $this->z;
 
 		if($x * $x + $z * $z < 1.2) {
-			$this->motionX = 0;
-			$this->motionZ = 0;
+			$this->motion->x = 0;
+			$this->motion->z = 0;
 		} else {
-			$this->motionX = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
-			$this->motionZ = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
+			$this->motion->x = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
+			$this->motion->z = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
 		}
 		$this->yaw = rad2deg(atan2(-$x, $z));
 		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
 
-		$this->move($this->motionX, $this->motionY, $this->motionZ);
+		$this->move($this->motion->x, $this->motion->y, $this->motion->z);
 
 		if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0) {
 			$event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage());
@@ -135,7 +135,7 @@ abstract class WalkingPet extends IrasciblePet {
 
 	public function jump(): void {
 		$this->motionY = $this->gravity * 8;
-		$this->move($this->motionX, $this->motionY, $this->motionZ);
+		$this->move($this->motion->x, $this->motion->y, $this->motion->z);
 		$this->jumpTicks = 5;
 	}
 
@@ -145,53 +145,60 @@ abstract class WalkingPet extends IrasciblePet {
 		$this->pitch = $rider->pitch;
 		$this->yaw = $rider->yaw;
 
-		$x = $this->getDirectionVector()->x / 2.5 * $this->getSpeed();
-		$z = $this->getDirectionVector()->z / 2.5 * $this->getSpeed();
+		$direction_vec = $this->getDirectionVector();
+		$x = $direction_vec->x / 2.5 * $this->getSpeed();
+		$z = $direction_vec->z / 2.5 * $this->getSpeed();
 
 		if($this->jumpTicks > 0) {
 			$this->jumpTicks--;
 		}
 
 		if(!$this->isOnGround()) {
-			if($this->motionY > -$this->gravity * 4) {
-				$this->motionY = -$this->gravity * 4;
+			if($this->motion->y > -$this->gravity * 4) {
+				$this->motion->y = -$this->gravity * 4;
 			} else {
-				$this->motionY -= $this->gravity;
+				$this->motion->y -= $this->gravity;
 			}
 		} else {
-			$this->motionY -= $this->gravity;
+			$this->motion->y -= $this->gravity;
 		}
 		if($this->isCollidedHorizontally && $this->jumpTicks === 0) {
 			$this->jump();
 		}
 
-		$finalMotion = [0, 0];
+		$finalMotionX = 0;
+		$finalMotionZ = 0;
 		switch($motionZ) {
 			case 1:
-				$finalMotion = [$x, $z];
+				$finalMotionX = $x;
+				$finalMotionZ = $z;
 				break;
 			case 0:
 				break;
 			case -1:
-				$finalMotion = [-$x, -$z];
+				$finalMotionX = -$x;
+				$finalMotionZ = -$z;
 				break;
 			default:
 				$average = $x + $z / 2;
-				$finalMotion = [$average / 1.414 * $motionZ, $average / 1.414 * $motionX];
+				$finalMotionX = $average / 1.414 * $motionZ;
+				$finalMotionZ = $average / 1.414 * $motionX;
 				break;
 		}
 		switch($motionX) {
 			case 1:
-				$finalMotion = [$z, -$x];
+				$finalMotionX = $z;
+				$finalMotionZ = -$x;
 				break;
 			case 0:
 				break;
 			case -1:
-				$finalMotion = [-$z, $x];
+				$finalMotionX = -$z;
+				$finalMotionZ = $x;
 				break;
 		}
 
-		$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);
+		$this->move($finalMotionX, $this->motion->y, $finalMotionZ);
 		$this->updateMovement();
 		return $this->isAlive();
 	}

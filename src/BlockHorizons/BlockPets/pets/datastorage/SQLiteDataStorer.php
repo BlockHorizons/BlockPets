@@ -24,7 +24,7 @@ class SQLiteDataStorer extends BaseDataStorer {
 		$playerName = strtolower($pet->getPetOwnerName());
 		$entityName = $pet->getEntityType();
 		$size = $pet->getScale();
-		$baby = (int) $pet->namedtag["IsBaby"];
+		$baby = $pet->namedtag->getByte("IsBaby", 0);
 		$level = $pet->getPetLevel();
 		$points = $pet->getPetLevelPoints();
 		$chested = (int) $pet->isChested();
@@ -73,7 +73,7 @@ class SQLiteDataStorer extends BaseDataStorer {
 		if(!$this->petExists($petName, $ownerName)) {
 			return false;
 		}
-		$chested = (int) $this->loader->getPetByName($petName, $this->loader->getServer()->getPlayer($ownerName))->isChested();
+		$chested = (int) $this->loader->getPetByName($petName, $this->loader->getServer()->getPlayerExact($ownerName))->isChested();
 		$query = "UPDATE Pets SET Chested = $chested WHERE Player = '" . $this->escape($ownerName) . "' AND PetName = '" . $this->escape($petName) . "'";
 		return $this->database->exec($query);
 	}

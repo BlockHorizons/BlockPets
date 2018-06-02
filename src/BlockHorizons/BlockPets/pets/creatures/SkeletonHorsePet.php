@@ -8,7 +8,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class SkeletonHorsePet extends WalkingPet {
 
-	public $networkId = 26;
+	const NETWORK_ID = self::SKELETON_HORSE;
+
 	public $name = "Skeleton Horse Pet";
 
 	public $width = 1.4;

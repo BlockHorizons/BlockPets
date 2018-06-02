@@ -26,7 +26,7 @@ class RemovePetCommand extends BaseCommand {
 			return true;
 		}
 
-		if(count($args) > 1 && isset($args[1])) {
+		if(isset($args[1])) {
 			if(($player = $this->getLoader()->getServer()->getPlayer($args[1])) === null) {
 				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.not-found"));
 				return true;

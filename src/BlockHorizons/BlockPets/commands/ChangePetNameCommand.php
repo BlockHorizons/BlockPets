@@ -27,13 +27,14 @@ class ChangePetNameCommand extends BaseCommand {
 			return true;
 		}
 
-		if(!$sender instanceof Player && count($args) != 3) {
+		if(!($sender instanceof Player) && count($args) !== 3) {
 			$this->sendConsoleError($sender);
 			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
 			return true;
 		}
-		if(empty(trim($args[1]))) {
+		if(!isset($args[1]) || empty(trim($args[1]))) {
 			$this->sendWarning($sender, "The name you entered is invalid.");
+			return true;
 		}
 		$newName = $args[1];
 

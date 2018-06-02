@@ -9,7 +9,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class WolfPet extends WalkingPet implements SmallCreature {
 
-	public $networkId = 14;
+	const NETWORK_ID = self::WOLF;
+
 	public $name = "Wolf Pet";
 
 	public $width = 0.72;
@@ -18,7 +19,7 @@ class WolfPet extends WalkingPet implements SmallCreature {
 	public function generateCustomPetData(): void {
 		$randomColour = random_int(0, 15);
 		$eid = 123456789123456789;
-		$this->propertyManager->setPropertyValue(self::DATA_OWNER_EID, self::DATA_TYPE_LONG, $eid);
-		$this->propertyManager->setPropertyValue(self::DATA_COLOUR, self::DATA_TYPE_BYTE, $randomColour);
+		$this->getDataPropertyManager()->setLong(self::DATA_OWNER_EID, $eid);
+		$this->getDataPropertyManager()->setByte(self::DATA_COLOUR, $randomColour);
 	}
 }

@@ -9,7 +9,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class OcelotPet extends WalkingPet implements SmallCreature {
 
-	public $networkId = 22;
+	const NETWORK_ID = self::OCELOT;
+
 	public $name = "Ocelot Pet";
 
 	public $width = 0.72;
@@ -17,6 +18,6 @@ class OcelotPet extends WalkingPet implements SmallCreature {
 
 	public function generateCustomPetData(): void {
 		$randomVariant = random_int(0, 3);
-		$this->propertyManager->setPropertyValue(self::DATA_VARIANT, self::DATA_TYPE_INT, $randomVariant);
+		$this->getDataPropertyManager()->setInt(self::DATA_VARIANT, $randomVariant);
 	}
 }

@@ -8,9 +8,10 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class MooshroomPet extends WalkingPet {
 
+	const NETWORK_ID = self::MOOSHROOM;
+
 	public $height = 1.3;
 	public $width = 0.9;
 
 	public $name = "Mooshroom Pet";
-	public $networkId = 16;
 }

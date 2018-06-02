@@ -8,7 +8,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class EvokerPet extends WalkingPet {
 
-	public $networkId = 104;
+	const NETWORK_ID = self::EVOCATION_ILLAGER;
+
 	public $name = "Evoker Pet";
 
 	public $width = 0.6;
@@ -16,6 +17,6 @@ class EvokerPet extends WalkingPet {
 
 	public function generateCustomPetData(): void {
 		$isCasting = random_int(0, 1);
-		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_EVOKER_SPELL, (bool) $isCasting);
+		$this->setGenericFlag(self::DATA_FLAG_EVOKER_SPELL, (bool) $isCasting);
 	}
 }

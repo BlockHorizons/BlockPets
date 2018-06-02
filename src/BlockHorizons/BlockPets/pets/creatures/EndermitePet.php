@@ -9,10 +9,10 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class EndermitePet extends WalkingPet implements SmallCreature {
 
+	const NETWORK_ID = self::ENDERMITE;
+
 	public $height = 0.2;
 	public $width = 0.4;
 
 	public $name = "Endermite Pet";
-
-	public $networkId = 55;
 }

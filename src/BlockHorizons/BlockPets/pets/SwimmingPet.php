@@ -30,23 +30,23 @@ abstract class SwimmingPet extends BouncingPet {
 		if($this->isAngry()) {
 			return $this->doAttackingMovement();
 		}
-		if($this->isInsideOfWater()) {
+		if($this->isUnderwater()) {
 			$x = $petOwner->x + $this->xOffset - $this->x;
 			$y = $petOwner->y + $this->yOffset - $this->y;
 			$z = $petOwner->z + $this->zOffset - $this->z;
 
 			if($x * $x + $z * $z < 6 + $this->getScale()) {
-				$this->motionX = 0;
-				$this->motionZ = 0;
+				$this->motion->x = 0;
+				$this->motion->z = 0;
 			} else {
-				$this->motionX = $this->getSwimmingSpeed() * 0.25 * ($x / (abs($x) + abs($z)));
-				$this->motionZ = $this->getSwimmingSpeed() * 0.25 * ($z / (abs($x) + abs($z)));
+				$this->motion->x = $this->getSwimmingSpeed() * 0.25 * ($x / (abs($x) + abs($z)));
+				$this->motion->z = $this->getSwimmingSpeed() * 0.25 * ($z / (abs($x) + abs($z)));
 			}
-			$this->motionY = $this->getSwimmingSpeed() * 0.25 * $y;
+			$this->motion->y = $this->getSwimmingSpeed() * 0.25 * $y;
 			$this->yaw = rad2deg(atan2(-$x, $z));
 			$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
 
-			$this->move($this->motionX, $this->motionY, $this->motionZ);
+			$this->move($this->motion->x, $this->motion->y, $this->motion->z);
 
 			$this->updateMovement();
 			return $this->isAlive();
@@ -60,26 +60,26 @@ abstract class SwimmingPet extends BouncingPet {
 		if(!$this->checkAttackRequirements()) {
 			return false;
 		}
-		if($this->isInsideOfWater()) {
+		if($this->isUnderwater()) {
 			$x = $target->x - $this->x;
 			$y = $target->y - $this->y;
 			$z = $target->z - $this->z;
 
 			if($x * $x + $z * $z < 1.2) {
-				$this->motionX = 0;
-				$this->motionZ = 0;
+				$this->motion->x = 0;
+				$this->motion->z = 0;
 			} else {
-				$this->motionX = $this->getSwimmingSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
-				$this->motionZ = $this->getSwimmingSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
+				$this->motion->x = $this->getSwimmingSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
+				$this->motion->z = $this->getSwimmingSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
 			}
 
 			if($y !== 0.0) {
-				$this->motionY = $this->getSwimmingSpeed() * 0.15 * $y;
+				$this->motion->y = $this->getSwimmingSpeed() * 0.15 * $y;
 			}
 
 			$this->yaw = rad2deg(atan2(-$x, $z));
 			$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
-			$this->move($this->motionX, $this->motionY, $this->motionZ);
+			$this->move($this->motion->x, $this->motion->y, $this->motion->z);
 
 			if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0) {
 				$event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage());
@@ -114,49 +114,56 @@ abstract class SwimmingPet extends BouncingPet {
 	}
 
 	public function doRidingMovement(float $motionX, float $motionZ): bool {
-		if($this->isInsideOfWater()) {
+		if($this->isUnderwater()) {
 			$rider = $this->getPetOwner();
 
 			$this->pitch = $rider->pitch;
 			$this->yaw = $rider->yaw;
 
-			$x = $rider->getDirectionVector()->x / 2 * $this->getSwimmingSpeed();
-			$z = $rider->getDirectionVector()->z / 2 * $this->getSwimmingSpeed();
-			$y = $rider->getDirectionVector()->y / 2 * $this->getSwimmingSpeed();
+			$rider_directionvec = $rider->getDirectionVector();
+			$x = $rider_directionvec->x / 2 * $this->getSwimmingSpeed();
+			$z = $rider_directionvec->z / 2 * $this->getSwimmingSpeed();
+			$y = $rider_directionvec->y / 2 * $this->getSwimmingSpeed();
 
-			$finalMotion = [0, 0];
+			$finalMotionX = 0;
+			$finalMotionZ = 0;
 			switch($motionZ) {
 				case 1:
-					$finalMotion = [$x, $z];
+					$finalMotionX = $x;
+					$finalMotionZ = $z;
 					break;
 				case 0:
 					break;
 				case -1:
-					$finalMotion = [-$x, -$z];
+					$finalMotionX = -$x;
+					$finalMotionZ = -$z;
 					break;
 				default:
 					$average = $x + $z / 2;
-					$finalMotion = [$average / 1.414 * $motionZ, $average / 1.414 * $motionX];
+					$finalMotionX = $average / 1.414 * $motionZ;
+					$finalMotionZ = $average / 1.414 * $motionX;
 					break;
 			}
 			switch($motionX) {
 				case 1:
-					$finalMotion = [$z, -$x];
+					$finalMotionX = $z;
+					$finalMotionZ = -$x;
 					break;
 				case 0:
 					break;
 				case -1:
-					$finalMotion = [-$z, $x];
+					$finalMotionX = -$z;
+					$finalMotionZ = $x;
 					break;
 			}
 
 			if(((float) $y) !== 0.0) {
-				$this->motionY = $this->getSwimmingSpeed() * 0.25 * $y;
+				$this->motion->y = $this->getSwimmingSpeed() * 0.25 * $y;
 			}
 			if(abs($y) < 0.1) {
-				$this->motionY = 0;
+				$this->motion->y = 0;
 			}
-			$this->move($finalMotion[0], $this->motionY, $finalMotion[1]);
+			$this->move($finalMotionX, $this->motion->y, $finalMotionZ);
 
 			$this->updateMovement();
 			return $this->isAlive();

@@ -8,14 +8,15 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class LlamaPet extends WalkingPet {
 
+	const NETWORK_ID = self::LLAMA;
+
 	public $height = 1.87;
 	public $width = 0.9;
 
 	public $name = "Llama Pet";
-	public $networkId = 29;
 
 	public function generateCustomPetData(): void {
 		$randomVariant = random_int(0, 3);
-		$this->propertyManager->setPropertyValue(self::DATA_VARIANT, self::DATA_TYPE_INT, $randomVariant);
+		$this->getDataPropertyManager()->setInt(self::DATA_VARIANT, $randomVariant);
 	}
 }
