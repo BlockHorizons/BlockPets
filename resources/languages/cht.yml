@@ -1,0 +1,54 @@
+---
+# Traditional Chinese messages file for BlockPets, a pets plugin by BlockHorizons.
+# TODO: replace § with &, add all language strings
+
+prefix:
+  warning: "§c[§6警告§c]"
+
+commands:
+  errors:
+    console-use: "當您從控制台只用該指令時，務必填寫所有參數"
+    no-console-use: "該指令僅可由玩家使用"
+    no-permission: "您並無權限使用該指令"
+    plugin-cancelled: "插件操作已取消"
+    
+    pet:
+      doesnt-exist: "該名稱寵物不存在"
+      numeric: "寵物的大小必須是一個數值"
+      
+    player:
+      not-found: "無法找到該玩家"
+      no-pet: "您不能擁有叫這個名稱的寵物"
+      no-pet-other: "該玩家不能擁有叫這個名稱的寵物"
+      already-own-pet: "您已擁有叫這個名稱的寵物了"
+         
+  changepetname:
+    no-permission: "您並無權限更改其他玩家的寵物名稱"
+    success: "成功從 %s §r§a 更改名稱為 %s!"
+    
+  clearpet:
+    success: "成功清除了寵物 §b%s§a!"
+    
+  healpet:
+    success: "%s §r§a 已成功被治療!"
+
+  leveluppet:
+  spawnpet:
+    success: "寵物已升等: §b%s §r§a %s!"
+    
+    no-permission: "您並無權限生成寵物"
+    no-permission-others: "您並無權限為其他人生成寵物"
+    success: "成功生成一隻名為 §b%s§a 的寵物!"
+    success-other: "您收到了一隻名為 §b%s§a 的寵物!"
+    name: "請於聊天窗中為您寵物取一個名字!"
+    selecting-name: "%s 正在為他們的寵物取一個名字!"
+    exceeded-limit: "%s 超出寵物的限制"
+    
+  removepet:
+    success: "成功刪除寵物 §b%s§a!"
+    
+  togglepet:
+    no-pet-specified: "您並無指定要切換的寵物"
+    success: "成功切換了您的寵物 %s!"
+    success-others: "成功切換寵物 §b%s §r§a %s!"
+...
