@@ -1,9 +1,8 @@
 ---
 # Dutch messages file for BlockPets, a pets plugin by BlockHorizons.
-# TODO: replace § with &, add all language strings
 
 prefix:
-  warning: "§c[§6Waarschuwing§c]"
+  warning: "&c[&6Waarschuwing&c]"
 
 commands:
   errors:
@@ -24,31 +23,31 @@ commands:
 
   changepetname:
     no-permission: "Je hebt geen permissie om de naam van huisdieren van andere spelers te veranderen."
-    success: "Naam van %s §r§asuccesvol veranderd naar %s!"
+    success: "Naam van %s &r&asuccesvol veranderd naar %s!"
 
   clearpet:
-    success: "Huisdier §b%s§a verwijderen succesvol!"
+    success: "Huisdier &b%s&a verwijderen succesvol!"
 
   healpet:
-    success: "Het huisdier %s §r§a genezen was succesvol!"
+    success: "Het huisdier %s &r&a genezen was succesvol!"
 
   leveluppet:
-    success: "Huisdier niveau verhogen succesvol: §b%s §r§a %s!"
+    success: "Huisdier niveau verhogen succesvol: &b%s &r&a %s!"
 
   spawnpet:
     no-permission: "Je hebt geen permissie om dat huisdier te gebruiken."
     no-permission-others: "Je hebt geen permissie om ander spelers huisdieren te geven."
-    success: "Verschijnen van het huisdier §b%s §awas succesvol!"
-    success-other: "Je hebt een huisdier gekregen met de naam: §b%s§a!"
+    success: "Verschijnen van het huisdier &b%s &awas succesvol!"
+    success-other: "Je hebt een huisdier gekregen met de naam: &b%s&a!"
     name: "Type alsjeblieft een naam voor je huisdier!"
     selecting-name: "%s is nu een naam voor zijn huisdier aan het kiezen!"
     exceeded-limit: "%s heeft de huisdier limiet overschreden."
 
   removepet:
-    success: "Verwijderen van het huisdier §b%s §awas succesvol."
+    success: "Verwijderen van het huisdier &b%s &awas succesvol."
 
   togglepet:
     no-pet-specified: "Je hebt geen huisdier gekozen om aan/uit te zetten."
     success: "Je hebt je huisdieren %s gezet!"
-    success-others: "Je hebt het huisdier §b%s §r§a %s gezet!"
+    success-others: "Je hebt het huisdier &b%s &r&a %s gezet!"
 ...

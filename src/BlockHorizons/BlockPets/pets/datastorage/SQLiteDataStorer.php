@@ -14,6 +14,9 @@ class SQLiteDataStorer extends SQLDataStorer {
 		$this->database->executeSelect(SQLDataStorer::LOAD_PLAYER_PETS, [
 			"player" => $player
 		], function(array $rows) use($callable): void {
+			if($callable === null) {
+				return;
+			}
 			foreach($rows as &$row) {
 				if(isset($row["Inventory"])) {
 					$row["Inventory"] = base64_decode($row["Inventory"]);

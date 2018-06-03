@@ -1,9 +1,8 @@
 ---
 # English messages file for BlockPets, a pets plugin by BlockHorizons.
-# TODO: replace § with &, add all language strings
 
 prefix:
-  warning: "§c[§6Warning§c]"
+  warning: "&c[&6Warning&c]"
 
 commands:
   errors:
@@ -24,31 +23,35 @@ commands:
          
   changepetname:
     no-permission: "You don't have permission to change the name of pets from other players."
-    success: "Successfully changed the name of %s §r§ato %s!"
+    success: "Successfully changed the name of %s &r&ato %s!"
     
   clearpet:
-    success: "Successfully cleared the pet §b%s§a!"
+    success: "Successfully cleared the pet &b%s&a!"
     
   healpet:
-    success: "The pet %s §r§a has been healed successfully!"
+    success: "The pet %s &r&a has been healed successfully!"
 
   leveluppet:
-    success: "Successfully leveled up the pet: §b%s §r§a %s!"
-    
+    success: "Successfully leveled up the pet: &b%s &r&a %s!"
+
+  listpets:
+    no-pets-found: "&cYou do not have any pets."
+    no-pets-found-type: "&cYou do not have any %ss."
+
   spawnpet:
     no-permission: "You don't have permission to spawn that pet."
     no-permission-others: "You don't have permission to spawn pets to others."
-    success: "Successfully spawned a pet with the name §b%s§a!"
-    success-other: "You have received a pet with the name §b%s§a!"
+    success: "Successfully spawned a pet with the name &b%s&a!"
+    success-other: "You have received a pet with the name &b%s&a!"
     name: "Please type a name for your pet in chat!"
     selecting-name: "%s is now selecting a name for their pet!"
     exceeded-limit: "%s exceeded the pet limit."
     
   removepet:
-    success: "Successfully removed the pet §b%s§a!"
+    success: "Successfully removed the pet &b%s&a!"
     
   togglepet:
     no-pet-specified: "You did not specify a pet to toggle."
     success: "Successfully toggled your pets %s!"
-    success-others: "Successfully toggle the pet §b%s §r§a %s!"
+    success-others: "Successfully toggle the pet &b%s &r&a %s!"
 ...

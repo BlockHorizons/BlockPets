@@ -17,6 +17,7 @@ class SQLDataStorer extends BaseDataStorer {
 
 	const INITIALIZE_TABLES = "blockpets.init";
 	const LOAD_PLAYER_PETS = "blockpets.loadplayer";
+	const LIST_PLAYER_PETS = "blockpets.listpets";
 	const RESET = "blockpets.reset";
 
 	const REGISTER_PET = "blockpets.pet.register";
@@ -53,6 +54,15 @@ class SQLDataStorer extends BaseDataStorer {
 
 		$this->database->executeSelect(SQLDataStorer::LOAD_PLAYER_PETS, [
 			"player" => $player
+		], $callable);
+	}
+
+	public function getPlayerPets(string $player, ?string $entityName = null, ?callable $callable = null): void {
+		$database = $this;
+
+		$this->database->executeSelect(SQLDataStorer::LIST_PLAYER_PETS, [
+			"player" => $player,
+			"entityname" => $entityName ?? "%"
 		], $callable);
 	}
 

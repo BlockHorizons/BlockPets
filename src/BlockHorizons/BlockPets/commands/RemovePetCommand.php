@@ -15,43 +15,38 @@ class RemovePetCommand extends BaseCommand {
 		$this->setPermission("blockpets.command.removepet");
 	}
 
-	public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
-		if(!$this->testPermission($sender)) {
-			$this->sendPermissionMessage($sender);
-			return true;
-		}
-
+	public function onCommand(CommandSender $sender, string $commandLabel, array $args): bool {
 		if(!isset($args[0])) {
-			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
-			return true;
+			return false;
 		}
 
+		$loader = $this->getLoader();
 		if(isset($args[1])) {
-			if(($player = $this->getLoader()->getServer()->getPlayer($args[1])) === null) {
-				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.not-found"));
+			if(($player = $loader->getServer()->getPlayer($args[1])) === null) {
+				$this->sendWarning($sender, $loader->translate("commands.errors.player.not-found"));
 				return true;
 			}
-			if(($pet = $this->getLoader()->getPetByName($args[0], $player)) === null) {
-				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.no-pet-other"));
+			if(($pet = $loader->getPetByName($args[0], $player)) === null) {
+				$this->sendWarning($sender, $loader->translate("commands.errors.player.no-pet-other"));
 				return true;
 			}
-			if($this->getLoader()->removePet($pet->getPetName(), $player) === false) {
-				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.plugin-cancelled"));
+			if($loader->removePet($pet->getPetName(), $player) === false) {
+				$this->sendWarning($sender, $loader->translate("commands.errors.plugin-cancelled"));
 				return true;
 			}
-			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.removepet.success", [$pet->getPetName()]));
+			$sender->sendMessage(TF::GREEN . $loader->translate("commands.removepet.success", [$pet->getPetName()]));
 			return true;
 		}
 
-		if(($pet = $this->getLoader()->getPetByName($args[0])) === null) {
-			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.doesnt-exist"));
+		if(($pet = $loader->getPetByName($args[0])) === null) {
+			$this->sendWarning($sender, $loader->translate("commands.errors.pet.doesnt-exist"));
 			return true;
 		}
 
-		if($this->getLoader()->removePet($args[0])) {
-			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.removepet.success", [$pet->getPetName()]));
+		if($loader->removePet($args[0])) {
+			$sender->sendMessage(TF::GREEN . $loader->translate("commands.removepet.success", [$pet->getPetName()]));
 		} else {
-			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.plugin-cancelled"));
+			$this->sendWarning($sender, $loader->translate("commands.errors.plugin-cancelled"));
 		}
 		return true;
 	}

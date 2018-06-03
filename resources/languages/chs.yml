@@ -1,9 +1,8 @@
 ---
 # Simplified Chinese messages file for BlockPets, a pets plugin by BlockHorizons.
-# TODO: replace § with &, add all language strings
 
 prefix:
-  warning: "§c[§6警告§c]"
+  warning: "&c[&6警告&c]"
 
 commands:
   errors:
@@ -24,31 +23,31 @@ commands:
          
   changepetname:
     no-permission: "您并无权限更改其他玩家的宠物名称"
-    success: "成功从 %s §r§a 更改名称为 %s!"
+    success: "成功从 %s &r&a 更改名称为 %s!"
     
   clearpet:
-    success: "成功清除了宠物 §b%s§a!"
+    success: "成功清除了宠物 &b%s&a!"
     
   healpet:
-    success: "%s §r§a 已成功被治疗!"
+    success: "%s &r&a 已成功被治疗!"
 
   leveluppet:
   spawnpet:
-    success: "宠物已升等: §b%s §r§a %s!"
+    success: "宠物已升等: &b%s &r&a %s!"
     
     no-permission: "您并无权限生成宠物"
     no-permission-others: "您并无权限为其他人生成宠物"
-    success: "成功生成一隻名为 §b%s§a 的宠物!"
-    success-other: "您收到了一隻名为 §b%s§a 的宠物!"
+    success: "成功生成一隻名为 &b%s&a 的宠物!"
+    success-other: "您收到了一隻名为 &b%s&a 的宠物!"
     name: "请于聊天窗中为您宠物取一个名字!"
     selecting-name: "%s 正在为他们的宠物取一个名字!"
     exceeded-limit: "%s 超出宠物的限制"
     
   removepet:
-    success: "成功移除宠物 §b%s§a!"
+    success: "成功移除宠物 &b%s&a!"
     
   togglepet:
     no-pet-specified: "您并无指定要切换的宠物"
     success: "成功切换了您的宠物 %s!"
-    success-others: "成功切换宠物 §b%s §r§a %s!"
+    success-others: "成功切换宠物 &b%s &r&a %s!"
 ...

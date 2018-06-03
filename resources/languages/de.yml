@@ -1,9 +1,8 @@
 ---
 # German messages file for BlockPets, a pets plugin by BlockHorizons.
-# TODO: replace § with &, add all language strings
 
 prefix:
-  warning: "§c[§6Warnung§c]"
+  warning: "&c[&6Warnung&c]"
 
 commands:
   errors:
@@ -24,31 +23,31 @@ commands:
          
   changepetname:
     no-permission: "Du hast nicht die Berechtigung um die Namen der Haustiere von anderen zu ändern."
-    success: "Der Name des Haustieres wurde von %s §r§azu %s geändert!"
+    success: "Der Name des Haustieres wurde von %s &r&azu %s geändert!"
     
   clearpet:
-    success: "Du hast das Haustier §b%s§a erfolgreich entfernt!"
+    success: "Du hast das Haustier &b%s&a erfolgreich entfernt!"
     
   healpet:
-    success: "Das Haustier mit dem Namen %s §r§a wurde geheilt!"
+    success: "Das Haustier mit dem Namen %s &r&a wurde geheilt!"
 
   leveluppet:
-    success: "Haustierlevel erfolgreich erhöht: §b%s §r§a %s!"
+    success: "Haustierlevel erfolgreich erhöht: &b%s &r&a %s!"
     
   spawnpet:
     no-permission: "Du hast keine Berechtigung dieses Haustier zu erstellen."
     no-permission-others: "Du hast keine Berechtigung um anderen Haustiere zu erstellen."
-    success: "Du hast ein Haustier mit dem Namen §b%s§a erstellt!"
-    success-other: "Du hast ein Haustier mit dem Namen §b%s§a bekommen!"
+    success: "Du hast ein Haustier mit dem Namen &b%s&a erstellt!"
+    success-other: "Du hast ein Haustier mit dem Namen &b%s&a bekommen!"
     name: "Bitte gebe einen Namen für dein Haustier in den Chat ein!"
     selecting-name: "%s wählt nun einen Namen für sein/ihr Haustier!"
     exceeded-limit: "%s hat das Haustierlimit erreicht."
     
   removepet:
-    success: "Das Tier §b%s§a wurde erfolgreich gelöscht!"
+    success: "Das Tier &b%s&a wurde erfolgreich gelöscht!"
     
   togglepet:
     no-pet-specified: "Du hast kein Tier angegeben."
     success: "Dein Haustier wurde erfolgreich auf %s umgestellt!"
-    success-others: "Das Haustier §b%s §r§awurde erfolgreich auf %s gestellt!"
+    success-others: "Das Haustier &b%s &r&awurde erfolgreich auf %s gestellt!"
 ...

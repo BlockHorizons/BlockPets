@@ -16,32 +16,27 @@ class ClearPetCommand extends BaseCommand {
 		$this->setPermission("blockpets.command.clearpet");
 	}
 
-	public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
-		if(!$this->testPermission($sender)) {
-			$this->sendPermissionMessage($sender);
-			return true;
-		}
-
+	public function onCommand(CommandSender $sender, string $commandLabel, array $args): bool {
 		if(!($sender instanceof Player)) {
 			$this->sendConsoleError($sender, true);
 			return true;
 		}
 
 		if(!isset($args[0])) {
-			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
+			return false;
+		}
+
+		$loader = $this->getLoader();
+		if(($pet = $loader->getPetByName($args[0], $sender)) === null) {
+			$this->sendWarning($sender, $loader->translate("commands.errors.pet.doesnt-exist"));
 			return true;
 		}
 
-		if(($pet = $this->getLoader()->getPetByName($args[0], $sender)) === null) {
-			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.doesnt-exist"));
+		if($loader->removePet($pet->getPetName(), $sender) === false) {
+			$this->sendWarning($sender, $loader->translate("commands.errors.plugin-cancelled"));
 			return true;
 		}
-
-		if($this->getLoader()->removePet($pet->getPetName(), $sender) === false) {
-			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.plugin-cancelled"));
-			return true;
-		}
-		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.removepet.success", [$pet->getPetName()]));
+		$sender->sendMessage(TF::GREEN . $loader->translate("commands.removepet.success", [$pet->getPetName()]));
 		return true;
 	}
 }

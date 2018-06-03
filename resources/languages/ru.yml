@@ -1,9 +1,8 @@
 ---
 # Russian messages file for BlockPets, a pets plugin by BlockHorizons.
-# TODO: replace § with &, add all language strings
 
 prefix:
-  warning: "§c[§6Предупреждение§c]"
+  warning: "&c[&6Предупреждение&c]"
 
 commands:
   errors:
@@ -23,31 +22,31 @@ commands:
 
   changepetname:
     no-permission: "У вас недостаточно прав для смены имени питомца других игроков."
-    success: "Успешно изменили имя питомца с  %s §r§aна %s!"
+    success: "Успешно изменили имя питомца с  %s &r&aна %s!"
 
   clearpet:
-    success: "Питомец §b%s§a был успешно очищен!"
+    success: "Питомец &b%s&a был успешно очищен!"
 
   healpet:
-    success: "Питомец %s §r§a был успешно вылечен!"
+    success: "Питомец %s &r&a был успешно вылечен!"
 
   leveluppet:
-    success: "Успешно повысили уровень питомца: §b%s §r§a %s!"
+    success: "Успешно повысили уровень питомца: &b%s &r&a %s!"
 
   spawnpet:
     no-permission: "У вас недостаточно прав для спавна этого питомца."
     no-permission-others: "У вас недостаточно прав для спавна питомцев другим игрокам."
-    success: "Питомец §b%s§a был успешно заспавнен!"
-    success-other: "Вам вручили питомца §b%s§a!"
+    success: "Питомец &b%s&a был успешно заспавнен!"
+    success-other: "Вам вручили питомца &b%s&a!"
     name: "Напишите новое имя для питомца в чат!"
     selecting-name: "%s в данный момент выбирает имя для своего питомца!"
     exceeded-limit: "%s достиг лимита питомцев."
 
   removepet:
-    success: "Питомец §b%s§a был успешно удалён!"
+    success: "Питомец &b%s&a был успешно удалён!"
 
   togglepet:
     no-pet-specified: "Вы не указали питомца для переключения."
     success: "Успешно переключили всех питомцев в режим %s!"
-    success-others: "Успешно переключён питомец §b%s §r§aв режим %s!"
+    success-others: "Успешно переключён питомец &b%s &r&aв режим %s!"
 ...

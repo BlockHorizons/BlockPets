@@ -16,19 +16,14 @@ class LevelUpPetCommand extends BaseCommand {
 		$this->setPermission("blockpets.command.leveluppet");
 	}
 
-	public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
-		if(!$this->testPermission($sender)) {
-			$this->sendPermissionMessage($sender);
-			return true;
-		}
-
+	public function onCommand(CommandSender $sender, string $commandLabel, array $args): bool {
 		if(!isset($args[0])) {
-			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
-			return true;
+			return false;
 		}
 
-		if(($pet = $this->getLoader()->getPetByName($args[0])) === null) {
-			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.doesnt-exist"));
+		$loader = $this->getLoader();
+		if(($pet = $loader->getPetByName($args[0])) === null) {
+			$this->sendWarning($sender, $loader->translate("commands.errors.pet.doesnt-exist"));
 			return true;
 		}
 
@@ -40,21 +35,21 @@ class LevelUpPetCommand extends BaseCommand {
 		}
 
 		if(isset($args[2])) {
-			if(($player = $this->getLoader()->getServer()->getPlayer($args[2])) === null) {
-				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.not-found"));
+			if(($player = $loader->getServer()->getPlayer($args[2])) === null) {
+				$this->sendWarning($sender, $loader->translate("commands.errors.player.not-found"));
 				return true;
 			}
-			if(($pet = $this->getLoader()->getPetByName($args[0], $player)) === null) {
-				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.no-pet-other"));
+			if(($pet = $loader->getPetByName($args[0], $player)) === null) {
+				$this->sendWarning($sender, $loader->translate("commands.errors.player.no-pet-other"));
 				return true;
 			}
 			$pet->levelUp($amount);
-			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.leveluppet.success", [$pet->getPetName(), ($amount === 1 ? " once" : " " . $amount . " times")]));
+			$sender->sendMessage(TF::GREEN . $loader->translate("commands.leveluppet.success", [$pet->getPetName(), ($amount === 1 ? " once" : " " . $amount . " times")]));
 			return true;
 		}
 
 		$pet->levelUp($amount);
-		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.leveluppet.success", [$pet->getPetName(), ($amount === 1 ? " once" : " " . $amount . " times")]));
+		$sender->sendMessage(TF::GREEN . $loader->translate("commands.leveluppet.success", [$pet->getPetName(), ($amount === 1 ? " once" : " " . $amount . " times")]));
 		return true;
 	}
 }

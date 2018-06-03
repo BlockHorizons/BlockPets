@@ -16,26 +16,17 @@ class ChangePetNameCommand extends BaseCommand {
 		$this->setPermission("blockpets.command.changepetname.use");
 	}
 
-	public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
-		if(!$this->testPermission($sender)) {
-			$this->sendPermissionMessage($sender);
-			return true;
-		}
-
-		if(!isset($args[0])) {
-			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
-			return true;
-		}
-
+	public function onCommand(CommandSender $sender, string $commandLabel, array $args): bool {
 		if(!($sender instanceof Player) && count($args) !== 3) {
 			$this->sendConsoleError($sender);
-			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
-			return true;
+			return false;
 		}
+
 		if(!isset($args[1]) || empty(trim($args[1]))) {
 			$this->sendWarning($sender, "The name you entered is invalid.");
 			return true;
 		}
+
 		$newName = $args[1];
 
 		if(isset($args[2])) {
@@ -58,19 +49,19 @@ class ChangePetNameCommand extends BaseCommand {
 					$newName
 				]));
 			return true;
-		} else {
-			if(($pet = $this->getLoader()->getPetByName($args[0], $sender)) === null) {
-				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.no-pet"));
-				return true;
-			}
+		}
+
+		if(($pet = $this->getLoader()->getPetByName($args[0], $sender)) === null) {
+			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.no-pet"));
+			return true;
 		}
 
 		$oldName = $pet->getPetName();
 		$pet->changeName($newName);
 		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.changepetname.success", [
-				$oldName,
-				$newName
-			]));
+			$oldName,
+			$newName
+		]));
 		return true;
 	}
 }

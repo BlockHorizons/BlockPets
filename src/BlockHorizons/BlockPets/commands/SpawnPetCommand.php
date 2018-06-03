@@ -16,24 +16,16 @@ class SpawnPetCommand extends BaseCommand {
 		$this->setPermission("blockpets.command.spawnpet.use");
 	}
 
-	public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
-		if(!$this->testPermission($sender)) {
-			$this->sendPermissionMessage($sender);
-			return true;
-		}
-
+	public function onCommand(CommandSender $sender, string $commandLabel, array $args): bool {
 		if(!($sender instanceof Player) && count($args) !== 5) {
 			$this->sendConsoleError($sender);
 			//$sender->sendMessage(TF::RED . "When using spawnpet from the console, all arguments must be provided.");
-			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
-			return true;
+			return false;
 		}
 
 		if($sender instanceof Player) {
-
 			if(count($args) > 5 || count($args) < 1) {
-				$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
-				return true;
+				return false;
 			}
 
 			if(!$sender->hasPermission("blockpets.pet." . strtolower($args[0]))) {
@@ -43,13 +35,15 @@ class SpawnPetCommand extends BaseCommand {
 		}
 
 		$player = $sender;
+		$loader = $this->getLoader();
+
 		if(isset($args[4])) {
-			if(($player = $this->getLoader()->getServer()->getPlayer($args[4])) === null) {
-				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.not-found"));
+			if(($player = $loader->getServer()->getPlayer($args[4])) === null) {
+				$this->sendWarning($sender, $loader->translate("commands.errors.player.not-found"));
 				return true;
 			}
 			if(!$sender->hasPermission("blockpets.command.spawnpet.others")) {
-				$this->sendWarning($sender, $this->getLoader()->translate("commands.spawnpet.no-permission.others"));
+				$this->sendWarning($sender, $loader->translate("commands.spawnpet.no-permission.others"));
 				return true;
 			}
 		}
@@ -60,7 +54,7 @@ class SpawnPetCommand extends BaseCommand {
 
 		if(isset($args[2])) {
 			if(!is_numeric($args[2])) {
-				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.numeric"));
+				$this->sendWarning($sender, $loader->translate("commands.errors.pet.numeric"));
 				return true;
 			}
 		}
@@ -74,43 +68,43 @@ class SpawnPetCommand extends BaseCommand {
 		} else {
 			$args[3] = false;
 		}
-		$petName = $this->getLoader()->getPet($args[0]);
+		$petName = $loader->getPet($args[0]);
 		if($petName === null) {
-			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.doesnt-exist", [$args[0]]));
+			$this->sendWarning($sender, $loader->translate("commands.errors.pet.doesnt-exist", [$args[0]]));
 			return true;
 		}
-		if(count($this->getLoader()->getPetsFrom($player)) >= $this->getLoader()->getBlockPetsConfig()->getMaxPets() && !$player->hasPermission("blockpets.bypass-limit")) {
-			$sender->sendMessage($sender, $this->getLoader()->translate("commands.spawnpet.exceeded-limit", [
+		if(count($loader->getPetsFrom($player)) >= $loader->getBlockPetsConfig()->getMaxPets() && !$player->hasPermission("blockpets.bypass-limit")) {
+			$sender->sendMessage($sender, $loader->translate("commands.spawnpet.exceeded-limit", [
 				$player === $sender ? "You have " : "Your target has "
 			]));
 			return true;
 		}
 		if(strtolower($args[1]) === "select") {
 			if($player !== $sender) {
-				$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.spawnpet.selecting-name", [$player->getName()]));
+				$sender->sendMessage(TF::GREEN . $loader->translate("commands.spawnpet.selecting-name", [$player->getName()]));
 			}
-			$player->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.spawnpet.name"));
-			$this->getLoader()->selectingName[$player->getName()] = [
+			$player->sendMessage(TF::GREEN . $loader->translate("commands.spawnpet.name"));
+			$loader->selectingName[$player->getName()] = [
 				"petType" => $petName,
 				"scale" => isset($args[2]) ? (float) $args[2] : 1.0,
 				"isBaby" => $args[3] ?? false
 			];
 			return true;
 		}
-		if($this->getLoader()->getPetByName($args[1], $player) !== null) {
-			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.already-own-pet"));
+		if($loader->getPetByName($args[1], $player) !== null) {
+			$this->sendWarning($sender, $loader->translate("commands.errors.player.already-own-pet"));
 			return true;
 		}
 
-		$pet = $this->getLoader()->createPet((string) $petName, $player, $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3]);
+		$pet = $loader->createPet((string) $petName, $player, $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3]);
 		if($pet === null) {
-			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.plugin-cancelled"));
+			$this->sendWarning($sender, $loader->translate("commands.errors.plugin-cancelled"));
 			return true;
 		}
-		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.spawnpet.success", [$args[1]]));
+		$sender->sendMessage(TF::GREEN . $loader->translate("commands.spawnpet.success", [$args[1]]));
 		$pet->register();
 		if($player->getName() !== $sender->getName()) {
-			$player->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.spawnpet.success.other", [$args[1]]));
+			$player->sendMessage(TF::GREEN . $loader->translate("commands.spawnpet.success.other", [$args[1]]));
 		}
 		return true;
 	}

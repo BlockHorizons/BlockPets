@@ -1,9 +1,8 @@
 ---
 # Korean messages file for BlockPets, a pets plugin by BlockHorizons.
-# TODO: replace § with &, add all language strings
 
 prefix:
-  warning: "§c[§6경고§c]"
+  warning: "&c[&6경고&c]"
 
 commands:
   errors:
@@ -24,31 +23,31 @@ commands:
          
   changepetname:
     no-permission: "다른 플레이어의 애완동물의 이름을 변경할 수 있는 권한이 없습니다."
-    success: "%s의 이름§r§a을 %s(으)로 성공적으로 변경했습니다!"
+    success: "%s의 이름&r&a을 %s(으)로 성공적으로 변경했습니다!"
     
   clearpet:
-    success: "애완동물 §b%s§a을(를) 성공적으로 제거했습니다!"
+    success: "애완동물 &b%s&a을(를) 성공적으로 제거했습니다!"
     
   healpet:
-    success: "애완동물 %s§r§a이(가) 성공적으로 치유되었습니다!"
+    success: "애완동물 %s&r&a이(가) 성공적으로 치유되었습니다!"
 
   leveluppet:
-    success: "애완동물을 성공적으로 레벨업했습니다: §b%s §r§a %s!"
+    success: "애완동물을 성공적으로 레벨업했습니다: &b%s &r&a %s!"
     
   spawnpet:
     no-permission: "해당 애완동물을 생성할 권한이 없습니다."
     no-permission-others: "다른 플레이어에게 애완동물을 생성할 권한이 없습니다."
-    success: "이름 §b%s§a의 애완동물을 성공적으로 생성했습니다!"
-    success-other: "이름 §b%s§a의 애완동물을 받았습니다!"
+    success: "이름 &b%s&a의 애완동물을 성공적으로 생성했습니다!"
+    success-other: "이름 &b%s&a의 애완동물을 받았습니다!"
     name: "애완동물의 이름을 대화에 입력해주세요!"
     selecting-name: "%s이(가) 애완동물의 이름을 선택하고 있습니다!"
     exceeded-limit: "%s이(가) 애완동물 제한을 넘었습니다."
     
   removepet:
-    success: "애완동물 §b%s§a을(를) 성공적으로 제거했습니다!"
+    success: "애완동물 &b%s&a을(를) 성공적으로 제거했습니다!"
     
   togglepet:
     no-pet-specified: "전환할 애완동물을 선택하지 않았습니다."
     success: "애완동물을 %s(으)로 성공적으로 전환했습니다!"
-    success-others: "애완동물 §b%s§r§a을(를) %s(으)로 성공적으로 전환했습니다!"
+    success-others: "애완동물 &b%s&r&a을(를) %s(으)로 성공적으로 전환했습니다!"
 ...

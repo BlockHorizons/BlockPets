@@ -30,6 +30,15 @@ SELECT
 FROM Pets WHERE Player=:player;
 -- #  }
 
+-- #  { listpets
+-- #    :player string
+-- #    :entityname string
+SELECT
+  PetName,
+  EntityName
+FROM Pets WHERE Player=:player AND EntityName LIKE :entityname;
+-- #  }
+
 -- #  { reset
 DELETE FROM Pets;
 -- #  }

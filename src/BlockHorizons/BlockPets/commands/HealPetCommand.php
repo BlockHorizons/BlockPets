@@ -16,36 +16,31 @@ class HealPetCommand extends BaseCommand {
 		$this->setPermission("blockpets.command.healpet");
 	}
 
-	public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
-		if(!$this->testPermission($sender)) {
-			$this->sendPermissionMessage($sender);
-			return true;
-		}
-
+	public function onCommand(CommandSender $sender, string $commandLabel, array $args): bool {
 		if(!isset($args[0])) {
-			$sender->sendMessage(TF::RED . "[Usage] " . $this->getUsage());
-			return true;
+			return false;
 		}
 
-		if(($pet = $this->getLoader()->getPetByName($args[0])) === null) {
-			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.pet.doesnt-exist"));
+		$loader = $this->getLoader();
+		if(($pet = $loader->getPetByName($args[0])) === null) {
+			$this->sendWarning($sender, $loader->translate("commands.errors.pet.doesnt-exist"));
 			return true;
 		}
 
 		if(isset($args[1])) {
-			if(($player = $this->getLoader()->getServer()->getPlayer($args[1])) === null) {
-				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.not-found"));
+			if(($player = $loader->getServer()->getPlayer($args[1])) === null) {
+				$this->sendWarning($sender, $loader->translate("commands.errors.player.not-found"));
 				return true;
 			}
-			if(($pet = $this->getLoader()->getPetByName($args[0], $player)) === null) {
-				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.no-pet-other"));
+			if(($pet = $loader->getPetByName($args[0], $player)) === null) {
+				$this->sendWarning($sender, $loader->translate("commands.errors.player.no-pet-other"));
 				return true;
 			}
 		}
 
 		$pet->fullHeal();
 		$pet->getLevel()->addParticle(new HeartParticle($pet->add(0, 2), 4));
-		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.healpet.success", [$pet->getPetName()]));
+		$sender->sendMessage(TF::GREEN . $loader->translate("commands.healpet.success", [$pet->getPetName()]));
 		return true;
 	}
 }

@@ -14,12 +14,15 @@ use pocketmine\utils\TextFormat as TF;
 
 abstract class BaseCommand extends Command implements PluginIdentifiableCommand {
 
+	/** @var Loader */
 	protected $loader;
 
 	public function __construct(Loader $loader, string $name, string $description = "", string $usageMessage = "", array $aliases = []) {
+		if($usageMessage !== "") {
+			$usageMessage = TF::RED . "Usage: " . $usageMessage;
+		}
 		parent::__construct($name, $description, $usageMessage, $aliases);
 		$this->loader = $loader;
-		$this->setUsage($usageMessage);
 	}
 
 	/**
@@ -61,4 +64,26 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 	public function getPlugin(): Plugin {
 		return $this->loader;
 	}
+
+
+	/**
+	 * @param CommandSender $sender
+	 * @param string        $commandLabel
+	 * @param string[]      $args
+	 *
+	 * @return mixed
+	 */
+	public final function execute(CommandSender $sender, string $commandLabel, array $args): void {
+		if(!$this->testPermissionSilent($sender)) {
+			$this->sendPermissionMessage($sender);
+			return;
+		}
+
+		if(!$this->onCommand($sender, $commandLabel, $args) && $this->usageMessage !== "") {
+			$sender->sendMessage($this->getUsage());
+			return;
+		}
+	}
+
+	public abstract function onCommand(CommandSender $sender, string $commandLabel, array $args) : bool;
 }

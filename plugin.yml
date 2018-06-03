@@ -59,6 +59,9 @@ permissions:
                     blockpets.command.pet:
                         default: op
                         description: "Allows access to use the pets command."
+                    blockpets.command.listpets:
+                        default: op
+                        description: "Allows access to use the listpets command."
             blockpets.pet:
                 default: false
                 description: "Allows access to all BlockPets pets."

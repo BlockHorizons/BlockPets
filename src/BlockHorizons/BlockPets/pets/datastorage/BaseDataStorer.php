@@ -78,6 +78,19 @@ abstract class BaseDataStorer {
 	public abstract function load(string $ownerName, ?callable $callable = null): void;
 
 	/**
+	 * Fetches all pets' names of the specified player
+	 * from the database and calls the optional callable
+	 * to get the list of pet names.
+	 * If $entityName is not null, only entities with the
+	 * specified entity name will be fetched.
+	 *
+	 * @param string $ownerName
+	 * @param string|null $entityName
+	 * @param callable|null $callable
+	 */
+	public abstract function getPlayerPets(string $ownerName, ?string $entityName = null, ?callable $callable = null): void;
+
+	/**
 	 * Updates the database with whether the pet is
 	 * chested or not.
 	 *
