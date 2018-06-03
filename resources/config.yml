@@ -71,9 +71,6 @@ MySQL-Info:
 # Whether to store pet data to the database set above or not.
 Store-To-Database: true
 
-# Whether to use data from the database. Pets get saved using NBT by default, and do not necessarily need this.
-Fetch-From-Database: false
-
 # WARNING: This will delete all pets and pet data the next restart if set to true.
 # Use with caution!
 Hard-Reset: false

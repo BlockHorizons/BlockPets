@@ -21,11 +21,6 @@ class BlockPetsConfig {
 	public function collectPreferences(): void {
 		$data = yaml_parse_file($this->getLoader()->getDataFolder() . "config.yml");
 		$this->settings = $data;
-
-		if($this->doHardReset()) {
-			$this->getLoader()->getConfig()->set("Fetch-From-Database", true);
-			$this->settings["Fetch-From-Database"] = true;
-		}
 	}
 
 	/**
@@ -124,13 +119,6 @@ class BlockPetsConfig {
 	 */
 	public function storeToDatabase(): bool {
 		return (bool) ($this->settings["Store-To-Database"] ?? true);
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function fetchFromDatabase(): bool {
-		return (bool) ($this->settings["Fetch-From-Database"] ?? false);
 	}
 
 	/**

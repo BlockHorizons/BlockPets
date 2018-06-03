@@ -79,7 +79,7 @@ class EventListener implements Listener {
 		$player = $event->getPlayer();
 		$loader = $this->getLoader();
 
-		if($loader->getBlockPetsConfig()->fetchFromDatabase()) {
+		if(!$loader->getBlockPetsConfig()->doHardReset()) {
 			$loader->getDatabase()->load(
 				$player->getName(),
 				function(array $petData) use($player, $loader): void {

@@ -100,10 +100,7 @@ class RidingListener implements Listener {
 			if($pet->isRidden()) {
 				$pet->throwRiderOff();
 			}
-			if($bpConfig->fetchFromDatabase()) {
-				$pet->getCalculator()->storeToDatabase();
-				$pet->close();
-			}
+			$pet->close();
 		}
 	}
 }

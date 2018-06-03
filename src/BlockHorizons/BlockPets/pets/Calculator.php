@@ -23,7 +23,6 @@ class Calculator {
 		$this->recalculateSize();
 		$this->recalculateDamage();
 		$this->updateNameTag();
-		$this->storeToDatabase();
 	}
 
 	/**
@@ -95,15 +94,5 @@ class Calculator {
 			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $pet->getPetLevel() . TextFormat::GRAY . " (" . TextFormat::YELLOW . $percentage . TextFormat::GRAY . "%) " . TextFormat::GRAY . $pet->getName() .
 			TextFormat::RED . " (" . $pet->getHealth() . "/" . $pet->getMaxHealth() . ")"
 		);
-	}
-
-	/**
-	 * Stores the pet to the database, or updates level and level points if the pet has already been added to the database.
-	 */
-	public function storeToDatabase(): void {
-		$pet = $this->getPet();
-		$database = $pet->getLoader()->getDatabase();
-		$database->updateExperience($pet);
-		$database->updateChested($pet);
 	}
 }

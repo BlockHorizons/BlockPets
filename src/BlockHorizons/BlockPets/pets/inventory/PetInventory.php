@@ -20,6 +20,9 @@ class PetInventory extends ChestInventory {
 	public function onClose(Player $player): void {
 		parent::onClose($player);
 		$pet = $this->manager->getPet();
-		$pet->getLoader()->getDatabase()->updateInventory($pet);
+		$loader = $pet->getLoader();
+		if($loader->getBlockPetsConfig()->storeToDatabase()) {
+			$loader->getDatabase()->updateInventory($pet);
+		}
 	}
 }

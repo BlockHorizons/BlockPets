@@ -107,7 +107,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setNameTagAlwaysVisible(true);
 
 		$this->petLevel = $this->namedtag->getInt("petLevel");
-		$this->petOwner = $this->namedtag->getString("petOwner");
+		$this->petOwner = $level->getServer()->getPlayerExact($this->namedtag->getString("petOwner"));
 		$this->scale = $this->namedtag->getFloat("scale");
 		$this->petName = $this->namedtag->getString("petName");
 		$this->petLevelPoints = $this->namedtag->getInt("petLevelPoints");
@@ -202,7 +202,11 @@ abstract class BasePet extends Creature implements Rideable {
 		if($this->chested !== $value) {
 			$this->setGenericFlag(self::DATA_FLAG_CHESTED, $value);
 			$this->chested = $value;
-			$this->getLoader()->getDatabase()->updateChested($this);
+
+			$loader = $this->getLoader();
+			if($loader->getBlockPetsConfig()->storeToDatabase()) {
+				$loader->getDatabase()->updateChested($this);
+			}
 		}
 	}
 
@@ -220,8 +224,6 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		$this->setPetLevel($ev->getTo());
-
-		$this->calculator->recalculateAll();
 
 		if(!$silent && $this->getPetOwner() !== null) {
 			$this->getPetOwner()->addTitle((TextFormat::GREEN . "Level Up!"), (TextFormat::AQUA . "Your pet " . $this->getPetName() . TextFormat::RESET . TextFormat::AQUA . " turned level " . $ev->getTo() . "!"));
@@ -244,16 +246,23 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @param int $petLevel
 	 */
 	public function setPetLevel(int $petLevel): void {
-		$this->petLevel = $petLevel;
+		if($this->petLevel !== $petLevel) {
+			$this->petLevel = $petLevel;
+
+			$loader = $this->getLoader();
+			if($loader->getBlockPetsConfig()->storeToDatabase()) {
+				$loader->getDatabase()->updateExperience($this);
+			}
+		}
 	}
 
 	/**
-	 * Returns the player that owns this pet if they are online, and null if not.
+	 * Returns the player that owns this pet if they are online.
 	 *
-	 * @return Player|null
+	 * @return Player
 	 */
-	public function getPetOwner(): ?Player {
-		return $this->server->getPlayerExact($this->petOwner);
+	public function getPetOwner(): Player {
+		return $this->petOwner;
 	}
 
 	/**
@@ -384,7 +393,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return string
 	 */
 	public function getPetOwnerName(): string {
-		return $this->petOwner;
+		return $this->petOwner->getName();
 	}
 
 	/**
@@ -431,17 +440,6 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	final public function getNetworkId(): int {
 		return static::NETWORK_ID;
-	}
-
-	public function saveNBT(): void {
-		parent::saveNBT();
-		$this->namedtag->setString("petOwner", $this->getPetOwnerName());
-		$this->namedtag->setString("petName", $this->getPetName());
-		$this->namedtag->setFloat("speed", $this->getSpeed());
-		$this->namedtag->setFloat("scale", $this->getStartingScale());
-		$this->namedtag->setInt("petLevel", $this->getPetLevel());
-		$this->namedtag->setInt("petLevelPoints", $this->getPetLevelPoints());
-		$this->namedtag->setByte("chested", (int) $this->isChested());
 	}
 
 	/**
@@ -711,22 +709,27 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->despawnFromAll();
 			return false;
 		}
-		if($this->getPetOwner() === null) {
+		if($this->getPetOwner()->isClosed()) {
 			$this->ridden = false;
 			$this->rider = null;
 			$this->riding = false;
 			$this->despawnFromAll();
 			$this->setDormant();
-			if($this->getLoader()->getBlockPetsConfig()->fetchFromDatabase()) {
-				$this->getCalculator()->storeToDatabase();
-				$this->close();
-			}
+			$this->close();
 			return false;
 		}
 		if(!$this->getPetOwner()->isAlive()) {
 			return false;
 		}
 		return true;
+	}
+
+	public function close(): void {
+		$loader = $this->getLoader();
+		if(!$loader->getBlockPetsConfig()->storeToDatabase()) {
+			$loader->getDatabase()->unregisterPet($this);
+		}
+		parent::close();
 	}
 
 	public function onDeath(): void {
