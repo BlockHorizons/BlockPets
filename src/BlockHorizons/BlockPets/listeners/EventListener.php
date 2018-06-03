@@ -47,8 +47,9 @@ class EventListener implements Listener {
 				if($event->isCancelled()) {
 					return;
 				}
-				if(!empty($this->getLoader()->getPetsFrom($player))) {
-					foreach($this->getLoader()->getPetsFrom($player) as $pet) {
+				$pets = $this->getLoader()->getPetsFrom($player);
+				if(!empty($pets)) {
+					foreach($pets as $pet) {
 						if(!($pet instanceof IrasciblePet)) {
 							continue;
 						}
@@ -77,7 +78,6 @@ class EventListener implements Listener {
 	public function onPlayerJoin(PlayerJoinEvent $event): void {
 		$player = $event->getPlayer();
 		$loader = $this->getLoader();
-		$pets = $loader->getPetsFrom($player);
 
 		if($loader->getBlockPetsConfig()->fetchFromDatabase()) {
 			$loader->getDatabase()->load(
@@ -103,18 +103,20 @@ class EventListener implements Listener {
 	 * @param PlayerChatEvent $event
 	 */
 	public function onChat(PlayerChatEvent $event): void {
-		if(isset($this->getLoader()->selectingName[$event->getPlayer()->getName()])) {
+		$player = $event->getPlayer();
+		$loader = $this->getLoader();
+		if(isset($loader->selectingName[$player->getName()])) {
 			$petName = $event->getMessage();
 			$event->setCancelled();
-			if($this->getLoader()->getPetByName($petName, $event->getPlayer()) !== null) {
-				$event->getPlayer()->sendMessage(TextFormat::RED . "[Warning] You already own a pet with that name. Please choose a different name.");
+			if($loader->getPetByName($petName, $player) !== null) {
+				$player->sendMessage(TextFormat::RED . "[Warning] You already own a pet with that name. Please choose a different name.");
 				return;
 			}
-			$data = $this->getLoader()->selectingName[$event->getPlayer()->getName()];
+			$data = $loader->selectingName[$player->getName()];
 
-			$this->getLoader()->createPet($data["petType"], $event->getPlayer(), $petName, $data["scale"], $data["isBaby"]);
-			$event->getPlayer()->sendMessage(TextFormat::GREEN . "Successfully obtained a " . $data["petType"] . " with the name " . $event->getMessage());
-			unset($this->getLoader()->selectingName[$event->getPlayer()->getName()]);
+			$loader->createPet($data["petType"], $player, $petName, $data["scale"], $data["isBaby"]);
+			$player->sendMessage(TextFormat::GREEN . "Successfully obtained a " . $data["petType"] . " with the name " . $event->getMessage());
+			unset($loader->selectingName[$player->getName()]);
 		}
 	}
 
@@ -122,10 +124,11 @@ class EventListener implements Listener {
 	 * @param EntitySpawnEvent $event
 	 */
 	public function onEntitySpawn(EntitySpawnEvent $event): void {
-		if($event->getEntity() instanceof BasePet) {
+		$entity = $event->getEntity();
+		if($entity instanceof BasePet) {
 			$clearLaggPlugin = $this->getLoader()->getServer()->getPluginManager()->getPlugin("ClearLagg");
 			if($clearLaggPlugin !== null) {
-				$clearLaggPlugin->exemptEntity($event->getEntity());
+				$clearLaggPlugin->exemptEntity($entity);
 			}
 		}
 	}

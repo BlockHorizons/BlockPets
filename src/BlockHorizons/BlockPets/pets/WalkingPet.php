@@ -17,9 +17,10 @@ abstract class WalkingPet extends IrasciblePet {
 		if(!$this->checkUpdateRequirements()) {
 			return true;
 		}
+		$petOwner = $this->getPetOwner();
 		if($this->isRiding()) {
-			$this->yaw = $this->getPetOwner()->yaw;
-			$this->pitch = $this->getPetOwner()->pitch;
+			$this->yaw = $petOwner->yaw;
+			$this->pitch = $petOwner->pitch;
 			$this->updateMovement();
 			return parent::onUpdate($currentTick);
 		}
@@ -29,7 +30,6 @@ abstract class WalkingPet extends IrasciblePet {
 		if(!$this->isAlive()) {
 			return false;
 		}
-		$petOwner = $this->getPetOwner();
 		if($this->isAngry()) {
 			return $this->doAttackingMovement();
 		}
@@ -72,7 +72,6 @@ abstract class WalkingPet extends IrasciblePet {
 	}
 
 	public function doAttackingMovement(): bool {
-		$target = $this->getTarget();
 		if(!$this->checkAttackRequirements()) {
 			return false;
 		}
@@ -95,6 +94,7 @@ abstract class WalkingPet extends IrasciblePet {
 		}
 		$this->move($this->motion->x, $this->motion->y, $this->motion->z);
 
+		$target = $this->getTarget();
 		$x = $target->x - $this->x;
 		$y = $target->y - $this->y;
 		$z = $target->z - $this->z;

@@ -19,13 +19,15 @@ abstract class BouncingPet extends IrasciblePet {
 		if(!$this->checkUpdateRequirements()) {
 			return false;
 		}
+
+		$petOwner = $this->getPetOwner();
 		if($this->isRiding()) {
-			$this->yaw = $this->getPetOwner()->yaw;
-			$this->pitch = $this->getPetOwner()->pitch;
+			$this->yaw = $petOwner->yaw;
+			$this->pitch = $petOwner->pitch;
 			$this->updateMovement();
 			return parent::onUpdate($currentTick);
 		}
-		$petOwner = $this->getPetOwner();
+
 		if(!parent::onUpdate($currentTick)) {
 			return false;
 		}
@@ -231,15 +233,6 @@ abstract class BouncingPet extends IrasciblePet {
 			$source->setCancelled();
 		}
 		parent::attack($source);
-	}
-
-	/**
-	 * @param int $currentTick
-	 *
-	 * @return bool
-	 */
-	public function parentOnUpdate(int $currentTick): bool {
-		return parent::onUpdate($currentTick);
 	}
 
 	/**

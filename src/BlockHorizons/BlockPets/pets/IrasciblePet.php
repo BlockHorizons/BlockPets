@@ -32,14 +32,15 @@ abstract class IrasciblePet extends BasePet {
 		if($this->closed || !$this->isAlive()) {
 			return;
 		}
-		if($this->getLoader()->getBlockPetsConfig()->arePetsInvulnerable()) {
+		$bpConfig = $this->getLoader()->getBlockPetsConfig();
+		if($bpConfig->arePetsInvulnerable()) {
 			$source->setCancelled();
 		}
 		if($this->isRidden() && $source->getCause() === $source::CAUSE_FALL) {
 			$source->setCancelled();
 		}
-		if($this->getLoader()->getBlockPetsConfig()->arePetsInvulnerableIfOwnerIs() && $this->getPetOwner() !== null) {
-			$this->server->getPluginManager()->callEvent($ownerDamageEvent = new EntityDamageEvent($this->getPetOwner(), EntityDamageEvent::CAUSE_CUSTOM, 0));
+		if($bpConfig->arePetsInvulnerableIfOwnerIs() && ($petOwner = $this->getPetOwner()) !== null) {
+			$this->server->getPluginManager()->callEvent($ownerDamageEvent = new EntityDamageEvent($petOwner, EntityDamageEvent::CAUSE_CUSTOM, 0));
 			if($ownerDamageEvent->isCancelled()) {
 				$source->setCancelled();
 			}
@@ -47,7 +48,7 @@ abstract class IrasciblePet extends BasePet {
 		}
 		if($source instanceof EntityDamageByEntityEvent) {
 			$attacker = $source->getDamager();
-			if(!$this->getLoader()->getBlockPetsConfig()->arePetsInvulnerable()) {
+			if(!$bpConfig->arePetsInvulnerable()) {
 				if($attacker instanceof Player) {
 					$nameTag = $attacker->getName();
 				} else {
@@ -56,7 +57,7 @@ abstract class IrasciblePet extends BasePet {
 				if($nameTag === $this->getPetOwnerName()) {
 					$source->setCancelled();
 				}
-				if($this->getLoader()->getBlockPetsConfig()->petsDoAttack() && $attacker instanceof Living && !$source->isCancelled()) {
+				if($bpConfig->petsDoAttack() && $attacker instanceof Living && !$source->isCancelled()) {
 					$this->setAngry($attacker);
 				}
 			}

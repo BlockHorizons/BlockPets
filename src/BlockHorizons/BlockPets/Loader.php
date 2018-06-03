@@ -81,6 +81,7 @@ use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\lang\BaseLang;
 use spoondetector\SpoonDetector;
 
 class Loader extends PluginBase {
@@ -89,106 +90,106 @@ class Loader extends PluginBase {
 	const API_TARGET = "3.0.0-ALPHA7";
 
 	const PETS = [
-		"Ghast",
-		"Blaze",
-		"Chicken",
+		"Arrow",
 		"Bat",
-		"EnderDragon",
-		"Horse",
-		"Ocelot",
-		"Skeleton",
-		"Wolf",
-		"Zombie",
-		"EnderCrystal",
-		"WitherSkull",
+		"Blaze",
 		"CaveSpider",
+		"Chicken",
 		"Cow",
 		"Creeper",
+		"Donkey",
+		"ElderGuardian",
+		"EnderCrystal",
+		"EnderDragon",
 		"Enderman",
 		"Endermite",
+		"Evoker",
+		"Ghast",
+		"Guardian",
+		"Horse",
 		"Husk",
 		"IronGolem",
+		"Llama",
+		"MagmaCube",
 		"Mooshroom",
+		"Mule",
+		"Ocelot",
 		"Pig",
 		"PolarBear",
+		"Rabbit",
 		"Sheep",
 		"SilverFish",
+		"Skeleton",
+		"SkeletonHorse",
+		"Slime",
 		"SnowGolem",
 		"Spider",
+		"Squid",
 		"Stray",
+		"Vex",
 		"Villager",
+		"Vindicator",
 		"Witch",
 		"Wither",
 		"WitherSkeleton",
 		"WitherSkull",
-		"ZombiePigman",
-		"ZombieVillager",
-		"Llama",
-		"Rabbit",
-		"Slime",
-		"MagmaCube",
-		"Evoker",
-		"Vindicator",
-		"Vex",
-		"Mule",
-		"Donkey",
-		"SkeletonHorse",
+		"WitherSkull",
+		"Wolf",
+		"Zombie",
 		"ZombieHorse",
-		"Squid",
-		"Guardian",
-		"ElderGuardian",
-		"Arrow"
+		"ZombiePigman",
+		"ZombieVillager"
 	];
 
 	const PET_CLASSES = [
-		BlazePet::class,
-		ChickenPet::class,
-		GhastPet::class,
+		ArrowPet::class,
 		BatPet::class,
-		EnderDragonPet::class,
-		HorsePet::class,
-		OcelotPet::class,
-		SkeletonPet::class,
-		WolfPet::class,
-		ZombiePet::class,
-		EnderCrystalPet::class,
+		BlazePet::class,
 		CaveSpiderPet::class,
+		ChickenPet::class,
 		CowPet::class,
 		CreeperPet::class,
+		DonkeyPet::class,
+		ElderGuardianPet::class,
+		EnderCrystalPet::class,
+		EnderDragonPet::class,
 		EndermanPet::class,
 		EndermitePet::class,
+		EvokerPet::class,
+		GhastPet::class,
+		GuardianPet::class,
+		HorsePet::class,
 		HuskPet::class,
 		IronGolemPet::class,
+		LlamaPet::class,
+		MagmaCubePet::class,
 		MooshroomPet::class,
+		MulePet::class,
+		OcelotPet::class,
 		PigPet::class,
 		PolarBearPet::class,
+		RabbitPet::class,
 		SheepPet::class,
 		SilverFishPet::class,
+		SkeletonHorsePet::class,
+		SkeletonPet::class,
+		SlimePet::class,
 		SnowGolemPet::class,
 		SpiderPet::class,
+		SquidPet::class,
 		StrayPet::class,
+		VexPet::class,
 		VillagerPet::class,
+		VindicatorPet::class,
 		WitchPet::class,
 		WitherPet::class,
 		WitherSkeletonPet::class,
 		WitherSkullPet::class,
-		ZombiePigmanPet::class,
-		ZombieVillagerPet::class,
-		LlamaPet::class,
-		MagmaCubePet::class,
-		SlimePet::class,
-		RabbitPet::class,
-		EvokerPet::class,
-		VindicatorPet::class,
-		VexPet::class,
-		MulePet::class,
-		DonkeyPet::class,
-		SkeletonHorsePet::class,
+		WolfPet::class,
 		ZombieHorsePet::class,
-		SquidPet::class,
-		ElderGuardianPet::class,
-		GuardianPet::class,
-		ArrowPet::class
+		ZombiePet::class,
+		ZombiePigmanPet::class,
+		ZombieVillagerPet::class
 	];
 
 	private $availableLanguages = [
@@ -231,12 +232,9 @@ class Loader extends PluginBase {
 		$this->saveResource("database_stmts/sqlite.sql", true);
 
 		SpoonDetector::printSpoon($this);
-		foreach(self::PET_CLASSES as $petClass) {
-			Entity::registerEntity($petClass, true);
-		}
-		ItemFactory::registerItem(new Saddle, true);
-		$saddle = Item::get(Saddle::SADDLE);
-		Item::addCreativeItem($saddle);
+
+		$this->registerEntities();
+		$this->registerItems();
 		$this->registerCommands();
 		$this->registerListeners();
 		PetInventoryManager::init($this);
@@ -263,6 +261,17 @@ class Loader extends PluginBase {
 		foreach($petCommands as $command) {
 			$this->getServer()->getCommandMap()->register($command->getName(), $command);
 		}
+	}
+
+	public function registerEntities(): void {
+		foreach(self::PET_CLASSES as $petClass) {
+			Entity::registerEntity($petClass, true);
+		}
+	}
+
+	public function registerItems(): void {
+		ItemFactory::registerItem(new Saddle(), true);
+		Item::addCreativeItem(Item::get(Item::SADDLE));
 	}
 
 	public function registerListeners(): void {

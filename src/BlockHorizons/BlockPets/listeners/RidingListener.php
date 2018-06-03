@@ -8,6 +8,7 @@ use BlockHorizons\BlockPets\Loader;
 use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\cheat\PlayerIllegalMoveEvent;
+use pocketmine\event\player\PlayerJumpEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\InteractPacket;
@@ -31,25 +32,21 @@ class RidingListener implements Listener {
 	public function ridePet(DataPacketReceiveEvent $event): void {
 		$packet = $event->getPacket();
 		if($packet instanceof PlayerInputPacket) {
-			if($this->getLoader()->isRidingAPet($event->getPlayer())) {
+			$loader = $this->getLoader();
+			$player = $event->getPlayer();
+			if($loader->isRidingAPet($player)) {
 				if($packet->motionX === 0 && $packet->motionY === 0) {
 					return;
 				}
-				$pet = $this->getLoader()->getRiddenPet($event->getPlayer());
+				$pet = $loader->getRiddenPet($player);
 				$pet->doRidingMovement($packet->motionX, $packet->motionY);
 			}
 		} elseif($packet instanceof InteractPacket) {
-			if($packet->action === $packet::ACTION_LEAVE_VEHICLE) {
-				if($this->getLoader()->isRidingAPet($event->getPlayer())) {
-					$this->getLoader()->getRiddenPet($event->getPlayer())->throwRiderOff();
-				}
-			}
-		} elseif($packet instanceof PlayerActionPacket) {
-			if($packet->action === $packet::ACTION_JUMP) {
-				foreach($this->getLoader()->getPetsFrom($event->getPlayer()) as $pet) {
-					if($pet->isRiding()) {
-						$pet->dismountFromOwner();
-					}
+			if($packet->action === InteractPacket::ACTION_LEAVE_VEHICLE) {
+				$loader = $this->getLoader();
+				$player = $event->getPlayer();
+				if($loader->isRidingAPet($player)) {
+					$loader->getRiddenPet($player)->throwRiderOff();
 				}
 			}
 		}
@@ -70,9 +67,10 @@ class RidingListener implements Listener {
 	public function onTeleport(EntityTeleportEvent $event): void {
 		$player = $event->getEntity();
 		if($player instanceof Player) {
-			if($this->getLoader()->isRidingAPet($player)) {
-				$this->getLoader()->getRiddenPet($player)->throwRiderOff();
-				foreach($this->getLoader()->getPetsFrom($player) as $pet) {
+			$loader = $this->getLoader();
+			if($loader->isRidingAPet($player)) {
+				$loader->getRiddenPet($player)->throwRiderOff();
+				foreach($loader->getPetsFrom($player) as $pet) {
 					$pet->dismountFromOwner();
 				}
 			}
@@ -96,11 +94,13 @@ class RidingListener implements Listener {
 	 * @param PlayerQuitEvent $event
 	 */
 	public function onPlayerQuit(PlayerQuitEvent $event): void {
-		foreach($this->getLoader()->getPetsFrom($event->getPlayer()) as $pet) {
+		$loader = $this->getLoader();
+		$bpConfig = $loader->getBlockPetsConfig();
+		foreach($loader->getPetsFrom($event->getPlayer()) as $pet) {
 			if($pet->isRidden()) {
 				$pet->throwRiderOff();
 			}
-			if($this->getLoader()->getBlockPetsConfig()->fetchFromDatabase()) {
+			if($bpConfig->fetchFromDatabase()) {
 				$pet->getCalculator()->storeToDatabase();
 				$pet->close();
 			}

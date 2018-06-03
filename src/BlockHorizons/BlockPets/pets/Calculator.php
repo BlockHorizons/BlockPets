@@ -30,12 +30,15 @@ class Calculator {
 	 * Recalculates maximum health that the pet should have according to its configuration scalings.
 	 */
 	public function recalculateHealth(): void {
-		$petLevel = $this->getPet()->getPetLevel();
-		$baseHealth = $this->getPet()->getLoader()->getBlockPetsConfig()->getBasePetHealth();
-		$scalingHealth = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetHealthPerLevel();
+		$pet = $this->getPet();
+		$bpConfig = $pet->getLoader()->getBlockPetsConfig();
 
-		$this->getPet()->setMaxHealth((int) floor($baseHealth + $scalingHealth * $petLevel));
-		$this->getPet()->fullHeal();
+		$petLevel = $pet->getPetLevel();
+		$baseHealth = $bpConfig->getBasePetHealth();
+		$scalingHealth = $bpConfig->getPetHealthPerLevel();
+
+		$pet->setMaxHealth((int) floor($baseHealth + $scalingHealth * $petLevel));
+		$pet->fullHeal();
 	}
 
 	/**
@@ -51,15 +54,18 @@ class Calculator {
 	 * @return bool
 	 */
 	public function recalculateSize(): bool {
-		if($this->getPet()->getPetOwner() === null) {
+		$pet = $this->getPet();
+		$petOwner = $pet->getPetOwner();
+		if($petOwner === null) {
 			return false;
 		}
-		$petLevel = $this->getPet()->getPetLevel();
-		$scalingSize = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetSizePerLevel();
 
-		$this->getPet()->setScale((float) ($this->getPet()->getStartingScale() + $scalingSize * $petLevel));
-		if($this->getPet()->getScale() > $this->getPet()->getMaxSize() && !($this->getPet()->getPetOwner()->hasPermission("blockpets.bypass-size-limit"))) {
-			$this->getPet()->setScale($this->getPet()->getMaxSize());
+		if($pet->getScale() > $pet->getMaxSize() && !($petOwner->hasPermission("blockpets.bypass-size-limit"))) {
+			$pet->setScale($pet->getMaxSize());
+		} else {
+			$petLevel = $pet->getPetLevel();
+			$scalingSize = $pet->getLoader()->getBlockPetsConfig()->getPetSizePerLevel();
+			$pet->setScale((float) ($pet->getStartingScale() + $scalingSize * $petLevel));
 		}
 		return true;
 	}
@@ -68,22 +74,26 @@ class Calculator {
 	 * Recalculates attack damage that the pet should have according to its configuration attack damage.
 	 */
 	public function recalculateDamage(): void {
-		$petLevel = $this->getPet()->getPetLevel();
-		$baseDamage = $this->getPet()->getLoader()->getBlockPetsConfig()->getBasePetDamage();
-		$scalingDamage = $this->getPet()->getLoader()->getBlockPetsConfig()->getPetDamagePerLevel();
+		$pet = $this->getPet();
+		$bpConfig = $pet->getLoader()->getBlockPetsConfig();
 
-		$this->getPet()->setAttackDamage((int) round($baseDamage + $scalingDamage * $petLevel));
+		$petLevel = $pet->getPetLevel();
+		$baseDamage = $bpConfig->getBasePetDamage();
+		$scalingDamage = $bpConfig->getPetDamagePerLevel();
+
+		$pet->setAttackDamage((int) round($baseDamage + $scalingDamage * $petLevel));
 	}
 
 	/**
 	 * Updates the name tag to include the latest data like level, level points etc.
 	 */
 	public function updateNameTag(): void {
-		$percentage = round($this->getPet()->getPetLevelPoints() / $this->getPet()->getRequiredLevelPoints($this->getPet()->getPetLevel()) * 100, 1);
-		$this->getPet()->setNameTag(
-			$this->getPet()->getPetName() . "\n" .
-			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $this->getPet()->getPetLevel() . TextFormat::GRAY . " (" . TextFormat::YELLOW . $percentage . TextFormat::GRAY . "%) " . TextFormat::GRAY . $this->getPet()->getName() .
-			TextFormat::RED . " (" . $this->getPet()->getHealth() . "/" . $this->getPet()->getMaxHealth() . ")"
+		$pet = $this->getPet();
+		$percentage = round($pet->getPetLevelPoints() / $pet->getRequiredLevelPoints($pet->getPetLevel()) * 100, 1);
+		$pet->setNameTag(
+			$pet->getPetName() . "\n" .
+			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $pet->getPetLevel() . TextFormat::GRAY . " (" . TextFormat::YELLOW . $percentage . TextFormat::GRAY . "%) " . TextFormat::GRAY . $pet->getName() .
+			TextFormat::RED . " (" . $pet->getHealth() . "/" . $pet->getMaxHealth() . ")"
 		);
 	}
 

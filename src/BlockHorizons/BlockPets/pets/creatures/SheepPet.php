@@ -19,21 +19,4 @@ class SheepPet extends WalkingPet {
 		$randomColour = random_int(0, 15);
 		$this->getDataPropertyManager()->setByte(self::DATA_COLOUR, $randomColour);
 	}
-
-	/**
-	 * @return bool
-	 */
-	public function doTickAction(): bool {
-		if(!strtolower($this->getPetName()) === "jeb_") {
-			return false;
-		}
-		if($this->getDataProperty()->getByte(self::DATA_COLOUR) === 15) {
-			$colour = 1;
-		} else {
-			$colour = $this->getDataProperty()->getByte(self::DATA_COLOUR);
-			$colour++;
-		}
-		$this->getDataPropertyManager()->setByte(self::DATA_COLOUR, $colour);
-		return true;
-	}
 }

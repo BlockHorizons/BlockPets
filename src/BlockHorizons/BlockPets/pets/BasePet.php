@@ -31,8 +31,8 @@ use pocketmine\math\Vector3;
 
 abstract class BasePet extends Creature implements Rideable {
 
-	const STATE_SITTING = 1;
 	const STATE_STANDING = 0;
+	const STATE_SITTING = 1;
 
 	const TIER_COMMON = 1;
 	const TIER_UNCOMMON = 2;
@@ -138,9 +138,9 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * Returns the BlockPets Loader. For internal usage.
 	 *
-	 * @return Loader
+	 * @return Loader|null
 	 */
-	public function getLoader(): Loader {
+	public function getLoader(): ?Loader {
 		$plugin = $this->server->getPluginManager()->getPlugin("BlockPets");
 		if($plugin instanceof Loader) {
 			return $plugin;
@@ -199,9 +199,11 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @param bool $value
 	 */
 	public function setChested(bool $value = true): void {
-		$this->setGenericFlag(self::DATA_FLAG_CHESTED, $value);
-		$this->chested = $value;
-		$this->getLoader()->getDatabase()->updateChested($this);
+		if($this->chested !== $value) {
+			$this->setGenericFlag(self::DATA_FLAG_CHESTED, $value);
+			$this->chested = $value;
+			$this->getLoader()->getDatabase()->updateChested($this);
+		}
 	}
 
 	/**
@@ -264,7 +266,6 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
-	 * @param float             $damage
 	 * @param EntityDamageEvent $source
 	 */
 	public function attack(EntityDamageEvent $source): void {
@@ -282,9 +283,8 @@ abstract class BasePet extends Creature implements Rideable {
 					if($this->getHealth() + $heal > $this->getMaxHealth()) {
 						$heal = $this->getMaxHealth() - $this->getHealth();
 					}
-					$remainder = $hand;
-					$remainder->setCount($remainder->getCount() - 1);
-					$player->getInventory()->setItemInHand($remainder);
+					$hand->pop();
+					$player->getInventory()->setItemInHand($hand);
 					$this->heal(new EntityRegainHealthEvent($this, $heal, EntityRegainHealthEvent::CAUSE_SATURATION));
 					$this->getLevel()->addParticle(new HeartParticle($this->add(0, 2), 4));
 
@@ -299,9 +299,8 @@ abstract class BasePet extends Creature implements Rideable {
 					if(!$this->isChested() && $this->getPetOwnerName() === $player->getName()) {
 						$this->server->getPluginManager()->callEvent($ev = new PetInventoryInitializationEvent($this->getLoader(), $this));
 						if(!$ev->isCancelled()) {
-							$remainder = $hand;
-							$remainder->setCount($remainder->getCount() - 1);
-							$player->getInventory()->setItemInHand($remainder);
+							$hand->pop();
+							$player->getInventory()->setItemInHand($hand);
 							$this->setChested();
 							$source->setCancelled();
 						}
@@ -481,11 +480,8 @@ abstract class BasePet extends Creature implements Rideable {
 
 	/**
 	 * Performs a special action of a pet every tick.
-	 *
-	 * @return bool
 	 */
-	public function doTickAction(): bool {
-		return false;
+	public function doTickAction(): void {
 	}
 
 	/**
@@ -494,7 +490,6 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	public function onUpdate(int $currentTick): bool {
-		$petOwner = $this->getPetOwner();
 		if(random_int(1, 60) === 1 && $this->isAlive()) {
 			if($this->getHealth() !== $this->getMaxHealth()) {
 				$this->heal(new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
@@ -504,13 +499,8 @@ abstract class BasePet extends Creature implements Rideable {
 		if(!$this->isAlive()) {
 			return parent::onUpdate($currentTick);
 		}
-		if($this->getLevel()->getEntity($petOwner->getId()) === null) {
-			$newPet = $this->getLoader()->createPet($this->getEntityType(), $petOwner, $this->getPetName(), $this->getStartingScale(), $this->isBaby(), $this->getPetLevel(), $this->getPetLevelPoints(), $this->isChested());
-			$newPet->getInventory()->setContents($this->getInventory()->getContents());
-			$this->close();
-			return false;
-		}
-		if($this->distance($petOwner) >= 50 && !$this->isDormant()) {
+		$petOwner = $this->getPetOwner();
+		if(($this->getLevel()->getEntity($petOwner->getId()) === null || $this->distance($petOwner) >= 50) && !$this->isDormant()) {
 			$this->teleport($petOwner);
 			return true;
 		}
@@ -561,35 +551,36 @@ abstract class BasePet extends Creature implements Rideable {
 		if(!$this->ridden) {
 			return false;
 		}
+
+		$owner = $this->getPetOwner();
+
 		$pk = new SetEntityLinkPacket();
 		$link = new EntityLink();
 		$link->fromEntityUniqueId = $this->getId();
 		$link->type = self::STATE_STANDING;
-		$link->toEntityUniqueId = $this->getPetOwner()->getId();
+		$link->toEntityUniqueId = $owner->getId();
 		$link->bool1 = true;
 
 		$pk->link = $link;
 		$this->ridden = false;
 		$rider = $this->getRider();
 		$this->rider = null;
-		$this->getPetOwner()->canCollide = true;
+		$owner->canCollide = true;
 		$this->server->broadcastPacket($this->getViewers(), $pk);
 
 		$pk = new SetEntityLinkPacket();
 
 		$link = new EntityLink();
-		$link->fromEntityUniqueId = $this->getPetOwner()->getId();
+		$link->fromEntityUniqueId = $owner->getId();
 		$link->type = self::STATE_STANDING;
 		$link->toEntityUniqueId = 0;
 		$link->bool1 = true;
 
 		$pk->link = $link;
-		$this->getPetOwner()->dataPacket($pk);
-		if($this->getPetOwner() !== null) {
-			$rider->setGenericFlag(self::DATA_FLAG_RIDING, false);
-			if($this->getPetOwner()->isSurvival()) {
-				$rider->setAllowFlight(false);
-			}
+		$owner->dataPacket($pk);
+		$rider->setGenericFlag(self::DATA_FLAG_RIDING, false);
+		if($owner->isSurvival()) {
+			$rider->setAllowFlight(false);
 		}
 		$rider->onGround = true;
 		return true;
@@ -618,11 +609,13 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->ridden = true;
 		$this->rider = $player->getName();
 		$player->canCollide = false;
-		$this->getPetOwner()->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, new Vector3(0, 1.8 + $this->getScale() * 0.9, -0.25));
+		$owner = $this->getPetOwner();
+		$scale = $this->getScale();
+		$owner->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, new Vector3(0, 1.8 + $scale * 0.9, -0.25));
 		if($this instanceof EnderDragonPet) {
-			$player->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, new Vector3(0, 2.65 + $this->getScale(), -1.7));
+			$player->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, new Vector3(0, 2.65 + $scale, -1.7));
 		} elseif($this instanceof SmallCreature) {
-			$player->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, new Vector3(0, 0.78 + $this->getScale() * 0.9, -0.25));
+			$player->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, new Vector3(0, 0.78 + $scale * 0.9, -0.25));
 		}
 		$player->setGenericFlag(self::DATA_FLAG_RIDING, true);
 		$this->setGenericFlag(self::DATA_FLAG_SADDLED, true);
@@ -647,8 +640,8 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->link = $link;
 		$player->dataPacket($pk);
 
-		if($this->getPetOwner()->isSurvival()) {
-			$this->getPetOwner()->setAllowFlight(true); // Set allow flight to true to prevent any 'kicked for flying' issues.
+		if($owner->isSurvival()) {
+			$owner->setAllowFlight(true); // Set allow flight to true to prevent any 'kicked for flying' issues.
 		}
 		return true;
 	}
@@ -657,10 +650,12 @@ abstract class BasePet extends Creature implements Rideable {
 	 * Heals the current pet back to full health.
 	 */
 	public function fullHeal(): bool {
-		if($this->getHealth() === $this->getMaxHealth()) {
+		$health = $this->getHealth();
+		$maxHealth = $this->getMaxHealth();
+		if($health === $maxHealth) {
 			return false;
 		}
-		$diff = $this->getMaxHealth() - $this->getHealth();
+		$diff = $maxHealth - $health;
 		$this->heal(new EntityRegainHealthEvent($this, $diff, EntityRegainHealthEvent::CAUSE_CUSTOM));
 		return true;
 	}
@@ -744,7 +739,7 @@ abstract class BasePet extends Creature implements Rideable {
 			return;
 		}
 
-		$loader->getServer()->getPluginManager()->callEvent($ev = new PetRespawnEvent($loader, $this, $delay));
+		$this->server->getPluginManager()->callEvent($ev = new PetRespawnEvent($loader, $this, $delay));
 		if($ev->isCancelled()) {
 			return;
 		}
@@ -753,7 +748,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$newPet->register();
 
 		$delay = $ev->getDelay() * 20;
-		$loader->getServer()->getScheduler()->scheduleDelayedTask(new PetRespawnTask($loader, $newPet), $delay);
+		$this->server->getScheduler()->scheduleDelayedTask(new PetRespawnTask($loader, $newPet), $delay);
 		$newPet->despawnFromAll();
 		$newPet->setDormant();
 	}
@@ -819,16 +814,18 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->riding = false;
 		$this->setGenericFlag(self::DATA_FLAG_RIDING, false);
 
+		$owner = $this->getPetOwner();
+
 		$pk = new SetEntityLinkPacket();
 		$link = new EntityLink();
-		$link->fromEntityUniqueId = $this->getPetOwner()->getId();
+		$link->fromEntityUniqueId = $owner->getId();
 		$link->type = self::STATE_STANDING;
 		$link->toEntityUniqueId = $this->getId();
 		$link->bool1 = true;
 
 		$pk->link = $link;
 		$this->server->broadcastPacket($this->getViewers(), $pk);
-		$this->teleport($this->getPetOwner());
+		$this->teleport($owner);
 		return true;
 	}
 
