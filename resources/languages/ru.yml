@@ -1,0 +1,53 @@
+---
+# Russian messages file for BlockPets, a pets plugin by BlockHorizons.
+# TODO: replace § with &, add all language strings
+
+prefix:
+  warning: "§c[§6Предупреждение§c]"
+
+commands:
+  errors:
+    console-use: "Командой могут пользоваться только игроки."
+    no-permission: "Недостаточно прав для использования этой команды."
+    plugin-cancelled: "Плагин отменил это действие."
+
+    pet:
+      doesnt-exist: "Питомец с данным именем не существует."
+      numeric: "Размер питомца должен быть числом."
+
+    player:
+      not-found: "Данный игрок не найден."
+      no-pet: "У вас нет питомца с данным именем."
+      no-pet-other: "У этого игрока нет питомца с данным именем."
+      already-own-pet: "У вас уже есть питомец с таким именем."
+
+  changepetname:
+    no-permission: "У вас недостаточно прав для смены имени питомца других игроков."
+    success: "Успешно изменили имя питомца с  %s §r§aна %s!"
+
+  clearpet:
+    success: "Питомец §b%s§a был успешно очищен!"
+
+  healpet:
+    success: "Питомец %s §r§a был успешно вылечен!"
+
+  leveluppet:
+    success: "Успешно повысили уровень питомца: §b%s §r§a %s!"
+
+  spawnpet:
+    no-permission: "У вас недостаточно прав для спавна этого питомца."
+    no-permission-others: "У вас недостаточно прав для спавна питомцев другим игрокам."
+    success: "Питомец §b%s§a был успешно заспавнен!"
+    success-other: "Вам вручили питомца §b%s§a!"
+    name: "Напишите новое имя для питомца в чат!"
+    selecting-name: "%s в данный момент выбирает имя для своего питомца!"
+    exceeded-limit: "%s достиг лимита питомцев."
+
+  removepet:
+    success: "Питомец §b%s§a был успешно удалён!"
+
+  togglepet:
+    no-pet-specified: "Вы не указали питомца для переключения."
+    success: "Успешно переключили всех питомцев в режим %s!"
+    success-others: "Успешно переключён питомец §b%s §r§aв режим %s!"
+...
