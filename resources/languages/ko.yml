@@ -2,55 +2,53 @@
 # Korean messages file for BlockPets, a pets plugin by BlockHorizons.
 # TODO: replace § with &, add all language strings
 
-# 번역이 조금 부족할 수 있습니다. 다른 분들도 이 번역에 참여해주시면 감사하겠습니다 :D
-
 prefix:
   warning: "§c[§6경고§c]"
 
 commands:
   errors:
-    console-use: "콘솔에서 해당 명령을 사용할 때 모든 인수가 제공되어야합니다."
-    no-console-use: "인게임 내에서 실행하세요."
-    no-permission: "명령어를 실행할 권한이 없습니다."
-    plugin-cancelled: "플러그인 작동이 취소되었습니다."
+    console-use: "콘솔에서 해당 명령어를 사용할 때는 모든 매개 변수가 제공되어야 합니다."
+    no-console-use: "해당 명령어는 플레이어만 사용할 수 있습니다."
+    no-permission: "해당 명령어를 사용할 수 있는 권한이 없습니다."
+    plugin-cancelled: "플러그인이 해당 작업을 취소했습니다."
     
     pet:
-      doesnt-exist: "해당 이름을 가진 플레이어의 펫은 없습니다."
-      numeric: "펫의 규모는 숫자이어야 합니다."
+      doesnt-exist: "주어진 이름의 애완동물은 없습니다."
+      numeric: "애완동물 규모는 숫자여야 합니다."
       
     player:
-      not-found: "해당 이름을 가진 플레이어는 존재하지 않습니다."
-      no-pet: "당신은 해당 이름을 가진 펫을 소유하고 있지 않습니다."
-      no-pet-other: "플레이어는 이 이름을 가진 펫을 소유하고 있지 않습니다."
-      already-own-pet: "당신은 이미 그 이름을 가진 펫을 소유하고 있습니다."
+      not-found: "주어진 플레이어를 찾을 수 없습니다."
+      no-pet: "주어진 이름의 애완동물을 가지고 있지 않습니다."
+      no-pet-other: "주어진 플레이어는 해당 이름의 애완동물을 가지고 있지 않습니다."
+      already-own-pet: "이미 해당 이름의 애완동물을 가지고 있습니다."
          
   changepetname:
-    no-permission: "당신은 다른 사람의 펫의 이름을 바꿀 권한을 가지고 있지 않습니다."
-    success: "이름을 %s §r§a에서  %s 으로 바꿨습니다!"
+    no-permission: "다른 플레이어의 애완동물의 이름을 변경할 수 있는 권한이 없습니다."
+    success: "%s의 이름§r§a을 %s(으)로 성공적으로 변경했습니다!"
     
   clearpet:
-    success: "펫을 제거하였습니다 §b%s§a!"
+    success: "애완동물 §b%s§a을(를) 성공적으로 제거했습니다!"
     
   healpet:
-    success: "펫 %s §r§a 을 치유시켰습니다!"
+    success: "애완동물 %s§r§a이(가) 성공적으로 치유되었습니다!"
 
   leveluppet:
-    success: "펫을 레벨업 시켰습니다: §b%s §r§a %s!"
+    success: "애완동물을 성공적으로 레벨업했습니다: §b%s §r§a %s!"
     
   spawnpet:
-    no-permission: "펫을 스폰시킬 권한이 없습니다."
-    no-permission-others: "다른 사람의 펫을 스폰시킬 권한이 없습니다."
-    success: "성공적으로 펫을 소환시켰습니다! 펫이름 : §b%s§a"
-    success-other: "당신은 펫을 받았습니다! 펫이름 : §b%s§a"
-    name: "채팅창에 펫의 이름으로 사용할 텍스트를 입력하세요!"
-    selecting-name: "%s 이 그들의 펫을 위한 이름을 선택하고 있습니다!"
-    exceeded-limit: "%s 이 펫 제한을 넘었습니다."
+    no-permission: "해당 애완동물을 생성할 권한이 없습니다."
+    no-permission-others: "다른 플레이어에게 애완동물을 생성할 권한이 없습니다."
+    success: "이름 §b%s§a의 애완동물을 성공적으로 생성했습니다!"
+    success-other: "이름 §b%s§a의 애완동물을 받았습니다!"
+    name: "애완동물의 이름을 대화에 입력해주세요!"
+    selecting-name: "%s이(가) 애완동물의 이름을 선택하고 있습니다!"
+    exceeded-limit: "%s이(가) 애완동물 제한을 넘었습니다."
     
   removepet:
-    success: "성공적으로 펫 §b%s§a 을 제거하였습니다!"
+    success: "애완동물 §b%s§a을(를) 성공적으로 제거했습니다!"
     
   togglepet:
-    no-pet-specified: "키거나 끌 펫을 명시하세요"
-    success: "당신의 펫을 %s 토글(끄거나 킴)하였습니다."
-    success-others: "펫을 토글(끄거나 킴)하였습니다! §b%s §r§a %s!"
+    no-pet-specified: "전환할 애완동물을 선택하지 않았습니다."
+    success: "애완동물을 %s(으)로 성공적으로 전환했습니다!"
+    success-others: "애완동물 §b%s§r§a을(를) %s(으)로 성공적으로 전환했습니다!"
 ...
