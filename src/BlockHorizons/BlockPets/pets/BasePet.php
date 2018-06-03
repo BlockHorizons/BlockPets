@@ -374,6 +374,10 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function setPetLevelPoints(int $points): void {
 		$this->petLevelPoints = $points;
+		$loader = $this->getLoader();
+		if($loader->getBlockPetsConfig()->storeToDatabase()) {
+			$loader->getDatabase()->updateExperience($this);
+		}
 	}
 
 	/**
