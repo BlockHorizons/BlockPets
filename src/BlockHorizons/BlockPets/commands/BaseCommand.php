@@ -80,7 +80,7 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 		}
 
 		if(!$this->onCommand($sender, $commandLabel, $args) && $this->usageMessage !== "") {
-			$sender->sendMessage($this->getUsage());
+			$sender->sendMessage(str_replace("/" . $this->getName(), "/" . $commandLabel, $this->getUsage()));
 			return;
 		}
 	}

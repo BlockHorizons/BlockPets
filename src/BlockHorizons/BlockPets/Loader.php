@@ -12,6 +12,7 @@ use BlockHorizons\BlockPets\commands\HealPetCommand;
 use BlockHorizons\BlockPets\commands\LevelUpPetCommand;
 use BlockHorizons\BlockPets\commands\ListPetsCommand;
 use BlockHorizons\BlockPets\commands\PetCommand;
+use BlockHorizons\BlockPets\commands\PetsTopCommand;
 use BlockHorizons\BlockPets\commands\RemovePetCommand;
 use BlockHorizons\BlockPets\commands\SpawnPetCommand;
 use BlockHorizons\BlockPets\commands\TogglePetCommand;
@@ -290,6 +291,7 @@ class Loader extends PluginBase {
 			new TogglePetCommand($this),
 			new ChangePetNameCommand($this),
 			new ListPetsCommand($this),
+			new PetsTopCommand($this),
 			new PetCommand($this)
 		];
 		foreach($petCommands as $command) {

@@ -8,15 +8,12 @@ use BlockHorizons\BlockPets\pets\BasePet;
 
 class SQLiteDataStorer extends SQLDataStorer {
 
-	public function load(string $player, ?callable $callable = null): void {
+	public function load(string $player, callable $callable): void {
 		$database = $this;
 
 		$this->database->executeSelect(SQLDataStorer::LOAD_PLAYER_PETS, [
 			"player" => $player
 		], function(array $rows) use($callable): void {
-			if($callable === null) {
-				return;
-			}
 			foreach($rows as &$row) {
 				if(isset($row["Inventory"])) {
 					$row["Inventory"] = base64_decode($row["Inventory"]);

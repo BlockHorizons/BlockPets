@@ -22,6 +22,7 @@ class SQLDataStorer extends BaseDataStorer {
 
 	const REGISTER_PET = "blockpets.pet.register";
 	const UNREGISTER_PET = "blockpets.pet.unregister";
+	const PET_LEADERBOARD = "blockpets.pet.leaderboard";
 	const UPDATE_PET_CHESTED = "blockpets.pet.update.chested";
 	const UPDATE_PET_EXPERIENCE = "blockpets.pet.update.exp";
 	const UPDATE_PET_INVENTORY = "blockpets.pet.update.inv";
@@ -51,20 +52,23 @@ class SQLDataStorer extends BaseDataStorer {
 		]);
 	}
 
-	public function load(string $player, ?callable $callable = null): void {
-		$database = $this;
-
+	public function load(string $player, callable $callable): void {
 		$this->database->executeSelect(SQLDataStorer::LOAD_PLAYER_PETS, [
 			"player" => $player
 		], $callable);
 	}
 
-	public function getPlayerPets(string $player, ?string $entityName = null, ?callable $callable = null): void {
-		$database = $this;
-
+	public function getPlayerPets(string $player, ?string $entityName = null, callable $callable): void {
 		$this->database->executeSelect(SQLDataStorer::LIST_PLAYER_PETS, [
 			"player" => $player,
 			"entityname" => $entityName ?? "%"
+		], $callable);
+	}
+
+	public function getPetsLeaderboard(int $offset = 0, int $length = 1, callable $callable): void {
+		$this->database->executeSelect(SQLDataStorer::PET_LEADERBOARD, [
+			"offset" => $offset,
+			"length" => $length
 		], $callable);
 	}
 

@@ -76,26 +76,37 @@ abstract class BaseDataStorer {
 
 	/**
 	 * Retrieves all of the owner's pets from the
-	 * database and then calls the optional callable
-	 * to initialize the fetched entries.
+	 * database and then calls the callable to
+	 * initialize the fetched entries.
 	 *
 	 * @param string $ownerName
-	 * @param callable|null $callable
+	 * @param callable $callable
 	 */
-	public abstract function load(string $ownerName, ?callable $callable = null): void;
+	public abstract function load(string $ownerName, callable $callable): void;
 
 	/**
 	 * Fetches all pets' names of the specified player
-	 * from the database and calls the optional callable
-	 * to get the list of pet names.
+	 * from the database and calls the callable to get
+	 * the list of pet names.
 	 * If $entityName is not null, only entities with the
 	 * specified entity name will be fetched.
 	 *
 	 * @param string $ownerName
 	 * @param string|null $entityName
-	 * @param callable|null $callable
+	 * @param callable $callable
 	 */
-	public abstract function getPlayerPets(string $ownerName, ?string $entityName = null, ?callable $callable = null): void;
+	public abstract function getPlayerPets(string $ownerName, ?string $entityName = null, callable $callable): void;
+
+	/**
+	 * Fetches all pets sorted by their level and points
+	 * and calls the callable to get the list of sorted
+	 * pets.
+	 *
+	 * @param int $offset
+	 * @param int $length
+	 * @param callable $callable
+	 */
+	public abstract function getPetsLeaderboard(int $offset = 0, int $length = 1, callable $callable): void;
 
 	/**
 	 * Updates the database with whether the pet is

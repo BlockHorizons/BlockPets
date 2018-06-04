@@ -14,6 +14,7 @@ commands:
     pet:
       doesnt-exist: "A pet with the given name doesn't exist."
       numeric: "The pet scale should be numeric."
+      none-on-server: "There are no pets on this server."
       
     player:
       not-found: "The given player cannot be found."

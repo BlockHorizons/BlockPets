@@ -82,6 +82,18 @@ DELETE FROM Pets
 WHERE Player=:player AND petname=:petname;
 -- #    }
 
+-- #    { leaderboard
+-- #      :offset int
+-- #      :length int
+SELECT
+  Player,
+  PetName,
+  EntityName,
+  PetLevel,
+  LevelPoints
+FROM Pets ORDER BY LevelPoints, PetLevel DESC LIMIT :offset, :length;
+-- #    }
+
 -- #    { update
 -- #      { chested
 -- #        :chested int
