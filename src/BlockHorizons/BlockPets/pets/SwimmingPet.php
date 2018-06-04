@@ -22,20 +22,25 @@ abstract class SwimmingPet extends BouncingPet {
 		}
 
 		if(!$this->isAngry() && $this->isUnderwater()) {
+			$petOwner = $this->getPetOwner();
 			$x = $petOwner->x + $this->xOffset - $this->x;
 			$y = $petOwner->y + $this->yOffset - $this->y;
 			$z = $petOwner->z + $this->zOffset - $this->z;
 
-			if($x * $x + $z * $z < 6 + $this->getScale()) {
+			$xz_sq = $x * $x + $z * $z;
+			$xz_modulus = sqrt($xz_sq);
+			$speed_factor = $this->getSwimmingSpeed() * 0.25;
+
+			if($xz_sq < 6 + $this->getScale()) {
 				$this->motion->x = 0;
 				$this->motion->z = 0;
 			} else {
-				$this->motion->x = $this->getSwimmingSpeed() * 0.25 * ($x / (abs($x) + abs($z)));
-				$this->motion->z = $this->getSwimmingSpeed() * 0.25 * ($z / (abs($x) + abs($z)));
+				$this->motion->x = $speed_factor * ($x / $xz_modulus);
+				$this->motion->z = $speed_factor * ($z / $xz_modulus);
 			}
-			$this->motion->y = $this->getSwimmingSpeed() * 0.25 * $y;
+			$this->motion->y = $speed_factor * $y;
 			$this->yaw = rad2deg(atan2(-$x, $z));
-			$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
+			$this->pitch = rad2deg(-atan2($y, $xz_modulus));
 
 			$this->move($this->motion->x, $this->motion->y, $this->motion->z);
 

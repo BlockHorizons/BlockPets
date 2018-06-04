@@ -55,7 +55,7 @@ class HorsePet extends WalkingPet {
 		]);
 	}
 
-	public function getVariant(int $type, int $colour): int {
+	public function getVariant(): int {
 		return $this->getDataPropertyManager()->getInt(self::DATA_VARIANT);
 	}
 
