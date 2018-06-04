@@ -103,28 +103,6 @@ abstract class BasePet extends Creature implements Rideable {
 		}
 
 		parent::__construct($level, $nbt);
-		$this->selectProperties();
-
-		$this->petLevel = $this->namedtag->getInt("petLevel", 1);
-		$this->petLevelPoints = $this->namedtag->getInt("petLevelPoints", 0);
-		$this->petName = $this->namedtag->getString("petName");
-		$this->scale = $this->namedtag->getFloat("scale", $this->getScale());
-		$this->setGenericFlag(self::DATA_FLAG_CHESTED, (bool) $this->namedtag->getByte("chested", 0));
-		$this->setGenericFlag(self::DATA_FLAG_BABY, (bool) $this->namedtag->getByte("isBaby", 0));
-		$this->setGenericFlag(self::DATA_FLAG_TAMED, true);
-
-		$this->calculator = new Calculator($this);
-
-		$this->setNameTagVisible(true);
-		$this->setNameTagAlwaysVisible(true);
-
-		$this->setScale($this->scale);
-
-		$this->inventory_manager = new PetInventoryManager($this);
-		$this->spawnToAll();
-
-		$this->getAttributeMap()->addAttribute(Attribute::getAttribute(20));
-		$this->setCanSaveWithChunk(false);
 	}
 
 	public function register(): void {
@@ -435,6 +413,29 @@ abstract class BasePet extends Creature implements Rideable {
 
 	protected function initEntity(): void {
 		parent::initEntity();
+		$this->selectProperties();
+
+		$this->petLevel = $this->namedtag->getInt("petLevel", 1);
+		$this->petLevelPoints = $this->namedtag->getInt("petLevelPoints", 0);
+		$this->petName = $this->namedtag->getString("petName");
+		$this->scale = $this->namedtag->getFloat("scale", $this->getScale());
+		$this->setGenericFlag(self::DATA_FLAG_CHESTED, (bool) $this->namedtag->getByte("chested", 0));
+		$this->setGenericFlag(self::DATA_FLAG_BABY, (bool) $this->namedtag->getByte("isBaby", 0));
+		$this->setGenericFlag(self::DATA_FLAG_TAMED, true);
+
+		$this->calculator = new Calculator($this);
+
+		$this->setNameTagVisible(true);
+		$this->setNameTagAlwaysVisible(true);
+
+		$this->setScale($this->scale);
+
+		$this->inventory_manager = new PetInventoryManager($this);
+		$this->spawnToAll();
+
+		$this->getAttributeMap()->addAttribute(Attribute::getAttribute(20));
+		$this->setCanSaveWithChunk(false);
+
 		$this->generateCustomPetData();
 		$this->setImmobile();
 	}

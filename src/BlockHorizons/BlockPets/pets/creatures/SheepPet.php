@@ -16,7 +16,21 @@ class SheepPet extends WalkingPet {
 	public $name = "Sheep Pet";
 
 	public function generateCustomPetData(): void {
-		$randomColour = random_int(0, 15);
-		$this->getDataPropertyManager()->setByte(self::DATA_COLOUR, $randomColour);
+		$this->setColor(random_int(0, 15));
+	}
+
+	public function setColor(int $color): void {
+		$this->propertyManager->setByte(self::DATA_COLOUR, $color % 16);
+	}
+
+	public function getColor(): int {
+		return $this->propertyManager->getByte(self::DATA_COLOR);
+	}
+
+	public function doPetUpdates(int $currentTick): bool {
+		if($currentTick % 10 === 0 && $this->getPetName() === "jeb_") {
+			$this->setColor($this->getColor() + 1);
+		}
+		return parent::doPetUpdates($currentTick);
 	}
 }
