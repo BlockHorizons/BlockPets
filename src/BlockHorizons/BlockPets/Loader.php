@@ -88,7 +88,7 @@ use spoondetector\SpoonDetector;
 class Loader extends PluginBase {
 
 	const VERSION = "1.1.0";
-	const API_TARGET = "3.0.0-ALPHA7";
+	const API_TARGET = "3.0.0-ALPHA12";
 
 	const PETS = [
 		"Arrow",
@@ -222,6 +222,7 @@ class Loader extends PluginBase {
 	public function onEnable() {
 		if(!is_dir($this->getDataFolder())) {
 			mkdir($this->getDataFolder());
+			$this->saveResoucre(".version_file");
 		}
 
 		$database_stmts = $this->getDataFolder() . "database_stmts/";
@@ -245,6 +246,38 @@ class Loader extends PluginBase {
 		$this->language = new LanguageConfig($this);
 		$this->selectDatabase();
 		Attribute::addAttribute(20, "minecraft:horse.jump_strength", 0, 3, 0.6679779);
+
+		$this->checkVersionChange();
+	}
+
+	private function checkVersionChange(): void {
+		$version_file = $this->getDataFolder() . ".version_file";
+		if(!is_file($version_file)) {
+			$current_version = "1.1.0";
+		} else {
+			$current_version = yaml_parse_file($version_file)["version"];
+		}
+
+		if(version_compare(self::VERSION, $current_version, '>')) {
+			$this->updateVersion($current_version);
+		}
+	}
+
+	private function updateVersion(string $current_version): void {
+		$current = (int) str_replace(".", "", $current_version);
+		$newest = (int) str_replace(".", "", self::VERSION);
+		while($current < $newest) {
+			++$current;
+			$version = implode(".", str_split((string) $current));
+			$this->onVersionUpdate($version);
+		}
+
+		$this->saveResource(".version_file", true);
+	}
+
+	private function onVersionUpdate(string $version): void {
+var_dump($version);
+		$this->getDatabase()->patch($version);
 	}
 
 	public function registerCommands(): void {

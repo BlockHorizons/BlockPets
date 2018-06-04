@@ -632,7 +632,6 @@ abstract class BasePet extends Creature implements Rideable {
 		}
 		$player->setGenericFlag(self::DATA_FLAG_RIDING, true);
 		$this->setGenericFlag(self::DATA_FLAG_SADDLED, true);
-		$this->setGenericFlag(self::DATA_FLAG_TAMED, true);
 
 		$pk = new SetEntityLinkPacket();
 		$link = new EntityLink();

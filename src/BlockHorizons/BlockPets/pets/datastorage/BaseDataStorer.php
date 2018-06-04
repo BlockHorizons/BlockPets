@@ -29,6 +29,14 @@ abstract class BaseDataStorer {
 	protected abstract function prepare(): void;
 
 	/**
+	 * Called when the plugin updates so database
+	 * can perform patches (if any).
+	 *
+	 * @param string $version
+	 */
+	protected abstract function patch(string $version): void;
+
+	/**
 	 * @return Loader
 	 */
 	protected function getLoader(): Loader {

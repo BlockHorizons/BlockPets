@@ -26,6 +26,8 @@ class SQLDataStorer extends BaseDataStorer {
 	const UPDATE_PET_EXPERIENCE = "blockpets.pet.update.exp";
 	const UPDATE_PET_INVENTORY = "blockpets.pet.update.inv";
 
+	const VERSION_PATCH = "version.{VERSION}";
+
 	/** @var libasynql */
 	protected $database;
 
@@ -115,6 +117,16 @@ class SQLDataStorer extends BaseDataStorer {
 		]);
 
 		$this->database->executeGeneric(SQLDataStorer::INITIALIZE_TABLES);
+	}
+
+	public function patch(string $version): void {
+		$resource = $this->getLoader()->getResource("patches/patch.sql");
+		if($resource === null) {
+			return;
+		}
+
+		$this->database->loadQueryFile($resource);//calls fclose($resource)
+		$this->database->executeGeneric(str_replace("{VERSION}", $version, SQLDataStorer::VERSION_PATCH));
 	}
 
 	protected function close(): void {
