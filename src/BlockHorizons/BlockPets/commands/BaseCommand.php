@@ -85,5 +85,5 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 		}
 	}
 
-	public abstract function onCommand(CommandSender $sender, string $commandLabel, array $args) : bool;
+	public abstract function onCommand(CommandSender $sender, string $commandLabel, array $args): bool;
 }

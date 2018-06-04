@@ -45,8 +45,6 @@ abstract class BasePet extends Creature implements Rideable {
 	/** @var float */
 	public $scale = 0.0;
 
-	/** @var string */
-	protected $petOwner = "";
 	/** @var int */
 	protected $petLevel = 0;
 	/** @var string */
@@ -84,10 +82,10 @@ abstract class BasePet extends Creature implements Rideable {
 	/** @var float */
 	protected $zOffset = 0.0;
 
+	/** @var Player */
+	private $petOwner = "";
 	/** @var bool */
 	private $dormant = false;
-	/** @var bool */
-	private $chested = false;
 	/** @var bool */
 	private $shouldIgnoreEvent = false;
 	/** @var int */
@@ -98,26 +96,29 @@ abstract class BasePet extends Creature implements Rideable {
 	private $maxSize = 10.0;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
+		$this->petOwner = $level->getServer()->getPlayerExact($nbt->getString("petOwner"));
+		if($this->petOwner === null) {
+			$this->close();
+			return;
+		}
+
 		parent::__construct($level, $nbt);
 		$this->selectProperties();
+
+		$this->petLevel = $this->namedtag->getInt("petLevel", 1);
+		$this->petLevelPoints = $this->namedtag->getInt("petLevelPoints", 0);
+		$this->petName = $this->namedtag->getString("petName");
+		$this->scale = $this->namedtag->getFloat("scale", $this->getScale());
+		$this->setGenericFlag(self::DATA_FLAG_CHESTED, (bool) $this->namedtag->getByte("chested", 0));
+		$this->setGenericFlag(self::DATA_FLAG_BABY, (bool) $this->namedtag->getByte("isBaby", 0));
+		$this->setGenericFlag(self::DATA_FLAG_TAMED, true);
 
 		$this->calculator = new Calculator($this);
 
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
 
-		$this->petLevel = $this->namedtag->getInt("petLevel");
-		$this->petOwner = $level->getServer()->getPlayerExact($this->namedtag->getString("petOwner"));
-		$this->scale = $this->namedtag->getFloat("scale");
-		$this->petName = $this->namedtag->getString("petName");
-		$this->petLevelPoints = $this->namedtag->getInt("petLevelPoints");
-		$this->chested = (bool) $this->namedtag->getByte("chested");
-
 		$this->setScale($this->scale);
-
-		$this->setGenericFlag(self::DATA_FLAG_CHESTED, (bool) $this->isChested());
-		$this->setGenericFlag(self::DATA_FLAG_BABY, (bool) $this->namedtag->getByte("isBaby", 0));
-		$this->setGenericFlag(self::DATA_FLAG_TAMED, true);
 
 		$this->inventory_manager = new PetInventoryManager($this);
 		$this->spawnToAll();
@@ -185,7 +186,14 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	public function isChested(): bool {
-		return $this->chested;
+		return $this->getGenericFlag(self::DATA_FLAG_CHESTED);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isSaddled(): bool {
+		return $this->getGenericFlag(self::DATA_FLAG_SADDLED);
 	}
 
 	/**
@@ -199,10 +207,8 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @param bool $value
 	 */
 	public function setChested(bool $value = true): void {
-		if($this->chested !== $value) {
+		if($this->isChested() !== $value) {
 			$this->setGenericFlag(self::DATA_FLAG_CHESTED, $value);
-			$this->chested = $value;
-
 			$loader = $this->getLoader();
 			if($loader->getBlockPetsConfig()->storeToDatabase()) {
 				$loader->getDatabase()->updateChested($this);
@@ -261,7 +267,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @return Player
 	 */
-	public function getPetOwner(): Player {
+	final public function getPetOwner(): Player {
 		return $this->petOwner;
 	}
 
@@ -396,7 +402,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @return string
 	 */
-	public function getPetOwnerName(): string {
+	final public function getPetOwnerName(): string {
 		return $this->petOwner->getName();
 	}
 
@@ -427,7 +433,7 @@ abstract class BasePet extends Creature implements Rideable {
 		return $this->getPetName();
 	}
 
-	public function initEntity(): void {
+	protected function initEntity(): void {
 		parent::initEntity();
 		$this->generateCustomPetData();
 		$this->setImmobile();
@@ -483,7 +489,8 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * Performs a special action of a pet every tick.
 	 */
-	public function doTickAction(): void {
+	public function doPetUpdates(int $currentTick): bool {
+		return true;
 	}
 
 	/**
@@ -491,38 +498,42 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @return bool
 	 */
-	public function onUpdate(int $currentTick): bool {
-		if(random_int(1, 60) === 1 && $this->isAlive()) {
-			if($this->getHealth() !== $this->getMaxHealth()) {
-				$this->heal(new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
-				$this->calculator->updateNameTag();
-			}
+	final public function onUpdate(int $currentTick): bool {
+		if(!parent::onUpdate($currentTick) && $this->isClosed()) {
+			return false;
 		}
-		if(!$this->isAlive()) {
-			return parent::onUpdate($currentTick);
-		}
-		$petOwner = $this->getPetOwner();
-		if(($this->getLevel()->getEntity($petOwner->getId()) === null || $this->distance($petOwner) >= 50) && !$this->isDormant()) {
-			$this->teleport($petOwner);
+		if(!$this->checkUpdateRequirements()) {
 			return true;
 		}
-		$this->positionSeekTick++;
-		if($this->shouldFindNewPosition()) {
-			if(!$this->getLoader()->getBlockPetsConfig()->shouldStalkPetOwner()) {
-				if((bool) random_int(0, 1)) {
-					$multiplicationValue = 1;
-				} else {
-					$multiplicationValue = -1;
+		if(!$this->isRidden()) {
+			if(random_int(1, 60) === 1) {
+				if($this->getHealth() !== $this->getMaxHealth()) {
+					$this->heal(new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
+					$this->calculator->updateNameTag();
 				}
-				$this->xOffset = lcg_value() * $multiplicationValue * (3 + $this->getScale());
-				$this->yOffset = lcg_value() * $multiplicationValue * (3 + $this->getScale());
-				$this->zOffset = lcg_value() * $multiplicationValue * (3 + $this->getScale());
+			}
+			$petOwner = $this->getPetOwner();
+			if(!$this->isDormant() && ($this->getLevel()->getEntity($petOwner->getId()) === null || $this->distance($petOwner) >= 50)) {
+				$this->teleport($petOwner);
+				return true;
+			}
+			++$this->positionSeekTick;
+				if($this->shouldFindNewPosition()) {
+				if(!$this->getLoader()->getBlockPetsConfig()->shouldStalkPetOwner()) {
+					if((bool) random_int(0, 1)) {
+						$multiplicationValue = 1;
+					} else {
+						$multiplicationValue = -1;
+					}
+					$offset_factor = $multiplicationValue * (3 + $this->getScale());
+					$this->xOffset = lcg_value() * $offset_factor;
+					$this->yOffset = lcg_value() * $offset_factor;
+					$this->zOffset = lcg_value() * $offset_factor;
+				}
 			}
 		}
-		$this->doTickAction();
-		$this->updateMovement();
-		parent::onUpdate($currentTick);
-		return $this->isAlive();
+		$this->doPetUpdates($currentTick);
+		return true;
 	}
 
 	/**
@@ -621,6 +632,7 @@ abstract class BasePet extends Creature implements Rideable {
 		}
 		$player->setGenericFlag(self::DATA_FLAG_RIDING, true);
 		$this->setGenericFlag(self::DATA_FLAG_SADDLED, true);
+		$this->setGenericFlag(self::DATA_FLAG_TAMED, true);
 
 		$pk = new SetEntityLinkPacket();
 		$link = new EntityLink();
@@ -696,17 +708,13 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @return bool
 	 */
-	public abstract function doRidingMovement(float $motionX, float $motionZ): bool;
+	public abstract function doRidingMovement(float $motionX, float $motionZ): void;
 
 	/**
 	 * @return bool
 	 */
 	protected function checkUpdateRequirements(): bool {
-		if($this->closed) {
-			return false;
-		}
-		if($this->isRidden()) {
-			$this->doTickAction();
+		if($this->isRiding()) {
 			return false;
 		}
 		if($this->isDormant()) {

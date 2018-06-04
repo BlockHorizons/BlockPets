@@ -57,7 +57,7 @@ class ListPetsCommand extends BaseCommand {
 		$loader->getDatabase()->getPlayerPets(
 			$sender->getName(),
 			$list_type,
-			function(array $rows) use ($loader, $list_type, $page, $sender): void {
+			function(array $rows) use($loader, $list_type, $page, $sender): void {
 				$pets = [];
 				$pets_c = 0;
 

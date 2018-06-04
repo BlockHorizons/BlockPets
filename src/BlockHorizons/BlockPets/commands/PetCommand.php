@@ -53,7 +53,7 @@ class PetCommand extends BaseCommand {
 				if($search_for !== null) {
 					if($char === $search_for) {
 						$arg = substr($args_string, $starting_offset, $offset - $starting_offset + 1);
-						if($is_optional){
+						if($is_optional) {
 							$arg = TextFormat::GRAY . $arg;
 						} else {
 							$arg = TextFormat::RED . $arg;

@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace BlockHorizons\BlockPets\pets;
 
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
+use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\Player;
@@ -16,37 +17,45 @@ abstract class HoveringPet extends IrasciblePet {
 	/** @var int */
 	protected $flyHeight = 0;
 
-	public function onUpdate(int $currentTick): bool {
-		if(!$this->checkUpdateRequirements()) {
-			return true;
-		}
-		$petOwner = $this->getPetOwner();
-		if($this->isRiding()) {
-			$this->yaw = $petOwner->yaw;
-			$this->pitch = $petOwner->pitch;
-			$this->updateMovement();
-			return parent::onUpdate($currentTick);
-		}
-		if(!parent::onUpdate($currentTick)) {
+	protected function initEntity(): void {
+		parent::initEntity();
+		$this->follow_range_sq = 8 + $this->getScale();
+	}
+
+	public function doPetUpdates(int $currentTick): bool {
+		if(!parent::doPetUpdates($currentTick)) {
 			return false;
 		}
-		if(!$this->isAlive()) {
+
+		if($this->isRidden()) {
 			return false;
 		}
+
 		if($this->isAngry()) {
-			return $this->doAttackingMovement();
+			$this->doAttackingMovement();
+		} else {
+			$this->follow($this->getPetOwner(), $this->xOffset, abs($this->yOffset) + 1.5, $this->zOffset);
 		}
 
-		$x = $petOwner->x + $this->xOffset - $this->x;
-		$y = $petOwner->y + abs($this->yOffset) + 1.5 - $this->y;
-		$z = $petOwner->z + $this->zOffset - $this->z;
+		$this->updateMovement();
+		return true;
+	}
 
-		if($x * $x + $z * $z < 8 + $this->getScale()) {
+	public function follow(Entity $target, float $xOffset = 0.0, float $yOffset = 0.0, float $zOffset = 0.0): void {
+		$x = $target->x + $xOffset - $this->x;
+		$y = $target->y + $yOffset - $this->y;
+		$z = $target->z + $zOffset - $this->z;
+
+		$xz_sq = $x * $x + $z * $z;
+		$xz_modulus = sqrt($xz_sq);
+
+		if($xz_sq < $this->follow_range_sq) {
 			$this->motion->x = 0;
 			$this->motion->z = 0;
 		} else {
-			$this->motion->x = $this->getSpeed() * 0.25 * ($x / (abs($x) + abs($z)));
-			$this->motion->z = $this->getSpeed() * 0.25 * ($z / (abs($x) + abs($z)));
+			$speed_factor = $this->getSpeed() * 0.15;
+			$this->motion->x = $speed_factor * ($x / $xz_modulus);
+			$this->motion->z = $speed_factor * ($z / $xz_modulus);
 		}
 
 		if((float) $y !== 0.0) {
@@ -57,46 +66,24 @@ abstract class HoveringPet extends IrasciblePet {
 		if($this->getNetworkId() === self::ENDER_DRAGON) {
 			$this->yaw += 180;
 		}
-		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
-		$this->move($this->motion->x, $this->motion->y, $this->motion->z);
+		$this->pitch = rad2deg(-atan2($y, $xz_modulus));
 
-		$this->updateMovement();
-		return $this->isAlive();
+		$this->move($this->motion->x, $this->motion->y, $this->motion->z);
 	}
 
-	public function doAttackingMovement(): bool {
-		$target = $this->getTarget();
-
+	public function doAttackingMovement(): void {
 		if(!$this->checkAttackRequirements()) {
-			return false;
+			return;
 		}
 
-		$x = $target->x - $this->x;
-		$y = $target->y + 0.5 - $this->y;
-		$z = $target->z - $this->z;
-
-		if($x * $x + $z * $z < 0.8) {
-			$this->motion->x = 0;
-			$this->motion->z = 0;
-		} else {
-			$this->motion->x = $this->getSpeed() * 0.15 * ($x / (abs($x) + abs($z)));
-			$this->motion->z = $this->getSpeed() * 0.15 * ($z / (abs($x) + abs($z)));
-		}
-
-		if((float) $y !== 0.0) {
-			$this->motion->y = $this->getSpeed() * 0.15 * $y;
-		}
-
-		$this->yaw = rad2deg(atan2(-$x, $z));
-		if($this->getNetworkId() === self::ENDER_DRAGON) {
-			$this->yaw += 180;
-		}
-		$this->pitch = rad2deg(-atan2($y, sqrt($x * $x + $z * $z)));
-		$this->move($this->motion->x, $this->motion->y, $this->motion->z);
+		$target = $this->getTarget();
+		$this->follow($target, 0.0, 0.5, 0.0);
 
 		if($this->distance($target) <= $this->scale + 1.1 && $this->waitingTime <= 0 && $target->isAlive()) {
 			$event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage());
-			if($target->getHealth() - $event->getFinalDamage() <= 0) {
+			$target->attack($event);
+
+			if(!$event->isCancelled() && !$target->isAlive()) {
 				if($target instanceof Player) {
 					$this->addPetLevelPoints($this->getLoader()->getBlockPetsConfig()->getPlayerExperiencePoints());
 				} else {
@@ -105,31 +92,29 @@ abstract class HoveringPet extends IrasciblePet {
 				$this->calmDown();
 			}
 
-			$target->attack($event);
-
 			$this->waitingTime = 12;
 		} elseif($this->distance($this->getPetOwner()) > 25 || $this->distance($this->getTarget()) > 15) {
 			$this->calmDown();
 		}
 
-		$this->updateMovement();
-		$this->waitingTime--;
-		return $this->isAlive();
+		--$this->waitingTime;
 	}
 
-	public function doRidingMovement(float $motionX, float $motionZ): bool {
+	public function doRidingMovement(float $motionX, float $motionZ): void {
 		$rider = $this->getPetOwner();
 
 		$this->pitch = $rider->pitch;
 		$this->yaw = $this instanceof EnderDragonPet ? $rider->yaw + 180 : $rider->yaw;
 
+		$speed_factor = 2 * $this->getSpeed();
 		$rider_directionvec = $rider->getDirectionVector();
-		$x = $rider_directionvec->x / 2 * $this->getSpeed();
-		$z = $rider_directionvec->z / 2 * $this->getSpeed();
-		$y = $rider_directionvec->y / 2 * $this->getSpeed();
+		$x = $rider_directionvec->x / $speed_factor;
+		$z = $rider_directionvec->z / $speed_factor;
+		$y = $rider_directionvec->y / $speed_factor;
 
 		$finalMotionX = 0;
 		$finalMotionZ = 0;
+
 		switch($motionZ) {
 			case 1:
 				$finalMotionX = $x;
@@ -147,6 +132,7 @@ abstract class HoveringPet extends IrasciblePet {
 				$finalMotionZ = $average / 1.414 * $motionX;
 				break;
 		}
+
 		switch($motionX) {
 			case 1:
 				$finalMotionX = $z;
@@ -170,10 +156,9 @@ abstract class HoveringPet extends IrasciblePet {
 		if(abs($y) < 0.2) {
 			$this->motion->y = 0;
 		}
-		$this->move($finalMotionX, $this->motion->y, $finalMotionZ);
 
+		$this->move($finalMotionX, $this->motion->y, $finalMotionZ);
 		$this->updateMovement();
-		return $this->isAlive();
 	}
 
 	/**
