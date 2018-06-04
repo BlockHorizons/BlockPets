@@ -276,7 +276,6 @@ class Loader extends PluginBase {
 	}
 
 	private function onVersionUpdate(string $version): void {
-var_dump($version);
 		$this->getDatabase()->patch($version);
 	}
 
