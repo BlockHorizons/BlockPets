@@ -43,7 +43,7 @@ abstract class BasePet extends Creature implements Rideable {
 	/** @var string */
 	public $name = "";
 	/** @var float */
-	public $scale = 0.0;
+	public $scale = 1.0;
 
 	/** @var int */
 	protected $petLevel = 0;
