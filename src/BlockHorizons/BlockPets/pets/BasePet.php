@@ -172,13 +172,6 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * @return bool
 	 */
-	public function isSaddled(): bool {
-		return $this->getGenericFlag(self::DATA_FLAG_SADDLED);
-	}
-
-	/**
-	 * @return bool
-	 */
 	public function isBaby(): bool {
 		return $this->getGenericFlag(self::DATA_FLAG_BABY);
 	}
@@ -851,16 +844,30 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->riding = true;
 		$this->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, new Vector3(0, $this->getScale() * 0.4 - 0.3, 0));
 		$this->setGenericFlag(self::DATA_FLAG_RIDING, true);
+		$this->setGenericFlag(self::DATA_FLAG_SADDLED, false);
+		$petOwner = $this->getPetOwner();
 
 		$pk = new SetEntityLinkPacket();
 		$link = new EntityLink();
-		$link->fromEntityUniqueId = $this->getPetOwner()->getId();
+		$link->fromEntityUniqueId = $petOwner->getId();
 		$link->type = self::STATE_SITTING;
 		$link->toEntityUniqueId = $this->getId();
 		$link->bool1 = true;
-
 		$pk->link = $link;
-		$this->server->broadcastPacket($this->getViewers(), $pk);
+		$petOwner->dataPacket($pk);
+
+		$viewers = $this->getViewers();
+		unset($viewers[$petOwner->getLoaderId()]);
+		if(!empty($viewers)) {
+			$pk = new SetEntityLinkPacket();
+			$link = new EntityLink();
+			$link->fromEntityUniqueId = $petOwner->getId();
+			$link->type = self::STATE_SITTING;
+			$link->toEntityUniqueId = $this->getId();
+			$link->bool1 = false;
+			$pk->link = $link;
+			$this->server->broadcastPacket($viewers, $pk);
+		}
 		return true;
 
 	}
