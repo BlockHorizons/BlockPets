@@ -88,9 +88,6 @@ use spoondetector\SpoonDetector;
 
 class Loader extends PluginBase {
 
-	const VERSION = "1.1.0";
-	const API_TARGET = "3.0.0-ALPHA12";
-
 	const PETS = [
 		"Arrow",
 		"Bat",
@@ -215,10 +212,8 @@ class Loader extends PluginBase {
 
 	/** @var BaseDataStorer */
 	private $database;
-	/** @var array */
-	private $toggledOff = [];
-	/** @var array */
-	private $toggledPets = [];
+	/** @var int[][] */
+	private $playerPets = [];
 
 	public function onEnable() {
 		if(!is_dir($this->getDataFolder())) {
@@ -259,14 +254,14 @@ class Loader extends PluginBase {
 			$current_version = yaml_parse_file($version_file)["version"];
 		}
 
-		if(version_compare(self::VERSION, $current_version, '>')) {
+		if(version_compare($this->getDescription()->getVersion(), $current_version, '>')) {
 			$this->updateVersion($current_version);
 		}
 	}
 
 	private function updateVersion(string $current_version): void {
 		$current = (int) str_replace(".", "", $current_version);
-		$newest = (int) str_replace(".", "", self::VERSION);
+		$newest = (int) str_replace(".", "", $this->getDescription()->getVersion());
 		while($current < $newest) {
 			++$current;
 			$version = implode(".", str_split((string) $current));
@@ -418,11 +413,10 @@ class Loader extends PluginBase {
 	 *
 	 * @return null|BasePet
 	 */
-	public function createPet(string $entityName, Player $player, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0, bool $chested = false, ?string $inventory = null): ?BasePet {
-		foreach($this->getPetsFrom($player) as $pet) {
-			if($pet->getPetName() === $name) {
-				$this->removePet($pet->getPetName(), $player);
-			}
+	public function createPet(string $entityName, Player $player, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0, bool $chested = false, bool $isVisible = true, ?string $inventory = null): ?BasePet {
+		$pet = $this->getPetByName($name, $player->getName());
+		if($pet !== null) {
+			$this->removePet($pet);
 		}
 
 		$nbt = Entity::createBaseNBT($player, null, $player->yaw, $player->pitch);
@@ -442,9 +436,14 @@ class Loader extends PluginBase {
 
 			$this->getServer()->getPluginManager()->callEvent($ev = new PetSpawnEvent($this, $entity));
 			if($ev->isCancelled()) {
-				$this->removePet($entity->getPetName(), $player);
+				$this->removePet($entity);
 				return null;
 			}
+
+			if(!$isVisible) {
+				$entity->updateVisibility(false);
+			}
+			$this->playerPets[$player->getLowerCaseName()][strtolower($entity->getPetName())] = $entity;
 			return $entity;
 		}
 		return null;
@@ -458,7 +457,7 @@ class Loader extends PluginBase {
 	 * @return BasePet
 	 */
 	public function clonePet(BasePet $pet): BasePet {
-		$clone = $this->createPet($pet->getEntityType(), $pet->getPetOwner(), $pet->getPetName(), $pet->getStartingScale(), $pet->isBaby(), $pet->getPetLevel(), $pet->getPetLevelPoints(), $pet->isChested());
+		$clone = $this->createPet($pet->getEntityType(), $pet->getPetOwner(), $pet->getPetName(), $pet->getStartingScale(), $pet->isBaby(), $pet->getPetLevel(), $pet->getPetLevelPoints(), $pet->isChested(), $pet->getVisibility());
 		$clone->getInventory()->setContents($pet->getInventory()->getContents());
 		return $clone;
 	}
@@ -467,95 +466,49 @@ class Loader extends PluginBase {
 	 * Gets all currently available pets from the given player.
 	 *
 	 * @param Player $player
-	 * @param bool $search_dead
 	 *
 	 * @return BasePet[]
 	 */
-	public function getPetsFrom(Player $player, bool $search_dead = false): array {
-		$playerPets = [];
-		$name = $player->getLowerCaseName();
-		foreach($player->getLevel()->getEntities() as $entity) {
-			if($entity instanceof BasePet) {
-				if(!$search_dead && !$entity->isAlive()) {
-					continue;
-				}
-				if(strtolower($entity->getPetOwnerName()) === $name) {
-					$playerPets[] = $entity;
-				}
-			}
-		}
-		return $playerPets;
+	public function getPetsFrom(Player $player): array {
+		return $this->playerPets[$player->getLowerCaseName()] ?? [];
 	}
 
 	/**
 	 * Returns the first pet found with the given name.
 	 *
 	 * @param string $name
-	 * @param Player $player
+	 * @param string $player
 	 *
 	 * @return BasePet|null
 	 */
-	public function getPetByName(string $name, Player $player = null): ?BasePet {
+	public function getPetByName(string $name, string $player = null): ?BasePet {
+		$name = strtolower($name);
 		if($player !== null) {
-			foreach($this->getPetsFrom($player) as $pet) {
-				if(strpos(strtolower($pet->getPetName()), strtolower($name)) !== false) {
-					return $pet;
-				}
-			}
-			return null;
+			return $this->playerPets[strtolower($player)][$name] ?? null;
 		}
-		foreach($this->getServer()->getLevels() as $level) {
-			foreach($level->getEntities() as $entity) {
-				if(!($entity instanceof BasePet)) {
-					continue;
-				}
-				if(strpos(strtolower($entity->getPetName()), strtolower($name)) !== false) {
-					return $entity;
-				}
+		foreach($this->getServer()->getOnlinePlayers() as $player) {
+			if(isset($this->playerPets[$k = $player->getLowerCaseName()][$name])) {
+				return $this->playerPets[$k][$name];
 			}
 		}
 		return null;
 	}
 
 	/**
-	 * Removes the first pet found with the given name, or the pet with the given name if playerName has been specified.
+	 * Closes and removes the specified pet from cache
+	 * and calls PetRemoveEvent events.
 	 *
-	 * @param string $name
-	 * @param Player $player
-	 *
-	 * @return bool
+	 * @param BasePet $pet
 	 */
-	public function removePet(string $name, Player $player = null): bool {
-		$foundPet = $this->getPetByName($name);
-		if($foundPet === null) {
-			return false;
+	public function removePet(BasePet $pet, bool $close = true): void {
+		$this->getServer()->getPluginManager()->callEvent(new PetRemoveEvent($this, $pet));//TODO: Call a cancellable event if this method isn't called when pet owner quits
+		if($pet->isRidden()) {
+			$pet->throwRiderOff();
 		}
-		if($player !== null) {
-			$name = strtolower($name);
-			foreach($this->getPetsFrom($player, true) as $pet) {
-				if(strpos(strtolower($pet->getPetName()), $name) !== false) {
-					$this->getServer()->getPluginManager()->callEvent($ev = new PetRemoveEvent($this, $pet));
-					if($ev->isCancelled()) {
-						return false;
-					}
-					if($pet->isRidden()) {
-						$pet->throwRiderOff();
-					}
-					$pet->kill(true);
-					return true;
-				}
-			}
-			return false;
+		if($close && !$pet->isClosed()) {
+			$pet->close();
 		}
-		$this->getServer()->getPluginManager()->callEvent($ev = new PetRemoveEvent($this, $foundPet));
-		if($ev->isCancelled()) {
-			return false;
-		}
-		if($foundPet->isRidden()) {
-			$foundPet->throwRiderOff();
-		}
-		$foundPet->kill(true);
-		return true;
+		unset($this->playerPets[strtolower($pet->getPetOwnerName())][strtolower($pet->getPetName())]);
 	}
 
 	/**
@@ -598,78 +551,6 @@ class Loader extends PluginBase {
 			if($pet->isRidden()) {
 				return true;
 			}
-		}
-		return false;
-	}
-
-	/**
-	 * Toggles pets of the given player on/off.
-	 *
-	 * @param Player $player
-	 *
-	 * @return bool
-	 */
-	public function togglePets(Player $player): bool {
-		if($this->arePetsToggledOn($player)) {
-			$this->toggledOff[$player->getName()] = true;
-			foreach($this->getPetsFrom($player) as $pet) {
-				$pet->despawnFromAll();
-				$pet->setDormant();
-			}
-			return false;
-		} else {
-			unset($this->toggledOff[$player->getName()]);
-			foreach($this->getPetsFrom($player) as $pet) {
-				$pet->spawnToAll();
-				$pet->setDormant(false);
-			}
-			return true;
-		}
-	}
-
-	/**
-	 * Checks if pets are toggled on.
-	 *
-	 * @param Player $player
-	 *
-	 * @return bool
-	 */
-	public function arePetsToggledOn(Player $player): bool {
-		return !isset($this->toggledOff[$player->getName()]);
-	}
-
-	/**
-	 * Toggles the given pet of the given player on or off.
-	 *
-	 * @param BasePet $pet
-	 * @param Player  $owner
-	 *
-	 * @return bool
-	 */
-	public function togglePet(BasePet $pet, Player $owner): bool {
-		if(isset($this->toggledPets[$pet->getPetName()])) {
-			if($this->toggledPets[$pet->getPetName()] === $owner->getName()) {
-				$pet->spawnToAll();
-				$pet->setDormant(false);
-				unset($this->toggledPets[$pet->getPetName()]);
-				return true;
-			}
-		}
-		$pet->despawnFromAll();
-		$pet->setDormant();
-		$this->toggledPets[$pet->getPetName()] = $owner->getName();
-		return false;
-	}
-
-	/**
-	 * @param BasePet $pet
-	 * @param Player  $owner
-	 *
-	 * @return bool
-	 */
-	public function isPetToggledOn(BasePet $pet, Player $owner): bool {
-		if(isset($this->toggledPets[$pet->getPetName()])) {
-			return $this->toggledPets[$pet->getPetName()] === $owner->getName();
 		}
 		return false;
 	}

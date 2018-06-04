@@ -55,6 +55,8 @@ abstract class BasePet extends Creature implements Rideable {
 	protected $rider = null;
 	/** @var bool */
 	protected $riding = false;
+	/** @var bool */
+	protected $visibility = true;
 
 	/** @var int */
 	protected $attackDamage = 4;
@@ -241,6 +243,43 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function getVisibility(): bool {
+		return $this->visibility;
+	}
+
+	/**
+	 * @internal
+	 * @param bool $value
+	 */
+	public function updateVisibility(bool $value): void {
+		$this->visibility = $value;
+		$this->setImmobile(!$value);
+		if($value) {
+			$this->spawnToAll();
+		} else {
+			$this->despawnFromAll();
+		}
+	}
+
+	public function setImmobile(bool $value = true): void {
+		if(!$this->visibility && $value) {
+			return;
+		}
+		parent::setImmobile($value);
+	}
+
+
+	public function spawnTo(Player $player): void {
+		if(!$this->visibility) {
+			return;
+		}
+
+		parent::spawnTo($player);
+	}
+
+	/**
 	 * Returns the player that owns this pet if they are online.
 	 *
 	 * @return Player
@@ -262,6 +301,9 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @param EntityDamageEvent $source
 	 */
 	public function attack(EntityDamageEvent $source): void {
+		if(!$this->visibility) {
+			return;
+		}
 		if($source instanceof EntityDamageByEntityEvent) {
 			$player = $source->getDamager();
 			if($player instanceof Player) {
@@ -717,6 +759,9 @@ abstract class BasePet extends Creature implements Rideable {
 		if($this->isRiding()) {
 			return false;
 		}
+		if(!$this->visibility) {
+			return false;
+		}
 		if($this->isDormant()) {
 			$this->despawnFromAll();
 			return false;
@@ -740,6 +785,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$loader = $this->getLoader();
 		if(!$loader->getBlockPetsConfig()->storeToDatabase()) {
 			$loader->getDatabase()->unregisterPet($this);
+			$loader->removePet($this, false);
 		}
 		parent::close();
 	}

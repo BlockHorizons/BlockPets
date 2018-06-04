@@ -26,14 +26,11 @@ class RemovePetCommand extends BaseCommand {
 				$this->sendWarning($sender, $loader->translate("commands.errors.player.not-found"));
 				return true;
 			}
-			if(($pet = $loader->getPetByName($args[0], $player)) === null) {
+			if(($pet = $loader->getPetByName($args[0], $player->getName())) === null) {
 				$this->sendWarning($sender, $loader->translate("commands.errors.player.no-pet-other"));
 				return true;
 			}
-			if($loader->removePet($pet->getPetName(), $player) === false) {
-				$this->sendWarning($sender, $loader->translate("commands.errors.plugin-cancelled"));
-				return true;
-			}
+			$loader->removePet($pet);
 			$sender->sendMessage(TF::GREEN . $loader->translate("commands.removepet.success", [$pet->getPetName()]));
 			return true;
 		}
@@ -43,11 +40,8 @@ class RemovePetCommand extends BaseCommand {
 			return true;
 		}
 
-		if($loader->removePet($args[0])) {
-			$sender->sendMessage(TF::GREEN . $loader->translate("commands.removepet.success", [$pet->getPetName()]));
-		} else {
-			$this->sendWarning($sender, $loader->translate("commands.errors.plugin-cancelled"));
-		}
+		$loader->removePet($pet);
+		$sender->sendMessage(TF::GREEN . $loader->translate("commands.removepet.success", [$pet->getPetName()]));
 		return true;
 	}
 }

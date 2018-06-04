@@ -55,4 +55,8 @@ commands:
     no-pet-specified: "You did not specify a pet to toggle."
     success: "Successfully toggled your pets %s!"
     success-others: "Successfully toggle the pet &b%s &r&a %s!"
+    success-specific: "Successfully toggled your pet %s %s."
+    success-specific-others: "Successfully toggled %s's pet %s."
+    success-diff: "Successfully toggled your pets, visible pets: &b%s."
+    success-diff-others: "Successfully toggled %s's pets, visible pets: &b%s."
 ...

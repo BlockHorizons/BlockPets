@@ -39,7 +39,7 @@ class LevelUpPetCommand extends BaseCommand {
 				$this->sendWarning($sender, $loader->translate("commands.errors.player.not-found"));
 				return true;
 			}
-			if(($pet = $loader->getPetByName($args[0], $player)) === null) {
+			if(($pet = $loader->getPetByName($args[0], $player->getName())) === null) {
 				$this->sendWarning($sender, $loader->translate("commands.errors.player.no-pet-other"));
 				return true;
 			}

@@ -38,7 +38,7 @@ class ChangePetNameCommand extends BaseCommand {
 				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.not-found"));
 				return true;
 			}
-			if(($pet = $this->getLoader()->getPetByName($args[0], $player)) === null) {
+			if(($pet = $this->getLoader()->getPetByName($args[0], $player->getName())) === null) {
 				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.no-pet-other"));
 				return true;
 			}
@@ -51,7 +51,7 @@ class ChangePetNameCommand extends BaseCommand {
 			return true;
 		}
 
-		if(($pet = $this->getLoader()->getPetByName($args[0], $sender)) === null) {
+		if(($pet = $this->getLoader()->getPetByName($args[0], $sender->getName())) === null) {
 			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.no-pet"));
 			return true;
 		}

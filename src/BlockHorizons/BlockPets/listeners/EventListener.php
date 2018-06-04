@@ -85,7 +85,18 @@ class EventListener implements Listener {
 				function(array $petData) use($player, $loader): void {
 					$hard_reset = $loader->getBlockPetsConfig()->doHardReset();
 					foreach($petData as $data) {
-						$pet = $loader->createPet($data["EntityName"], $player, $data["PetName"], $data["PetSize"], (bool) $data["IsBaby"], $data["PetLevel"], $data["LevelPoints"], (bool) $data["Chested"], $data["Inventory"]);
+						$pet = $loader->createPet(
+							$data["EntityName"],
+							$player,
+							$data["PetName"],
+							$data["PetSize"],
+							(bool) $data["IsBaby"],
+							$data["PetLevel"],
+							$data["LevelPoints"],
+							(bool) $data["Chested"],
+							(bool) $data["Visible"],
+							$data["Inventory"]
+						);
 						$pet->spawnToAll();
 						$pet->setDormant(false);
 						if($hard_reset) {

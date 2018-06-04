@@ -131,8 +131,8 @@ class PetCommand extends BaseCommand {
 			default:
 			case "info":
 				$sender->sendMessage(TextFormat::AQUA . "[BlockPets] Information\n" .
-					TextFormat::GREEN . "Version: " . TextFormat::YELLOW . Loader::VERSION . "\n" .
-					TextFormat::GREEN . "Target API: " . TextFormat::YELLOW . Loader::API_TARGET . "\n" .
+					TextFormat::GREEN . "Version: " . TextFormat::YELLOW . $loader->getDescription()->getVersion() . "\n" .
+					TextFormat::GREEN . "Target API: " . TextFormat::YELLOW . implode(", ", $loader->getDescription()->getCompatibleApis()) . "\n" .
 					TextFormat::GREEN . "Organization: " . TextFormat::YELLOW . "BlockHorizons (https://github.com/BlockHorizons/BlockPets)\n" .
 					TextFormat::GREEN . "Authors: " . TextFormat::YELLOW . "Sandertv (@Sandertv), TheDiamondYT (@TheDiamondYT1)");
 				break;

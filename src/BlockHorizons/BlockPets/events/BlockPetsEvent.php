@@ -9,6 +9,7 @@ use pocketmine\event\plugin\PluginEvent;
 
 abstract class BlockPetsEvent extends PluginEvent {
 
+	/** @var BasePet */
 	private $loader;
 
 	public function __construct(Loader $loader) {

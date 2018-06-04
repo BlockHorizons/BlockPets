@@ -61,8 +61,12 @@ class ListPetsCommand extends BaseCommand {
 				$pets = [];
 				$pets_c = 0;
 
-				foreach($rows as ["PetName" => $petName, "EntityName" => $entityName]) {
-					$pets[] = TextFormat::YELLOW . ++$pets_c . ". " . $petName . ($list_type === null ? TextFormat::GRAY . " (" . $entityName . ")" : "");
+				foreach($rows as ["PetName" => $petName, "EntityName" => $entityName, "Visible" => $isVisible]) {
+					$row = TextFormat::YELLOW . ++$pets_c . ". " . $petName . ($list_type === null ? TextFormat::GRAY . " (" . $entityName . ") " : "");
+					if(!$isVisible) {
+						$row .= TextFormat::GRAY . "[INVISIBLE]";
+					}
+					$pets[] = $row;
 				}
 
 				if(empty($pets)) {

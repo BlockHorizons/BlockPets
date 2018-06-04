@@ -109,6 +109,14 @@ abstract class BaseDataStorer {
 	public abstract function getPetsLeaderboard(int $offset = 0, int $length = 1, callable $callable): void;
 
 	/**
+	 * Toggles pets on or off from the database.
+	 *
+	 * @param string $ownerName
+	 * @param string|null $petName
+	 */
+	public abstract function togglePets(string $owner, ?string $petName, callable $callable): void;
+
+	/**
 	 * Updates the database with whether the pet is
 	 * chested or not.
 	 *

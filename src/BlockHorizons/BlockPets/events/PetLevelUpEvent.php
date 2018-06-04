@@ -8,12 +8,11 @@ use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\BasePet;
 use pocketmine\event\Cancellable;
 
-class PetLevelUpEvent extends BlockPetsEvent implements Cancellable {
+class PetLevelUpEvent extends PetEvent implements Cancellable {
 
-	public static $handlerList = null;
-
-	private $pet;
+	/** @var int */
 	private $from;
+	/** @var int */
 	private $to;
 
 	public function __construct(Loader $loader, BasePet $pet, int $from, int $to) {
@@ -21,15 +20,6 @@ class PetLevelUpEvent extends BlockPetsEvent implements Cancellable {
 		$this->pet = $pet;
 		$this->from = $from;
 		$this->to = $to;
-	}
-
-	/**
-	 * Returns the pet leveled up in the process.
-	 *
-	 * @return BasePet
-	 */
-	public function getPet(): BasePet {
-		return $this->pet;
 	}
 
 	/**

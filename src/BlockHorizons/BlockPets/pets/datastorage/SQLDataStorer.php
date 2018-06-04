@@ -23,14 +23,18 @@ class SQLDataStorer extends BaseDataStorer {
 	const REGISTER_PET = "blockpets.pet.register";
 	const UNREGISTER_PET = "blockpets.pet.unregister";
 	const PET_LEADERBOARD = "blockpets.pet.leaderboard";
+	const PET_VISIBILITY = "blockpets.pet.visibility.select";
 	const UPDATE_PET_CHESTED = "blockpets.pet.update.chested";
 	const UPDATE_PET_EXPERIENCE = "blockpets.pet.update.exp";
 	const UPDATE_PET_INVENTORY = "blockpets.pet.update.inv";
+	const UPDATE_PET_VISIBILITY = "blockpets.pet.visibility.toggle";
 
 	const VERSION_PATCH = "version.{VERSION}";
 
 	/** @var libasynql */
 	protected $database;
+	/** @var string */
+	protected $type;
 
 	public function registerPet(BasePet $pet): void {
 		$this->database->executeChange(SQLDataStorer::REGISTER_PET, [
@@ -72,6 +76,24 @@ class SQLDataStorer extends BaseDataStorer {
 		], $callable);
 	}
 
+	public function togglePets(string $ownerName, ?string $petName, callable $callable): void {
+		$database = $this->database;
+
+		$this->database->executeChange(SQLDataStorer::UPDATE_PET_VISIBILITY, [
+			"player" => $ownerName,
+			"petname" => $petName ?? "%"
+		], function(int $changed) use($ownerName, $petName, $database, $callable): void {
+			if($changed === 0) {
+				$callable([]);
+			} else {
+				$database->executeSelect(SQLDataStorer::PET_VISIBILITY, [
+					"player" => $ownerName,
+					"petname" => $petName ?? "%"
+				], $callable);
+			}
+		});
+	}
+
 	public function updateExperience(BasePet $pet): void {
 		$this->database->executeChange(SQLDataStorer::UPDATE_PET_EXPERIENCE, [
 			"petlevel" => $pet->getPetLevel(),
@@ -101,11 +123,11 @@ class SQLDataStorer extends BaseDataStorer {
 		$loader = $this->getLoader();
 
 		$config = $loader->getBlockPetsConfig();
-		$type = strtolower($config->getDatabase());
+		$this->type = strtolower($config->getDatabase());
 		$mc = $config->getMySQLInfo();
 
 		$libasynql_friendly_config = [
-			"type" => $type,
+			"type" => $this->type,
 			"sqlite" => [
 				"file" => $loader->getDataFolder() . "pets.sqlite3"
 			],
@@ -121,16 +143,19 @@ class SQLDataStorer extends BaseDataStorer {
 		]);
 
 		$this->database->executeGeneric(SQLDataStorer::INITIALIZE_TABLES);
+
+		$resource = $this->getLoader()->getResource("patches/" . $this->type . ".sql");
+		if($resource !== null) {
+			$this->database->loadQueryFile($resource);//calls fclose($resource)
+		}
 	}
 
 	public function patch(string $version): void {
-		$resource = $this->getLoader()->getResource("patches/patch.sql");
-		if($resource === null) {
-			return;
+		switch($version) {
+			case "1.1.2":
+				$this->database->executeGeneric(str_replace("{VERSION}", $version, SQLDataStorer::VERSION_PATCH));
+				break;
 		}
-
-		$this->database->loadQueryFile($resource);//calls fclose($resource)
-		$this->database->executeGeneric(str_replace("{VERSION}", $version, SQLDataStorer::VERSION_PATCH));
 	}
 
 	protected function close(): void {

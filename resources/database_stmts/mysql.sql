@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS Pets(
   PetSize FLOAT NOT NULL DEFAULT 1.0,
   IsBaby BOOL NOT NULL DEFAULT false,
   Chested BOOL NOT NULL DEFAULT false,
+  Visible BOOL NOT NULL DEFAULT true,
   PetLevel INT UNSIGNED NOT NULL DEFAULT 1,
   LevelPoints INT UNSIGNED NOT NULL DEFAULT 0,
   Inventory BLOB,
@@ -26,6 +27,7 @@ SELECT
   Chested,
   PetLevel,
   LevelPoints,
+  Visible,
   Inventory
 FROM Pets WHERE Player=:player;
 -- #  }
@@ -35,7 +37,8 @@ FROM Pets WHERE Player=:player;
 -- #    :entityname string
 SELECT
   PetName,
-  EntityName
+  EntityName,
+  Visible
 FROM Pets WHERE Player=:player AND EntityName LIKE :entityname;
 -- #  }
 
@@ -99,6 +102,21 @@ SELECT
   PetLevel,
   LevelPoints
 FROM Pets ORDER BY LevelPoints, PetLevel DESC LIMIT :offset, :length;
+-- #    }
+
+-- #    { visibility
+-- #      { toggle
+-- #        :player string
+-- #        :petname string
+UPDATE Pets SET Visible=NOT Visible
+WHERE Player=:player AND PetName LIKE :petname;
+-- #      }
+-- #      { select
+-- #        :player string
+-- #        :petname string
+SELECT PetName, Visible FROM Pets
+WHERE Player=:player AND PetName LIKE :petname;
+-- #      }
 -- #    }
 
 -- #    { update

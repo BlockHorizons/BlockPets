@@ -27,15 +27,12 @@ class ClearPetCommand extends BaseCommand {
 		}
 
 		$loader = $this->getLoader();
-		if(($pet = $loader->getPetByName($args[0], $sender)) === null) {
+		if(($pet = $loader->getPetByName($args[0], $sender->getName())) === null) {
 			$this->sendWarning($sender, $loader->translate("commands.errors.pet.doesnt-exist"));
 			return true;
 		}
 
-		if($loader->removePet($pet->getPetName(), $sender) === false) {
-			$this->sendWarning($sender, $loader->translate("commands.errors.plugin-cancelled"));
-			return true;
-		}
+		$loader->removePet($pet);
 		$sender->sendMessage(TF::GREEN . $loader->translate("commands.removepet.success", [$pet->getPetName()]));
 		return true;
 	}

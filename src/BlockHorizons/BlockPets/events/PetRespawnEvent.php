@@ -8,26 +8,14 @@ use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\BasePet;
 use pocketmine\event\Cancellable;
 
-class PetRespawnEvent extends BlockPetsEvent implements Cancellable {
+class PetRespawnEvent extends PetEvent implements Cancellable {
 
-	public static $handlerList = null;
-
+	/** @var int */
 	private $delay = 0;
-	private $pet;
 
 	public function __construct(Loader $loader, BasePet $pet, int $delay) {
-		parent::__construct($loader);
-		$this->pet = $pet;
+		parent::__construct($loader, $pet);
 		$this->delay = $delay;
-	}
-
-	/**
-	 * Returns the pet that will be respawned.
-	 *
-	 * @return BasePet
-	 */
-	public function getPet(): BasePet {
-		return $this->pet;
 	}
 
 	/**
