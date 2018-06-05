@@ -293,8 +293,6 @@ abstract class BasePet extends Creature implements Rideable {
 		$pk->metadata = $this->propertyManager->getAll();
 		$pk->links = array_values($this->links);
 		$player->dataPacket($pk);
-
-var_dump($pk->links);
 	}
 
 	/**
