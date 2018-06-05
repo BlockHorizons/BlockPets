@@ -12,6 +12,6 @@ class DonkeyPet extends WalkingPet {
 
 	public $name = "Donkey Pet";
 
-	public $width = 1.4;
+	public $width = 1.3965;
 	public $height = 1.6;
 }

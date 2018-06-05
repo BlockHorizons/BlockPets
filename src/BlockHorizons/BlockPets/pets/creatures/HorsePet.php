@@ -26,7 +26,7 @@ class HorsePet extends WalkingPet {
 
 	public $name = "Horse Pet";
 
-	public $width = 1.4;
+	public $width = 1.3965;
 	public $height = 1.6;
 
 	public function generateCustomPetData(): void {

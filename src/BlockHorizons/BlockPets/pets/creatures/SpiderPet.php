@@ -11,8 +11,8 @@ class SpiderPet extends WalkingPet implements SmallCreature {
 
 	const NETWORK_ID = self::SPIDER;
 
-	public $height = 1.12;
-	public $width = 1.3;
+	public $height = 0.9;
+	public $width = 1.4;
 
 	public $name = "Spider Pet";
 

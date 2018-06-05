@@ -12,6 +12,6 @@ class ZombiePet extends WalkingPet {
 
 	public $name = "Zombie Pet";
 
-	public $width = 0.72;
-	public $height = 1.8;
+	public $width = 0.6;
+	public $height = 1.95;
 }

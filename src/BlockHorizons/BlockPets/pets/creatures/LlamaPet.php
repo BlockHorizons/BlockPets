@@ -10,8 +10,8 @@ class LlamaPet extends WalkingPet {
 
 	const NETWORK_ID = self::LLAMA;
 
-	public $height = 1.87;
-	public $width = 0.9;
+	public $height = 0.935;
+	public $width = 0.45;
 
 	public $name = "Llama Pet";
 

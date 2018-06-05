@@ -10,8 +10,8 @@ class GhastPet extends HoveringPet {
 
 	const NETWORK_ID = self::GHAST;
 
-	public $width = 4;
-	public $height = 4;
+	public $width = 4.0;
+	public $height = 4.0;
 
 	public $name = "Ghast Pet";
 }

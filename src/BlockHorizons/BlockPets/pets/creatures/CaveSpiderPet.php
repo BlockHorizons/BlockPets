@@ -12,8 +12,8 @@ class CaveSpiderPet extends WalkingPet implements SmallCreature {
 	const NETWORK_ID = self::CAVE_SPIDER;
 
 	public $speed = 1.4;
-	public $height = 0.8;
-	public $width = 0.9;
+	public $height = 0.5;
+	public $width = 0.7;
 
 	public $name = "Cave Spider Pet";
 

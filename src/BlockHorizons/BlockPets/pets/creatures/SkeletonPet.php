@@ -12,6 +12,6 @@ class SkeletonPet extends WalkingPet {
 
 	public $name = "Skeleton Pet";
 
-	public $width = 0.65;
-	public $height = 1.8;
+	public $width = 0.6;
+	public $height = 1.99;
 }

@@ -51,10 +51,14 @@ abstract class BasePet extends Creature implements Rideable {
 	protected $petName = "";
 	/** @var bool */
 	protected $ridden = false;
-	/** @var null|string */
+	/** @var Player|null */
 	protected $rider = null;
+	/** @var Vector3 */
+	protected $rider_seatpos;
 	/** @var bool */
 	protected $riding = false;
+	/** @var Vector3 */
+	protected $seatpos;
 	/** @var bool */
 	protected $visibility = true;
 
@@ -473,6 +477,17 @@ abstract class BasePet extends Creature implements Rideable {
 
 		$this->generateCustomPetData();
 		$this->setImmobile();
+
+		$scale = $this->getScale();
+		if($this instanceof EnderDragonPet) {
+			$this->rider_seatpos = new Vector3(0, 2.65 + $scale, -1.7);
+		} elseif($this instanceof SmallCreature) {
+			$this->rider_seatpos = new Vector3(0, 0.78 + $scale * 0.9, -0.25);
+		} else {
+			$this->rider_seatpos = new Vector3(0, 1.8 + $scale * 0.9, -0.25);
+		}
+
+		$this->seatpos = new Vector3(0, $scale * 0.4 - 0.3, 0);
 	}
 
 	public function generateCustomPetData(): void {
@@ -632,6 +647,10 @@ abstract class BasePet extends Creature implements Rideable {
 			$rider->setAllowFlight(false);
 		}
 		$rider->onGround = true;
+
+		$this->width = $this->getDataPropertyManager()->getFloat(self::DATA_BOUNDING_BOX_WIDTH);
+		$this->height = $this->getDataPropertyManager()->getFloat(self::DATA_BOUNDING_BOX_HEIGHT);
+		$this->recalculateBoundingBox();
 		return true;
 	}
 
@@ -641,7 +660,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return Player|null
 	 */
 	public function getRider(): ?Player {
-		return $this->server->getPlayerExact($this->rider);
+		return $this->rider;
 	}
 
 	/**
@@ -655,17 +674,12 @@ abstract class BasePet extends Creature implements Rideable {
 		if($this->ridden) {
 			return false;
 		}
+
 		$this->ridden = true;
-		$this->rider = $player->getName();
+		$this->rider = $player;
 		$player->canCollide = false;
 		$owner = $this->getPetOwner();
-		$scale = $this->getScale();
-		$owner->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, new Vector3(0, 1.8 + $scale * 0.9, -0.25));
-		if($this instanceof EnderDragonPet) {
-			$player->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, new Vector3(0, 2.65 + $scale, -1.7));
-		} elseif($this instanceof SmallCreature) {
-			$player->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, new Vector3(0, 0.78 + $scale * 0.9, -0.25));
-		}
+		$player->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, $this->rider_seatpos);
 		$player->setGenericFlag(self::DATA_FLAG_RIDING, true);
 		$this->setGenericFlag(self::DATA_FLAG_SADDLED, true);
 
@@ -692,6 +706,10 @@ abstract class BasePet extends Creature implements Rideable {
 		if($owner->isSurvival()) {
 			$owner->setAllowFlight(true); // Set allow flight to true to prevent any 'kicked for flying' issues.
 		}
+
+		$this->width = max($player->width, $this->width);//adding more vertical area to the BB, so the horizontal can just be the maximum.
+		$this->height = $this->rider_seatpos->y;
+		$this->recalculateBoundingBox();
 		return true;
 	}
 
@@ -842,7 +860,7 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		$this->riding = true;
-		$this->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, new Vector3(0, $this->getScale() * 0.4 - 0.3, 0));
+		$this->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, $this->seatpos);
 		$this->setGenericFlag(self::DATA_FLAG_RIDING, true);
 		$this->setGenericFlag(self::DATA_FLAG_SADDLED, false);
 		$petOwner = $this->getPetOwner();
@@ -869,7 +887,6 @@ abstract class BasePet extends Creature implements Rideable {
 			$this->server->broadcastPacket($viewers, $pk);
 		}
 		return true;
-
 	}
 
 	/**
@@ -882,18 +899,18 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->riding = false;
 		$this->setGenericFlag(self::DATA_FLAG_RIDING, false);
 
-		$owner = $this->getPetOwner();
+		$petOwner = $this->getPetOwner();
 
 		$pk = new SetEntityLinkPacket();
 		$link = new EntityLink();
-		$link->fromEntityUniqueId = $owner->getId();
+		$link->fromEntityUniqueId = $petOwner->getId();
 		$link->type = self::STATE_STANDING;
 		$link->toEntityUniqueId = $this->getId();
 		$link->bool1 = true;
 
 		$pk->link = $link;
 		$this->server->broadcastPacket($this->getViewers(), $pk);
-		$this->teleport($owner);
+		$this->teleport($petOwner);
 		return true;
 	}
 

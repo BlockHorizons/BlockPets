@@ -13,8 +13,8 @@ class WolfPet extends WalkingPet implements SmallCreature {
 
 	public $name = "Wolf Pet";
 
-	public $width = 0.72;
-	public $height = 0.9;
+	public $width = 0.6;
+	public $height = 0.85;
 
 	public function generateCustomPetData(): void {
 		$randomColour = random_int(0, 15);

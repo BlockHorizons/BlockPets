@@ -10,7 +10,7 @@ class BlazePet extends HoveringPet {
 
 	const NETWORK_ID = self::BLAZE;
 
-	public $width = 0.72;
+	public $width = 0.6;
 	public $height = 1.8;
 
 	public $name = "Blaze Pet";

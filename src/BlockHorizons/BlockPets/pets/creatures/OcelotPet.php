@@ -13,8 +13,8 @@ class OcelotPet extends WalkingPet implements SmallCreature {
 
 	public $name = "Ocelot Pet";
 
-	public $width = 0.72;
-	public $height = 0.9;
+	public $width = 0.6;
+	public $height = 0.7;
 
 	public function generateCustomPetData(): void {
 		$randomVariant = random_int(0, 3);

@@ -10,8 +10,8 @@ class SnowGolemPet extends WalkingPet {
 
 	const NETWORK_ID = self::SNOW_GOLEM;
 
-	public $height = 1.7;
-	public $width = 0.9;
+	public $height = 1.9;
+	public $width = 0.7;
 
 	public $name = "Snow Golem Pet";
 

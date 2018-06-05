@@ -10,8 +10,8 @@ class HuskPet extends WalkingPet {
 
 	const NETWORK_ID = self::HUSK;
 
-	public $height = 1.75;
-	public $width = 0.8;
+	public $height = 1.95;
+	public $width = 0.6;
 
 	public $name = "Husk Pet";
 }

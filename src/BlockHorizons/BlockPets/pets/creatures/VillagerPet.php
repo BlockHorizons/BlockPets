@@ -10,8 +10,8 @@ class VillagerPet extends WalkingPet {
 
 	const NETWORK_ID = self::VILLAGER;
 
-	public $height = 1.8;
-	public $width = 0.8;
+	public $height = 1.95;
+	public $width = 0.6;
 
 	public $name = "Villager Pet";
 

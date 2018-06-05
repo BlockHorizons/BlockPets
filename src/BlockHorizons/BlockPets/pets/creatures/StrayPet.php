@@ -10,7 +10,7 @@ class StrayPet extends WalkingPet {
 
 	const NETWORK_ID = self::STRAY;
 
-	public $height = 1.9;
+	public $height = 1.99;
 	public $width = 0.6;
 
 	public $name = "Stray Pet";

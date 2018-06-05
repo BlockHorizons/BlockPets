@@ -13,6 +13,6 @@ class BatPet extends HoveringPet implements SmallCreature {
 
 	public $name = "Bat Pet";
 
-	public $width = 0.3;
-	public $height = 0.3;
+	public $width = 0.5;
+	public $height = 0.9;
 }

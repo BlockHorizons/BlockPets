@@ -10,7 +10,7 @@ class MooshroomPet extends WalkingPet {
 
 	const NETWORK_ID = self::MOOSHROOM;
 
-	public $height = 1.3;
+	public $height = 1.4;
 	public $width = 0.9;
 
 	public $name = "Mooshroom Pet";

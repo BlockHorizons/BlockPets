@@ -10,8 +10,8 @@ class WitherSkeletonPet extends WalkingPet {
 
 	const NETWORK_ID = self::WITHER_SKELETON;
 
-	public $height = 2.2;
-	public $width = 0.8;
+	public $height = 2.4;
+	public $width = 0.7;
 
 	public $name = "Wither Skeleton Pet";
 }

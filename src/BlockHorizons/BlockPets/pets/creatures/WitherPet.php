@@ -10,8 +10,8 @@ class WitherPet extends HoveringPet {
 
 	const NETWORK_ID = self::WITHER;
 
-	public $height = 3;
-	public $width = 3;
+	public $height = 3.5;
+	public $width = 0.9;
 
 	public $name = "Wither Pet";
 }

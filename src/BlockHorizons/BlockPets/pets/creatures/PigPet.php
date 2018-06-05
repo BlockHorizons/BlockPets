@@ -12,7 +12,7 @@ class PigPet extends WalkingPet implements SmallCreature {
 	const NETWORK_ID = self::PIG;
 
 	public $height = 0.9;
-	public $width = 0.7;
+	public $width = 0.9;
 
 	public $name = "Pig Pet";
 }

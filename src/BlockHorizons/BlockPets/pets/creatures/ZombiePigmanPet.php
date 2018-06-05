@@ -10,8 +10,8 @@ class ZombiePigmanPet extends WalkingPet {
 
 	const NETWORK_ID = self::ZOMBIE_PIGMAN;
 
-	public $height = 1.8;
-	public $width = 0.72;
+	public $height = 1.95;
+	public $width = 0.6;
 
 	public $name = "Zombie Pigman Pet";
 }

@@ -10,8 +10,8 @@ class SheepPet extends WalkingPet {
 
 	const NETWORK_ID = self::SHEEP;
 
-	public $height = 1.2;
-	public $width = 0.8;
+	public $height = 1.3;
+	public $width = 0.9;
 
 	public $name = "Sheep Pet";
 
