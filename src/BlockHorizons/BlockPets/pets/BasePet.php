@@ -14,6 +14,7 @@ use BlockHorizons\BlockPets\pets\inventory\PetInventoryManager;
 use BlockHorizons\BlockPets\tasks\PetRespawnTask;
 use pocketmine\entity\Attribute;
 use pocketmine\entity\Creature;
+use pocketmine\entity\Entity;
 use pocketmine\entity\Rideable;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
@@ -23,6 +24,7 @@ use pocketmine\item\Item;
 use pocketmine\level\Level;
 use pocketmine\level\particle\HeartParticle;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\network\mcpe\protocol\AddEntityPacket;
 use pocketmine\network\mcpe\protocol\SetEntityLinkPacket;
 use pocketmine\network\mcpe\protocol\types\EntityLink;
 use pocketmine\Player;
@@ -40,6 +42,9 @@ abstract class BasePet extends Creature implements Rideable {
 	const TIER_EPIC = 4;
 	const TIER_LEGENDARY = 5;
 
+	const LINK_RIDING = 0;
+	const LINK_RIDER = 1;
+
 	/** @var string */
 	public $name = "";
 	/** @var float */
@@ -49,8 +54,6 @@ abstract class BasePet extends Creature implements Rideable {
 	protected $petLevel = 0;
 	/** @var string */
 	protected $petName = "";
-	/** @var bool */
-	protected $ridden = false;
 	/** @var Player|null */
 	protected $rider = null;
 	/** @var Vector3 */
@@ -88,6 +91,8 @@ abstract class BasePet extends Creature implements Rideable {
 	/** @var float */
 	protected $zOffset = 0.0;
 
+	/** @var EntityLink[] */
+	private $links = [];
 	/** @var Player */
 	private $petOwner = "";
 	/** @var bool */
@@ -274,6 +279,22 @@ abstract class BasePet extends Creature implements Rideable {
 		}
 
 		parent::spawnTo($player);
+	}
+
+	protected function sendSpawnPacket(Player $player): void {
+		$pk = new AddEntityPacket();
+		$pk->entityRuntimeId = $this->getId();
+		$pk->type = static::NETWORK_ID;
+		$pk->position = $this->asVector3();
+		$pk->motion = $this->getMotion();
+		$pk->yaw = $this->yaw;
+		$pk->pitch = $this->pitch;
+		$pk->attributes = $this->attributeMap->getAll();
+		$pk->metadata = $this->propertyManager->getAll();
+		$pk->links = array_values($this->links);
+		$player->dataPacket($pk);
+
+var_dump($pk->links);
 	}
 
 	/**
@@ -544,6 +565,22 @@ abstract class BasePet extends Creature implements Rideable {
 		return true;
 	}
 
+	protected function applyGravity(): void {
+		if($this->isRiding()) {
+			return;
+		}
+
+		parent::applyGravity();
+	}
+
+	protected function broadcastMovement(bool $teleport = false): void {
+		if($this->isRiding()) {
+			return;
+		}
+
+		parent::broadcastMovement($teleport);
+	}
+
 	/**
 	 * @param $currentTick
 	 *
@@ -551,6 +588,18 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	final public function onUpdate(int $currentTick): bool {
 		if(!parent::onUpdate($currentTick) && $this->isClosed()) {
+			return false;
+		}
+		if($this->isRiding()) {
+			$petOwner = $this->getPetOwner();
+
+			$x = $petOwner->x - $this->x;
+			$y = $petOwner->y - $this->y;
+			$z = $petOwner->z - $this->z;
+
+			if($x !== 0.0 || $z !== 0.0 || $y !== -$petOwner->height) {
+				$this->fastMove($x, $y + $petOwner->height, $z);
+			}
 			return false;
 		}
 		if(!$this->checkUpdateRequirements()) {
@@ -569,7 +618,7 @@ abstract class BasePet extends Creature implements Rideable {
 				return true;
 			}
 			++$this->positionSeekTick;
-				if($this->shouldFindNewPosition()) {
+			if($this->shouldFindNewPosition()) {
 				if(!$this->getLoader()->getBlockPetsConfig()->shouldStalkPetOwner()) {
 					if((bool) random_int(0, 1)) {
 						$multiplicationValue = 1;
@@ -612,38 +661,17 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	public function throwRiderOff(): bool {
-		if(!$this->ridden) {
+		if(!$this->isRidden()) {
 			return false;
 		}
 
-		$owner = $this->getPetOwner();
-
-		$pk = new SetEntityLinkPacket();
-		$link = new EntityLink();
-		$link->fromEntityUniqueId = $this->getId();
-		$link->type = self::STATE_STANDING;
-		$link->toEntityUniqueId = $owner->getId();
-		$link->bool1 = true;
-
-		$pk->link = $link;
-		$this->ridden = false;
 		$rider = $this->getRider();
 		$this->rider = null;
-		$owner->canCollide = true;
-		$this->server->broadcastPacket($this->getViewers(), $pk);
+		$rider->canCollide = true;
+		$this->removeLink($rider, self::LINK_RIDER);
 
-		$pk = new SetEntityLinkPacket();
-
-		$link = new EntityLink();
-		$link->fromEntityUniqueId = $owner->getId();
-		$link->type = self::STATE_STANDING;
-		$link->toEntityUniqueId = 0;
-		$link->bool1 = true;
-
-		$pk->link = $link;
-		$owner->dataPacket($pk);
 		$rider->setGenericFlag(self::DATA_FLAG_RIDING, false);
-		if($owner->isSurvival()) {
+		if($rider->isSurvival()) {
 			$rider->setAllowFlight(false);
 		}
 		$rider->onGround = true;
@@ -671,44 +699,26 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	public function setRider(Player $player): bool {
-		if($this->ridden) {
+		if($this->isRidden()) {
 			return false;
 		}
 
-		$this->ridden = true;
 		$this->rider = $player;
 		$player->canCollide = false;
 		$owner = $this->getPetOwner();
 		$player->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, $this->rider_seatpos);
+
+		$this->addLink($player, self::LINK_RIDER);
+
 		$player->setGenericFlag(self::DATA_FLAG_RIDING, true);
 		$this->setGenericFlag(self::DATA_FLAG_SADDLED, true);
-
-		$pk = new SetEntityLinkPacket();
-		$link = new EntityLink();
-		$link->fromEntityUniqueId = $this->getId();
-		$link->type = self::STATE_SITTING;
-		$link->toEntityUniqueId = $player->getId();
-		$link->bool1 = true;
-
-		$pk->link = $link;
-		$this->server->broadcastPacket($this->getViewers(), $pk);
-
-		$pk = new SetEntityLinkPacket();
-		$link = new EntityLink();
-		$link->fromEntityUniqueId = $this->getId();
-		$link->type = self::STATE_SITTING;
-		$link->toEntityUniqueId = 0;
-		$link->bool1 = true;
-
-		$pk->link = $link;
-		$player->dataPacket($pk);
 
 		if($owner->isSurvival()) {
 			$owner->setAllowFlight(true); // Set allow flight to true to prevent any 'kicked for flying' issues.
 		}
 
 		$this->width = max($player->width, $this->width);//adding more vertical area to the BB, so the horizontal can just be the maximum.
-		$this->height = $this->rider_seatpos->y;
+		$this->height = max(($this->rider_seatpos->y / 2.5) + $player->height, $this->height);
 		$this->recalculateBoundingBox();
 		return true;
 	}
@@ -767,9 +777,6 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	protected function checkUpdateRequirements(): bool {
-		if($this->isRiding()) {
-			return false;
-		}
 		if(!$this->visibility) {
 			return false;
 		}
@@ -778,7 +785,6 @@ abstract class BasePet extends Creature implements Rideable {
 			return false;
 		}
 		if($this->getPetOwner()->isClosed()) {
-			$this->ridden = false;
 			$this->rider = null;
 			$this->riding = false;
 			$this->despawnFromAll();
@@ -793,12 +799,14 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	public function close(): void {
-		$loader = $this->getLoader();
-		if(!$loader->getBlockPetsConfig()->storeToDatabase()) {
-			$loader->getDatabase()->unregisterPet($this);
-			$loader->removePet($this, false);
+		if(!$this->closed) {
+			$loader = $this->getLoader();
+			if(!$loader->getBlockPetsConfig()->storeToDatabase()) {
+				$loader->getDatabase()->unregisterPet($this);
+				$loader->removePet($this, false);
+			}
+			parent::close();
 		}
-		parent::close();
 	}
 
 	public function onDeath(): void {
@@ -831,7 +839,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	public function isRidden(): bool {
-		return $this->ridden;
+		return $this->rider !== null;
 	}
 
 	/**
@@ -853,6 +861,153 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
+	 * Adds a link to this pet.
+	 *
+	 * @param Entity $entity
+	 * @param int $type
+	 */
+	public function addLink(Entity $entity, int $type): void {
+		$this->removeLink($entity, $type);
+		$viewers = $this->getViewers();
+
+		switch($type) {
+			case self::LINK_RIDER:
+				$link = new EntityLink();
+				$link->fromEntityUniqueId = $this->getId();
+				$link->type = self::STATE_SITTING;
+				$link->toEntityUniqueId = $entity->getId();
+				$link->bool1 = true;
+
+				if($entity instanceof Player) {
+					$pk = new SetEntityLinkPacket();
+					$pk->link = $link;
+					$entity->dataPacket($pk);
+
+					$link_2 = new EntityLink();
+					$link_2->fromEntityUniqueId = $this->getId();
+					$link_2->type = self::STATE_SITTING;
+					$link_2->toEntityUniqueId = 0;
+					$link_2->bool1 = true;
+
+					$pk = new SetEntityLinkPacket();
+					$pk->link = $link_2;
+					$entity->dataPacket($pk);
+					unset($viewers[$entity->getLoaderId()]);
+				}
+				break;
+			case self::LINK_RIDING:
+				$link = new EntityLink();
+				$link->fromEntityUniqueId = $entity->getId();
+				$link->type = self::STATE_SITTING;
+				$link->toEntityUniqueId = $this->getId();
+				$link->bool1 = true;
+
+				if($entity instanceof Player) {
+					$pk = new SetEntityLinkPacket();
+					$pk->link = $link;
+					$entity->dataPacket($pk);
+
+					$link_2 = new EntityLink();
+					$link_2->fromEntityUniqueId = $entity->getId();
+					$link_2->type = self::STATE_SITTING;
+					$link_2->toEntityUniqueId = 0;
+					$link_2->bool1 = true;
+
+					$pk = new SetEntityLinkPacket();
+					$pk->link = $link_2;
+					$entity->dataPacket($pk);
+					unset($viewers[$entity->getLoaderId()]);
+				}
+				break;
+			default:
+				throw new \InvalidArgumentException();
+		}
+
+		if(!empty($viewers)) {
+			$pk = new SetEntityLinkPacket();
+			$pk->link = $link;
+			$this->server->broadcastPacket($viewers, $pk);
+		}
+
+		$this->links[$type] = $link;
+	}
+
+	/**
+	 * Removes a link from this pet.
+	 *
+	 * @param Entity $entity
+	 * @param int $type
+	 */
+	public function removeLink(Entity $entity, int $type): void {
+		if(!isset($this->links[$type])) {
+			return;
+		}
+
+		$viewers = $this->getViewers();
+
+		switch($type) {
+			case self::LINK_RIDER:
+				$link = new EntityLink();
+				$link->fromEntityUniqueId = $this->getId();
+				$link->type = self::STATE_STANDING;
+				$link->toEntityUniqueId = $entity->getId();
+				$link->bool1 = true;
+
+				if($entity instanceof Player) {
+					$pk = new SetEntityLinkPacket();
+					$pk->link = $link;
+					$entity->dataPacket($pk);
+
+					$link_2 = new EntityLink();
+					$link_2->fromEntityUniqueId = $entity->getId();
+					$link_2->type = self::STATE_STANDING;
+					$link_2->toEntityUniqueId = 0;
+					$link_2->bool1 = true;
+
+					$pk = new SetEntityLinkPacket();
+					$pk->link = $link_2;
+					$entity->dataPacket($pk);
+					unset($viewers[$entity->getLoaderId()]);
+				}
+				break;
+			case self::LINK_RIDING:
+				$link = new EntityLink();
+				$link->fromEntityUniqueId = $entity->getId();
+				$link->type = self::STATE_STANDING;
+				$link->toEntityUniqueId = $this->getId();
+				$link->bool1 = true;
+
+				if($entity instanceof Player) {
+					$pk = new SetEntityLinkPacket();
+					$pk->link = $link;
+					$entity->dataPacket($pk);
+
+					$link_2 = new EntityLink();
+					$link_2->fromEntityUniqueId = $entity->getId();
+					$link_2->type = self::STATE_STANDING;
+					$link_2->toEntityUniqueId = 0;
+					$link_2->bool1 = true;
+
+					$pk = new SetEntityLinkPacket();
+					$pk->link = $link_2;
+					$entity->dataPacket($pk);
+					unset($viewers[$entity->getLoaderId()]);
+				}
+				break;
+			default:
+				throw new \InvalidArgumentException();
+		}
+
+		unset($this->links[$type]);
+
+		if(!empty($viewers)) {
+			$pk = new SetEntityLinkPacket();
+			$pk->link = $link;
+			$this->server->broadcastPacket($viewers, $pk);
+		}
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function sitOnOwner(): bool {
@@ -863,29 +1018,8 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->getDataPropertyManager()->setVector3(self::DATA_RIDER_SEAT_POSITION, $this->seatpos);
 		$this->setGenericFlag(self::DATA_FLAG_RIDING, true);
 		$this->setGenericFlag(self::DATA_FLAG_SADDLED, false);
-		$petOwner = $this->getPetOwner();
 
-		$pk = new SetEntityLinkPacket();
-		$link = new EntityLink();
-		$link->fromEntityUniqueId = $petOwner->getId();
-		$link->type = self::STATE_SITTING;
-		$link->toEntityUniqueId = $this->getId();
-		$link->bool1 = true;
-		$pk->link = $link;
-		$petOwner->dataPacket($pk);
-
-		$viewers = $this->getViewers();
-		unset($viewers[$petOwner->getLoaderId()]);
-		if(!empty($viewers)) {
-			$pk = new SetEntityLinkPacket();
-			$link = new EntityLink();
-			$link->fromEntityUniqueId = $petOwner->getId();
-			$link->type = self::STATE_SITTING;
-			$link->toEntityUniqueId = $this->getId();
-			$link->bool1 = false;
-			$pk->link = $link;
-			$this->server->broadcastPacket($viewers, $pk);
-		}
+		$this->addLink($this->getPetOwner(), self::LINK_RIDING);
 		return true;
 	}
 
@@ -898,18 +1032,8 @@ abstract class BasePet extends Creature implements Rideable {
 		}
 		$this->riding = false;
 		$this->setGenericFlag(self::DATA_FLAG_RIDING, false);
-
 		$petOwner = $this->getPetOwner();
-
-		$pk = new SetEntityLinkPacket();
-		$link = new EntityLink();
-		$link->fromEntityUniqueId = $petOwner->getId();
-		$link->type = self::STATE_STANDING;
-		$link->toEntityUniqueId = $this->getId();
-		$link->bool1 = true;
-
-		$pk->link = $link;
-		$this->server->broadcastPacket($this->getViewers(), $pk);
+		$this->removeLink($petOwner, self::LINK_RIDING);
 		$this->teleport($petOwner);
 		return true;
 	}
