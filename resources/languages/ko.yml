@@ -6,7 +6,7 @@ prefix:
 
 commands:
   errors:
-    console-use: "콘솔에서 해당 명령어를 사용할 때는 모든 매개 변수가 제공되어야 합니다."
+    console-use: "콘솔에서 해당 명령어를 사용할 때는 모든 인수가 제공되어야 합니다."
     no-console-use: "해당 명령어는 플레이어만 사용할 수 있습니다."
     no-permission: "해당 명령어를 사용할 수 있는 권한이 없습니다."
     plugin-cancelled: "플러그인이 해당 작업을 취소했습니다."
@@ -14,6 +14,7 @@ commands:
     pet:
       doesnt-exist: "주어진 이름의 애완동물은 없습니다."
       numeric: "애완동물 규모는 숫자여야 합니다."
+      none-on-server: "이 서버에는 애완동물이 없습니다."
       
     player:
       not-found: "주어진 플레이어를 찾을 수 없습니다."
@@ -33,7 +34,11 @@ commands:
 
   leveluppet:
     success: "애완동물을 성공적으로 레벨업했습니다: &b%s &r&a %s!"
-    
+
+  listpets:
+    no-pets-found: "&c애완동물을 가지고 있지 않습니다."
+    no-pets-found-type: "&c%s을(를) 가지고 있지 않습니다."
+
   spawnpet:
     no-permission: "해당 애완동물을 생성할 권한이 없습니다."
     no-permission-others: "다른 플레이어에게 애완동물을 생성할 권한이 없습니다."
@@ -50,4 +55,8 @@ commands:
     no-pet-specified: "전환할 애완동물을 선택하지 않았습니다."
     success: "애완동물을 %s(으)로 성공적으로 전환했습니다!"
     success-others: "애완동물 &b%s&r&a을(를) %s(으)로 성공적으로 전환했습니다!"
+    success-specific: "애완동물 %s을(를) %s(으)로 성공적으로 전환했습니다."
+    success-specific-others: "%s의 애완동물을 %s(으)로 성공적으로 전환했습니다."
+    success-diff: "당신의 애완동물을 성공적으로 전환했습니다, 보이는 애완동물: &b%s."
+    success-diff-others: "%s의 애완동물을 성공적으로 전환했습니다, 보이는 애완동물: &b%s."
 ...
