@@ -218,7 +218,7 @@ class Loader extends PluginBase {
 	public function onEnable() {
 		if(!is_dir($this->getDataFolder())) {
 			mkdir($this->getDataFolder());
-			$this->saveResoucre(".version_file");
+			$this->saveResource(".version_file");
 		}
 
 		$database_stmts = $this->getDataFolder() . "database_stmts/";
