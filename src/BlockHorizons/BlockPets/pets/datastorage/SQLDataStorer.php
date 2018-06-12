@@ -69,10 +69,11 @@ class SQLDataStorer extends BaseDataStorer {
 		], $callable);
 	}
 
-	public function getPetsLeaderboard(int $offset = 0, int $length = 1, callable $callable): void {
+	public function getPetsLeaderboard(int $offset = 0, int $length = 1, ?string $entityName = null, callable $callable): void {
 		$this->database->executeSelect(SQLDataStorer::PET_LEADERBOARD, [
 			"offset" => $offset,
-			"length" => $length
+			"length" => $length,
+			"entityname" => $entityName ?? "%"
 		], $callable);
 	}
 

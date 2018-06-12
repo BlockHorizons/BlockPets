@@ -14,17 +14,34 @@ class PetsTopCommand extends BaseCommand {
 	const ENTRIES_PER_PAGE = 10;//No. of pets to list per page.
 
 	public function __construct(Loader $loader) {
-		parent::__construct($loader, "petstop", "Lists the pets leaderboard", "/petstop [page=1]", ["petsleaderboard", "toppets"]);
+		parent::__construct($loader, "petstop", "Lists the pets leaderboard", "/petstop [EntityName=ALL] [page=1]", ["petsleaderboard", "toppets"]);
 		$this->setPermission("blockpets.command.petstop");
 	}
 
 	public function onCommand(CommandSender $sender, string $commandLabel, array $args): bool {
-		$page = isset($args[0]) ? max(1, (int) $args[0]) : 1;
+		$loader = $this->getLoader();
 
-		$this->getLoader()->getDatabase()->getPetsLeaderboard(
+		if(isset($args[1]) || (isset($args[0]) && !is_numeric($args[0]))) {
+			$entityName = $args[0];
+			$page = max(1, (int) ($args[1] ?? 1));
+		} else {
+			$page = max(1, (int) ($args[0] ?? 1));
+			$entityName = null;
+		}
+
+		if($entityName !== null) {
+			$entityName = $loader->getPet($entityName);
+			if($entityName === null) {
+				$sender->sendMessage($loader->translate("commands.errors.pet.doesnt-exist"));
+				return true;
+			}
+		}
+
+		$loader->getDatabase()->getPetsLeaderboard(
 			($page - 1) * self::ENTRIES_PER_PAGE,
 			self::ENTRIES_PER_PAGE,
-			function(array $rows) use($sender, $page, $commandLabel): void {
+			$entityName,
+			function(array $rows) use($sender, $page, $commandLabel, $entityName): void {
 				$pets = "";
 				$index = PetsTopCommand::ENTRIES_PER_PAGE * ($page - 1);
 
@@ -41,9 +58,17 @@ class PetsTopCommand extends BaseCommand {
 
 				if($pets === "") {
 					if($page === 1) {
-						$sender->sendMessage(TextFormat::RED . $loader->translate("commands.errors.pets.none-on-server"));
+						if($entityName === null) {
+							$sender->sendMessage(TextFormat::RED . $loader->translate("commands.errors.pets.none-on-server"));
+						} else {
+							$sender->sendMessage(TextFormat::RED . $loader->translate("commands.errors.pets.none-on-server-type", [$entityName]));
+						}
 					} else {
-						$this->onCommand($sender, $commandLabel, [1]);//send first page.
+						if($entityName === null) {
+							$this->onCommand($sender, $commandLabel, [1]);//send first page.
+						} else {
+							$this->onCommand($sender, $commandLabel, [$entityName, 1]);//send first page.
+						}
 					}
 				} else {
 					$message = TextFormat::GREEN . "--- Pets Leaderboard " . TextFormat::YELLOW . "#" . $page . TextFormat::GREEN . " ---" . TextFormat::EOL;

@@ -88,13 +88,14 @@ WHERE Player=:player AND petname=:petname;
 -- #    { leaderboard
 -- #      :offset int
 -- #      :length int
+-- #      :entityname string
 SELECT
   Player,
   PetName,
   EntityName,
   PetLevel,
   LevelPoints
-FROM Pets ORDER BY LevelPoints, PetLevel DESC LIMIT :offset, :length;
+FROM Pets WHERE EntityName LIKE :entityname ORDER BY LevelPoints, PetLevel DESC LIMIT :offset, :length;
 -- #    }
 
 -- #    { visibility

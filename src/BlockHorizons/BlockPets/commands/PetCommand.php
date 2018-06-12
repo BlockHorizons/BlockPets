@@ -21,8 +21,8 @@ class PetCommand extends BaseCommand {
 		"/leveluppet <name> [amount] [player]: Levels up the first pet with the given name by the amount, and checks for player if given.",
 		"/clearpet <name>: Clears one of your own pets with the given name.",
 		"/changepetname <old name> <new name> [player]: Changes the name of one of your pets, or the pet of other players if specified.",
-		"/listpets [EntityName] [page=1]: Lists all your pets.",
-		"/petstop [page=1]: Displays pets leaderboard."
+		"/listpets [EntityName=ALL] [page=1]: Lists all your pets.",
+		"/petstop [EntityName=ALL] [page=1]: Displays pets leaderboard."
 	];
 
 	const HELP_MESSAGES_PER_PAGE = 4;//When executed in console, all help messages are displayed irrespective of the page specified.

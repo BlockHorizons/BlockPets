@@ -101,12 +101,15 @@ abstract class BaseDataStorer {
 	 * Fetches all pets sorted by their level and points
 	 * and calls the callable to get the list of sorted
 	 * pets.
+	 * If $entityName is not null, only entities with the
+	 * specified entity name will be fetched.
 	 *
 	 * @param int $offset
 	 * @param int $length
+	 * @param string|null $entityName
 	 * @param callable $callable
 	 */
-	public abstract function getPetsLeaderboard(int $offset = 0, int $length = 1, callable $callable): void;
+	public abstract function getPetsLeaderboard(int $offset = 0, int $length = 1, ?string $entityName = null, callable $callable): void;
 
 	/**
 	 * Toggles pets on or off from the database.
