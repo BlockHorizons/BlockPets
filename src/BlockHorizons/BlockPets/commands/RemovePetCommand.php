@@ -31,6 +31,7 @@ class RemovePetCommand extends BaseCommand {
 				return true;
 			}
 			$loader->removePet($pet);
+			$loader->getDatabase()->unregisterPet($pet);
 			$sender->sendMessage(TF::GREEN . $loader->translate("commands.removepet.success", [$pet->getPetName()]));
 			return true;
 		}
@@ -41,6 +42,7 @@ class RemovePetCommand extends BaseCommand {
 		}
 
 		$loader->removePet($pet);
+		$loader->getDatabase()->unregisterPet($pet);
 		$sender->sendMessage(TF::GREEN . $loader->translate("commands.removepet.success", [$pet->getPetName()]));
 		return true;
 	}

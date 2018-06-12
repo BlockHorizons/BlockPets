@@ -477,11 +477,11 @@ class Loader extends PluginBase {
 	 * Returns the first pet found with the given name.
 	 *
 	 * @param string $name
-	 * @param string $player
+	 * @param string|null $player
 	 *
 	 * @return BasePet|null
 	 */
-	public function getPetByName(string $name, string $player = null): ?BasePet {
+	public function getPetByName(string $name, ?string $player = null): ?BasePet {
 		$name = strtolower($name);
 		if($player !== null) {
 			return $this->playerPets[strtolower($player)][$name] ?? null;
