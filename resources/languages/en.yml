@@ -22,14 +22,17 @@ commands:
       no-pet: "You do not own a pet with the given name."
       no-pet-other: "The given player does not own a pet with that name."
       already-own-pet: "You already own a pet with that name."
-         
+
+  addpetpoints:
+    success: "Successfully added &b%sxp&a to the pet &b%s&r&a!"
+
   changepetname:
     no-permission: "You don't have permission to change the name of pets from other players."
     success: "Successfully changed the name of %s &r&ato %s!"
-    
+
   clearpet:
     success: "Successfully cleared the pet &b%s&a!"
-    
+
   healpet:
     success: "The pet %s &r&a has been healed successfully!"
 
@@ -48,10 +51,10 @@ commands:
     name: "Please type a name for your pet in chat!"
     selecting-name: "%s is now selecting a name for their pet!"
     exceeded-limit: "%s exceeded the pet limit."
-    
+
   removepet:
     success: "Successfully removed the pet &b%s&a!"
-    
+
   togglepet:
     no-pet-specified: "You did not specify a pet to toggle."
     success: "Successfully toggled your pets %s!"

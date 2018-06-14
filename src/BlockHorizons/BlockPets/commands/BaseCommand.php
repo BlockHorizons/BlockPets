@@ -45,13 +45,6 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 	}
 
 	/**
-	 * @return Loader
-	 */
-	public function getLoader(): Loader {
-		return $this->loader;
-	}
-
-	/**
 	 * @param CommandSender $sender
 	 */
 	public function sendPermissionMessage(CommandSender $sender): void {
@@ -61,10 +54,16 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 	/**
 	 * @return Loader
 	 */
-	public function getPlugin(): Plugin {
+	public function getLoader(): Loader {
 		return $this->loader;
 	}
 
+	/**
+	 * @return Loader
+	 */
+	public function getPlugin(): Plugin {
+		return $this->loader;
+	}
 
 	/**
 	 * @param CommandSender $sender

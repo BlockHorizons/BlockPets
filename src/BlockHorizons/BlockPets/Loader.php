@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets;
 
+use BlockHorizons\BlockPets\commands\AddPetPointsCommand;
 use BlockHorizons\BlockPets\commands\BaseCommand;
 use BlockHorizons\BlockPets\commands\ChangePetNameCommand;
 use BlockHorizons\BlockPets\commands\ClearPetCommand;
@@ -276,8 +277,8 @@ class Loader extends PluginBase {
 	}
 
 	public function registerCommands(): void {
-		/** @var BaseCommand[] $petCommands */
-		$petCommands = [
+		$this->getServer()->getCommandMap()->registerAll($this->getName(), [
+			new AddPetPointsCommand($this),
 			new SpawnPetCommand($this),
 			new LevelUpPetCommand($this),
 			new RemovePetCommand($this),
@@ -288,10 +289,7 @@ class Loader extends PluginBase {
 			new ListPetsCommand($this),
 			new PetsTopCommand($this),
 			new PetCommand($this)
-		];
-		foreach($petCommands as $command) {
-			$this->getServer()->getCommandMap()->register($command->getName(), $command);
-		}
+		]);
 	}
 
 	public function registerEntities(): void {

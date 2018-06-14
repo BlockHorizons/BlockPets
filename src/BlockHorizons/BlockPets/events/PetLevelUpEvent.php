@@ -16,7 +16,7 @@ class PetLevelUpEvent extends PetEvent implements Cancellable {
 	private $to;
 
 	public function __construct(Loader $loader, BasePet $pet, int $from, int $to) {
-		parent::__construct($loader);
+		parent::__construct($loader, $pet);
 		$this->pet = $pet;
 		$this->from = $from;
 		$this->to = $to;
@@ -46,6 +46,10 @@ class PetLevelUpEvent extends PetEvent implements Cancellable {
 	 * @param int $to
 	 */
 	public function setTo(int $to): void {
+		if($to < 1) {
+			throw new \LogicException("Pet level cannot be negative.");
+		}
+
 		$this->to = $to;
 	}
 }

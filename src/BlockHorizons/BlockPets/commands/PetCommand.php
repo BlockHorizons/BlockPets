@@ -19,10 +19,11 @@ class PetCommand extends BaseCommand {
 		"/togglepet <all/pet name> [player]: Toggles a pet on/off, depending on the current state.",
 		"/healpet <name> [player]: Heals the first pet with the given name, and checks for a player if given.",
 		"/leveluppet <name> [amount] [player]: Levels up the first pet with the given name by the amount, and checks for player if given.",
+		"/addpetpoints <name> [amount] [player]: Adds pet points to the first pet with the given name by the amount, and checks for player if given.",
 		"/clearpet <name>: Clears one of your own pets with the given name.",
 		"/changepetname <old name> <new name> [player]: Changes the name of one of your pets, or the pet of other players if specified.",
 		"/listpets [EntityName=ALL] [page=1]: Lists all your pets.",
-		"/petstop [EntityName=ALL] [page=1]: Displays pets leaderboard."
+		"/petstop [EntityName=ALL] [page=1]: Displays pets leaderboard.",
 	];
 
 	const HELP_MESSAGES_PER_PAGE = 4;//When executed in console, all help messages are displayed irrespective of the page specified.
@@ -130,6 +131,7 @@ class PetCommand extends BaseCommand {
 				break;
 			default:
 			case "info":
+				$loader = $this->getLoader();
 				$sender->sendMessage(TextFormat::AQUA . "[BlockPets] Information\n" .
 					TextFormat::GREEN . "Version: " . TextFormat::YELLOW . $loader->getDescription()->getVersion() . "\n" .
 					TextFormat::GREEN . "Target API: " . TextFormat::YELLOW . implode(", ", $loader->getDescription()->getCompatibleApis()) . "\n" .
