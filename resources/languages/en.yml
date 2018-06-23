@@ -10,13 +10,13 @@ commands:
     no-console-use: "That command can only be used by players."
     no-permission: "You don't have permission to use that command."
     plugin-cancelled: "A plugin has cancelled that action."
-    
+
     pet:
       doesnt-exist: "A pet with the given name doesn't exist."
       numeric: "The pet scale should be numeric."
       none-on-server: "There are no pets on this server."
       none-on-server-type: "There are no %s pets on this server."
-      
+
     player:
       not-found: "The given player cannot be found."
       no-pet: "You do not own a pet with the given name."

@@ -10,25 +10,29 @@ commands:
     no-console-use: "해당 명령어는 플레이어만 사용할 수 있습니다."
     no-permission: "해당 명령어를 사용할 수 있는 권한이 없습니다."
     plugin-cancelled: "플러그인이 해당 작업을 취소했습니다."
-    
+
     pet:
       doesnt-exist: "주어진 이름의 애완동물은 없습니다."
       numeric: "애완동물 규모는 숫자여야 합니다."
       none-on-server: "이 서버에는 애완동물이 없습니다."
-      
+      none-on-server-type: "이 서버에는 %s 애완동물이 없습니다."
+
     player:
       not-found: "주어진 플레이어를 찾을 수 없습니다."
       no-pet: "주어진 이름의 애완동물을 가지고 있지 않습니다."
       no-pet-other: "주어진 플레이어는 해당 이름의 애완동물을 가지고 있지 않습니다."
       already-own-pet: "이미 해당 이름의 애완동물을 가지고 있습니다."
-         
+
+  addpetpoints:
+    success: "성공적으로 애완동물 &b%2$s&r&a에게 &b%1$s 경험치&a를 추가했습니다!"
+
   changepetname:
     no-permission: "다른 플레이어의 애완동물의 이름을 변경할 수 있는 권한이 없습니다."
     success: "%s의 이름&r&a을 %s(으)로 성공적으로 변경했습니다!"
-    
+
   clearpet:
     success: "애완동물 &b%s&a을(를) 성공적으로 제거했습니다!"
-    
+
   healpet:
     success: "애완동물 %s&r&a이(가) 성공적으로 치유되었습니다!"
 
@@ -47,16 +51,16 @@ commands:
     name: "애완동물의 이름을 대화에 입력해주세요!"
     selecting-name: "%s이(가) 애완동물의 이름을 선택하고 있습니다!"
     exceeded-limit: "%s이(가) 애완동물 제한을 넘었습니다."
-    
+
   removepet:
     success: "애완동물 &b%s&a을(를) 성공적으로 제거했습니다!"
-    
+
   togglepet:
     no-pet-specified: "전환할 애완동물을 선택하지 않았습니다."
     success: "애완동물을 %s(으)로 성공적으로 전환했습니다!"
     success-others: "애완동물 &b%s&r&a을(를) %s(으)로 성공적으로 전환했습니다!"
     success-specific: "애완동물 %s을(를) %s(으)로 성공적으로 전환했습니다."
     success-specific-others: "%s의 애완동물을 %s(으)로 성공적으로 전환했습니다."
-    success-diff: "당신의 애완동물을 성공적으로 전환했습니다, 보이는 애완동물: &b%s."
+    success-diff: "애완동물을 성공적으로 전환했습니다, 보이는 애완동물: &b%s."
     success-diff-others: "%s의 애완동물을 성공적으로 전환했습니다, 보이는 애완동물: &b%s."
 ...
