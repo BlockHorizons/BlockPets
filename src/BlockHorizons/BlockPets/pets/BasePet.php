@@ -814,7 +814,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$newPet->register();
 
 		$delay = $ev->getDelay() * 20;
-		$this->server->getScheduler()->scheduleDelayedTask(new PetRespawnTask($loader, $newPet), $delay);
+		$this->getLoader()->getScheduler()->scheduleDelayedTask(new PetRespawnTask($loader, $newPet), $delay);
 		$newPet->despawnFromAll();
 		$newPet->setDormant();
 	}
