@@ -17,8 +17,9 @@ class TogglePetCommand extends BaseCommand {
 	}
 
 	public function onCommand(CommandSender $sender, string $commandLabel, array $args): bool {
+		$loader = $this->getLoader();
 		if(!isset($args[0])) {
-			$this->sendWarning($sender, TextFormat::RED . $this->getLoader()->translate("commands.togglepet.no-pet-specified"));
+			$this->sendWarning($sender, TextFormat::RED . $loader->translate("commands.togglepet.no-pet-specified"));
 			return false;
 		}
 
@@ -34,8 +35,6 @@ class TogglePetCommand extends BaseCommand {
 				return true;
 			}
 		}
-
-		$loader = $this->getLoader();
 		$loader->getDatabase()->togglePets(
 			$player = $player->getName(),
 			$type = $args[0] === "all" ? null : $args[0],
