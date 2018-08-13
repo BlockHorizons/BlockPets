@@ -12,7 +12,6 @@ abstract class BaseTask extends Task {
 	protected $loader;
 
 	public function __construct(Loader $loader) {
-		
 		$this->loader = $loader;
 	}
 
