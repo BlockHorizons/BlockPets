@@ -8,7 +8,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class StrayPet extends WalkingPet {
 
-	const NETWORK_ID = self::STRAY;
+	const NETWORK_NAME = "STRAY_PET";
+	const NETWORK_ORIG = self::STRAY;
 
 	public $height = 1.99;
 	public $width = 0.6;

@@ -8,7 +8,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class SnowGolemPet extends WalkingPet {
 
-	const NETWORK_ID = self::SNOW_GOLEM;
+	const NETWORK_NAME = "SNOW_GOLEM_PET";
+	const NETWORK_ORIG = self::SNOW_GOLEM;
 
 	public $height = 1.9;
 	public $width = 0.7;

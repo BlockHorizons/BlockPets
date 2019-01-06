@@ -9,7 +9,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class OcelotPet extends WalkingPet implements SmallCreature {
 
-	const NETWORK_ID = self::OCELOT;
+	const NETWORK_NAME = "OCELOT_PET";
+	const NETWORK_ORIG = self::OCELOT;
 
 	public $name = "Ocelot Pet";
 

@@ -24,10 +24,6 @@ abstract class IrasciblePet extends BasePet {
 	/** @var Living|null */
 	private $target = null;
 
-	public function __construct(Level $level, CompoundTag $nbt) {
-		parent::__construct($level, $nbt);
-	}
-
 	/**
 	 * @param EntityDamageEvent $source
 	 */

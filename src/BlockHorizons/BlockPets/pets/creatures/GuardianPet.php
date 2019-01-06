@@ -8,7 +8,8 @@ use BlockHorizons\BlockPets\pets\SwimmingPet;
 
 class GuardianPet extends SwimmingPet {
 
-	const NETWORK_ID = self::GUARDIAN;
+	const NETWORK_NAME = "GUARDIAN_PET";
+	const NETWORK_ORIG = self::GUARDIAN;
 
 	public $width = 0.85;
 	public $height = 0.85;

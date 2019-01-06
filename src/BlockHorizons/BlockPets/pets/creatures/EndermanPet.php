@@ -8,7 +8,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class EndermanPet extends WalkingPet {
 
-	const NETWORK_ID = self::ENDERMAN;
+	const NETWORK_NAME = "ENDERMAN_PET";
+	const NETWORK_ORIG = self::ENDERMAN;
 
 	public $height = 2.9;
 	public $width = 0.6;

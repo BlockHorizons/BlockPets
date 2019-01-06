@@ -8,7 +8,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class PolarBearPet extends WalkingPet {
 
-	const NETWORK_ID = self::POLAR_BEAR;
+	const NETWORK_NAME = "POLAR_BEAR_PET";
+	const NETWORK_ORIG = self::POLAR_BEAR;
 
 	public $height = 1.4;
 	public $width = 1.3;

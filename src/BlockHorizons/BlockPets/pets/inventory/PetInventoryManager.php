@@ -35,9 +35,9 @@ class PetInventoryManager {
 
 	public function __construct(BasePet $pet) {
 		$this->pet = $pet;
-		$this->menu = InvMenu::create(InvMenu::TYPE_CUSTOM, PetInventory::class);
+		$this->menu = InvMenu::create(PetInventory::class);
 		$this->setName($pet->getPetName());
-		$this->getInventory()->setManager($this);
+		$this->menu->setInventoryCloseListener([$this,"onClose"]);
 	}
 
 	public function setName(string $name): void {
@@ -74,5 +74,13 @@ class PetInventoryManager {
 		$tag = new CompoundTag();
 		$tag->setTag($list);
 		return self::$nbtParser->writeCompressed($tag);
+	}
+
+	public function onClose(PetInventory $inventory, Player $player) : void {
+		$pet = $this->getPet();
+		$loader = $pppppet->getLoader();
+		if ($loader->getBlockPetsConfig()->storeToDatabase()){
+			$loader->getDatabase()->updateInventory($pet);
+		}
 	}
 }

@@ -9,7 +9,8 @@ use BlockHorizons\BlockPets\pets\SmallCreature;
 
 class ArrowPet extends HoveringPet implements SmallCreature {
 
-	const NETWORK_ID = self::ARROW;
+	const NETWORK_NAME = "ARROW_PET";
+	const NETWORK_ORIG = self::ARROW;
 
 	public $name = "Arrow Pet";
 

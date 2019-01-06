@@ -9,7 +9,7 @@ projects:
       - src: Falkirks/spoondetector/spoondetector
         version: ^0
       - src: poggit/libasynql/libasynql
-        version: ^3.0
+        version: ^3.1.1
       - src: muqsit/InvMenu/InvMenu
-        version: ^1.1.1
+        version: ^2.0.0
 ...

@@ -9,7 +9,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class CaveSpiderPet extends WalkingPet implements SmallCreature {
 
-	const NETWORK_ID = self::CAVE_SPIDER;
+	const NETWORK_NAME = "SPIDER_PET";
+	const NETWORK_ORIG = self::CAVE_SPIDER;
 
 	public $speed = 1.4;
 	public $height = 0.5;

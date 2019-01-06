@@ -9,7 +9,8 @@ use BlockHorizons\BlockPets\pets\SmallCreature;
 
 class MagmaCubePet extends BouncingPet implements SmallCreature {
 
-	const NETWORK_ID = self::MAGMA_CUBE;
+	const NETWORK_NAME = "MAGMA_CUBE_PET";
+	const NETWORK_ORIG = self::MAGMA_CUBE;
 
 	public $height = 0.51;
 	public $width = 0.51;

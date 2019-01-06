@@ -45,6 +45,10 @@ abstract class BasePet extends Creature implements Rideable {
 	const LINK_RIDING = 0;
 	const LINK_RIDER = 1;
 
+	const NETWORK_ID = -1;
+	const NETWORK_NAME = null;
+	const NETWORK_ORIG = null;
+	
 	/** @var string */
 	public $name = "";
 	/** @var float */
@@ -106,14 +110,19 @@ abstract class BasePet extends Creature implements Rideable {
 	/** @var float */
 	private $maxSize = 10.0;
 
-	public function __construct(Level $level, CompoundTag $nbt) {
-		$this->petOwner = $level->getServer()->getPlayerExact($nbt->getString("petOwner"));
-		if($this->petOwner === null) {
-			$this->close();
-			return;
-		}
+	final public function __construct(Level $level, CompoundTag $nbt) {
+	  if(static::NETWORK_ID !== -1) {
+            throw new \LogicException("Network IDs of pets cannot be overridden.");
+	  }
+	  if(static::NETWORK_NAME === null) {
+            throw new \LogicException("NETWORK_NAME constant in " . get_class($this) . " must be defined.");
+	  }
+	  if(static::NETWORK_ORIG === null) {
+            throw new \LogicException("NETWORK_NAME constant in " . get_class($this) . " must be defined.");
+	  }
 
-		parent::__construct($level, $nbt);
+	  $this->petOwner = $level->getServer()->getPlayerExact($nbt->getString("petOwner"));
+	  parent::__construct($level, $nbt);
 	}
 
 	public function register(): void {
@@ -238,7 +247,7 @@ abstract class BasePet extends Creature implements Rideable {
 	protected function sendSpawnPacket(Player $player): void {
 		$pk = new AddEntityPacket();
 		$pk->entityRuntimeId = $this->getId();
-		$pk->type = static::NETWORK_ID;
+		$pk->type = static::NETWORK_ORIG;
 		$pk->position = $this->asVector3();
 		$pk->motion = $this->getMotion();
 		$pk->yaw = $this->yaw;
@@ -294,7 +303,7 @@ abstract class BasePet extends Creature implements Rideable {
 					$this->getLevel()->addParticle(new HeartParticle($this->add(0, 2), 4));
 
 					if($this->getLoader()->getBlockPetsConfig()->giveExperienceWhenFed()) {
-						$this->addPetLevelPoints($nutrition / 40 * LevelCalculator::getRequiredLevelPoints($this->getPetLevel()));
+						$this->addPetLevelPoints( (int) ($nutrition / 40 * LevelCalculator::getRequiredLevelPoints($this->getPetLevel())) );
 					}
 
 					$this->calculator->updateNameTag();
