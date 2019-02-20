@@ -11,9 +11,9 @@ use pocketmine\utils\TextFormat;
 
 class PetCommand extends BaseCommand {
 
-	const HELP_MESSAGE_TITLE = TextFormat::GREEN . "--- BlockPets Help Page " . TextFormat::YELLOW . "{CURRENT_PAGE}/{TOTAL_PAGES}" . TextFormat::GREEN . " ---";
+	public const HELP_MESSAGE_TITLE = TextFormat::GREEN . "--- BlockPets Help Page " . TextFormat::YELLOW . "{CURRENT_PAGE}/{TOTAL_PAGES}" . TextFormat::GREEN . " ---";
 
-	const HELP_MESSAGES = [
+	public const HELP_MESSAGES = [
 		"/spawnpet <petType> [petName|select] [size] [isBaby] [player]: Spawns a new pet with the given data.",
 		"/removepet <name> [player]: Removes the first pet with the given name, and checks for a player if given.",
 		"/togglepet <all/pet name> [player]: Toggles a pet on/off, depending on the current state.",
@@ -26,7 +26,7 @@ class PetCommand extends BaseCommand {
 		"/petstop [EntityName=ALL] [page=1]: Displays pets leaderboard.",
 	];
 
-	const HELP_MESSAGES_PER_PAGE = 4;//When executed in console, all help messages are displayed irrespective of the page specified.
+	public const HELP_MESSAGES_PER_PAGE = 4;//When executed in console, all help messages are displayed irrespective of the page specified.
 
 	/** @var string[][] */
 	private $help_messages = [];
@@ -136,7 +136,8 @@ class PetCommand extends BaseCommand {
 					TextFormat::GREEN . "Version: " . TextFormat::YELLOW . $loader->getDescription()->getVersion() . "\n" .
 					TextFormat::GREEN . "Target API: " . TextFormat::YELLOW . implode(", ", $loader->getDescription()->getCompatibleApis()) . "\n" .
 					TextFormat::GREEN . "Organization: " . TextFormat::YELLOW . "BlockHorizons (https://github.com/BlockHorizons/BlockPets)\n" .
-					TextFormat::GREEN . "Authors: " . TextFormat::YELLOW . "Sandertv (@Sandertv), TheDiamondYT (@TheDiamondYT1)");
+					TextFormat::GREEN . "Authors: " . TextFormat::YELLOW . "Sandertv (@Sandertv), TheDiamondYT (@TheDiamondYT1)"
+				);
 				break;
 		}
 		return true;

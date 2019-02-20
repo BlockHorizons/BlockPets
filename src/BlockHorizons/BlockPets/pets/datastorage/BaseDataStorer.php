@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace BlockHorizons\BlockPets\pets\datastorage;
 
 use BlockHorizons\BlockPets\Loader;
-use BlockHorizons\BlockPets\pets\BasePet;
+use BlockHorizons\BlockPets\pets\datastorage\types\PetData;
 
 abstract class BaseDataStorer {
 
@@ -54,25 +54,18 @@ abstract class BaseDataStorer {
 	 * database, the database will perform an
 	 * UPDATE-ALL-VALUES instead.
 	 *
-	 * @param BasePet $pet
+	 * @param PetData $data
 	 */
-	public abstract function registerPet(BasePet $pet): void;
+	public abstract function registerPet(PetData $data): void;
 
 	/**
 	 * Deletes the pet's entry from the database
 	 * if exists.
 	 *
-	 * @param BasePet $pet
+	 * @param string $ownerName
+	 * @param string $petName
 	 */
-	public abstract function unregisterPet(BasePet $pet): void;
-
-	/**
-	 * Updates pet's level and level points if it's
-	 * entry exists in the database.
-	 *
-	 * @param BasePet $pet
-	 */
-	public abstract function updateExperience(BasePet $pet): void;
+	public abstract function unregisterPet(string $ownerName, string $petName): void;
 
 	/**
 	 * Retrieves all of the owner's pets from the
@@ -118,22 +111,6 @@ abstract class BaseDataStorer {
 	 * @param string|null $petName
 	 */
 	public abstract function togglePets(string $owner, ?string $petName, callable $callable): void;
-
-	/**
-	 * Updates the database with whether the pet is
-	 * chested or not.
-	 *
-	 * @param BasePet $pet
-	 */
-	public abstract function updateChested(BasePet $pet): void;
-
-	/**
-	 * Updates the database with the pet's inventory
-	 * contents.
-	 *
-	 * @param BasePet $pet
-	 */
-	public abstract function updateInventory(BasePet $pet): void;
 
 	/**
 	 * Called during plugin disable to let databases

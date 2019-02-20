@@ -20,29 +20,13 @@ class RemovePetCommand extends BaseCommand {
 			return false;
 		}
 
-		$loader = $this->getLoader();
 		if(isset($args[1])) {
-			if(($player = $loader->getServer()->getPlayer($args[1])) === null) {
-				$this->sendWarning($sender, $loader->translate("commands.errors.player.not-found"));
-				return true;
-			}
-			if(($pet = $loader->getPetByName($args[0], $player->getName())) === null) {
-				$this->sendWarning($sender, $loader->translate("commands.errors.player.no-pet-other"));
-				return true;
-			}
-			$loader->removePet($pet);
-			$loader->getDatabase()->unregisterPet($pet);
-			$sender->sendMessage(TF::GREEN . $loader->translate("commands.removepet.success", [$pet->getPetName()]));
-			return true;
+			$pet = $this->getPlayerPet($args[1], $args[0], $player, $session);
+		} else {
+			$pet = $this->getPetByName($args[0], $sender, $session);
 		}
 
-		if(($pet = $loader->getPetByName($args[0])) === null) {
-			$this->sendWarning($sender, $loader->translate("commands.errors.pet.doesnt-exist"));
-			return true;
-		}
-
-		$loader->removePet($pet);
-		$loader->getDatabase()->unregisterPet($pet);
+		$session->deletePet($pet);
 		$sender->sendMessage(TF::GREEN . $loader->translate("commands.removepet.success", [$pet->getPetName()]));
 		return true;
 	}

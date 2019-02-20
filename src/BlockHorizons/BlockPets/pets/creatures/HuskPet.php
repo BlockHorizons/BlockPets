@@ -8,8 +8,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class HuskPet extends WalkingPet {
 
-	const NETWORK_NAME = "HUSK_PET";
-	const NETWORK_ORIG = self::HUSK;
+	protected const PET_SAVE_ID = parent::PET_SAVE_ID . "husk";
+	protected const PET_NETWORK_ID = self::HUSK;
 
 	public $height = 1.95;
 	public $width = 0.6;

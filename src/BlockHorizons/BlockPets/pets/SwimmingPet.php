@@ -16,8 +16,8 @@ abstract class SwimmingPet extends BouncingPet {
 	/** @var float */
 	protected $follow_range_sq = 1.2;
 
-	public function doPetUpdates(int $currentTick): bool {
-		if(!parent::doPetUpdates($currentTick)) {
+	public function doPetUpdates(int $tickDiff): bool {
+		if(!parent::doPetUpdates($tickDiff)) {
 			return false;
 		}
 

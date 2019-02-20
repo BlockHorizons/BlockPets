@@ -23,22 +23,19 @@ class TogglePetCommand extends BaseCommand {
 			return false;
 		}
 
-		if(!($sender instanceof Player) && count($args) !== 2) {
+		if(isset($args[1])) {
+			$session = $this->getPlayerSession($args[1], $player);
+		} elseif(!($sender instanceof Player)) {
 			$this->sendConsoleError($sender);
-			return false;
+		} else {
+			$session = PlayerSession::get($sender);
+			$player = $sender;
 		}
 
-		$player = $sender;
-		if(isset($args[1])) {
-			if(($player = $loader->getServer()->getPlayer($args[1])) === null) {
-				$this->sendWarning($sender, TextFormat::RED . $loader->translate("commands.errors.player.not-found"));
-				return true;
-			}
-		}
 		$loader->getDatabase()->togglePets(
 			$player = $player->getName(),
 			$type = $args[0] === "all" ? null : $args[0],
-			function(array $rows) use($loader, $type, $sender, $player): void {
+			function(array $rows) use($loader, $type, $sender, $player, $session): void {
 				if(empty($rows)) {
 					$this->sendWarning($sender, TextFormat::RED . $loader->translate("commands.errors.player.no-pet"));
 					return;
@@ -51,7 +48,7 @@ class TogglePetCommand extends BaseCommand {
 						"PetName" => $petName,
 						"Visible" => $isVisible
 					]) {
-						$pet = $loader->getPetByName($petName, $player);
+						$pet = $session->getPet($petName);
 						if($pet !== null) {
 							$pets[$pet->getPetName()] = $isVisible;
 							$pet->updateVisibility((bool) $isVisible);
@@ -87,7 +84,7 @@ class TogglePetCommand extends BaseCommand {
 					}
 
 					["PetName" => $petName, "Visible" => $isVisible] = array_pop($rows);
-					$pet = $loader->getPetByName($petName, $player);
+					$pet = $session->getPet($petName);
 					if($pet === null) {
 						$this->sendWarning(TextFormat::RED . $sender, $loader->translate("commands.errors.player.no-pet"));
 						return;

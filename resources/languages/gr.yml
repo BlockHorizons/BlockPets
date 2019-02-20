@@ -11,6 +11,10 @@ commands:
     no-permission: "Δεν έχετε την άδεια να χρησιμοποιήσετε αυτήν την εντολή."
     plugin-cancelled: "Ένα άλλο πρόσθετο/plugin ακύρωσε αυτή την ενέργεια."
 
+    database:
+      player-not-loaded: "Please wait until your pets data has loaded."
+      player-not-loaded-other: "Please wait until %s's pet data has loaded."
+
     pet:
       doesnt-exist: "Ένα κατοικίδιο με το συγκεκριμένο όνομα δεν υπάρχει."
       numeric: "Η κλίμακα των κατοικίδιων πρέπει να είναι αριθμητική."

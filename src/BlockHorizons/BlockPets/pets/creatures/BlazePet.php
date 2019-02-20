@@ -8,8 +8,8 @@ use BlockHorizons\BlockPets\pets\HoveringPet;
 
 class BlazePet extends HoveringPet {
 
-	const NETWORK_NAME = "BLAZE_PET";
-	const NETWORK_ORIG = self::BLAZE;
+	protected const PET_SAVE_ID = parent::PET_SAVE_ID . "blaze";
+	protected const PET_NETWORK_ID = self::BLAZE;
 
 	public $width = 0.6;
 	public $height = 1.8;

@@ -57,6 +57,8 @@ DELETE FROM Pets;
 -- #      :chested int
 -- #      :petlevel int
 -- #      :levelpoints int
+-- #      :visible int
+-- #      :inventory string
 INSERT OR REPLACE INTO Pets(
   Player,
   PetName,
@@ -65,7 +67,9 @@ INSERT OR REPLACE INTO Pets(
   IsBaby,
   Chested,
   PetLevel,
-  LevelPoints
+  LevelPoints,
+  Visible,
+  Inventory
 ) VALUES (
   :player,
   :petname,
@@ -74,7 +78,9 @@ INSERT OR REPLACE INTO Pets(
   :isbaby,
   :chested,
   :petlevel,
-  :levelpoints
+  :levelpoints,
+  :visible,
+  :inventory
 );
 -- #    }
 
@@ -110,35 +116,6 @@ WHERE Player=:player AND PetName LIKE :petname;
 -- #        :petname string
 SELECT PetName, Visible FROM Pets
 WHERE Player=:player AND PetName LIKE :petname;
--- #      }
--- #    }
-
--- #    { update
--- #      { chested
--- #        :chested int
--- #        :player string
--- #        :petname string
-UPDATE Pets SET
-  Chested=:chested
-WHERE Player=:player AND PetName=:petname;
--- #      }
--- #      { exp
--- #        :petlevel int
--- #        :levelpoints int
--- #        :player string
--- #        :petname string
-UPDATE Pets SET
-  PetLevel=:petlevel,
-  LevelPoints=:levelpoints
-WHERE Player=:player AND PetName=:petname;
--- #      }
--- #      { inv
--- #        :inventory string
--- #        :player string
--- #        :petname string
-UPDATE Pets SET
-  Inventory=:inventory
-WHERE Player=:player AND PetName=:petname;
 -- #      }
 -- #    }
 -- #  }

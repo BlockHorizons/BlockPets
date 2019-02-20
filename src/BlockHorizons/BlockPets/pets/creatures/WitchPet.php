@@ -8,8 +8,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class WitchPet extends WalkingPet {
 
-	const NETWORK_NAME = "WITCH_PET";
-	const NETWORK_ORIG = self::WITCH;
+	protected const PET_SAVE_ID = parent::PET_SAVE_ID . "witch";
+	protected const PET_NETWORK_ID = self::WITCH;
 
 	public $height = 1.95;
 	public $width = 0.6;

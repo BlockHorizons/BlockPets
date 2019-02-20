@@ -9,8 +9,8 @@ use BlockHorizons\BlockPets\pets\SmallCreature;
 
 class VexPet extends HoveringPet implements SmallCreature {
 
-	const NETWORK_NAME = "VEX_PET";
-	const NETWORK_ORIG = self::VEX;
+	protected const PET_SAVE_ID = parent::PET_SAVE_ID . "vex";
+	protected const PET_NETWORK_ID = self::VEX;
 
 	public $height = 0.8;
 	public $width = 0.4;

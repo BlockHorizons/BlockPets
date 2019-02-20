@@ -21,26 +21,15 @@ class HealPetCommand extends BaseCommand {
 			return false;
 		}
 
-		$loader = $this->getLoader();
-		if(($pet = $loader->getPetByName($args[0])) === null) {
-			$this->sendWarning($sender, $loader->translate("commands.errors.pet.doesnt-exist"));
-			return true;
-		}
-
 		if(isset($args[1])) {
-			if(($player = $loader->getServer()->getPlayer($args[1])) === null) {
-				$this->sendWarning($sender, $loader->translate("commands.errors.player.not-found"));
-				return true;
-			}
-			if(($pet = $loader->getPetByName($args[0], $player->getName())) === null) {
-				$this->sendWarning($sender, $loader->translate("commands.errors.player.no-pet-other"));
-				return true;
-			}
+			$pet = $this->getPlayerPet($args[1], $args[0]);
+		} else {
+			$pet = $this->getPetByName($args[0], $sender);
 		}
 
 		$pet->fullHeal();
 		$pet->getLevel()->addParticle(new HeartParticle($pet->add(0, 2), 4));
-		$sender->sendMessage(TF::GREEN . $loader->translate("commands.healpet.success", [$pet->getPetName()]));
+		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.healpet.success", [$pet->getPetName()]));
 		return true;
 	}
 }

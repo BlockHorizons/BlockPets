@@ -8,8 +8,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class WitherSkeletonPet extends WalkingPet {
 
-	const NETWORK_NAME = "WITHER_SKELETON_PET";
-	const NETWORK_ORIG = self::WITHER_SKELETON;
+	protected const PET_SAVE_ID = parent::PET_SAVE_ID . "wither_skeleton";
+	protected const PET_NETWORK_ID = self::WITHER_SKELETON;
 
 	public $height = 2.4;
 	public $width = 0.7;

@@ -26,14 +26,8 @@ class ClearPetCommand extends BaseCommand {
 			return false;
 		}
 
-		$loader = $this->getLoader();
-		if(($pet = $loader->getPetByName($args[0], $sender->getName())) === null) {
-			$this->sendWarning($sender, $loader->translate("commands.errors.pet.doesnt-exist"));
-			return true;
-		}
-
-		$loader->removePet($pet);
-		$loader->getDatabase()->unregisterPet($pet);
+		$pet = $this->getPetByName($args[0], $sender, $session);
+		$session->deletePet($pet);
 		$sender->sendMessage(TF::GREEN . $loader->translate("commands.removepet.success", [$pet->getPetName()]));
 		return true;
 	}

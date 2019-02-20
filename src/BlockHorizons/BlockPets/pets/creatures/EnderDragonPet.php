@@ -8,8 +8,8 @@ use BlockHorizons\BlockPets\pets\HoveringPet;
 
 class EnderDragonPet extends HoveringPet {
 
-	const NETWORK_NAME = "ENDER_DRAGON_PET";
-	const NETWORK_ORIG = self::ENDER_DRAGON;
+	protected const PET_SAVE_ID = parent::PET_SAVE_ID . "ender_dragon";
+	protected const PET_NETWORK_ID = self::ENDER_DRAGON;
 
 	public $name = "Ender Dragon Pet";
 

@@ -12,8 +12,8 @@ use pocketmine\Player;
 
 class ElderGuardianPet extends SwimmingPet {
 
-	const NETWORK_NAME = "ELDER_GUARDIAN_PET";
-	const NETWORK_ORIG = self::ELDER_GUARDIAN;
+	protected const PET_SAVE_ID = parent::PET_SAVE_ID . "elder_guardian";
+	protected const PET_NETWORK_ID = self::ELDER_GUARDIAN;
 
 	public $width = 1.9975;
 	public $height = 1.9975;

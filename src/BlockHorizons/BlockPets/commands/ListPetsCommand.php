@@ -5,13 +5,14 @@ declare(strict_types = 1);
 namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
+use BlockHorizons\BlockPets\pets\PetFactory;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
 class ListPetsCommand extends BaseCommand {
 
-	const ENTRIES_PER_PAGE = 10;//No. of pets to list per page.
+	public const ENTRIES_PER_PAGE = 10;//No. of pets to list per page.
 
 	public function __construct(Loader $loader) {
 		parent::__construct($loader, "listpets", "Lists all pets that you own", "/listpets [EntityName=ALL] [page=1]", ["lpets", "petslist"]);
@@ -39,7 +40,7 @@ class ListPetsCommand extends BaseCommand {
 		$loader = $this->getLoader();
 
 		if(isset($list_type)) {
-			$list_type = $loader->getPet($list_type);
+			$list_type = PetFactory::getKnownPetId($list_type);
 			if($list_type === null) {
 				$sender->sendMessage($loader->translate("commands.errors.pet.doesnt-exist"));
 				return true;
@@ -62,7 +63,7 @@ class ListPetsCommand extends BaseCommand {
 				$pets_c = 0;
 
 				foreach($rows as ["PetName" => $petName, "EntityName" => $entityName, "Visible" => $isVisible]) {
-					$row = TextFormat::YELLOW . ++$pets_c . ". " . $petName . ($list_type === null ? TextFormat::GRAY . " (" . $entityName . ") " : "");
+					$row = TextFormat::YELLOW . ++$pets_c . ". " . $petName . ($list_type === null ? TextFormat::GRAY . " (" . PetFactory::getReadableName($entityName) . ") " : "");
 					if(!$isVisible) {
 						$row .= TextFormat::GRAY . "[INVISIBLE]";
 					}

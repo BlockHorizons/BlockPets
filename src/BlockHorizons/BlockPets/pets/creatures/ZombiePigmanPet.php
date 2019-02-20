@@ -8,8 +8,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class ZombiePigmanPet extends WalkingPet {
 
-	const NETWORK_NAME = "ZOMBIE_PIGMAN_PET";
-	const NETWORK_ORIG = self::ZOMBIE_PIGMAN;
+	protected const PET_SAVE_ID = parent::PET_SAVE_ID . "zombie_pigman";
+	protected const PET_NETWORK_ID = self::ZOMBIE_PIGMAN;
 
 	public $height = 1.95;
 	public $width = 0.6;

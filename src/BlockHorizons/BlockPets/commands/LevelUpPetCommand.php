@@ -21,12 +21,6 @@ class LevelUpPetCommand extends BaseCommand {
 			return false;
 		}
 
-		$loader = $this->getLoader();
-		if(($pet = $loader->getPetByName($args[0])) === null) {
-			$this->sendWarning($sender, $loader->translate("commands.errors.pet.doesnt-exist"));
-			return true;
-		}
-
 		$amount = 1;
 		if(isset($args[1])) {
 			if(is_numeric($args[1])) {
@@ -35,17 +29,9 @@ class LevelUpPetCommand extends BaseCommand {
 		}
 
 		if(isset($args[2])) {
-			if(($player = $loader->getServer()->getPlayer($args[2])) === null) {
-				$this->sendWarning($sender, $loader->translate("commands.errors.player.not-found"));
-				return true;
-			}
-			if(($pet = $loader->getPetByName($args[0], $player->getName())) === null) {
-				$this->sendWarning($sender, $loader->translate("commands.errors.player.no-pet-other"));
-				return true;
-			}
-			$pet->levelUp($amount);
-			$sender->sendMessage(TF::GREEN . $loader->translate("commands.leveluppet.success", [$pet->getPetName(), ($amount === 1 ? " once" : " " . $amount . " times")]));
-			return true;
+			$pet = $this->getPlayerPet($args[2], $args[0]);
+		} else {
+			$pet = $this->getPetByName($args[0], $sender);
 		}
 
 		$pet->levelUp($amount);

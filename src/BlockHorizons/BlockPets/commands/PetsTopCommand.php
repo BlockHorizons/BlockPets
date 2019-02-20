@@ -5,13 +5,14 @@ declare(strict_types = 1);
 namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
+use BlockHorizons\BlockPets\pets\PetFactory;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
 class PetsTopCommand extends BaseCommand {
 
-	const ENTRIES_PER_PAGE = 10;//No. of pets to list per page.
+	public const ENTRIES_PER_PAGE = 10;//No. of pets to list per page.
 
 	public function __construct(Loader $loader) {
 		parent::__construct($loader, "petstop", "Lists the pets leaderboard", "/petstop [EntityName=ALL] [page=1]", ["petsleaderboard", "toppets"]);
@@ -30,18 +31,23 @@ class PetsTopCommand extends BaseCommand {
 		}
 
 		if($entityName !== null) {
-			$entityName = $loader->getPet($entityName);
+			$entityName = PetFactory::getKnownPetId($entityName);
 			if($entityName === null) {
 				$sender->sendMessage($loader->translate("commands.errors.pet.doesnt-exist"));
 				return true;
 			}
 		}
 
+		$this->sendPage($sender, $page, $entityName);
+		return true;
+	}
+
+	public function sendPage(CommandSender $sender, int $page = 1, ?string $entityName = null): void {
 		$loader->getDatabase()->getPetsLeaderboard(
 			($page - 1) * self::ENTRIES_PER_PAGE,
 			self::ENTRIES_PER_PAGE,
 			$entityName,
-			function(array $rows) use($sender, $page, $commandLabel, $entityName): void {
+			function(array $rows) use($sender, $page, $entityName): void {
 				$pets = "";
 				$index = PetsTopCommand::ENTRIES_PER_PAGE * ($page - 1);
 
@@ -52,7 +58,7 @@ class PetsTopCommand extends BaseCommand {
 					"PetLevel" => $petLevel,
 					"LevelPoints" => $levelPoints
 				]) {
-					$pets .= TextFormat::YELLOW . ++$index . ". " . TextFormat::AQUA . $player . "'s Pet " . $entityName . ", " . TextFormat::YELLOW . $petName;
+					$pets .= TextFormat::YELLOW . ++$index . ". " . TextFormat::AQUA . $player . "'s Pet " . PetFactory::getReadableName($entityName) . ", " . TextFormat::YELLOW . $petName;
 					$pets .= TextFormat::GRAY . "(" . "Lvl " . TextFormat::AQUA . $petLevel . TextFormat::GRAY . ", " . TextFormat::AQUA . $levelPoints . TextFormat::GRAY . " xp)" . TextFormat::EOL;
 				}
 
@@ -64,11 +70,7 @@ class PetsTopCommand extends BaseCommand {
 							$sender->sendMessage(TextFormat::RED . $loader->translate("commands.errors.pets.none-on-server-type", [$entityName]));
 						}
 					} else {
-						if($entityName === null) {
-							$this->onCommand($sender, $commandLabel, [1]);//send first page.
-						} else {
-							$this->onCommand($sender, $commandLabel, [$entityName, 1]);//send first page.
-						}
+						$this->sendPage($sender, 1, $entityName);//send first page.
 					}
 				} else {
 					$message = TextFormat::GREEN . "--- Pets Leaderboard " . TextFormat::YELLOW . "#" . $page . TextFormat::GREEN . " ---" . TextFormat::EOL;
@@ -77,6 +79,5 @@ class PetsTopCommand extends BaseCommand {
 				}
 			}
 		);
-		return true;
 	}
 }

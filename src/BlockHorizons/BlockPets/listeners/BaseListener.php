@@ -2,14 +2,15 @@
 
 declare(strict_types = 1);
 
-namespace BlockHorizons\BlockPets\tasks;
+namespace BlockHorizons\BlockPets\listeners;
 
 use BlockHorizons\BlockPets\Loader;
-use pocketmine\scheduler\Task;
+use pocketmine\event\Listener;
 
-abstract class BaseTask extends Task {
+abstract class BaseListener implements Listener {
 
-	protected $loader;
+	/** @var Loader */
+	private $loader;
 
 	public function __construct(Loader $loader) {
 		$this->loader = $loader;

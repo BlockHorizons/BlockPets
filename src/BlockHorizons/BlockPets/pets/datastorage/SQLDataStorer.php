@@ -5,7 +5,8 @@ declare(strict_types = 1);
 namespace BlockHorizons\BlockPets\pets\datastorage;
 
 use BlockHorizons\BlockPets\Loader;
-use BlockHorizons\BlockPets\pets\BasePet;
+use BlockHorizons\BlockPets\pets\datastorage\types\PetData;
+use BlockHorizons\BlockPets\pets\datastorage\types\PetOwnerData;
 
 use pocketmine\item\Item;
 use pocketmine\nbt\BigEndianNBTStream;
@@ -13,53 +14,68 @@ use pocketmine\nbt\tag\ListTag;
 
 use poggit\libasynql\libasynql;
 
-class SQLDataStorer extends BaseDataStorer {
+abstract class SQLDataStorer extends BaseDataStorer {
 
-	const INITIALIZE_TABLES = "blockpets.init";
-	const LOAD_PLAYER_PETS = "blockpets.loadplayer";
-	const LIST_PLAYER_PETS = "blockpets.listpets";
-	const RESET = "blockpets.reset";
+	protected const INITIALIZE_TABLES = "blockpets.init";
+	protected const LOAD_PLAYER_PETS = "blockpets.loadplayer";
+	protected const LIST_PLAYER_PETS = "blockpets.listpets";
+	protected const RESET = "blockpets.reset";
 
-	const REGISTER_PET = "blockpets.pet.register";
-	const UNREGISTER_PET = "blockpets.pet.unregister";
-	const PET_LEADERBOARD = "blockpets.pet.leaderboard";
-	const PET_VISIBILITY = "blockpets.pet.visibility.select";
-	const UPDATE_PET_CHESTED = "blockpets.pet.update.chested";
-	const UPDATE_PET_EXPERIENCE = "blockpets.pet.update.exp";
-	const UPDATE_PET_INVENTORY = "blockpets.pet.update.inv";
-	const UPDATE_PET_VISIBILITY = "blockpets.pet.visibility.toggle";
+	protected const REGISTER_PET = "blockpets.pet.register";
+	protected const UNREGISTER_PET = "blockpets.pet.unregister";
+	protected const PET_LEADERBOARD = "blockpets.pet.leaderboard";
+	protected const PET_VISIBILITY = "blockpets.pet.visibility.select";
+	protected const UPDATE_PET_VISIBILITY = "blockpets.pet.visibility.toggle";
 
-	const VERSION_PATCH = "version.{VERSION}";
+	protected const VERSION_PATCH = "version.{VERSION}";
 
 	/** @var libasynql */
 	protected $database;
 	/** @var string */
 	protected $type;
 
-	public function registerPet(BasePet $pet): void {
+	public function registerPet(PetData $data): void {
 		$this->database->executeChange(SQLDataStorer::REGISTER_PET, [
-			"player" => $pet->getPetOwnerName(),
-			"petname" => $pet->getPetName(),
-			"entityname" => $pet->getEntityType(),
-			"petsize" => $pet->getScale(),
-			"isbaby" => (int) $pet->isBaby(),
-			"chested" => (int) $pet->isChested(),
-			"petlevel" => $pet->getPetLevel(),
-			"levelpoints" => $pet->getPetLevelPoints()
+			"player" => $data->getOwner(),
+			"petname" => $data->getName(),
+			"entityname" => $data->getType(),
+			"petsize" => $data->scale,
+			"isbaby" => (int) $data->is_baby,
+			"chested" => (int) $data->is_chested,
+			"petlevel" => $data->level,
+			"levelpoints" => $data->level_points,
+			"visible" => $data->is_visible,
+			"inventory" => $data->inventory_manager->write()
 		]);
 	}
 
-	public function unregisterPet(BasePet $pet): void {
+	public function unregisterPet(string $ownerName, string $petName): void {
 		$this->database->executeChange(SQLDataStorer::UNREGISTER_PET, [
-			"player" => $pet->getPetOwnerName(),
-			"petname" => $pet->getPetName()
+			"player" => $ownerName,
+			"petname" => $petName
 		]);
 	}
 
-	public function load(string $player, callable $callable): void {
+	public function load(string $owner, callable $callable): void {
 		$this->database->executeSelect(SQLDataStorer::LOAD_PLAYER_PETS, [
-			"player" => $player
-		], $callable);
+			"player" => $owner
+		], function(array $entries) use($owner, $callable): void {
+			$player_data = new PetOwnerData($owner);
+
+			foreach($entries as $entry) {
+				$pet_data = new PetData($entry["PetName"], $entry["EntityName"], $owner);
+				$pet_data->size = $entry["PetSize"];
+				$pet_data->is_baby = (bool) $entry["IsBaby"];
+				$pet_data->level = $entry["PetLevel"];
+				$pet_data->level_points = $entry["LevelPoints"];
+				$pet_data->is_chested = (bool) $entry["Chested"];
+				$pet_data->is_visible = (bool) $entry["Visible"];
+				$pet_data->inventory_manager->read($entry["Inventory"]);
+				$player_data->addPet($pet_data);
+			}
+
+			$callable($player_data);
+		});
 	}
 
 	public function getPlayerPets(string $player, ?string $entityName = null, callable $callable): void {
@@ -95,29 +111,8 @@ class SQLDataStorer extends BaseDataStorer {
 		});
 	}
 
-	public function updateExperience(BasePet $pet): void {
-		$this->database->executeChange(SQLDataStorer::UPDATE_PET_EXPERIENCE, [
-			"petlevel" => $pet->getPetLevel(),
-			"levelpoints" => $pet->getPetLevelPoints(),
-			"player" => $pet->getPetOwnerName(),
-			"petname" => $pet->getPetName()
-		]);
-	}
-
-	public function updateChested(BasePet $pet): void {
-		$this->database->executeChange(SQLDataStorer::UPDATE_PET_CHESTED, [
-			"chested" => (int) $pet->isChested(),
-			"player" => $pet->getPetOwnerName(),
-			"petname" => $pet->getPetName()
-		]);
-	}
-
-	public function updateInventory(BasePet $pet): void {
-		$this->database->executeChange(SQLDataStorer::UPDATE_PET_INVENTORY, [
-			"inventory" => $pet->getInventoryManager()->compressContents(),
-			"player" => $pet->getPetOwnerName(),
-			"petname" => $pet->getPetName()
-		]);
+	public function updatePet(PetData $data): void {
+		$this->registerPet($data);
 	}
 
 	protected function prepare(): void {
@@ -154,6 +149,7 @@ class SQLDataStorer extends BaseDataStorer {
 	public function patch(string $version): void {
 		switch($version) {
 			case "1.1.2":
+			case "2.0.0":
 				$this->database->executeGeneric(str_replace("{VERSION}", $version, SQLDataStorer::VERSION_PATCH));
 				break;
 		}

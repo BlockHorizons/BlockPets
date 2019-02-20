@@ -10,7 +10,11 @@ commands:
     no-console-use: "Chạy command trong server!"
     no-permission: "Bạn không có quyền sử dụng lệnh này!"
     plugin-cancelled: "Plugin đã hủy hành động này!"
-    
+
+    database:
+      player-not-loaded: "Please wait until your pets data has loaded."
+      player-not-loaded-other: "Please wait until %s's pet data has loaded."
+
     pet:
       doesnt-exist: "Không tồn tại tên Pet!"
       numeric: "Tên Pet không được phép để kí tự hay chữ số"

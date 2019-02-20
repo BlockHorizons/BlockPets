@@ -8,8 +8,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class EvokerPet extends WalkingPet {
 
-	const NETWORK_NAME = "EVOCATION_ILLAGER_PET";
-	const NETWORK_ORIG = self::EVOCATION_ILLAGER;
+	protected const PET_SAVE_ID = parent::PET_SAVE_ID . "evocation_illager";
+	protected const PET_NETWORK_ID = self::EVOCATION_ILLAGER;
 
 	public $name = "Evoker Pet";
 

@@ -10,6 +10,10 @@ commands:
     no-permission: "Недостаточно прав для использования этой команды."
     plugin-cancelled: "Плагин отменил это действие."
 
+    database:
+      player-not-loaded: "Please wait until your pets data has loaded."
+      player-not-loaded-other: "Please wait until %s's pet data has loaded."
+
     pet:
       doesnt-exist: "Питомец с данным именем не существует."
       numeric: "Размер питомца должен быть числом."

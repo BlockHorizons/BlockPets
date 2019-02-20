@@ -9,8 +9,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class ChickenPet extends WalkingPet implements SmallCreature {
 
-	const NETWORK_NAME = "CHICKEN_PET";
-	const NETWORK_ORIG = self::CHICKEN;
+	protected const PET_SAVE_ID = parent::PET_SAVE_ID . "chicken";
+	protected const PET_NETWORK_ID = self::CHICKEN;
 
 	public $width = 0.4;
 	public $height = 0.7;

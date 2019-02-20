@@ -10,6 +10,10 @@ commands:
     no-console-use: "该命令仅可由玩家使用"
     no-permission: "您并无权限使用该命令"
     plugin-cancelled: "插件操作已取消"
+
+    database:
+      player-not-loaded: "Please wait until your pets data has loaded."
+      player-not-loaded-other: "Please wait until %s's pet data has loaded."
     
     pet:
       doesnt-exist: "该名称宠物不存在"

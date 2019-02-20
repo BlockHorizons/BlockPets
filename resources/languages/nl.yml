@@ -11,6 +11,10 @@ commands:
     no-permission: "Je hebt geen permissie om dat commando uit te voeren."
     plugin-cancelled: "Een andere plugin heeft die actie onderbroken."
 
+    database:
+      player-not-loaded: "Please wait until your pets data has loaded."
+      player-not-loaded-other: "Please wait until %s's pet data has loaded."
+
     pet:
       doesnt-exist: "Een huisdier type met die naam bestaat niet."
       numeric: "De huisdier grootte moet numeriek zijn."

@@ -8,8 +8,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class SheepPet extends WalkingPet {
 
-	const NETWORK_NAME = "SHEEP_PET";
-	const NETWORK_ORIG = self::SHEEP;
+	protected const PET_SAVE_ID = parent::PET_SAVE_ID . "sheep";
+	protected const PET_NETWORK_ID = self::SHEEP;
 
 	public $height = 1.3;
 	public $width = 0.9;
@@ -28,10 +28,10 @@ class SheepPet extends WalkingPet {
 		return $this->propertyManager->getByte(self::DATA_COLOR);
 	}
 
-	public function doPetUpdates(int $currentTick): bool {
-		if($currentTick % 10 === 0 && $this->getPetName() === "jeb_") {
+	public function doPetUpdates(int $tickDiff): bool {
+		if($this->ticksLived % 10 === 0 && $this->getPetName() === "jeb_") {
 			$this->setColor($this->getColor() + 1);
 		}
-		return parent::doPetUpdates($currentTick);
+		return parent::doPetUpdates($tickDiff);
 	}
 }

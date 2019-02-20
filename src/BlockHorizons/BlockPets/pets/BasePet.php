@@ -6,12 +6,13 @@ namespace BlockHorizons\BlockPets\pets;
 
 use BlockHorizons\BlockPets\events\PetInventoryInitializationEvent;
 use BlockHorizons\BlockPets\events\PetLevelUpEvent;
+use BlockHorizons\BlockPets\events\PetRemoveEvent;
 use BlockHorizons\BlockPets\events\PetRespawnEvent;
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
+use BlockHorizons\BlockPets\pets\datastorage\types\PetData;
+use BlockHorizons\BlockPets\pets\datastorage\types\PetInventoryManager;
 use BlockHorizons\BlockPets\pets\inventory\PetInventory;
-use BlockHorizons\BlockPets\pets\inventory\PetInventoryManager;
-use BlockHorizons\BlockPets\tasks\PetRespawnTask;
 use pocketmine\entity\Attribute;
 use pocketmine\entity\Creature;
 use pocketmine\entity\Entity;
@@ -33,33 +34,41 @@ use pocketmine\math\Vector3;
 
 abstract class BasePet extends Creature implements Rideable {
 
-	const STATE_STANDING = 0;
-	const STATE_SITTING = 1;
+	public const STATE_STANDING = 0;
+	public const STATE_SITTING = 1;
 
-	const TIER_COMMON = 1;
-	const TIER_UNCOMMON = 2;
-	const TIER_SPECIAL = 3;
-	const TIER_EPIC = 4;
-	const TIER_LEGENDARY = 5;
+	public const TIER_COMMON = 1;
+	public const TIER_UNCOMMON = 2;
+	public const TIER_SPECIAL = 3;
+	public const TIER_EPIC = 4;
+	public const TIER_LEGENDARY = 5;
 
-	const LINK_RIDING = 0;
-	const LINK_RIDER = 1;
+	public const LINK_RIDING = 0;
+	public const LINK_RIDER = 1;
 
-	const NETWORK_ID = -1;
-	const NETWORK_NAME = null;
-	const NETWORK_ORIG = null;
-	
+	public const NETWORK_ID = -1;
+	protected const PET_NETWORK_ID = null;
+	protected const PET_SAVE_ID = PetFactory::SAVE_ID_PREFIX;
+
+	final public static function getPetNetworkId(): int {
+		return static::PET_NETWORK_ID;
+	}
+
+	final public static function getPetSaveId(): string {
+		return static::PET_SAVE_ID;
+	}
+
 	/** @var string */
 	public $name = "";
 	/** @var float */
-	public $scale = 1.0;
+	public $starting_scale = 1.0;
 
 	/** @var int */
 	protected $petLevel = 0;
 	/** @var string */
-	protected $petName = "";
+	protected $petName;
 	/** @var Player|null */
-	protected $rider = null;
+	protected $rider;
 	/** @var Vector3 */
 	protected $rider_seatpos;
 	/** @var bool */
@@ -98,7 +107,7 @@ abstract class BasePet extends Creature implements Rideable {
 	/** @var EntityLink[] */
 	private $links = [];
 	/** @var Player */
-	private $petOwner = "";
+	private $petOwner;
 	/** @var bool */
 	private $dormant = false;
 	/** @var bool */
@@ -107,26 +116,43 @@ abstract class BasePet extends Creature implements Rideable {
 	private $positionSeekTick = 60;
 	/** @var PetInventoryManager */
 	private $inventory_manager;
+	/** @var bool */
+	private $canSavePetData = true;
 	/** @var float */
 	private $maxSize = 10.0;
 
-	final public function __construct(Level $level, CompoundTag $nbt) {
-	  if(static::NETWORK_ID !== -1) {
-            throw new \LogicException("Network IDs of pets cannot be overridden.");
-	  }
-	  if(static::NETWORK_NAME === null) {
-            throw new \LogicException("NETWORK_NAME constant in " . get_class($this) . " must be defined.");
-	  }
-	  if(static::NETWORK_ORIG === null) {
-            throw new \LogicException("NETWORK_NAME constant in " . get_class($this) . " must be defined.");
-	  }
-
-	  $this->petOwner = $level->getServer()->getPlayerExact($nbt->getString("petOwner"));
-	  parent::__construct($level, $nbt);
+	final public function __construct(Level $level, CompoundTag $nbt, PetData $data) {
+		$this->setCanSaveWithChunk(false);
+		parent::__construct($level, $nbt);
+		$this->initPet($data);
 	}
 
-	public function register(): void {
-		$this->getLoader()->getDatabase()->registerPet($this);
+	final public function setCanSavePetData(bool $value): void {
+		$this->canSavePetData = $value;
+	}
+
+	protected function initPet(PetData $data): void {
+		$this->petName = $data->getName();
+		$this->petOwner = $this->server->getPlayerExact($data->getOwner());
+		$this->petLevel = $data->level;
+		$this->petLevelPoints = $data->level_points;
+		$this->setScale($data->scale ?? $this->getStartingScale());
+		$this->setBaby($data->is_baby);
+		$this->setChested($data->is_chested);
+		$this->updateVisibility($data->is_visible);
+		$this->inventory_manager = $data->inventory_manager;
+	}
+
+	public function savePet(): PetData {
+		$data = new PetData($this->getPetName(), static::getPetSaveId(), $this->getPetOwnerName());
+		$data->level = $this->getPetLevel();
+		$data->level_points = $this->getPetLevelPoints();
+		$data->scale = $this->getScale();
+		$data->is_baby = $this->isBaby();
+		$data->is_chested = $this->isChested();
+		$data->is_visible = $this->getVisibility();
+		$data->inventory_manager = $this->getInventoryManager();
+		return $data;
 	}
 
 	public function selectProperties(): void {
@@ -197,14 +223,15 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * @param bool $value
 	 */
+	public function setBaby(bool $value = true): void {
+		$this->setGenericFlag(self::DATA_FLAG_BABY, $value);
+	}
+
+	/**
+	 * @param bool $value
+	 */
 	public function setChested(bool $value = true): void {
-		if($this->isChested() !== $value) {
-			$this->setGenericFlag(self::DATA_FLAG_CHESTED, $value);
-			$loader = $this->getLoader();
-			if($loader->getBlockPetsConfig()->storeToDatabase()) {
-				$loader->getDatabase()->updateChested($this);
-			}
-		}
+		$this->setGenericFlag(self::DATA_FLAG_CHESTED, $value);
 	}
 
 	/**
@@ -247,7 +274,7 @@ abstract class BasePet extends Creature implements Rideable {
 	protected function sendSpawnPacket(Player $player): void {
 		$pk = new AddEntityPacket();
 		$pk->entityRuntimeId = $this->getId();
-		$pk->type = static::NETWORK_ORIG;
+		$pk->type = static::getPetNetworkId();
 		$pk->position = $this->asVector3();
 		$pk->motion = $this->getMotion();
 		$pk->yaw = $this->yaw;
@@ -303,7 +330,7 @@ abstract class BasePet extends Creature implements Rideable {
 					$this->getLevel()->addParticle(new HeartParticle($this->add(0, 2), 4));
 
 					if($this->getLoader()->getBlockPetsConfig()->giveExperienceWhenFed()) {
-						$this->addPetLevelPoints( (int) ($nutrition / 40 * LevelCalculator::getRequiredLevelPoints($this->getPetLevel())) );
+						$this->addPetLevelPoints((int) ($nutrition / 40 * LevelCalculator::getRequiredLevelPoints($this->getPetLevel())));
 					}
 
 					$this->calculator->updateNameTag();
@@ -323,7 +350,7 @@ abstract class BasePet extends Creature implements Rideable {
 				} elseif($player->getName() === $this->getPetOwnerName()) {
 					if($this->isChested() && $hand->getId() === Item::AIR) {
 						$source->setCancelled();
-						$this->getInventoryManager()->openAs($player);
+						$this->inventory_manager->openAs($player);
 					} elseif($player->isSneaking() && $this->canRide) {
 						foreach($this->getLoader()->getPetsFrom($player) as $pet) {
 							$pet->dismountFromOwner();
@@ -398,14 +425,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @param int $petLevel
 	 */
 	public function setPetLevel(int $petLevel): void {
-		if($this->petLevel !== $petLevel) {
-			$this->petLevel = $petLevel;
-
-			$loader = $this->getLoader();
-			if($loader->getBlockPetsConfig()->storeToDatabase()) {
-				$loader->getDatabase()->updateExperience($this);
-			}
-		}
+		$this->petLevel = $petLevel;
 	}
 
 	/**
@@ -424,10 +444,6 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function setPetLevelPoints(int $points): void {
 		$this->petLevelPoints = $points;
-		$loader = $this->getLoader();
-		if($loader->getBlockPetsConfig()->storeToDatabase()) {
-			$loader->getDatabase()->updateExperience($this);
-		}
 	}
 
 	/**
@@ -470,12 +486,6 @@ abstract class BasePet extends Creature implements Rideable {
 		parent::initEntity();
 		$this->selectProperties();
 
-		$this->petLevel = $this->namedtag->getInt("petLevel", 1);
-		$this->petLevelPoints = $this->namedtag->getInt("petLevelPoints", 0);
-		$this->petName = $this->namedtag->getString("petName");
-		$this->scale = $this->namedtag->getFloat("scale", $this->getScale());
-		$this->setGenericFlag(self::DATA_FLAG_CHESTED, (bool) $this->namedtag->getByte("chested", 0));
-		$this->setGenericFlag(self::DATA_FLAG_BABY, (bool) $this->namedtag->getByte("isBaby", 0));
 		$this->setGenericFlag(self::DATA_FLAG_TAMED, true);
 
 		$this->calculator = new Calculator($this);
@@ -483,13 +493,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setNameTagVisible(true);
 		$this->setNameTagAlwaysVisible(true);
 
-		$this->setScale($this->scale);
-
-		$this->inventory_manager = new PetInventoryManager($this);
-		$this->spawnToAll();
-
 		$this->getAttributeMap()->addAttribute(Attribute::getAttribute(20));
-		$this->setCanSaveWithChunk(false);
 
 		$this->generateCustomPetData();
 		$this->setImmobile();
@@ -532,7 +536,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return float
 	 */
 	public function getStartingScale(): float {
-		return $this->scale;
+		return $this->starting_scale;
 	}
 
 	/**
@@ -556,7 +560,7 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * Performs a special action of a pet every tick.
 	 */
-	public function doPetUpdates(int $currentTick): bool {
+	public function doPetUpdates(int $tickDiff): bool {
 		return true;
 	}
 
@@ -577,14 +581,13 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	/**
-	 * @param $currentTick
+	 * @param $tickDiff
 	 *
 	 * @return bool
 	 */
-	final public function onUpdate(int $currentTick): bool {
-		if(!parent::onUpdate($currentTick) && $this->isClosed()) {
-			return false;
-		}
+	public function entityBaseTick(int $tickDiff = 1): bool {
+		$hasUpdate = parent::entityBaseTick($tickDiff);
+
 		if($this->isRiding()) {
 			$petOwner = $this->getPetOwner();
 
@@ -595,11 +598,14 @@ abstract class BasePet extends Creature implements Rideable {
 			if($x !== 0.0 || $z !== 0.0 || $y !== -$petOwner->height) {
 				$this->fastMove($x, $y + $petOwner->height, $z);
 			}
-			return false;
+
+			return $hasUpdate;
 		}
+
 		if(!$this->checkUpdateRequirements()) {
-			return true;
+			return $hasUpdate;
 		}
+
 		if(!$this->isRidden()) {
 			if(random_int(1, 60) === 1) {
 				if($this->getHealth() !== $this->getMaxHealth()) {
@@ -610,7 +616,7 @@ abstract class BasePet extends Creature implements Rideable {
 			$petOwner = $this->getPetOwner();
 			if(!$this->isDormant() && ($this->getLevel()->getEntity($petOwner->getId()) === null || $this->distance($petOwner) >= 50)) {
 				$this->teleport($petOwner);
-				return true;
+				return $hasUpdate;
 			}
 			++$this->positionSeekTick;
 			if($this->shouldFindNewPosition()) {
@@ -627,8 +633,9 @@ abstract class BasePet extends Creature implements Rideable {
 				}
 			}
 		}
-		$this->doPetUpdates($currentTick);
-		return true;
+
+		$this->doPetUpdates($tickDiff);
+		return $hasUpdate;
 	}
 
 	/**
@@ -796,36 +803,59 @@ abstract class BasePet extends Creature implements Rideable {
 	public function close(): void {
 		if(!$this->closed) {
 			$loader = $this->getLoader();
-			if(!$loader->getBlockPetsConfig()->storeToDatabase()) {
-				$loader->getDatabase()->unregisterPet($this);
-				$loader->removePet($this, false);
+			(new PetRemoveEvent($loader, $this))->call();
+
+			if($this->isRidden()) {
+				$this->throwRiderOff();
 			}
+
+			if($this->canSavePetData) {
+				if($loader->getBlockPetsConfig()->storeToDatabase()) {
+					$loader->getDatabase()->updatePet($this->savePet());
+				}else{
+					$loader->getDatabase()->unregisterPet($this);
+				}
+			}
+
 			parent::close();
 		}
 	}
 
-	public function onDeath(): void {
+	protected function onDeath(): void {
 		parent::onDeath();
-		$loader = $this->getLoader();
-		$delay = $loader->getBlockPetsConfig()->getRespawnTime();
 
-		$loader->getDatabase()->unregisterPet($this);
 		if($this->shouldIgnoreEvent()) {
 			return;
 		}
 
-		$this->server->getPluginManager()->callEvent($ev = new PetRespawnEvent($loader, $this, $delay));
+		$ev = new PetRespawnEvent($this->getLoader(), $this, $this->getLoader()->getBlockPetsConfig()->getRespawnTime());
+		$ev->call();
 		if($ev->isCancelled()) {
+			$this->flagForDespawn();
 			return;
 		}
 
-		$newPet = $loader->clonePet($this);
-		$newPet->register();
+		$this->maxDeadTicks = $ev->getDelay() * 20;
+	}
 
-		$delay = $ev->getDelay() * 20;
-		$loader->getScheduler()->scheduleDelayedTask(new PetRespawnTask($loader, $newPet), $delay);
-		$newPet->despawnFromAll();
-		$newPet->setDormant();
+	protected function onDeathUpdate(int $tickDiff): bool {
+		if(parent::onDeathUpdate($tickDiff)) {
+			$this->doRespawn();
+		}
+
+		return false;
+	}
+
+	protected function doRespawn(): void {
+		$this->extinguish();
+		$this->setAirSupplyTicks($this->getMaxAirSupplyTicks());
+		$this->deadTicks = 0;
+		$this->noDamageTicks = 60;
+		$this->removeAllEffects();
+		$this->setHealth($this->getMaxHealth());
+
+		$this->teleport($this->getPetOwner());
+		$this->spawnToAll();
 	}
 
 	/**

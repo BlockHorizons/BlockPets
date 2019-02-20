@@ -22,8 +22,8 @@ abstract class HoveringPet extends IrasciblePet {
 		$this->follow_range_sq = 8 + $this->getScale();
 	}
 
-	public function doPetUpdates(int $currentTick): bool {
-		if(!parent::doPetUpdates($currentTick)) {
+	public function doPetUpdates(int $tickDiff): bool {
+		if(!parent::doPetUpdates($tickDiff)) {
 			return false;
 		}
 
@@ -79,7 +79,7 @@ abstract class HoveringPet extends IrasciblePet {
 		$target = $this->getTarget();
 		$this->follow($target, 0.0, 0.5, 0.0);
 
-		if($this->distance($target) <= $this->scale + 1.1 && $this->waitingTime <= 0 && $target->isAlive()) {
+		if($this->distance($target) <= $this->getScale() + 1.1 && $this->waitingTime <= 0 && $target->isAlive()) {
 			$event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage());
 			$target->attack($event);
 

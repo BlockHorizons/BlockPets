@@ -21,8 +21,8 @@ abstract class BouncingPet extends IrasciblePet {
 		$this->jumpVelocity = $this->jumpHeight * 12 * $this->getScale();
 	}
 
-	public function doPetUpdates(int $currentTick): bool {
-		if(!parent::doPetUpdates($currentTick)) {
+	public function doPetUpdates(int $tickDiff): bool {
+		if(!parent::doPetUpdates($tickDiff)) {
 			return false;
 		}
 

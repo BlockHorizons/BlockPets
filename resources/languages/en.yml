@@ -11,6 +11,10 @@ commands:
     no-permission: "You don't have permission to use that command."
     plugin-cancelled: "A plugin has cancelled that action."
 
+    database:
+      player-not-loaded: "Please wait until your pets data has loaded."
+      player-not-loaded-other: "Please wait until %s's pet data has loaded."
+
     pet:
       doesnt-exist: "A pet with the given name doesn't exist."
       numeric: "The pet scale should be numeric."

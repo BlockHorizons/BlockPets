@@ -8,8 +8,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class LlamaPet extends WalkingPet {
 
-	const NETWORK_NAME = "LLAMA_PET";
-	const NETWORK_ORIG = self::LLAMA;
+	protected const PET_SAVE_ID = parent::PET_SAVE_ID . "llama";
+	protected const PET_NETWORK_ID = self::LLAMA;
 
 	public $height = 0.935;
 	public $width = 0.45;

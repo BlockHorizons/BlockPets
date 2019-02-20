@@ -11,6 +11,10 @@ commands:
     no-permission: "해당 명령어를 사용할 수 있는 권한이 없습니다."
     plugin-cancelled: "플러그인이 해당 작업을 취소했습니다."
 
+    database:
+      player-not-loaded: "Please wait until your pets data has loaded."
+      player-not-loaded-other: "Please wait until %s's pet data has loaded."
+
     pet:
       doesnt-exist: "주어진 이름의 애완동물은 없습니다."
       numeric: "애완동물 규모는 숫자여야 합니다."

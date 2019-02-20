@@ -6,7 +6,6 @@ namespace BlockHorizons\BlockPets\pets\inventory;
 
 use muqsit\invmenu\inventories\ChestInventory;
 
-
 class PetInventory extends ChestInventory {
 
 }

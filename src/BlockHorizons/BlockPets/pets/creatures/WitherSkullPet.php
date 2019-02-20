@@ -9,8 +9,8 @@ use BlockHorizons\BlockPets\pets\SmallCreature;
 
 class WitherSkullPet extends HoveringPet implements SmallCreature {
 
-	const NETWORK_NAME = "WITHER_SKULL_PET";
-	const NETWORK_ORIG = self::WITHER_SKULL;
+	protected const PET_SAVE_ID = parent::PET_SAVE_ID . "wither_skull";
+	protected const PET_NETWORK_ID = self::WITHER_SKULL;
 
 	public $height = 0.4;
 	public $width = 0.4;

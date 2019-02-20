@@ -98,7 +98,7 @@ abstract class IrasciblePet extends BasePet {
 		$target = $this->getTarget();
 		$this->follow($target);
 
-		if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0) {
+		if($this->distance($target) <= $this->getScale() + 0.5 && $this->waitingTime <= 0) {
 			$event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage());
 			$target->attack($event);
 

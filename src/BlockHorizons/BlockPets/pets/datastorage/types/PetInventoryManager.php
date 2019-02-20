@@ -2,10 +2,10 @@
 
 declare(strict_types = 1);
 
-namespace BlockHorizons\BlockPets\pets\inventory;
+namespace BlockHorizons\BlockPets\pets\datastorage\types;
 
 use BlockHorizons\BlockPets\Loader;
-use BlockHorizons\BlockPets\pets\BasePet;
+use BlockHorizons\BlockPets\pets\inventory\PetInventory;
 
 use muqsit\invmenu\InvMenu;
 use muqsit\invmenu\InvMenuHandler;
@@ -30,22 +30,21 @@ class PetInventoryManager {
 
 	/** @var InvMenu */
 	private $menu;
-	/** @var BasePet */
-	private $pet;
+	/** @var PetData */
+	private $pet_data;
 
-	public function __construct(BasePet $pet) {
-		$this->pet = $pet;
+	public function __construct(PetData $pet_data) {
+		$this->pet_data = $pet_data;
 		$this->menu = InvMenu::create(PetInventory::class);
-		$this->setName($pet->getPetName());
-		$this->menu->setInventoryCloseListener([$this,"onClose"]);
+		$this->setName($pet_data->getName());
 	}
 
 	public function setName(string $name): void {
 		$this->menu->setName($name . "'s Inventory");
 	}
 
-	public function getPet(): BasePet {
-		return $this->pet;
+	public function getPetData(): PetData {
+		return $this->pet_data;
 	}
 
 	public function getInventory(): PetInventory {
@@ -56,7 +55,7 @@ class PetInventoryManager {
 		$this->menu->send($player, $forceId);
 	}
 
-	public function load(string $compressed): void {
+	public function read(string $compressed): void {
 		$contents = [];
 		foreach(self::$nbtParser->readCompressed($compressed)->getListTag("Inventory") as $nbt) {
 			$contents[$nbt->getByte("Slot")] = Item::nbtDeserialize($nbt);
@@ -65,7 +64,7 @@ class PetInventoryManager {
 		$this->getInventory()->setContents($contents);
 	}
 
-	public function compressContents(): string {
+	public function write(): string {
 		$list = new ListTag("Inventory");
 		foreach($this->getInventory()->getContents() as $slot => $item) {
 			$list->push($item->nbtSerialize($slot));
@@ -75,12 +74,5 @@ class PetInventoryManager {
 		$tag->setTag($list);
 		return self::$nbtParser->writeCompressed($tag);
 	}
-
-	public function onClose(PetInventory $inventory, Player $player) : void {
-		$pet = $this->getPet();
-		$loader = $pppppet->getLoader();
-		if ($loader->getBlockPetsConfig()->storeToDatabase()){
-			$loader->getDatabase()->updateInventory($pet);
-		}
-	}
 }
+

@@ -5,8 +5,10 @@ declare(strict_types = 1);
 namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
+use BlockHorizons\BlockPets\sessions\PlayerSessionUtils;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
+use pocketmine\Server;
 use pocketmine\utils\TextFormat as TF;
 
 class AddPetPointsCommand extends BaseCommand {
@@ -21,11 +23,7 @@ class AddPetPointsCommand extends BaseCommand {
 			return false;
 		}
 
-		$loader = $this->getLoader();
-		if(($pet = $loader->getPetByName($args[0])) === null) {
-			$this->sendWarning($sender, $loader->translate("commands.errors.pet.doesnt-exist"));
-			return true;
-		}
+		$petName = $args[0];
 
 		$amount = 1;
 		if(isset($args[1])) {
@@ -34,18 +32,12 @@ class AddPetPointsCommand extends BaseCommand {
 			}
 		}
 
+		$loader = $this->getLoader();
+
 		if(isset($args[2])) {
-			if(($player = $loader->getServer()->getPlayer($args[2])) === null) {
-				$this->sendWarning($sender, $loader->translate("commands.errors.player.not-found"));
-				return true;
-			}
-			if(($pet = $loader->getPetByName($args[0], $player->getName())) === null) {
-				$this->sendWarning($sender, $loader->translate("commands.errors.player.no-pet-other"));
-				return true;
-			}
-			$pet->addPetLevelPoints($amount);
-			$sender->sendMessage(TF::GREEN . $loader->translate("commands.addpetpoints.success", [$amount, $pet->getPetName()]));
-			return true;
+			$pet = $this->getPlayerPet($args[2], $petName);
+		}else{
+			$pet = $this->getPetByName($petName);
 		}
 
 		$pet->addPetLevelPoints($amount);

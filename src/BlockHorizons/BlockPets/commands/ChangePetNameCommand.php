@@ -27,6 +27,7 @@ class ChangePetNameCommand extends BaseCommand {
 			return true;
 		}
 
+		$petName = $args[0];
 		$newName = $args[1];
 
 		if(isset($args[2])) {
@@ -34,34 +35,14 @@ class ChangePetNameCommand extends BaseCommand {
 				$this->sendPermissionMessage($sender);
 				return true;
 			}
-			if(($player = $this->getLoader()->getServer()->getPlayer($args[2])) === null) {
-				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.not-found"));
-				return true;
-			}
-			if(($pet = $this->getLoader()->getPetByName($args[0], $player->getName())) === null) {
-				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.no-pet-other"));
-				return true;
-			}
-			$oldName = $pet->getPetName();
-			$pet->changeName($newName);
-			$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.changepetname.success", [
-					$oldName,
-					$newName
-				]));
-			return true;
-		}
-
-		if(($pet = $this->getLoader()->getPetByName($args[0], $sender->getName())) === null) {
-			$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.no-pet"));
-			return true;
+			$pet = $this->getPlayerPet($args[2], $petName);
+		}else{
+			$pet = $this->getPetByName($args[2], $sender);
 		}
 
 		$oldName = $pet->getPetName();
 		$pet->changeName($newName);
-		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.changepetname.success", [
-			$oldName,
-			$newName
-		]));
+		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.changepetname.success", [$oldName, $newName]));
 		return true;
 	}
 }

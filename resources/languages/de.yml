@@ -10,7 +10,11 @@ commands:
     no-console-use: "Dieses Kommando können nur Spieler benutzen."
     no-permission: "Du hast keine Berechtigung dieses Kommando zu benutzen."
     plugin-cancelled: "Ein Plugin hat diese Aktion unterbrochen."
-    
+
+    database:
+      player-not-loaded: "Please wait until your pets data has loaded."
+      player-not-loaded-other: "Please wait until %s's pet data has loaded."
+
     pet:
       doesnt-exist: "Ein Haustier mit diesem Namen gibt es nicht."
       numeric: "Die Haustiergröße sollte in Zahlen angegeben werden."
