@@ -13,6 +13,7 @@ use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use BlockHorizons\BlockPets\pets\datastorage\types\PetData;
 use BlockHorizons\BlockPets\pets\datastorage\types\PetInventoryManager;
 use BlockHorizons\BlockPets\pets\inventory\PetInventory;
+use BlockHorizons\BlockPets\sessions\PlayerSession;
 use pocketmine\entity\Attribute;
 use pocketmine\entity\Creature;
 use pocketmine\entity\Entity;
@@ -743,11 +744,11 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @param string $newName
 	 */
 	public function changeName(string $newName): void {
-		$database = $this->getLoader()->getDatabase();
-		$database->unregisterPet($this);
+		$owner = $this->getPetOwner();
+		PlayerSession::get($owner)->onPetNameChange($this, $newName);
+		$this->getLoader()->getDatabase()->updatePetName($owner->getName(), $this->getPetName(), $newName);
 		$this->petName = $newName;
 		$this->getCalculator()->updateNameTag();
-		$database->registerPet($this);
 		$this->getInventoryManager()->setName($newName);
 	}
 

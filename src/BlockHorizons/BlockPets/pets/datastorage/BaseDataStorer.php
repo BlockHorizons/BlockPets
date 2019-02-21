@@ -113,6 +113,15 @@ abstract class BaseDataStorer {
 	public abstract function togglePets(string $owner, ?string $petName, callable $callable): void;
 
 	/**
+	 * Renames pet in the database.
+	 *
+	 * @param string $ownerName
+	 * @param string $oldName
+	 * @param string $newName
+	 */
+	public abstract function updatePetName(string $ownerName, string $oldName, string $newName): void;
+
+	/**
 	 * Called during plugin disable to let databases
 	 * close their instances.
 	 */

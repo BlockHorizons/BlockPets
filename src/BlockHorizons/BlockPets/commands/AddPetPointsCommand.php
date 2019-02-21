@@ -37,7 +37,7 @@ class AddPetPointsCommand extends BaseCommand {
 		if(isset($args[2])) {
 			$pet = $this->getPlayerPet($args[2], $petName);
 		}else{
-			$pet = $this->getPetByName($petName);
+			$pet = $this->getPetByName($petName, $sender);
 		}
 
 		$pet->addPetLevelPoints($amount);

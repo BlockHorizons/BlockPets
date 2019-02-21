@@ -11,12 +11,11 @@ class PlayerSessionUtils {
 	/**
 	 * Finds pets by the given name.
 	 *
-	 * @param string $pet_name name of the pet.
-	 * @param Player|null $player owner of the pet.
+	 * @param string $pet_name
 	 *
 	 * @return \Generator<BasePet>
 	 */
-	public function getPetsByName(string $pet_name): \Generator {
+	public static function getPetsByName(string $pet_name): \Generator {
 		foreach(PlayerSession::getAll() as $session) {
 			$pet = $session->getPet($pet_name);
 			if($pet !== null) {
@@ -25,7 +24,7 @@ class PlayerSessionUtils {
 		}
 	}
 
-	public function getPetByName(string $pet_name): ?BasePet {
+	public static function getPetByName(string $pet_name): ?BasePet {
 		foreach(self::getPetsByName($pet_name) as $pet) {
 			return $pet;
 		}

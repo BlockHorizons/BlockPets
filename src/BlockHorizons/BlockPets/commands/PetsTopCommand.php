@@ -43,11 +43,12 @@ class PetsTopCommand extends BaseCommand {
 	}
 
 	public function sendPage(CommandSender $sender, int $page = 1, ?string $entityName = null): void {
+		$loader = $this->getLoader();
 		$loader->getDatabase()->getPetsLeaderboard(
 			($page - 1) * self::ENTRIES_PER_PAGE,
 			self::ENTRIES_PER_PAGE,
 			$entityName,
-			function(array $rows) use($sender, $page, $entityName): void {
+			function(array $rows) use($sender, $page, $entityName, $loader): void {
 				$pets = "";
 				$index = PetsTopCommand::ENTRIES_PER_PAGE * ($page - 1);
 

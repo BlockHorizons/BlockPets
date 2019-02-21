@@ -8,6 +8,7 @@ use BlockHorizons\BlockPets\commands\utils\BlockPetsCommandException;
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\BasePet;
 use BlockHorizons\BlockPets\sessions\PlayerSession;
+use BlockHorizons\BlockPets\sessions\PlayerSessionUtils;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;

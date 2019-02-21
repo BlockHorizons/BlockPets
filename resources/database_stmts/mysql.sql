@@ -127,6 +127,16 @@ SELECT PetName, Visible FROM Pets
 WHERE Player=:player AND PetName LIKE :petname;
 -- #      }
 -- #    }
+
+-- #    { update
+-- #      { name
+-- #        :player string
+-- #        :oldname string
+-- #        :newname string
+UPDATE Pets SET PetName=:newname WHERE Player=:player AND PetName=:oldname;
+-- #      }
+-- #    }
+
 -- #  }
 
 -- #}

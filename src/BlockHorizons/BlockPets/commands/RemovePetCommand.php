@@ -27,7 +27,7 @@ class RemovePetCommand extends BaseCommand {
 		}
 
 		$session->deletePet($pet);
-		$sender->sendMessage(TF::GREEN . $loader->translate("commands.removepet.success", [$pet->getPetName()]));
+		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.removepet.success", [$pet->getPetName()]));
 		return true;
 	}
 }

@@ -26,6 +26,7 @@ abstract class SQLDataStorer extends BaseDataStorer {
 	protected const PET_LEADERBOARD = "blockpets.pet.leaderboard";
 	protected const PET_VISIBILITY = "blockpets.pet.visibility.select";
 	protected const UPDATE_PET_VISIBILITY = "blockpets.pet.visibility.toggle";
+	protected const UPDATE_PET_NAME = "blockpets.pet.update.name";
 
 	protected const VERSION_PATCH = "version.{VERSION}";
 
@@ -109,6 +110,14 @@ abstract class SQLDataStorer extends BaseDataStorer {
 				], $callable);
 			}
 		});
+	}
+
+	public function updatePetName(string $owner, string $oldName, string $newName): void {
+		$this->database->executeChange(SQLDataStorer::UPDATE_PET_NAME, [
+			"player" => $owner,
+			"oldname" => $oldName,
+			"newname" => $newName
+		]);
 	}
 
 	public function updatePet(PetData $data): void {

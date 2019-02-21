@@ -37,7 +37,7 @@ class ChangePetNameCommand extends BaseCommand {
 			}
 			$pet = $this->getPlayerPet($args[2], $petName);
 		}else{
-			$pet = $this->getPetByName($args[2], $sender);
+			$pet = $this->getPetByName($petName, $sender);
 		}
 
 		$oldName = $pet->getPetName();
