@@ -8,120 +8,156 @@ use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\datastorage\types\PetData;
 use BlockHorizons\BlockPets\pets\datastorage\types\PetOwnerData;
 
-use pocketmine\item\Item;
 use pocketmine\nbt\BigEndianNBTStream;
-use pocketmine\nbt\tag\ListTag;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\Player;
+use pocketmine\utils\UUID;
 
 use poggit\libasynql\libasynql;
 
+use SOFe\AwaitGenerator\Await;
+
 abstract class SQLDataStorer extends BaseDataStorer {
 
-	protected const INITIALIZE_TABLES = "blockpets.init";
-	protected const LOAD_PLAYER_PETS = "blockpets.loadplayer";
-	protected const LIST_PLAYER_PETS = "blockpets.listpets";
-	protected const RESET = "blockpets.reset";
+	protected const INIT_PETS = "blockpets.init.pets";
+	protected const INIT_PETS_PROPERTY = "blockpets.init.pets_property";
 
-	protected const REGISTER_PET = "blockpets.pet.register";
-	protected const UNREGISTER_PET = "blockpets.pet.unregister";
-	protected const PET_LEADERBOARD = "blockpets.pet.leaderboard";
-	protected const PET_VISIBILITY = "blockpets.pet.visibility.select";
-	protected const UPDATE_PET_VISIBILITY = "blockpets.pet.visibility.toggle";
-	protected const UPDATE_PET_NAME = "blockpets.pet.update.name";
+	protected const LOAD_PLAYER = "blockpets.player.load";
+
+	protected const PET_CREATE = "blockpets.pet.create";
+	protected const PET_DELETE = "blockpets.pet.delete";
+	protected const PET_LEADERBOARDS = "blockpets.pet.leaderboards";
+	protected const PET_INIT_PROPERTIES = "blockpets.pet.init_properties";
+	protected const PET_UPDATE_NAME = "blockpets.pet.update.name";
+	protected const PET_UPDATE_XP = "blockpets.pet.update.xp";
+	protected const PET_UPDATE_NBT = "blockpets.pet.update.nbt";
 
 	protected const VERSION_PATCH = "version.{VERSION}";
+
+	/** @var BigEndianNBTStream|null */
+	protected static $nbtSerializer = null;
+
+	protected static function getNBTSerializer(): BigEndianNBTStream {
+		return self::$nbtSerializer ?? self::$nbtSerializer = new BigEndianNBTStream();
+	}
+
+	/**
+	 * Reads a binary string from the database.
+	 *
+	 * @param string $string
+	 *
+	 * @return string
+	 */
+	protected static function readBinaryString(string $string): string {
+		return $string;
+	}
+
+	/**
+	 * Writes a binary string safely to the database.
+	 *
+	 * @param string $string
+	 *
+	 * @return string
+	 */
+	protected static function writeBinaryString(string $string): string {
+		return $string;
+	}
+
+	/**
+	 * Decodes NBT from the given compressed buffer and returns it.
+	 *
+	 * @param string $buffer
+	 *
+	 * @return CompoundTag
+	 */
+	protected static function readNamedTag(string $buffer): CompoundTag {
+		return static::getNBTSerializer()->readCompressed(static::readBinaryString($buffer));
+	}
+
+	/**
+	 * @param CompoundTag $nbt
+	 *
+	 * @return string
+	 */
+	protected static function writeNamedTag(CompoundTag $nbt): string {
+		return static::writeBinaryString(static::getNBTSerializer()->writeCompressed($nbt));
+	}
 
 	/** @var libasynql */
 	protected $database;
 	/** @var string */
 	protected $type;
 
-	public function registerPet(PetData $data): void {
-		$this->database->executeChange(SQLDataStorer::REGISTER_PET, [
-			"player" => $data->getOwner(),
-			"petname" => $data->getName(),
-			"entityname" => $data->getType(),
-			"petsize" => $data->scale,
-			"isbaby" => (int) $data->is_baby,
-			"chested" => (int) $data->is_chested,
-			"petlevel" => $data->level,
-			"levelpoints" => $data->level_points,
-			"visible" => $data->is_visible,
-			"inventory" => $data->inventory_manager->write()
-		]);
-	}
+	public function createPet(PetData $data): void {
+		Await::f2c(function() use($data){
+			yield $this->asyncChange(static::PET_CREATE, [
+				"uuid" => $data->getUUID()->toBinary(),
+				"owner" => $data->getOwner(),
+				"type" => $data->getType()
+			]);
 
-	public function unregisterPet(string $ownerName, string $petName): void {
-		$this->database->executeChange(SQLDataStorer::UNREGISTER_PET, [
-			"player" => $ownerName,
-			"petname" => $petName
-		]);
-	}
+			yield $this->asyncChange(static::PET_INIT_PROPERTIES, [
+				"uuid" => $data->getUUID()->toBinary(),
+				"name" => $data->getName(),
+				"xp" => $data->getXp(),
+				"nbt" => static::writeNamedTag($data->getNamedTag())
+			]);
 
-	public function load(string $owner, callable $callable): void {
-		$this->database->executeSelect(SQLDataStorer::LOAD_PLAYER_PETS, [
-			"player" => $owner
-		], function(array $entries) use($owner, $callable): void {
-			$player_data = new PetOwnerData($owner);
-
-			foreach($entries as $entry) {
-				$pet_data = new PetData($entry["PetName"], $entry["EntityName"], $owner);
-				$pet_data->size = $entry["PetSize"];
-				$pet_data->is_baby = (bool) $entry["IsBaby"];
-				$pet_data->level = $entry["PetLevel"];
-				$pet_data->level_points = $entry["LevelPoints"];
-				$pet_data->is_chested = (bool) $entry["Chested"];
-				$pet_data->is_visible = (bool) $entry["Visible"];
-				$pet_data->inventory_manager->read($entry["Inventory"]);
-				$player_data->addPet($pet_data);
-			}
-
-			$callable($player_data);
+			yield Await::ALL;
 		});
 	}
 
-	public function getPlayerPets(string $player, ?string $entityName = null, callable $callable): void {
-		$this->database->executeSelect(SQLDataStorer::LIST_PLAYER_PETS, [
-			"player" => $player,
-			"entityname" => $entityName ?? "%"
-		], $callable);
+	public function deletePet(UUID $uuid): void {
+		$this->database->executeChange(static::PET_DELETE, [
+			"uuid" => $uuid
+		]);
+	}
+
+	public function loadPlayer(Player $player, callable $on_load_player): void {
+		$owner = $player->getName();
+		$this->database->executeSelect(static::LOAD_PLAYER, [
+			"owner" => $owner
+		], function(array $entries) use($owner, $on_load_player): void {
+			$data = new PetOwnerData($owner);
+
+			foreach($entries as $entry) {
+				$pet = new PetData(UUID::fromBinary($entry["uuid"]), $entry["name"], $entry["type"], $owner);
+				$pet->setXp($entry["xp"]);
+				$pet->setNamedTag(static::readNamedTag($entry["nbt"]));
+				$data->setPet($pet);
+			}
+
+			$on_load_player($data);
+		});
 	}
 
 	public function getPetsLeaderboard(int $offset = 0, int $length = 1, ?string $entityName = null, callable $callable): void {
-		$this->database->executeSelect(SQLDataStorer::PET_LEADERBOARD, [
+		$this->database->executeSelect(static::PET_LEADERBOARDS, [
 			"offset" => $offset,
 			"length" => $length,
 			"entityname" => $entityName ?? "%"
 		], $callable);
 	}
 
-	public function togglePets(string $ownerName, ?string $petName, callable $callable): void {
-		$database = $this->database;
-
-		$this->database->executeChange(SQLDataStorer::UPDATE_PET_VISIBILITY, [
-			"player" => $ownerName,
-			"petname" => $petName ?? "%"
-		], function(int $changed) use($ownerName, $petName, $database, $callable): void {
-			if($changed === 0) {
-				$callable([]);
-			} else {
-				$database->executeSelect(SQLDataStorer::PET_VISIBILITY, [
-					"player" => $ownerName,
-					"petname" => $petName ?? "%"
-				], $callable);
-			}
-		});
-	}
-
-	public function updatePetName(string $owner, string $oldName, string $newName): void {
-		$this->database->executeChange(SQLDataStorer::UPDATE_PET_NAME, [
-			"player" => $owner,
-			"oldname" => $oldName,
-			"newname" => $newName
+	public function updatePetName(UUID $uuid, string $new_name): void {
+		$this->database->executeChange(static::PET_UPDATE_NAME, [
+			"uuid" => $uuid->toBinary(),
+			"name" => $new_name
 		]);
 	}
 
-	public function updatePet(PetData $data): void {
-		$this->registerPet($data);
+	public function updatePetXp(UUID $uuid, int $xp): void {
+		$this->database->executeChange(static::PET_UPDATE_XP, [
+			"uuid" => $uuid->toBinary(),
+			"xp" => $xp
+		]);
+	}
+
+	public function updatePetNBT(UUID $uuid, CompoundTag $nbt): void {
+		$this->database->executeChange(static::PET_UPDATE_NBT, [
+			"uuid" => $uuid->toBinary(),
+			"nbt" => static::writeNamedTag($nbt)
+		]);
 	}
 
 	protected function prepare(): void {
@@ -134,12 +170,16 @@ abstract class SQLDataStorer extends BaseDataStorer {
 		$libasynql_friendly_config = [
 			"type" => $this->type,
 			"sqlite" => [
-				"file" => $loader->getDataFolder() . "pets.sqlite3"
+				"file" => $loader->getDataFolder() . "blockpets.sqlite3"
 			],
-			"mysql" => array_combine(
-				["host", "username", "password", "schema", "port"],
-				[$mc["Host"], $mc["User"], $mc["Password"], $mc["Database"], $mc["Port"]]
-			)
+			"mysql" => [
+				"host" => $mc["Host"],
+				"username" => $mc["User"],
+				"password" => $mc["Password"],
+				"schema" => $mc["Database"],
+				"port" => $mc["Port"]
+			],
+			"worker-limit" => $config->getDatabaseWorkerLimit()
 		];
 
 		$this->database = libasynql::create($loader, $libasynql_friendly_config, [
@@ -147,12 +187,26 @@ abstract class SQLDataStorer extends BaseDataStorer {
 			"sqlite" => "database_stmts/sqlite.sql"
 		]);
 
-		$this->database->executeGeneric(SQLDataStorer::INITIALIZE_TABLES);
+		Await::f2c(function(){
+			yield $this->asyncGeneric(static::INIT_PETS);
+			yield $this->asyncGeneric(static::INIT_PETS_PROPERTY);
+			yield Await::ALL;
+		});
 
 		$resource = $this->getLoader()->getResource("patches/" . $this->type . ".sql");
 		if($resource !== null) {
 			$this->database->loadQueryFile($resource);//calls fclose($resource)
 		}
+	}
+
+	protected function asyncChange(string $query, array $args = []): \Generator {
+		$this->database->executeChange($query, $args, yield, yield Await::REJECT);
+		return yield Await::ONCE;
+	}
+
+	protected function asyncGeneric(string $query, array $args = []): \Generator {
+		$this->database->executeGeneric($query, $args, yield, yield Await::REJECT);
+		return yield Await::ONCE;
 	}
 
 	public function patch(string $version): void {
@@ -166,9 +220,5 @@ abstract class SQLDataStorer extends BaseDataStorer {
 
 	protected function close(): void {
 		$this->database->close();
-	}
-
-	protected function reset(): void {
-		$this->database->executeChange(SQLDataStorer::RESET);
 	}
 }

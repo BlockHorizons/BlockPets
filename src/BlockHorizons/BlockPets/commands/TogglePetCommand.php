@@ -48,7 +48,7 @@ class TogglePetCommand extends BaseCommand {
 						"PetName" => $petName,
 						"Visible" => $isVisible
 					]) {
-						$pet = $session->getPet($petName);
+						$pet = $session->getPetByName($petName);
 						if($pet !== null) {
 							$pets[$pet->getPetName()] = $isVisible;
 							$pet->updateVisibility((bool) $isVisible);
@@ -84,7 +84,7 @@ class TogglePetCommand extends BaseCommand {
 					}
 
 					["PetName" => $petName, "Visible" => $isVisible] = array_pop($rows);
-					$pet = $session->getPet($petName);
+					$pet = $session->getPetByName($petName);
 					if($pet === null) {
 						$this->sendWarning(TextFormat::RED . $sender, $loader->translate("commands.errors.player.no-pet"));
 						return;

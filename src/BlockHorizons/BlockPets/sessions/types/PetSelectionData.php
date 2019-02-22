@@ -6,25 +6,22 @@ namespace BlockHorizons\BlockPets\sessions\types;
 
 use BlockHorizons\BlockPets\pets\datastorage\types\PetData;
 
+use pocketmine\nbt\tag\CompoundTag;
+
 class PetSelectionData {
 
 	/** @var string */
 	public $type;
-	/** @var float */
-	public $scale;
-	/** @var bool */
-	public $is_baby;
+	/** @var CompoundTag */
+	public $namedtag;
 
-	public function __construct(string $type, float $scale = 1.0, bool $is_baby = false) {
+	public function __construct(string $type, ?CompoundTag $namedtag = null) {
 		$this->type = $type;
-		$this->scale = $scale;
-		$this->is_baby = $is_baby;
+		$this->namedtag = $namedtag ?? new CompoundTag();
 	}
 
 	public function toPetData(string $name, string $owner): PetData {
-		$data = new PetData($name, $this->type, $owner);
-		$data->scale = $this->scale;
-		$data->is_baby = $this->is_baby;
+		$data = PetData::new($name, $this->type, $owner, 0, $this->namedtag);
 		return $data;
 	}
 }

@@ -89,7 +89,7 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 
 	public function getPetByName(string $petName, CommandSender $sender, &$session = null): BasePet {
 		if($sender instanceof Player) {
-			$pet = ($session = $this->getPlayerSession($sender))->getPet($petName);
+			$pet = ($session = $this->getPlayerSession($sender))->getPetByName($petName);
 			if($pet !== null) {
 				return $pet;
 			}
@@ -104,7 +104,7 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 	}
 
 	public function getPlayerPet(string $ownerName, string $petName, &$owner = null, &$session = null): BasePet {
-		$pet = ($session = $this->getPlayerSession($ownerName, $owner))->getPet($petName);
+		$pet = ($session = $this->getPlayerSession($ownerName, $owner))->getPetByName($petName);
 		if($pet === null) {
 			throw new BlockPetsCommandException($this->getLoader()->translate("commands.errors.player.no-pet-other"));
 		}

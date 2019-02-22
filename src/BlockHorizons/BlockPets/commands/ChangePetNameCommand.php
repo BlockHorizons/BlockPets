@@ -41,7 +41,7 @@ class ChangePetNameCommand extends BaseCommand {
 		}
 
 		$oldName = $pet->getPetName();
-		$pet->changeName($newName);
+		$pet->setPetName($newName);
 		$sender->sendMessage(TF::GREEN . $this->getLoader()->translate("commands.changepetname.success", [$oldName, $newName]));
 		return true;
 	}

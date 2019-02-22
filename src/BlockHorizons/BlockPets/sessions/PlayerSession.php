@@ -14,6 +14,7 @@ use BlockHorizons\BlockPets\sessions\types\PetSelectionData;
 use pocketmine\entity\Entity;
 use pocketmine\Player;
 use pocketmine\Server;
+use pocketmine\utils\UUID;
 
 class PlayerSession {
 
@@ -78,7 +79,7 @@ class PlayerSession {
 
 	private function __construct(Loader $loader, Player $player) {
 		$this->uuid = $player->getRawUniqueId();
-		$loader->getDatabase()->load($player->getName(), [$this, "onLoad"]);
+		$loader->getDatabase()->loadPlayer($player, [$this, "onLoad"]);
 	}
 
 	/**
@@ -90,41 +91,39 @@ class PlayerSession {
 		return Server::getInstance()->getPlayerByRawUUID($this->uuid);
 	}
 
-	/**
-	 * Returns whether this player owns a pet
-	 * with a given name.
-	 *
-	 * @param string $pet_name
-	 *
-	 * @return bool
-	 */
-	public function hasPet(string $pet_name): bool {
-		return isset($this->pets[strtolower($pet_name)]);
+	protected function getLoader(): Loader {
+		return Server::getInstance()->getPluginManager()->getPlugin("BlockPets");
 	}
 
-	/**
-	 * Returns whether this player owns a pet
-	 * of a given pet instance.
-	 *
-	 * @param BasePet $pet
-	 *
-	 * @return bool
-	 */
 	public function ownsPet(BasePet $pet): bool {
-		return $this->hasPet($pet->getPetName());
+		return $this->getPet($pet->getPetUUID()) !== null;
+	}
+
+	public function getPet(UUID $uuid): ?BasePet {
+		return $this->getPetByRawUUID($uuid->toBinary());
 	}
 
 	/**
-	 * Returns a pet of a given name that this
-	 * player owns or null if they don't own a
-	 * pet by such a name.
+	 * Returns a pet of a given UUID that this player owns
+	 * or null if they don't own a pet by such a UUID.
 	 *
-	 * @param string $pet_name
+	 * @param string $uuid
 	 *
 	 * @return BasePet|null
 	 */
-	public function getPet(string $pet_name): ?BasePet {
-		return $this->pets[strtolower($pet_name)] ?? null;
+	public function getPetByRawUUID(string $uuid): ?BasePet {
+		return $this->pets[$uuid] ?? null;
+	}
+
+	public function getPetByName(string $pet_name): ?BasePet {
+		$pet_name = strtolower($pet_name);
+		foreach($this->pets as $pet) {
+			if(strtolower($pet->getPetName()) === $pet_name) {
+				return $pet;
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -158,7 +157,7 @@ class PlayerSession {
 	}
 
 	/**
-	 * Adds a pet to this player and returns the
+	 * Adds a new pet to this player and returns the
 	 * pet instance if the pet was successfully
 	 * added.
 	 *
@@ -167,13 +166,16 @@ class PlayerSession {
 	 * @return BasePet|null
 	 */
 	public function addPet(PetData $data): ?BasePet {
-		if($this->hasPet($data->getName())) {
+		if($this->getPet($data->getUUID()) !== null) {
 			throw new \InvalidArgumentException("Tried adding a pet to a player who already owns a pet with the name " . $data->getName() . ".");
 		}
 
+		$loader = $this->getLoader();
+		$loader->getDatabase()->createPet($data);
+
 		$player = $this->getPlayer();
 		$pet = PetFactory::create($data, $player->getLevel(), Entity::createBaseNBT($player->asVector3(), null, $player->yaw, $player->pitch));
-		if($this->onPetAdd($pet)) {
+		if($this->onPetAdd($pet, $loader)) {
 			return $pet;
 		}
 
@@ -181,7 +183,7 @@ class PlayerSession {
 	}
 
 	private function onPetAdd(BasePet $pet, ?Loader $loader = null): bool {
-		$ev = new PetSpawnEvent($loader ?? Server::getInstance()->getPluginManager()->getPlugin("BlockPets"), $pet);
+		$ev = new PetSpawnEvent($loader ?? $this->getLoader(), $pet);
 		$ev->call();
 		if($ev->isCancelled()) {
 			$pet->setCanSavePetData(false);
@@ -191,7 +193,7 @@ class PlayerSession {
 
 		$pet->spawnToAll();
 		$pet->setDormant(false);
-		$this->pets[strtolower($pet->getPetName())] = $pet;
+		$this->pets[$pet->getPetUUID()->toBinary()] = $pet;
 		return true;
 	}
 
@@ -205,35 +207,14 @@ class PlayerSession {
 			throw new \InvalidArgumentException("Tried deleting a pet from a player that doesn't own the pet.");
 		}
 
-		Server::getInstance()->getPluginManager()->getPlugin("BlockPets")->getDatabase()->unregisterPet($this->getPlayer()->getName(), $pet->getPetName());
+		Server::getInstance()->getPluginManager()->getPlugin("BlockPets")->getDatabase()->deletePet($pet->getPetUUID());
 		$this->onPetDelete($pet);
 	}
 
 	private function onPetDelete(BasePet $pet): void {
-		unset($this->pets[strtolower($pet->getPetName())]);
+		unset($this->pets[$pet->getPetUUID()->toBinary()]);
 		$pet->setCanSavePetData(false);
 		$pet->flagForDespawn();
-	}
-
-	/**
-	 * Called when a pet's name is changed so
-	 * that the pet can be re-indexed (pets are
-	 * indexed by their lowercased pet name).
-	 *
-	 * @param BasePet $pet
-	 * @param string $newName
-	 */
-	public function onPetNameChange(BasePet $pet, string $newName): void {
-		if(!isset($this->pets[$oldName = strtolower($pet->getPetName())])) {
-			throw new \InvalidArgumentException("Tried changing name of a pet that the player doesn't own.");
-		}
-
-		unset($this->pets[$oldName]);
-		$this->pets[$newName = strtolower($newName)] = $pet;
-
-		if($this->riding === $oldName) {
-			$this->riding = $newName;
-		}
 	}
 
 	/**
@@ -242,7 +223,7 @@ class PlayerSession {
 	 * @param BasePet|null $pet
 	 */
 	public function setRidingPet(?BasePet $pet): void {
-		$this->riding = $pet !== null ? strtolower($pet->getPetName()) : null;
+		$this->riding = $pet !== null ? $pet->getPetUUID()->toBinary() : null;
 	}
 
 	/**
@@ -266,7 +247,7 @@ class PlayerSession {
 	 * @return bool
 	 */
 	public function isRidingPet(?BasePet $pet = null): bool {
-		return $this->riding !== null ? ($pet === null || $this->riding === strtolower($pet->getPetName())) : false;
+		return $this->riding !== null && ($pet === null || $this->riding === $pet->getPetUUID()->toBinary());
 	}
 
 	/**

@@ -17,7 +17,7 @@ class PlayerSessionUtils {
 	 */
 	public static function getPetsByName(string $pet_name): \Generator {
 		foreach(PlayerSession::getAll() as $session) {
-			$pet = $session->getPet($pet_name);
+			$pet = $session->getPetByName($pet_name);
 			if($pet !== null) {
 				yield $pet;
 			}

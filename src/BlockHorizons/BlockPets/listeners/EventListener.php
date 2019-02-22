@@ -82,7 +82,7 @@ class EventListener extends BaseListener {
 			$event->setCancelled();
 
 			$pet_name = $event->getMessage();
-			if($session->getPet($pet_name) !== null) {
+			if($session->getPetByName($pet_name) !== null) {
 				$player->sendMessage(TextFormat::RED . "[Warning] You already own a pet with that name. Please choose a different name.");
 				return;
 			}

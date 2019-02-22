@@ -7,6 +7,10 @@ namespace BlockHorizons\BlockPets\pets\datastorage;
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\datastorage\types\PetData;
 
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\Player;
+use pocketmine\utils\UUID;
+
 abstract class BaseDataStorer {
 
 	/** @var Loader */
@@ -15,10 +19,13 @@ abstract class BaseDataStorer {
 	public function __construct(Loader $loader) {
 		$this->loader = $loader;
 		$this->prepare();
-		if($loader->getBlockPetsConfig()->doHardReset()) {
-			$this->reset();
-			$this->getLoader()->getConfig()->set("Hard-Reset", false);
-		}
+	}
+
+	/**
+	 * @return Loader
+	 */
+	protected function getLoader(): Loader {
+		return $this->loader;
 	}
 
 	/**
@@ -37,89 +44,65 @@ abstract class BaseDataStorer {
 	protected abstract function patch(string $version): void;
 
 	/**
-	 * @return Loader
-	 */
-	protected function getLoader(): Loader {
-		return $this->loader;
-	}
-
-	/**
-	 * Resets all values in the database.
-	 */
-	protected abstract function reset(): void;
-
-	/**
-	 * Registers pet to the database.
-	 * If the pet's entry already exists in the
-	 * database, the database will perform an
-	 * UPDATE-ALL-VALUES instead.
+	 * Inserts pet data into the database. Do NOT use
+	 * this method as a means to mass-update pet data.
 	 *
 	 * @param PetData $data
 	 */
-	public abstract function registerPet(PetData $data): void;
+	public abstract function createPet(PetData $data): void;
 
 	/**
-	 * Deletes the pet's entry from the database
-	 * if exists.
+	 * Deletes a pet's entry from the database.
 	 *
-	 * @param string $ownerName
-	 * @param string $petName
+	 * @param UUID $uuid
 	 */
-	public abstract function unregisterPet(string $ownerName, string $petName): void;
+	public abstract function deletePet(UUID $uuid): void;
 
 	/**
-	 * Retrieves all of the owner's pets from the
-	 * database and then calls the callable to
-	 * initialize the fetched entries.
+	 * Fetches all pets assosciated with the given player.
 	 *
-	 * @param string $ownerName
-	 * @param callable $callable
+	 * @param Player $ownerName
+	 * @param callable $on_load_player
 	 */
-	public abstract function load(string $ownerName, callable $callable): void;
-
-	/**
-	 * Fetches all pets' names of the specified player
-	 * from the database and calls the callable to get
-	 * the list of pet names.
-	 * If $entityName is not null, only entities with the
-	 * specified entity name will be fetched.
-	 *
-	 * @param string $ownerName
-	 * @param string|null $entityName
-	 * @param callable $callable
-	 */
-	public abstract function getPlayerPets(string $ownerName, ?string $entityName = null, callable $callable): void;
+	public abstract function loadPlayer(Player $player, callable $on_load_player): void;
 
 	/**
 	 * Fetches all pets sorted by their level and points
 	 * and calls the callable to get the list of sorted
 	 * pets.
-	 * If $entityName is not null, only entities with the
+	 * If $type is not null, only entities with the
 	 * specified entity name will be fetched.
 	 *
 	 * @param int $offset
 	 * @param int $length
-	 * @param string|null $entityName
+	 * @param string|null $type
 	 * @param callable $callable
 	 */
-	public abstract function getPetsLeaderboard(int $offset = 0, int $length = 1, ?string $entityName = null, callable $callable): void;
+	public abstract function getPetsLeaderboard(int $offset = 0, int $length = 1, ?string $type = null, callable $callable): void;
 
 	/**
-	 * Toggles pets on or off from the database.
+	 * Updates the pet's name in the database.
 	 *
-	 * @param string $ownerName
-	 * @param string|null $petName
+	 * @param UUID $uuid
+	 * @param string $new_name
 	 */
-	public abstract function togglePets(string $owner, ?string $petName, callable $callable): void;
+	public abstract function updatePetName(UUID $uuid, string $new_name): void;
 
 	/**
-	 * Renames pet in the database.
+	 * Updates the pet's experience in the database.
 	 *
-	 * @param string $ownerName
-	 * @param string $oldName
-	 * @param string $newName
+	 * @param UUID $uuid
+	 * @param int $xp
 	 */
-	public abstract function updatePetName(string $ownerName, string $oldName, string $newName): void;
+	public abstract function updatePetXp(UUID $uuid, int $xp): void;
+
+	/**
+	 * Updates the pet's nbt data in the database.
+	 *
+	 * @param UUID $uuid
+	 * @param CompoundTag $nbt
+	 */
+	public abstract function updatePetNBT(UUID $uuid, CompoundTag $nbt): void;
 
 	/**
 	 * Called during plugin disable to let databases

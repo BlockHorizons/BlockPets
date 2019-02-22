@@ -68,10 +68,10 @@ MySQL-Info:
   Database: BlockPets
   Port: 3306
 
+# The maximum number of simultaneous SQL queries
+# Recommended: 1 for sqlite, 2 for MySQL. You may want to further increase this value if your MySQL connection is very slow.
+Worker-Limit: 1
+
 # Whether to store pet data to the database set above or not.
 Store-To-Database: true
-
-# WARNING: This will delete all pets and pet data the next restart if set to true.
-# Use with caution!
-Hard-Reset: false
 ...

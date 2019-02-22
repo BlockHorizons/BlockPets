@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets\datastorage\types;
 
-use pocketmine\Player;
+use pocketmine\utils\UUID;
 
 class PetOwnerData {
 
@@ -17,20 +17,33 @@ class PetOwnerData {
 		$this->owner = $owner;
 	}
 
+	/**
+	 * Returns the pet owner's name.
+	 *
+	 * @return string
+	 */
 	public function getName(): string {
 		return $this->owner;
 	}
 
-	public function getPet(string $pet): ?PetData {
-		return $this->pets[strtolower($pet)] ?? null;
+	public function getPet(UUID $uuid): ?PetData {
+		return $this->getPetByRawUUID($uuid->toBinary());
+	}
+
+	public function getPetByRawUUID(string $rawUUID): ?PetData {
+		return $this->pets[$rawUUID] ?? null;
 	}
 
 	public function setPet(PetData $data): void {
-		$this->pets[strtolower($data->getName())] = $data;
+		$this->pets[$data->getUUID()->toBinary()] = $data;
 	}
 
-	public function removePet(string $pet): void {
-		unset($this->pets[strtolower($pet)]);
+	public function removePet(UUID $uuid): void {
+		$this->removePetByRawUUID($uuid->toBinary());
+	}
+
+	public function removePetByRawUUID(string $rawUUID): void {
+		unset($this->pets[$rawUUID]);
 	}
 
 	public function getPets(): array {

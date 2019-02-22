@@ -33,13 +33,6 @@ class BlockPetsConfig {
 	/**
 	 * @return bool
 	 */
-	public function doHardReset(): bool {
-		return (bool) ($this->settings["Hard-Reset"] ?? false);
-	}
-
-	/**
-	 * @return bool
-	 */
 	public function arePetsInvulnerable(): bool {
 		return (bool) ($this->settings["Invulnerable-Pets"] ?? false);
 	}
@@ -126,6 +119,13 @@ class BlockPetsConfig {
 	 */
 	public function getDatabase(): string {
 		return (string) ($this->settings["Database"] ?? "SQLite");
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getDatabaseWorkerLimit(): int {
+		return (int) ($this->settings["Worker-Limit"] ?? 1);
 	}
 
 	/**

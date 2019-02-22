@@ -55,7 +55,7 @@ use BlockHorizons\BlockPets\pets\creatures\ZombiePet;
 use BlockHorizons\BlockPets\pets\creatures\ZombiePigmanPet;
 use BlockHorizons\BlockPets\pets\creatures\ZombieVillagerPet;
 use BlockHorizons\BlockPets\pets\datastorage\types\PetData;
-use BlockHorizons\BlockPets\pets\datastorage\types\PetInventoryManager;
+use BlockHorizons\BlockPets\pets\inventory\PetInventoryManager;
 use pocketmine\entity\Attribute;
 use pocketmine\entity\Entity;
 use pocketmine\level\Level;
@@ -141,7 +141,20 @@ final class PetFactory {
 		self::$knownPets[$readable_name] = $className::getPetSaveId();
 	}
 
-	public static function create(PetData $data, Level $level, CompoundTag $nbt): BasePet {
+	public static function create(PetData $data, Level $level, CompoundTag $spawn_nbt): BasePet {
+		$nbt = $data->getNamedTag();
+		$nbt->setTag($spawn_nbt->getListTag("Pos"));
+
+		$motion_tag = $spawn_nbt->getListTag("Motion");
+		if($motion_tag !== null) {
+			$nbt->setTag($motion_tag);
+		}
+
+		$rotation_tag = $spawn_nbt->getListTag("Rotation");
+		if($rotation_tag !== null) {
+			$nbt->setTag($rotation_tag);
+		}
+
 		return Entity::createEntity($data->getType(), $level, $nbt, $data);
 	}
 

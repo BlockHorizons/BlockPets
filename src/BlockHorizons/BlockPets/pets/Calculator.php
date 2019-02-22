@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets;
 
+use BlockHorizons\BlockPets\pets\utils\LevelCalculator;
+
 use pocketmine\utils\TextFormat;
 
 class Calculator {
@@ -11,8 +13,19 @@ class Calculator {
 	/** @var BasePet */
 	private $pet;
 
+	/** @var bool */
+	private $needs_update = false;
+
 	public function __construct(BasePet $pet) {
 		$this->pet = $pet;
+	}
+
+	public function flagForUpdate(bool $value = true): void {
+		$this->needs_update = $value;
+	}
+
+	public function isFlaggedForUpdate(): bool {
+		return $this->needs_update;
 	}
 
 	/**
@@ -88,7 +101,9 @@ class Calculator {
 	 */
 	public function updateNameTag(): void {
 		$pet = $this->getPet();
-		$percentage = round($pet->getPetLevelPoints() / LevelCalculator::getRequiredLevelPoints($pet->getPetLevel()) * 100, 1);
+
+		$pet_level = $pet->getPetLevel();
+		$percentage = round(max(0, $pet->getPetLevelPoints() - LevelCalculator::getRequiredLevelPoints($pet_level - 1)) / LevelCalculator::getRequiredLevelPoints($pet_level) * 100, 1);
 		$pet->setNameTag(
 			$pet->getPetName() . "\n" .
 			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $pet->getPetLevel() . TextFormat::GRAY . " (" . TextFormat::YELLOW . $percentage . TextFormat::GRAY . "%) " . TextFormat::GRAY . $pet->getName() .

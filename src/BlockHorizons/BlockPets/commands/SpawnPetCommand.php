@@ -5,10 +5,12 @@ declare(strict_types = 1);
 namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
+use BlockHorizons\BlockPets\pets\BasePet;
 use BlockHorizons\BlockPets\pets\PetFactory;
 use BlockHorizons\BlockPets\pets\datastorage\types\PetData;
 use BlockHorizons\BlockPets\sessions\PlayerSession;
 use pocketmine\command\CommandSender;
+use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 
@@ -73,6 +75,10 @@ class SpawnPetCommand extends BaseCommand {
 		$pet_size = (int) ($args[2] ?? 1.0);
 		$pet_is_baby = isset($args[3]) && $args[3] !== "false" && $args !== "no";
 
+		$nbt = new CompoundTag(BasePet::TAG_PET_DATA);
+		$nbt->setFloat(BasePet::TAG_SCALE, $pet_size);
+		$nbt->setByte(BasePet::TAG_BABY, (int) $pet_is_baby);
+
 		if(count($session->getPets()) >= $loader->getBlockPetsConfig()->getMaxPets() && !$player->hasPermission("blockpets.bypass-limit")) {
 			$sender->sendMessage($sender, $loader->translate("commands.spawnpet.exceeded-limit", [
 				$player === $sender ? "You have " : "Your target has "
@@ -84,17 +90,19 @@ class SpawnPetCommand extends BaseCommand {
 				$sender->sendMessage(TF::GREEN . $loader->translate("commands.spawnpet.selecting-name", [$player->getName()]));
 			}
 			$player->sendMessage(TF::GREEN . $loader->translate("commands.spawnpet.name"));
-			$session->setSelectionData(new PetSelectionData($pet_type, $pet_size, $pet_is_baby));
+
+			$data = new PetSelectionData($pet_type, $pet_size, $pet_is_baby);
+			$data->namedtag->setTag($nbt);
+			$session->setSelectionData($data);
 			return true;
 		}
-		if($session->getPet($pet_name) !== null) {
+		if($session->getPetByName($pet_name) !== null) {
 			$this->sendWarning($sender, $loader->translate("commands.errors.player.already-own-pet"));
 			return true;
 		}
 
-		$pet_data = new PetData($pet_name, $pet_type, $player->getName());
-		$pet_data->scale = $pet_size;
-		$pet_data->is_baby = $pet_is_baby;
+		$pet_data = PetData::new($pet_name, $pet_type, $player->getName());
+		$pet_data->getNamedTag()->setTag($nbt);
 
 		$pet = $session->addPet($pet_data);
 		if($pet === null) {

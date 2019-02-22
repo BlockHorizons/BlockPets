@@ -39,7 +39,8 @@ abstract class IrasciblePet extends BasePet {
 			$source->setCancelled();
 		}
 		if($bpConfig->arePetsInvulnerableIfOwnerIs() && ($petOwner = $this->getPetOwner()) !== null) {
-			$this->server->getPluginManager()->callEvent($ownerDamageEvent = new EntityDamageEvent($petOwner, EntityDamageEvent::CAUSE_CUSTOM, 0));
+			$ownerDamageEvent = new EntityDamageEvent($petOwner, EntityDamageEvent::CAUSE_CUSTOM, 0);
+			$ownerDamageEvent->call();
 			if($ownerDamageEvent->isCancelled()) {
 				$source->setCancelled();
 			}
@@ -53,14 +54,14 @@ abstract class IrasciblePet extends BasePet {
 				} else {
 					$nameTag = $attacker->getNameTag();
 				}
-				if($nameTag === $this->getPetOwnerName()) {
+				if($nameTag === $this->getPetOwner()->getName()) {
 					$source->setCancelled();
 				}
 				if($bpConfig->petsDoAttack() && $attacker instanceof Living && !$source->isCancelled()) {
 					$this->setAngry($attacker);
 				}
 			}
-			if($attacker instanceof Player && !$attacker->isSneaking() && $this->canBeRidden && $attacker->getName() === $this->getPetOwnerName()) {
+			if($attacker instanceof Player && !$attacker->isSneaking() && $this->canBeRidden && $attacker === $this->getPetOwner()) {
 				$item = $attacker->getInventory()->getItemInHand();
 				if($item->getId() === Item::SADDLE) {
 					$this->setRider($attacker);
