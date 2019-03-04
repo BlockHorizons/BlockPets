@@ -5,6 +5,8 @@ projects:
   BlockPets:
     path: ""
     icon: resources/BlockPetsLogo.png
+    compressBuilds: false
+    fullGzip: 9
     libs:
       - src: Falkirks/spoondetector/spoondetector
         version: ^0
