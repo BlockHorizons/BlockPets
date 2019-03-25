@@ -6,26 +6,20 @@ namespace BlockHorizons\BlockPets\pets\utils;
 
 final class LevelCalculator {
 
-	/**
-	 * Returns the required amount of points for the given level to level up.
-	 *
-	 * @param int $level
-	 *
-	 * @return int
-	 */
-	public static function getRequiredLevelPoints(int $level): int {
-		return (int) (20 + $level / 1.5 * $level);
+	/** @var LevelCurve */
+	private static $curve;
+
+	public static function get(): LevelCurve {
+		return self::$curve;
 	}
 
-	/**
-	 * Returns the level for the given level points.
-	 *
-	 * @param int $points
-	 *
-	 * @return int
-	 */
-	public static function getLevelFromLevelPoints(int $points): int {
-		return (int) sqrt(($points - 20) * 1.5);
+	public static function set(LevelCurve $curve): void {
+		self::$curve = $curve;
+	}
+
+	public static function getLevelPoints(int $level): int {
+		$curve = self::get();
+		return 1 + $curve->getRequiredLevelPoints($level) - $curve->getRequiredLevelPoints($level - 1);
 	}
 
 	/**
@@ -44,7 +38,9 @@ final class LevelCalculator {
 		$remaining = $points;
 		$levelled = 0;
 
-		while($remaining > ($reqd = self::getRequiredLevelPoints($level + $levelled))) {
+		$curve = self::get();
+
+		while($remaining > ($reqd = $curve->getRequiredLevelPoints($level + $levelled))) {
 			++$levelled;
 			$remaining -= $reqd;
 		}

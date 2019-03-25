@@ -5,13 +5,12 @@ declare(strict_types = 1);
 namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
-use BlockHorizons\BlockPets\sessions\PlayerSessionUtils;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat as TF;
 
-class AddPetPointsCommand extends BaseCommand {
+class AddPetPointsCommand extends SessionDependentCommand {
 
 	public function __construct(Loader $loader) {
 		parent::__construct($loader, "addpetpoints", "Add level points to a pet", "/addpetpoints <petName> [amount] [player]", ["app"]);
@@ -40,7 +39,7 @@ class AddPetPointsCommand extends BaseCommand {
 			$pet = $this->getPetByName($petName, $sender);
 		}
 
-		$pet->addPetLevelPoints($amount);
+		$pet->addPetPoints($amount);
 		$sender->sendMessage(TF::GREEN . $loader->translate("commands.addpetpoints.success", [$amount, $pet->getPetName()]));
 		return true;
 	}

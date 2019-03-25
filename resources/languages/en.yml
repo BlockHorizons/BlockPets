@@ -65,6 +65,6 @@ commands:
     success-others: "Successfully toggle the pet &b%s &r&a %s!"
     success-specific: "Successfully toggled your pet %s %s."
     success-specific-others: "Successfully toggled %s's pet %s."
-    success-diff: "Successfully toggled your pets, visible pets: &b%s."
-    success-diff-others: "Successfully toggled %s's pets, visible pets: &b%s."
+    success-diff: "Successfully toggled %s pets."
+    success-diff-others: "Successfully toggled %s pets belonging to %s."
 ...

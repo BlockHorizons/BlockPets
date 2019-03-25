@@ -1,0 +1,14 @@
+# Experience configuration for BlockPets
+
+# Valid values are: linear and exponential
+# If an invalid value is entered, this will reset to the default setting, which is LINEAR
+Curve: linear
+# xp_required_to_level_up = base + (level * multiplier)
+Linear:
+    base: 20
+    multiplier: 30
+# xp_required_to_level_up = multiplier * level ^ exponent + base
+Exponential:
+    base: 40
+    multiplier: 0.1
+    exponent: 1.80

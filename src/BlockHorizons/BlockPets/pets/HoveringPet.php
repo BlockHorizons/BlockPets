@@ -85,9 +85,9 @@ abstract class HoveringPet extends IrasciblePet {
 
 			if(!$event->isCancelled() && !$target->isAlive()) {
 				if($target instanceof Player) {
-					$this->addPetLevelPoints($this->getLoader()->getBlockPetsConfig()->getPlayerExperiencePoints());
+					$this->addPetPoints($this->getLoader()->getBlockPetsConfig()->getPlayerExperiencePoints());
 				} else {
-					$this->addPetLevelPoints($this->getLoader()->getBlockPetsConfig()->getEntityExperiencePoints());
+					$this->addPetPoints($this->getLoader()->getBlockPetsConfig()->getEntityExperiencePoints());
 				}
 				$this->calmDown();
 			}

@@ -5,7 +5,9 @@ declare(strict_types = 1);
 namespace BlockHorizons\BlockPets\pets\datastorage;
 
 use BlockHorizons\BlockPets\Loader;
+use BlockHorizons\BlockPets\pets\datastorage\types\MinimalPetData;
 use BlockHorizons\BlockPets\pets\datastorage\types\PetData;
+use BlockHorizons\BlockPets\pets\datastorage\types\PetsLeaderboardData;
 use BlockHorizons\BlockPets\pets\datastorage\types\PetOwnerData;
 
 use pocketmine\nbt\BigEndianNBTStream;
@@ -17,7 +19,10 @@ use poggit\libasynql\libasynql;
 
 use SOFe\AwaitGenerator\Await;
 
-abstract class SQLDataStorer extends BaseDataStorer {
+abstract class SQLDataStorer implements IDataStorer {
+
+	protected const PSF_FOLDER_PATH = "database_stmts/"; // relative path to the folder that holds the PSF files
+	protected const PATCHES_FOLDER_PATH = "patches/"; // relative path to the folder that holds PSF patch files
 
 	protected const INIT_PETS = "blockpets.init.pets";
 	protected const INIT_PETS_PROPERTY = "blockpets.init.pets_property";
@@ -29,7 +34,7 @@ abstract class SQLDataStorer extends BaseDataStorer {
 	protected const PET_LEADERBOARDS = "blockpets.pet.leaderboards";
 	protected const PET_INIT_PROPERTIES = "blockpets.pet.init_properties";
 	protected const PET_UPDATE_NAME = "blockpets.pet.update.name";
-	protected const PET_UPDATE_XP = "blockpets.pet.update.xp";
+	protected const PET_UPDATE_POINTS = "blockpets.pet.update.points";
 	protected const PET_UPDATE_NBT = "blockpets.pet.update.nbt";
 
 	protected const VERSION_PATCH = "version.{VERSION}";
@@ -85,8 +90,6 @@ abstract class SQLDataStorer extends BaseDataStorer {
 
 	/** @var libasynql */
 	protected $database;
-	/** @var string */
-	protected $type;
 
 	public function createPet(PetData $data): void {
 		Await::f2c(function() use($data){
@@ -99,7 +102,7 @@ abstract class SQLDataStorer extends BaseDataStorer {
 			yield $this->asyncChange(static::PET_INIT_PROPERTIES, [
 				"uuid" => $data->getUUID()->toBinary(),
 				"name" => $data->getName(),
-				"xp" => $data->getXp(),
+				"points" => $data->getPoints(),
 				"nbt" => static::writeNamedTag($data->getNamedTag())
 			]);
 
@@ -122,7 +125,7 @@ abstract class SQLDataStorer extends BaseDataStorer {
 
 			foreach($entries as $entry) {
 				$pet = new PetData(UUID::fromBinary($entry["uuid"]), $entry["name"], $entry["type"], $owner);
-				$pet->setXp($entry["xp"]);
+				$pet->setPoints($entry["points"]);
 				$pet->setNamedTag(static::readNamedTag($entry["nbt"]));
 				$data->setPet($pet);
 			}
@@ -131,12 +134,19 @@ abstract class SQLDataStorer extends BaseDataStorer {
 		});
 	}
 
-	public function getPetsLeaderboard(int $offset = 0, int $length = 1, ?string $entityName = null, callable $callable): void {
+	public function getPetsLeaderboard(int $offset = 0, int $length = 1, ?string $type = null, callable $callable): void {
 		$this->database->executeSelect(static::PET_LEADERBOARDS, [
 			"offset" => $offset,
 			"length" => $length,
-			"entityname" => $entityName ?? "%"
-		], $callable);
+			"type" => $type ?? "%"
+		], function(array $entries) use($callable) : void {
+			$data = new PetsLeaderboardData();
+			foreach($entries as $entry) {
+				$data->addEntry(new MinimalPetData($entry["name"], $entry["type"], $entry["owner"], $entry["points"]));
+			}
+
+			$callable($data);
+		});
 	}
 
 	public function updatePetName(UUID $uuid, string $new_name): void {
@@ -146,10 +156,10 @@ abstract class SQLDataStorer extends BaseDataStorer {
 		]);
 	}
 
-	public function updatePetXp(UUID $uuid, int $xp): void {
-		$this->database->executeChange(static::PET_UPDATE_XP, [
+	public function updatePetPoints(UUID $uuid, int $points): void {
+		$this->database->executeChange(static::PET_UPDATE_POINTS, [
 			"uuid" => $uuid->toBinary(),
-			"xp" => $xp
+			"points" => $points
 		]);
 	}
 
@@ -160,40 +170,43 @@ abstract class SQLDataStorer extends BaseDataStorer {
 		]);
 	}
 
-	protected function prepare(): void {
-		$loader = $this->getLoader();
+	/**
+	 * Returns a libasyql-friendly formatted database configuration.
+	 *
+	 * @param Loader $loader
+	 *
+	 * @return array
+	 */
+	protected abstract function getLibasynqlFriendlyConfig(Loader $loader): array;
 
-		$config = $loader->getBlockPetsConfig();
-		$this->type = strtolower($config->getDatabase());
-		$mc = $config->getMySQLInfo();
+	/**
+	 * Returns a libasynql-friendly name of the database.
+	 *
+	 * @return string
+	 */
+	protected abstract function getName(): string;
 
-		$libasynql_friendly_config = [
-			"type" => $this->type,
-			"sqlite" => [
-				"file" => $loader->getDataFolder() . "blockpets.sqlite3"
-			],
-			"mysql" => [
-				"host" => $mc["Host"],
-				"username" => $mc["User"],
-				"password" => $mc["Password"],
-				"schema" => $mc["Database"],
-				"port" => $mc["Port"]
-			],
-			"worker-limit" => $config->getDatabaseWorkerLimit()
-		];
+	public function prepare(Loader $loader): void {
+		$database_stmts = $loader->getDataFolder() . self::PSF_FOLDER_PATH;
+		if(!is_dir($database_stmts)) {
+			mkdir($database_stmts);
+		}
+
+		$loader->saveResource(self::PSF_FOLDER_PATH . $this->getName() . ".sql", true);
+
+		$libasynql_friendly_config = $this->getLibasynqlFriendlyConfig($loader);
+		$libasynql_friendly_config["type"] = $this->getName();
+		$libasynql_friendly_config["worker-limit"] = $loader->getBlockPetsConfig()->getDatabaseWorkerLimit();
 
 		$this->database = libasynql::create($loader, $libasynql_friendly_config, [
-			"mysql" => "database_stmts/mysql.sql",
-			"sqlite" => "database_stmts/sqlite.sql"
+			$this->getName() => self::PSF_FOLDER_PATH . $this->getName() . ".sql"
 		]);
 
-		Await::f2c(function(){
-			yield $this->asyncGeneric(static::INIT_PETS);
-			yield $this->asyncGeneric(static::INIT_PETS_PROPERTY);
-			yield Await::ALL;
-		});
+		$this->database->executeGeneric(static::INIT_PETS);
+		$this->database->executeGeneric(static::INIT_PETS_PROPERTY);
+		$this->database->waitAll();
 
-		$resource = $this->getLoader()->getResource("patches/" . $this->type . ".sql");
+		$resource = $loader->getResource(self::PATCHES_FOLDER_PATH . $this->getName() . ".sql");
 		if($resource !== null) {
 			$this->database->loadQueryFile($resource);//calls fclose($resource)
 		}
@@ -201,11 +214,6 @@ abstract class SQLDataStorer extends BaseDataStorer {
 
 	protected function asyncChange(string $query, array $args = []): \Generator {
 		$this->database->executeChange($query, $args, yield, yield Await::REJECT);
-		return yield Await::ONCE;
-	}
-
-	protected function asyncGeneric(string $query, array $args = []): \Generator {
-		$this->database->executeGeneric($query, $args, yield, yield Await::REJECT);
 		return yield Await::ONCE;
 	}
 
@@ -218,7 +226,7 @@ abstract class SQLDataStorer extends BaseDataStorer {
 		}
 	}
 
-	protected function close(): void {
+	public function close(): void {
 		$this->database->close();
 	}
 }

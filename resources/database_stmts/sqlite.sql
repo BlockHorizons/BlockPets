@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS pets(
 CREATE TABLE IF NOT EXISTS pets_property(
   uuid BINARY(16) NOT NULL,
   name VARCHAR(48) NOT NULL,
-  xp INT UNSIGNED NOT NULL DEFAULT 0,
+  points INT UNSIGNED NOT NULL DEFAULT 0,
   nbt BLOB,
 
   PRIMARY KEY(uuid, name),
@@ -33,12 +33,12 @@ SELECT
   pet.uuid,
   pet.type,
   property.name,
-  property.xp,
+  property.points,
   property.nbt
 FROM pets pet
 INNER JOIN pets_property property
   ON property.uuid=pet.uuid
-WHERE pet.owner=:owner
+WHERE pet.owner=:owner;
 -- #    }
 -- #  }
 
@@ -66,10 +66,10 @@ VALUES(:uuid, :name);
 -- #        :name string
 UPDATE pets_property SET name=:name WHERE uuid=:uuid;
 -- #      }
--- #      { xp
+-- #      { points
 -- #        :uuid string
--- #        :xp int
-UPDATE pets_property SET xp=:xp WHERE uuid=:uuid;
+-- #        :points int
+UPDATE pets_property SET points=:points WHERE uuid=:uuid;
 -- #      }
 -- #      { nbt
 -- #        :uuid string
@@ -85,12 +85,12 @@ SELECT
   pet.owner,
   pet.type
   property.name,
-  property.xp
+  property.points
 FROM pets pet
 INNER JOIN pets_property property
   ON property.uuid=pet.uuid
 WHERE pet.type LIKE :type
-ORDER BY xp DESC
+ORDER BY points DESC
 LIMIT :offset, :length;
 -- #    }
 -- #  }

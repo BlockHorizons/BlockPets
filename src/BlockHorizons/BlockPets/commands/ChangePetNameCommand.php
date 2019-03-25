@@ -9,7 +9,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 
-class ChangePetNameCommand extends BaseCommand {
+class ChangePetNameCommand extends SessionDependentCommand {
 
 	public function __construct(Loader $loader) {
 		parent::__construct($loader, "changepetname", "Changes the name of a pet", "/changepetname <pet name> <new name> [player]", ["cpn, chpn"]);

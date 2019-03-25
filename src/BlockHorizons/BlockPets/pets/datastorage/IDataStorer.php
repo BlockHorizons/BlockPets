@@ -11,29 +11,16 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
 use pocketmine\utils\UUID;
 
-abstract class BaseDataStorer {
-
-	/** @var Loader */
-	protected $loader;
-
-	public function __construct(Loader $loader) {
-		$this->loader = $loader;
-		$this->prepare();
-	}
-
-	/**
-	 * @return Loader
-	 */
-	protected function getLoader(): Loader {
-		return $this->loader;
-	}
+interface IDataStorer {
 
 	/**
 	 * Called during class construction to let
 	 * databases create and initialize their
 	 * instances.
+	 *
+	 * @param Loader $loader
 	 */
-	protected abstract function prepare(): void;
+	public function prepare(Loader $loader): void;
 
 	/**
 	 * Called when the plugin updates so database
@@ -41,7 +28,7 @@ abstract class BaseDataStorer {
 	 *
 	 * @param string $version
 	 */
-	protected abstract function patch(string $version): void;
+	public function patch(string $version): void;
 
 	/**
 	 * Inserts pet data into the database. Do NOT use
@@ -49,14 +36,14 @@ abstract class BaseDataStorer {
 	 *
 	 * @param PetData $data
 	 */
-	public abstract function createPet(PetData $data): void;
+	public function createPet(PetData $data): void;
 
 	/**
 	 * Deletes a pet's entry from the database.
 	 *
 	 * @param UUID $uuid
 	 */
-	public abstract function deletePet(UUID $uuid): void;
+	public function deletePet(UUID $uuid): void;
 
 	/**
 	 * Fetches all pets assosciated with the given player.
@@ -64,21 +51,20 @@ abstract class BaseDataStorer {
 	 * @param Player $ownerName
 	 * @param callable $on_load_player
 	 */
-	public abstract function loadPlayer(Player $player, callable $on_load_player): void;
+	public function loadPlayer(Player $player, callable $on_load_player): void;
 
 	/**
 	 * Fetches all pets sorted by their level and points
 	 * and calls the callable to get the list of sorted
-	 * pets.
-	 * If $type is not null, only entities with the
-	 * specified entity name will be fetched.
+	 * pets. If $type is not null, only entities of the
+	 * specified type will be fetched.
 	 *
 	 * @param int $offset
 	 * @param int $length
 	 * @param string|null $type
 	 * @param callable $callable
 	 */
-	public abstract function getPetsLeaderboard(int $offset = 0, int $length = 1, ?string $type = null, callable $callable): void;
+	public function getPetsLeaderboard(int $offset = 0, int $length = 1, ?string $type = null, callable $callable): void;
 
 	/**
 	 * Updates the pet's name in the database.
@@ -86,15 +72,15 @@ abstract class BaseDataStorer {
 	 * @param UUID $uuid
 	 * @param string $new_name
 	 */
-	public abstract function updatePetName(UUID $uuid, string $new_name): void;
+	public function updatePetName(UUID $uuid, string $new_name): void;
 
 	/**
-	 * Updates the pet's experience in the database.
+	 * Updates the pet's points in the database.
 	 *
 	 * @param UUID $uuid
-	 * @param int $xp
+	 * @param int $points
 	 */
-	public abstract function updatePetXp(UUID $uuid, int $xp): void;
+	public function updatePetPoints(UUID $uuid, int $points): void;
 
 	/**
 	 * Updates the pet's nbt data in the database.
@@ -102,11 +88,11 @@ abstract class BaseDataStorer {
 	 * @param UUID $uuid
 	 * @param CompoundTag $nbt
 	 */
-	public abstract function updatePetNBT(UUID $uuid, CompoundTag $nbt): void;
+	public function updatePetNBT(UUID $uuid, CompoundTag $nbt): void;
 
 	/**
 	 * Called during plugin disable to let databases
 	 * close their instances.
 	 */
-	protected abstract function close(): void;
+	public function close(): void;
 }

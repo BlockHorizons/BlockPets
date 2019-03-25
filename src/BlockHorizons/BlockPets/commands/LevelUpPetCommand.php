@@ -9,7 +9,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 
-class LevelUpPetCommand extends BaseCommand {
+class LevelUpPetCommand extends SessionDependentCommand {
 
 	public function __construct(Loader $loader) {
 		parent::__construct($loader, "leveluppet", "Level up a pet", "/leveluppet <petName> [amount] [player]", ["lup"]);

@@ -14,7 +14,7 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 
-class SpawnPetCommand extends BaseCommand {
+class SpawnPetCommand extends SessionDependentCommand {
 
 	public function __construct(Loader $loader) {
 		parent::__construct($loader, "spawnpet", "Spawn a pet for yourself or other players", "/spawnpet <petType> [name] [size] [baby] [player]", ["sp"]);
@@ -54,7 +54,7 @@ class SpawnPetCommand extends BaseCommand {
 				return true;
 			}
 
-			$session = $this->getPlayerSession($args[4], $player);
+			$session = $this->getOnlinePlayerSession($args[4], $player);
 		} else {
 			$session = PlayerSession::get($player);
 			if($session === null) {

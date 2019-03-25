@@ -9,7 +9,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\level\particle\HeartParticle;
 use pocketmine\utils\TextFormat as TF;
 
-class HealPetCommand extends BaseCommand {
+class HealPetCommand extends SessionDependentCommand {
 
 	public function __construct(Loader $loader) {
 		parent::__construct($loader, "healpet", "Heal a pet back to full health", "/healpet <petName> [player]", ["hp", "petheal"]);

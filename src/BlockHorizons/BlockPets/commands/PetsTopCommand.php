@@ -5,18 +5,24 @@ declare(strict_types = 1);
 namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
+use BlockHorizons\BlockPets\pets\datastorage\types\MinimalPetData;
+use BlockHorizons\BlockPets\pets\datastorage\types\PetsLeaderboardData;
 use BlockHorizons\BlockPets\pets\PetFactory;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
-class PetsTopCommand extends BaseCommand {
+class PetsTopCommand extends SessionDependentCommand {
 
 	public const ENTRIES_PER_PAGE = 10;//No. of pets to list per page.
 
 	public function __construct(Loader $loader) {
 		parent::__construct($loader, "petstop", "Lists the pets leaderboard", "/petstop [EntityName=ALL] [page=1]", ["petsleaderboard", "toppets"]);
 		$this->setPermission("blockpets.command.petstop");
+	}
+
+	public function requiresDatabaseConnection(): bool {
+		return true;
 	}
 
 	public function onCommand(CommandSender $sender, string $commandLabel, array $args): bool {
@@ -42,36 +48,30 @@ class PetsTopCommand extends BaseCommand {
 		return true;
 	}
 
-	public function sendPage(CommandSender $sender, int $page = 1, ?string $entityName = null): void {
+	public function sendPage(CommandSender $sender, int $page = 1, ?string $type = null): void {
 		$loader = $this->getLoader();
 		$loader->getDatabase()->getPetsLeaderboard(
 			($page - 1) * self::ENTRIES_PER_PAGE,
 			self::ENTRIES_PER_PAGE,
-			$entityName,
-			function(array $rows) use($sender, $page, $entityName, $loader): void {
+			$type,
+			function(PetsLeaderboardData $data) use($type): void {
 				$pets = "";
 				$index = PetsTopCommand::ENTRIES_PER_PAGE * ($page - 1);
 
-				foreach($rows as [
-					"Player" => $player,
-					"PetName" => $petName,
-					"EntityName" => $entityName,
-					"PetLevel" => $petLevel,
-					"LevelPoints" => $levelPoints
-				]) {
-					$pets .= TextFormat::YELLOW . ++$index . ". " . TextFormat::AQUA . $player . "'s Pet " . PetFactory::getReadableName($entityName) . ", " . TextFormat::YELLOW . $petName;
-					$pets .= TextFormat::GRAY . "(" . "Lvl " . TextFormat::AQUA . $petLevel . TextFormat::GRAY . ", " . TextFormat::AQUA . $levelPoints . TextFormat::GRAY . " xp)" . TextFormat::EOL;
+				foreach($data->getPets() as $pet) {
+					$pets .= TextFormat::YELLOW . ++$index . ". " . TextFormat::AQUA . $pet->getOwner() . "'s Pet " . PetFactory::getReadableName($pet->getType()) . ", " . TextFormat::YELLOW . $pet->getName();
+					$pets .= TextFormat::GRAY . "(" . "Lvl " . TextFormat::AQUA . $pet->getLevel() . TextFormat::GRAY . ", " . TextFormat::AQUA . $pet->getLevelPoints() . TextFormat::GRAY . " xp)" . TextFormat::EOL;
 				}
 
 				if($pets === "") {
 					if($page === 1) {
-						if($entityName === null) {
+						if($type === null) {
 							$sender->sendMessage(TextFormat::RED . $loader->translate("commands.errors.pets.none-on-server"));
 						} else {
-							$sender->sendMessage(TextFormat::RED . $loader->translate("commands.errors.pets.none-on-server-type", [$entityName]));
+							$sender->sendMessage(TextFormat::RED . $loader->translate("commands.errors.pets.none-on-server-type", [$type]));
 						}
 					} else {
-						$this->sendPage($sender, 1, $entityName);//send first page.
+						$this->sendPage($sender, 1, $type);//send first page.
 					}
 				} else {
 					$message = TextFormat::GREEN . "--- Pets Leaderboard " . TextFormat::YELLOW . "#" . $page . TextFormat::GREEN . " ---" . TextFormat::EOL;

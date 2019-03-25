@@ -65,6 +65,6 @@ commands:
     success-others: "애완동물 &b%s&r&a을(를) %s(으)로 성공적으로 전환했습니다!"
     success-specific: "애완동물 %s을(를) %s(으)로 성공적으로 전환했습니다."
     success-specific-others: "%s의 애완동물을 %s(으)로 성공적으로 전환했습니다."
-    success-diff: "애완동물을 성공적으로 전환했습니다, 보이는 애완동물: &b%s."
-    success-diff-others: "%s의 애완동물을 성공적으로 전환했습니다, 보이는 애완동물: &b%s."
+    success-diff: "Successfully toggled %s pets."
+    success-diff-others: "Successfully toggled %s pets belonging to %s."
 ...

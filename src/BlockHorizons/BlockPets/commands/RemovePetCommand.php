@@ -8,7 +8,7 @@ use BlockHorizons\BlockPets\Loader;
 use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat as TF;
 
-class RemovePetCommand extends BaseCommand {
+class RemovePetCommand extends SessionDependentCommand {
 
 	public function __construct(Loader $loader) {
 		parent::__construct($loader, "removepet", "Remove a pet", "/removepet <petName> [player]", ["rmp"]);

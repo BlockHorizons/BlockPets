@@ -5,14 +5,15 @@ declare(strict_types = 1);
 namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
+use BlockHorizons\BlockPets\sessions\PlayerSession;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
-class TogglePetCommand extends BaseCommand {
+class TogglePetCommand extends SessionDependentCommand {
 
 	public function __construct(Loader $loader) {
-		parent::__construct($loader, "togglepet", "Toggle pets on/off", "/togglepet <all/pet name> [player]", ["togglep"]);
+		parent::__construct($loader, "togglepet", "Toggle pets on/off", "/togglepet <all/showall/hideall/pet name> [player]", ["togglep"]);
 		$this->setPermission("blockpets.command.togglepet");
 	}
 
@@ -24,12 +25,73 @@ class TogglePetCommand extends BaseCommand {
 		}
 
 		if(isset($args[1])) {
-			$session = $this->getPlayerSession($args[1], $player);
+			$session = $this->getOnlinePlayerSession($args[1], $player);
 		} elseif(!($sender instanceof Player)) {
 			$this->sendConsoleError($sender);
 		} else {
 			$session = PlayerSession::get($sender);
 			$player = $sender;
+		}
+
+		switch($args[0]) {
+			case "all":
+				$changed = 0;
+				foreach($session->getPets() as $pet) {
+					$pet->updateVisibility(!$pet->getVisibility());
+					++$changed;
+				}
+
+				if($sender === $player) {
+					$sender->sendMessage(TextFormat::GREEN . $loader->translate("commands.togglepet.success-diff", [$changed]));
+				} else {
+					$sender->sendMessage(TextFormat::GREEN . $loader->translate("commands.togglepet.success-diff-others", [$player->getName(), $changed]));
+				}
+				return true;
+			case "showall":
+				$changed = 0;
+				foreach($session->getPets() as $pet) {
+					if(!$pet->getVisibility()) {
+						$pet->updateVisibility(true);
+						++$changed;
+					}
+				}
+
+				if($sender === $player) {
+					$sender->sendMessage(TextFormat::GREEN . $loader->translate("commands.togglepet.success-diff", [$changed]));
+				} else {
+					$sender->sendMessage(TextFormat::GREEN . $loader->translate("commands.togglepet.success-diff-others", [$player->getName(), $changed]));
+				}
+				return true;
+			case "hideall":
+				$changed = 0;
+				foreach($session->getPets() as $pet) {
+					if($pet->getVisibility()) {
+						$pet->updateVisibility(false);
+						++$changed;
+					}
+				}
+
+				if($sender === $player) {
+					$sender->sendMessage(TextFormat::GREEN . $loader->translate("commands.togglepet.success-diff", [$changed]));
+				} else {
+					$sender->sendMessage(TextFormat::GREEN . $loader->translate("commands.togglepet.success-diff-others", [$player->getName(), $changed]));
+				}
+				return true;
+			default:
+				$pet = $session->getPetByName($args[0]);
+				if($pet === null) {
+					$sender->sendMessage($this->getLoader()->translate("commands.errors.player.no-pet"));
+					return true;
+				}
+
+				$pet->updateVisibility($is_visible = !$pet->getVisibility());
+
+				if($sender === $player) {
+					$sender->sendMessage(TextFormat::GREEN . $loader->translate("commands.togglepet.success", [$is_visible ? "on" : "off"]));
+				} else {
+					$sender->sendMessage(TextFormat::GREEN . $loader->translate("commands.togglepet.success-others", [$player->getName(), $is_visible ? "on" : "off"]));
+				}
+				return true;
 		}
 
 		$loader->getDatabase()->togglePets(

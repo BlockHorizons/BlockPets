@@ -103,10 +103,11 @@ class Calculator {
 		$pet = $this->getPet();
 
 		$pet_level = $pet->getPetLevel();
-		$percentage = round(max(0, $pet->getPetLevelPoints() - LevelCalculator::getRequiredLevelPoints($pet_level - 1)) / LevelCalculator::getRequiredLevelPoints($pet_level) * 100, 1);
+
+		$percentage = ($pet->getPetLevelPoints() / LevelCalculator::getLevelPoints($pet_level)) * 100;
 		$pet->setNameTag(
 			$pet->getPetName() . "\n" .
-			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $pet->getPetLevel() . TextFormat::GRAY . " (" . TextFormat::YELLOW . $percentage . TextFormat::GRAY . "%) " . TextFormat::GRAY . $pet->getName() .
+			TextFormat::GRAY . "Lvl." . TextFormat::AQUA . $pet_level . TextFormat::GRAY . " (" . TextFormat::YELLOW . round($percentage, 1) . TextFormat::GRAY . "%) " . TextFormat::GRAY . $pet->getName() .
 			TextFormat::RED . " (" . $pet->getHealth() . "/" . $pet->getMaxHealth() . ")"
 		);
 	}

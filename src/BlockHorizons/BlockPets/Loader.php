@@ -6,6 +6,7 @@ namespace BlockHorizons\BlockPets;
 
 use BlockHorizons\BlockPets\commands\CommandFactory;
 use BlockHorizons\BlockPets\configurable\BlockPetsConfig;
+use BlockHorizons\BlockPets\configurable\ExperienceConfig;
 use BlockHorizons\BlockPets\configurable\LanguageConfig;
 use BlockHorizons\BlockPets\configurable\PetProperties;
 use BlockHorizons\BlockPets\items\Saddle;
@@ -13,7 +14,7 @@ use BlockHorizons\BlockPets\listeners\EventListener;
 use BlockHorizons\BlockPets\listeners\RidingListener;
 use BlockHorizons\BlockPets\pets\BasePet;
 use BlockHorizons\BlockPets\pets\PetFactory;
-use BlockHorizons\BlockPets\pets\datastorage\BaseDataStorer;
+use BlockHorizons\BlockPets\pets\datastorage\IDataStorer;
 use BlockHorizons\BlockPets\pets\datastorage\MySQLDataStorer;
 use BlockHorizons\BlockPets\pets\datastorage\SQLiteDataStorer;
 use pocketmine\entity\Entity;
@@ -42,7 +43,7 @@ class Loader extends PluginBase {
 	/** @var LanguageConfig */
 	private $language;
 
-	/** @var BaseDataStorer */
+	/** @var IDataStorer */
 	private $database;
 
 	public function onEnable() {
@@ -56,6 +57,8 @@ class Loader extends PluginBase {
 		$this->bpConfig = new BlockPetsConfig($this);
 		$this->pProperties = new PetProperties($this);
 		$this->language = new LanguageConfig($this);
+		new ExperienceConfig($this);
+
 		$this->registerDatabase();
 
 		$this->checkVersionChange();
@@ -110,14 +113,6 @@ class Loader extends PluginBase {
 	}
 
 	private function registerDatabase(): void {
-		$database_stmts = $this->getDataFolder() . "database_stmts/";
-		if(!is_dir($database_stmts)) {
-			mkdir($database_stmts);
-		}
-
-		$this->saveResource("database_stmts/mysql.sql", true);
-		$this->saveResource("database_stmts/sqlite.sql", true);
-
 		switch(strtolower($this->getBlockPetsConfig()->getDatabase())) {
 			default:
 			case "mysql":
@@ -128,6 +123,8 @@ class Loader extends PluginBase {
 				$this->database = new SQLiteDataStorer($this);
 				break;
 		}
+
+		$this->database->prepare($this);
 	}
 
 	/**
@@ -160,9 +157,9 @@ class Loader extends PluginBase {
 	/**
 	 * Returns the database to store and fetch data from.
 	 *
-	 * @return BaseDataStorer
+	 * @return IDataStorer
 	 */
-	public function getDatabase(): BaseDataStorer {
+	public function getDatabase(): IDataStorer {
 		if($this->database === null) {
 			throw new \RuntimeException("Attempted to retrieve the database while database storing was unavailable.");
 		}

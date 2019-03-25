@@ -9,7 +9,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 
-class ClearPetCommand extends BaseCommand {
+class ClearPetCommand extends SessionDependentCommand {
 
 	public function __construct(Loader $loader) {
 		parent::__construct($loader, "clearpet", "Clear a pet", "/clearpet <petName>", ["cp"]);

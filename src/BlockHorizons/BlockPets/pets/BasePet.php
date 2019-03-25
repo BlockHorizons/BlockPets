@@ -79,7 +79,7 @@ abstract class BasePet extends Creature implements Rideable {
 	/** @var string */
 	private $petName;
 	/** @var int */
-	private $petLevelPoints;
+	private $petPoints;
 	/** @var Player */
 	private $petOwner;
 	/** @var UUID */
@@ -149,7 +149,7 @@ abstract class BasePet extends Creature implements Rideable {
 
 	private function loadPetData(PetData $pet_data): void {
 		$this->petName = $pet_data->getName();
-		$this->petLevelPoints = $pet_data->getXp();
+		$this->petPoints = $pet_data->getPoints();
 		$this->petOwner = Server::getInstance()->getPlayerExact($pet_data->getOwner());
 		$this->petUUID = $pet_data->getUUID();
 	}
@@ -385,7 +385,7 @@ abstract class BasePet extends Creature implements Rideable {
 					$this->getLevel()->addParticle(new HeartParticle($this->add(0, 2), 4));
 
 					if($this->getLoader()->getBlockPetsConfig()->giveExperienceWhenFed()) {
-						$this->addPetLevelPoints((int) ($nutrition / 40 * LevelCalculator::getRequiredLevelPoints($this->getPetLevel())));
+						$this->addPetPoints((int) ($nutrition / 40 * LevelCalculator::get()->getRequiredLevelPoints($this->getPetLevel())));
 					}
 
 					$source->setCancelled();
@@ -460,30 +460,48 @@ abstract class BasePet extends Creature implements Rideable {
 	 *
 	 * @return bool
 	 */
-	public function addPetLevelPoints(int $points): bool {
-		$this->levelUp(LevelCalculator::calculateLevelUp($points, $this->getPetLevel(), $remaining));
-		$this->setPetLevelPoints($this->petLevelPoints + $points);
+	public function addPetPoints(int $points): bool {
+		$this->levelUp(LevelCalculator::calculateLevelUp($this->petPoints + $points, $this->getPetLevel(), $remaining));
+		$this->setPetPoints($this->petPoints + $points);
 		return true;
 	}
 
 	/**
-	 * Returns the pet's current experience level points.
+	 * Returns the pet's total points.
+	 *
+	 * @return int
+	 */
+	public function getPetPoints(): int {
+		return $this->petPoints;
+	}
+
+	/**
+	 * Sets the pet's total points to the given amount.
+	 *
+	 * @param int $points
+	 */
+	public function setPetPoints(int $points): void {
+		$this->petPoints = $points;
+		$this->calculator->flagForUpdate();
+		$this->getLoader()->getDatabase()->updatePetPoints($this->getPetUUID(), $points);
+	}
+
+	/**
+	 * Returns the pet's current level points.
 	 *
 	 * @return int
 	 */
 	public function getPetLevelPoints(): int {
-		return $this->petLevelPoints;
+		return $this->petPoints - LevelCalculator::get()->getRequiredLevelPoints($this->getPetLevel() - 1);
 	}
 
 	/**
-	 * Sets the pet's experience level points to the given amount.
+	 * Sets the pet's current level points to the given amount.
 	 *
 	 * @param int $points
 	 */
 	public function setPetLevelPoints(int $points): void {
-		$this->petLevelPoints = $points;
-		$this->calculator->flagForUpdate();
-		$this->getLoader()->getDatabase()->updatePetXp($this->getPetUUID(), $points);
+		$this->setPetPoints(LevelCalculator::get()->getRequiredLevelPoints($this->getPetLevel() - 1) + $points);
 	}
 
 	/**
@@ -492,7 +510,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return int
 	 */
 	public function getPetLevel(): int {
-		return LevelCalculator::getLevelFromLevelPoints($this->petLevelPoints);
+		return LevelCalculator::get()->getLevelFromPoints($this->petPoints);
 	}
 
 	/**
@@ -501,7 +519,7 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @param int $petLevel
 	 */
 	public function setPetLevel(int $petLevel): void {
-		$this->setPetLevelPoints(LevelCalculator::getRequiredLevelPoints($petLevel) + 1);
+		$this->setPetPoints(LevelCalculator::get()->getRequiredLevelPoints($petLevel - 1) + 1);
 	}
 
 	/**
