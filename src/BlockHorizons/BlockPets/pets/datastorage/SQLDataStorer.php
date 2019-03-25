@@ -40,9 +40,9 @@ abstract class SQLDataStorer implements IDataStorer {
 	protected const VERSION_PATCH = "version.{VERSION}";
 
 	/** @var BigEndianNBTStream|null */
-	protected static $nbtSerializer = null;
+	private static $nbtSerializer = null;
 
-	protected static function getNBTSerializer(): BigEndianNBTStream {
+	private static function getNBTSerializer(): BigEndianNBTStream {
 		return self::$nbtSerializer ?? self::$nbtSerializer = new BigEndianNBTStream();
 	}
 
@@ -76,7 +76,7 @@ abstract class SQLDataStorer implements IDataStorer {
 	 * @return CompoundTag
 	 */
 	protected static function readNamedTag(string $buffer): CompoundTag {
-		return static::getNBTSerializer()->readCompressed(static::readBinaryString($buffer));
+		return self::getNBTSerializer()->readCompressed(static::readBinaryString($buffer));
 	}
 
 	/**
@@ -85,7 +85,7 @@ abstract class SQLDataStorer implements IDataStorer {
 	 * @return string
 	 */
 	protected static function writeNamedTag(CompoundTag $nbt): string {
-		return static::writeBinaryString(static::getNBTSerializer()->writeCompressed($nbt));
+		return static::writeBinaryString(self::getNBTSerializer()->writeCompressed($nbt));
 	}
 
 	/** @var libasynql */
