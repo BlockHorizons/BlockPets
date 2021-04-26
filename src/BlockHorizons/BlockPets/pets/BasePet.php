@@ -24,7 +24,7 @@ use pocketmine\item\Item;
 use pocketmine\level\Level;
 use pocketmine\level\particle\HeartParticle;
 use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\network\mcpe\protocol\AddEntityPacket;
+use pocketmine\network\mcpe\protocol\AddActorPacket;
 use pocketmine\network\mcpe\protocol\SetEntityLinkPacket;
 use pocketmine\network\mcpe\protocol\types\EntityLink;
 use pocketmine\Player;
@@ -236,7 +236,7 @@ abstract class BasePet extends Creature implements Rideable {
 	}
 
 	protected function sendSpawnPacket(Player $player): void {
-		$pk = new AddEntityPacket();
+		$pk = new AddActorPacket();
 		$pk->entityRuntimeId = $this->getId();
 		$pk->type = static::NETWORK_ID;
 		$pk->position = $this->asVector3();

@@ -34,7 +34,7 @@ abstract class BaseDataStorer {
 	 *
 	 * @param string $version
 	 */
-	protected abstract function patch(string $version): void;
+	public abstract function patch(string $version): void;
 
 	/**
 	 * @return Loader
