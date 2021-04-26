@@ -1,4 +1,4 @@
---- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/Sandertv/BlockPets
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/BlockHorizons/BlockPets
 branches:
 - master
 projects:
