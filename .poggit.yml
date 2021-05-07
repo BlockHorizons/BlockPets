@@ -12,6 +12,6 @@ projects:
         version: ^0.0.1
       - src: poggit/libasynql/libasynql
         version: ^3.3.1
-      - src: muqsit/InvMenu/InvMenu
+      - src: muqsit/invmenu/invmenu
         version: ^4.2.0
 ...
