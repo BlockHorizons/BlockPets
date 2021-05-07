@@ -7,9 +7,9 @@ namespace BlockHorizons\BlockPets\pets\inventory;
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\BasePet;
 
+use muqsit\invmenu\inventory\InvMenuInventory;
 use muqsit\invmenu\InvMenu;
 use muqsit\invmenu\InvMenuHandler;
-
 use pocketmine\item\Item;
 use pocketmine\nbt\BigEndianNBTStream;
 use pocketmine\nbt\tag\CompoundTag;
@@ -35,9 +35,15 @@ class PetInventoryManager {
 
 	public function __construct(BasePet $pet) {
 		$this->pet = $pet;
-		$this->menu = InvMenu::create(InvMenu::TYPE_CUSTOM, PetInventory::class);
+		$this->menu = InvMenu::create(InvMenu::TYPE_CHEST);
+		$this->menu->setInventoryCloseListener(function(): void {
+            $pet = $this->getPet();
+            $loader = $pet->getLoader();
+            if($loader->getBlockPetsConfig()->storeToDatabase()) {
+                $loader->getDatabase()->updateInventory($pet);
+            }
+        });
 		$this->setName($pet->getPetName());
-		$this->getInventory()->setManager($this);
 	}
 
 	public function setName(string $name): void {
@@ -48,7 +54,7 @@ class PetInventoryManager {
 		return $this->pet;
 	}
 
-	public function getInventory(): PetInventory {
+	public function getInventory(): InvMenuInventory {
 		return $this->menu->getInventory();
 	}
 
