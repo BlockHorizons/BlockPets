@@ -295,7 +295,7 @@ abstract class BasePet extends Creature implements Rideable {
 					$this->getLevel()->addParticle(new HeartParticle($this->add(0, 2), 4));
 
 					if($this->getLoader()->getBlockPetsConfig()->giveExperienceWhenFed()) {
-						$this->addPetLevelPoints($nutrition / 40 * LevelCalculator::getRequiredLevelPoints($this->getPetLevel()));
+						$this->addPetLevelPoints((int) ($nutrition / 40 * LevelCalculator::getRequiredLevelPoints($this->getPetLevel())));
 					}
 
 					$this->calculator->updateNameTag();
