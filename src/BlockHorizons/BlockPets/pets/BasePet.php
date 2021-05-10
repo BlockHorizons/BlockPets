@@ -108,8 +108,8 @@ abstract class BasePet extends Creature implements Rideable {
 	private $maxSize = 10.0;
 
 	public function __construct(Level $level, CompoundTag $nbt) {
-		$this->petOwner = $level->getServer()->getPlayerExact($nbt->getString("petOwner", false));
-		if($this->petOwner === false) {
+		$this->petOwner = $level->getServer()->getPlayerExact($nbt->getString("petOwner"));
+		if($this->petOwner === null) {
 			$this->close();
 			return;
 		}
