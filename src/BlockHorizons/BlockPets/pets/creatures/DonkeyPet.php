@@ -8,7 +8,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class DonkeyPet extends WalkingPet {
 
-	const NETWORK_ID = self::DONKEY;
+	const NETWORK_NAME = "DONKEY_PET";
+	const NETWORK_ORIG_ID = self::DONKEY;
 
 	public $name = "Donkey Pet";
 

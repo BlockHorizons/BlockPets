@@ -8,7 +8,8 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 
 class HorsePet extends WalkingPet {
 
-	const NETWORK_ID = self::HORSE;
+	const NETWORK_NAME = "HORSE_PET";
+	const NETWORK_ORIG_ID = self::HORSE;
 
 	const TYPE_NONE = 0;
 	const TYPE_WHITE = 1;

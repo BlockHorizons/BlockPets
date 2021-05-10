@@ -8,7 +8,8 @@ use BlockHorizons\BlockPets\pets\HoveringPet;
 
 class GhastPet extends HoveringPet {
 
-	const NETWORK_ID = self::GHAST;
+	const NETWORK_NAME = "GHAST_PET";
+	const NETWORK_ORIG_ID = self::GHAST;
 
 	public $width = 4.0;
 	public $height = 4.0;

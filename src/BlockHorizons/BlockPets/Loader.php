@@ -294,7 +294,7 @@ class Loader extends PluginBase {
 
 	public function registerEntities(): void {
 		foreach(self::PET_CLASSES as $petClass) {
-			Entity::registerEntity($petClass, true);
+			Entity::registerEntity($petClass, true, [$petClass::NETWORK_NAME]);
 		}
 	}
 

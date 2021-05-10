@@ -9,7 +9,8 @@ use BlockHorizons\BlockPets\pets\SmallCreature;
 
 class SlimePet extends BouncingPet implements SmallCreature {
 
-	const NETWORK_ID = self::SLIME;
+	const NETWORK_NAME = "SLIME_PET";
+	const NETWORK_ORIG_ID = self::SLIME;
 
 	public $height = 0.51;
 	public $width = 0.51;
