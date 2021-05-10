@@ -111,7 +111,7 @@ abstract class BasePet extends Creature implements Rideable {
 	/** @var float */
 	private $maxSize = 10.0;
 
-	public final function __construct(Level $level, CompoundTag $nbt) {
+	final public function __construct(Level $level, CompoundTag $nbt) {
 		if(static::NETWORK_ID !== -1) {
 			throw new \LogicException("Network IDs of pets cannot be overridden.");
 		}

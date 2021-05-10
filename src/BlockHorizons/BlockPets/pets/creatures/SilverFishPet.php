@@ -15,5 +15,5 @@ class SilverFishPet extends WalkingPet implements SmallCreature {
 	public $height = 0.3;
 	public $width = 0.4;
 
-	public $name = "Silverfish Pet";
+	public $name = "SilverFish Pet";
 }

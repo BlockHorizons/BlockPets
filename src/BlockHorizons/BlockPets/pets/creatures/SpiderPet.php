@@ -18,6 +18,6 @@ class SpiderPet extends WalkingPet implements SmallCreature {
 	public $name = "Spider Pet";
 
 	public function generateCustomPetData(): void {
-		$this->propertyManager->setPropertyValue(self::DATA_FLAGS, self::DATA_FLAG_CAN_CLIMB, true);
+		$this->setGenericFlag(self::DATA_FLAG_CAN_CLIMB, true);
 	}
 }
