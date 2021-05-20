@@ -1,10 +1,11 @@
 ---
 name: BlockPets
-author: BlockHorizons
+main: BlockHorizons\BlockPets\Loader
 version: 1.1.3
 api: 3.19.0
+author: BlockHorizons
+mcpe-protocol: 431
 description: A pets plugin for PocketMine-MP
-main: BlockHorizons\BlockPets\Loader
 
 permissions:
     blockpets:
