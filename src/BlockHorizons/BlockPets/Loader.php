@@ -50,6 +50,7 @@ use BlockHorizons\BlockPets\pets\creatures\MagmaCubePet;
 use BlockHorizons\BlockPets\pets\creatures\MooshroomPet;
 use BlockHorizons\BlockPets\pets\creatures\MulePet;
 use BlockHorizons\BlockPets\pets\creatures\OcelotPet;
+use BlockHorizons\BlockPets\pets\creatures\ParrotPet;
 use BlockHorizons\BlockPets\pets\creatures\PigPet;
 use BlockHorizons\BlockPets\pets\creatures\PolarBearPet;
 use BlockHorizons\BlockPets\pets\creatures\RabbitPet;
@@ -114,6 +115,7 @@ class Loader extends PluginBase {
 		"Mooshroom",
 		"Mule",
 		"Ocelot",
+		"Parrot",
 		"Pig",
 		"PolarBear",
 		"Rabbit",
@@ -166,6 +168,7 @@ class Loader extends PluginBase {
 		MooshroomPet::class,
 		MulePet::class,
 		OcelotPet::class,
+		ParrotPet::class,
 		PigPet::class,
 		PolarBearPet::class,
 		RabbitPet::class,

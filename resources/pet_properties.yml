@@ -281,6 +281,14 @@ Ghast:
   Speed: 1.3
   Flying-Height: 25
   Max-Size: 10
+Parrot:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1
+  Flying-Height: 8
+  Max-Size: 10
 Vex:
   Can-Attack: true
   Can-Be-Ridden: true

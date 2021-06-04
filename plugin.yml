@@ -148,6 +148,9 @@ permissions:
                     blockpets.pet.ocelot:
                         default: op
                         description: "Allows access to use the ocelot pet."
+                    blockpets.pet.parrot:
+                        default: op
+                        description: "Allows access to use the parrot pet."
                     blockpets.pet.pig:
                         default: op
                         description: "Allows access to use the pig pet."
