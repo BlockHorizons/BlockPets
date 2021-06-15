@@ -9,7 +9,7 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 class HorsePet extends WalkingPet {
 
 	const NETWORK_NAME = "HORSE_PET";
-	const NETWORK_ORIG_ID = self::HORSE;
+	const BLOCKPET_ENTITY_ID = "minecraft:horse";
 
 	const TYPE_NONE = 0;
 	const TYPE_WHITE = 1;
@@ -25,10 +25,10 @@ class HorsePet extends WalkingPet {
 	const COLOR_GRAY = 5, COLOUR_GRAY = 5;
 	const COLOR_DARKBROWN = 6, COLOUR_DARKBROWN = 6;
 
-	public $name = "Horse Pet";
-
-	public $width = 1.3965;
 	public $height = 1.6;
+	public $width = 1.3965;
+
+	public $name = "Horse Pet";
 
 	public function generateCustomPetData(): void {
 		$this->setVariant($this->getRandomType(), $this->getRandomColor());

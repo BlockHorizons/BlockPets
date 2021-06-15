@@ -9,7 +9,7 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 class WitherSkeletonPet extends WalkingPet {
 
 	const NETWORK_NAME = "WITHER_SKELETON_PET";
-	const NETWORK_ORIG_ID = self::WITHER_SKELETON;
+	const BLOCKPET_ENTITY_ID = "minecraft:wither_skeleton";
 
 	public $height = 2.4;
 	public $width = 0.7;

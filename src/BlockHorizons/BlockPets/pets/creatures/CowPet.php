@@ -9,7 +9,7 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 class CowPet extends WalkingPet {
 
 	const NETWORK_NAME = "COW_PET";
-	const NETWORK_ORIG_ID = self::COW;
+	const BLOCKPET_ENTITY_ID = "minecraft:cow";
 
 	public $height = 1.4;
 	public $width = 0.9;

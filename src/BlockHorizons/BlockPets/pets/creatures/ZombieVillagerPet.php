@@ -9,7 +9,7 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 class ZombieVillagerPet extends WalkingPet {
 
 	const NETWORK_NAME = "ZOMBIE_VILLAGER_PET";
-	const NETWORK_ORIG_ID = self::ZOMBIE_VILLAGER;
+	const BLOCKPET_ENTITY_ID = "minecraft:zombie_villager";
 
 	public $height = 1.95;
 	public $width = 0.6;

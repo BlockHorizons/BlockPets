@@ -10,12 +10,12 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 class WolfPet extends WalkingPet implements SmallCreature {
 
 	const NETWORK_NAME = "WOLF_PET";
-	const NETWORK_ORIG_ID = self::WOLF;
+	const BLOCKPET_ENTITY_ID = "minecraft:wolf";
+
+	public $height = 0.85;
+	public $width = 0.6;
 
 	public $name = "Wolf Pet";
-
-	public $width = 0.6;
-	public $height = 0.85;
 
 	public function generateCustomPetData(): void {
 		$randomColour = random_int(0, 15);

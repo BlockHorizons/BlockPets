@@ -10,7 +10,7 @@ use BlockHorizons\BlockPets\pets\SmallCreature;
 class RabbitPet extends BouncingPet implements SmallCreature {
 
 	const NETWORK_NAME = "RABBIT_PET";
-	const NETWORK_ORIG_ID = self::RABBIT;
+	const BLOCKPET_ENTITY_ID = "minecraft:rabbit";
 
 	public $height = 0.5;
 	public $width = 0.4;

@@ -10,7 +10,7 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 class PigPet extends WalkingPet implements SmallCreature {
 
 	const NETWORK_NAME = "PIG_PET";
-	const NETWORK_ORIG_ID = self::PIG;
+	const BLOCKPET_ENTITY_ID = "minecraft:pig";
 
 	public $height = 0.9;
 	public $width = 0.9;

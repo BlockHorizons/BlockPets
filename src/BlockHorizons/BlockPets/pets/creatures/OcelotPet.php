@@ -10,12 +10,12 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 class OcelotPet extends WalkingPet implements SmallCreature {
 
 	const NETWORK_NAME = "OCELOT_PET";
-	const NETWORK_ORIG_ID = self::OCELOT;
+	const BLOCKPET_ENTITY_ID = "minecraft:ocelot";
+
+	public $height = 0.7;
+	public $width = 0.6;
 
 	public $name = "Ocelot Pet";
-
-	public $width = 0.6;
-	public $height = 0.7;
 
 	public function generateCustomPetData(): void {
 		$randomVariant = random_int(0, 3);

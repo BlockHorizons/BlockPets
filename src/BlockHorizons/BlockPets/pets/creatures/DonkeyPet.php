@@ -9,10 +9,10 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 class DonkeyPet extends WalkingPet {
 
 	const NETWORK_NAME = "DONKEY_PET";
-	const NETWORK_ORIG_ID = self::DONKEY;
+	const BLOCKPET_ENTITY_ID = "minecraft:donkey";
+
+	public $height = 1.6;
+	public $width = 1.4;
 
 	public $name = "Donkey Pet";
-
-	public $width = 1.3965;
-	public $height = 1.6;
 }

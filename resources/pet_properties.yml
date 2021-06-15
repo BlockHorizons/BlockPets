@@ -1,5 +1,12 @@
 ---
 # Walking Pets
+Axolotl:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1.4
+  Max-Size: 10
 CaveSpider:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -56,6 +63,27 @@ Evoker:
   Can-Sit-On-Owner: true
   Speed: 1.4
   Max-Size: 10
+FoxRed:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1.8
+  Max-Size: 10
+FoxArctic:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1.8
+  Max-Size: 10
+Goat:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1
+  Max-Size: 10
 Horse:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -104,6 +132,13 @@ Ocelot:
   Can-Be-Chested: true
   Can-Sit-On-Owner: true
   Speed: 1.8
+  Max-Size: 10
+Panda:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1
   Max-Size: 10
 Pig:
   Can-Attack: true
@@ -231,6 +266,13 @@ ZombieVillager:
   Can-Sit-On-Owner: true
   Speed: 1.2
   Max-Size: 10
+Custom:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1.2
+  Max-Size: 10
 
 # Flying Pets
 Arrow:
@@ -242,6 +284,22 @@ Arrow:
   Flying-Height: 25
   Max-Size: 10
 Bat:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1
+  Flying-Height: 8
+  Max-Size: 10
+Bee:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1
+  Flying-Height: 8
+  Max-Size: 10
+Parrot:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
@@ -281,14 +339,6 @@ Ghast:
   Speed: 1.3
   Flying-Height: 25
   Max-Size: 10
-Parrot:
-  Can-Attack: true
-  Can-Be-Ridden: true
-  Can-Be-Chested: true
-  Can-Sit-On-Owner: true
-  Speed: 1
-  Flying-Height: 8
-  Max-Size: 10
 Vex:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -315,6 +365,15 @@ WitherSkull:
   Max-Size: 10
 
 # Swimming Pets
+Dolphin:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1
+  Swimming-Speed: 1.4
+  Jumping-Height: 0.1
+  Max-Size: 10
 ElderGuardian:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -323,6 +382,15 @@ ElderGuardian:
   Speed: 1
   Swimming-Speed: 2
   Jumping-Height: 0.12
+  Max-Size: 10
+GlowSquid:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1
+  Swimming-Speed: 1.4
+  Jumping-Height: 0.1
   Max-Size: 10
 Guardian:
   Can-Attack: true
@@ -342,7 +410,24 @@ Squid:
   Swimming-Speed: 1.4
   Jumping-Height: 0.1
   Max-Size: 10
-
+Salmon:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1
+  Swimming-Speed: 1.4
+  Jumping-Height: 0.1
+  Max-Size: 10
+Turtle:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1
+  Swimming-Speed: 1
+  Jumping-Height: 0.1
+  Max-Size: 10
 # Bouncing Pets
 MagmaCube:
   Can-Attack: true

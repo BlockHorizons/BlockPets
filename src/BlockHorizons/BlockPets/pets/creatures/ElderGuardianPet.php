@@ -13,10 +13,10 @@ use pocketmine\Player;
 class ElderGuardianPet extends SwimmingPet {
 
 	const NETWORK_NAME = "ELDER_GUARDIAN_PET";
-	const NETWORK_ORIG_ID = self::ELDER_GUARDIAN;
+	const BLOCKPET_ENTITY_ID = "minecraft:elder_guardian";
 
-	public $width = 1.9975;
 	public $height = 1.9975;
+	public $width = 1.9975;
 
 	public $name = "Elder Guardian Pet";
 

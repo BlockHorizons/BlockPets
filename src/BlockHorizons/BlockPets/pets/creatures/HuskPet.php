@@ -9,7 +9,7 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 class HuskPet extends WalkingPet {
 
 	const NETWORK_NAME = "HUSK_PET";
-	const NETWORK_ORIG_ID = self::HUSK;
+	const BLOCKPET_ENTITY_ID = "minecraft:husk";
 
 	public $height = 1.95;
 	public $width = 0.6;

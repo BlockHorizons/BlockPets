@@ -9,7 +9,7 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 class EndermanPet extends WalkingPet {
 
 	const NETWORK_NAME = "ENDERMAN_PET";
-	const NETWORK_ORIG_ID = self::ENDERMAN;
+	const BLOCKPET_ENTITY_ID = "minecraft:enderman";
 
 	public $height = 2.9;
 	public $width = 0.6;

@@ -9,10 +9,10 @@ use BlockHorizons\BlockPets\pets\HoveringPet;
 class EnderDragonPet extends HoveringPet {
 
 	const NETWORK_NAME = "ENDER_DRAGON_PET";
-	const NETWORK_ORIG_ID = self::ENDER_DRAGON;
+	const BLOCKPET_ENTITY_ID = "minecraft:ender_dragon";
+
+	public $height = 1;
+	public $width = 2.5;
 
 	public $name = "Ender Dragon Pet";
-
-	public $width = 2.5;
-	public $height = 1;
 }

@@ -6,18 +6,18 @@ namespace BlockHorizons\BlockPets\pets\creatures;
 
 use BlockHorizons\BlockPets\pets\WalkingPet;
 
-class VillagerPet extends WalkingPet {
+class GoatPet extends WalkingPet {
 
-	const NETWORK_NAME = "VILLAGER_PET";
-	const BLOCKPET_ENTITY_ID = "minecraft:villager";
+	const NETWORK_NAME = "GOAT_PET";
+	const BLOCKPET_ENTITY_ID = "minecraft:goat";
 
-	public $height = 1.95;
-	public $width = 0.6;
+	public $height = 0.9;
+	public $width = 1.3;
 
-	public $name = "Villager Pet";
+	public $name = "Goat Pet";
 
 	public function generateCustomPetData(): void {
-		$randomVariant = random_int(0, 5);
+		$randomVariant = random_int(0, 1);
 		$this->getDataPropertyManager()->setInt(self::DATA_VARIANT, $randomVariant);
 	}
 }

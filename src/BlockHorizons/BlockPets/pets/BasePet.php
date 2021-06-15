@@ -48,7 +48,7 @@ abstract class BasePet extends Creature implements Rideable {
 
 	const NETWORK_ID = -1;
 	const NETWORK_NAME = null;
-	const NETWORK_ORIG_ID = null;
+	const BLOCKPET_ENTITY_ID = null;
 
 	/** @var string */
 	public $name = "";
@@ -118,8 +118,8 @@ abstract class BasePet extends Creature implements Rideable {
 		if(static::NETWORK_NAME === null) {
 			throw new \LogicException("NETWORK_NAME constant in " . get_class($this) . " must be defined.");
 		}
-		if(static::NETWORK_ORIG_ID === null) {
-			throw new \LogicException("NETWORK_ORIG_ID constant in " . get_class($this) . " must be defined.");
+		if(static::BLOCKPET_ENTITY_ID === null) {
+			throw new \LogicException("BLOCKPET_ENTITY_ID constant in " . get_class($this) . " must be defined.");
 		}
 		$this->petOwner = $level->getServer()->getPlayerExact($nbt->getString("petOwner"));
 		if($this->petOwner === null) {
@@ -252,7 +252,7 @@ abstract class BasePet extends Creature implements Rideable {
 	protected function sendSpawnPacket(Player $player): void {
 		$pk = new AddActorPacket();
 		$pk->entityRuntimeId = $this->getId();
-		$pk->type = AddActorPacket::LEGACY_ID_MAP_BC[static::NETWORK_ORIG_ID];
+		$pk->type = static::BLOCKPET_ENTITY_ID;
 		$pk->position = $this->asVector3();
 		$pk->motion = $this->getMotion();
 		$pk->yaw = $this->yaw;

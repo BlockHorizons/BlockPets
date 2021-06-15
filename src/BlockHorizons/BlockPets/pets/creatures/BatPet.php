@@ -10,10 +10,10 @@ use BlockHorizons\BlockPets\pets\SmallCreature;
 class BatPet extends HoveringPet implements SmallCreature {
 
 	const NETWORK_NAME = "BAT_PET";
-	const NETWORK_ORIG_ID = self::BAT;
+	const BLOCKPET_ENTITY_ID = "minecraft:bat";
+
+	public $height = 0.9;
+	public $width = 0.5;
 
 	public $name = "Bat Pet";
-
-	public $width = 0.5;
-	public $height = 0.9;
 }

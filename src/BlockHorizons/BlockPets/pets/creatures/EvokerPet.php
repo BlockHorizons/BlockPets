@@ -9,12 +9,12 @@ use BlockHorizons\BlockPets\pets\WalkingPet;
 class EvokerPet extends WalkingPet {
 
 	const NETWORK_NAME = "EVOKER_PET";
-	const NETWORK_ORIG_ID = self::EVOCATION_ILLAGER;
+	const BLOCKPET_ENTITY_ID = "minecraft:evocation_illager";
+
+	public $height = 1.95;
+	public $width = 0.6;
 
 	public $name = "Evoker Pet";
-
-	public $width = 0.6;
-	public $height = 1.95;
 
 	public function generateCustomPetData(): void {
 		$isCasting = random_int(0, 1);

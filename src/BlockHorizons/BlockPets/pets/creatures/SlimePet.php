@@ -10,7 +10,7 @@ use BlockHorizons\BlockPets\pets\SmallCreature;
 class SlimePet extends BouncingPet implements SmallCreature {
 
 	const NETWORK_NAME = "SLIME_PET";
-	const NETWORK_ORIG_ID = self::SLIME;
+	const BLOCKPET_ENTITY_ID = "minecraft:slime";
 
 	public $height = 0.51;
 	public $width = 0.51;

@@ -27,12 +27,15 @@ use BlockHorizons\BlockPets\listeners\EventListener;
 use BlockHorizons\BlockPets\listeners\RidingListener;
 use BlockHorizons\BlockPets\pets\BasePet;
 use BlockHorizons\BlockPets\pets\creatures\ArrowPet;
+use BlockHorizons\BlockPets\pets\creatures\AxolotlPet;
 use BlockHorizons\BlockPets\pets\creatures\BatPet;
+use BlockHorizons\BlockPets\pets\creatures\BeePet;
 use BlockHorizons\BlockPets\pets\creatures\BlazePet;
 use BlockHorizons\BlockPets\pets\creatures\CaveSpiderPet;
 use BlockHorizons\BlockPets\pets\creatures\ChickenPet;
 use BlockHorizons\BlockPets\pets\creatures\CowPet;
 use BlockHorizons\BlockPets\pets\creatures\CreeperPet;
+use BlockHorizons\BlockPets\pets\creatures\DolphinPet;
 use BlockHorizons\BlockPets\pets\creatures\DonkeyPet;
 use BlockHorizons\BlockPets\pets\creatures\ElderGuardianPet;
 use BlockHorizons\BlockPets\pets\creatures\EnderCrystalPet;
@@ -40,7 +43,11 @@ use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use BlockHorizons\BlockPets\pets\creatures\EndermanPet;
 use BlockHorizons\BlockPets\pets\creatures\EndermitePet;
 use BlockHorizons\BlockPets\pets\creatures\EvokerPet;
+use BlockHorizons\BlockPets\pets\creatures\FoxArcticPet;
+use BlockHorizons\BlockPets\pets\creatures\FoxRedPet;
 use BlockHorizons\BlockPets\pets\creatures\GhastPet;
+use BlockHorizons\BlockPets\pets\creatures\GlowSquidPet;
+use BlockHorizons\BlockPets\pets\creatures\GoatPet;
 use BlockHorizons\BlockPets\pets\creatures\GuardianPet;
 use BlockHorizons\BlockPets\pets\creatures\HorsePet;
 use BlockHorizons\BlockPets\pets\creatures\HuskPet;
@@ -50,10 +57,12 @@ use BlockHorizons\BlockPets\pets\creatures\MagmaCubePet;
 use BlockHorizons\BlockPets\pets\creatures\MooshroomPet;
 use BlockHorizons\BlockPets\pets\creatures\MulePet;
 use BlockHorizons\BlockPets\pets\creatures\OcelotPet;
+use BlockHorizons\BlockPets\pets\creatures\PandaPet;
 use BlockHorizons\BlockPets\pets\creatures\ParrotPet;
 use BlockHorizons\BlockPets\pets\creatures\PigPet;
 use BlockHorizons\BlockPets\pets\creatures\PolarBearPet;
 use BlockHorizons\BlockPets\pets\creatures\RabbitPet;
+use BlockHorizons\BlockPets\pets\creatures\SalmonPet;
 use BlockHorizons\BlockPets\pets\creatures\SheepPet;
 use BlockHorizons\BlockPets\pets\creatures\SilverFishPet;
 use BlockHorizons\BlockPets\pets\creatures\SkeletonHorsePet;
@@ -63,6 +72,7 @@ use BlockHorizons\BlockPets\pets\creatures\SnowGolemPet;
 use BlockHorizons\BlockPets\pets\creatures\SpiderPet;
 use BlockHorizons\BlockPets\pets\creatures\SquidPet;
 use BlockHorizons\BlockPets\pets\creatures\StrayPet;
+use BlockHorizons\BlockPets\pets\creatures\TurtlePet;
 use BlockHorizons\BlockPets\pets\creatures\VexPet;
 use BlockHorizons\BlockPets\pets\creatures\VillagerPet;
 use BlockHorizons\BlockPets\pets\creatures\VindicatorPet;
@@ -92,12 +102,15 @@ class Loader extends PluginBase {
 
 	const PETS = [
 		"Arrow",
+		"Axolotl",
 		"Bat",
+		"Bee",
 		"Blaze",
 		"CaveSpider",
 		"Chicken",
 		"Cow",
 		"Creeper",
+		"Dolphin",
 		"Donkey",
 		"ElderGuardian",
 		"EnderCrystal",
@@ -105,7 +118,11 @@ class Loader extends PluginBase {
 		"Enderman",
 		"Endermite",
 		"Evoker",
+		"FoxArctic",
+		"FoxRed",
 		"Ghast",
+		"GlowSquid",
+		"Goat",
 		"Guardian",
 		"Horse",
 		"Husk",
@@ -115,10 +132,12 @@ class Loader extends PluginBase {
 		"Mooshroom",
 		"Mule",
 		"Ocelot",
+		"Panda",
 		"Parrot",
 		"Pig",
 		"PolarBear",
 		"Rabbit",
+		"Salmon",
 		"Sheep",
 		"SilverFish",
 		"Skeleton",
@@ -128,6 +147,7 @@ class Loader extends PluginBase {
 		"Spider",
 		"Squid",
 		"Stray",
+		"Turtle",
 		"Vex",
 		"Villager",
 		"Vindicator",
@@ -145,12 +165,15 @@ class Loader extends PluginBase {
 
 	const PET_CLASSES = [
 		ArrowPet::class,
+		AxolotlPet::class,
 		BatPet::class,
+		BeePet::class,
 		BlazePet::class,
 		CaveSpiderPet::class,
 		ChickenPet::class,
 		CowPet::class,
 		CreeperPet::class,
+		DolphinPet::class,
 		DonkeyPet::class,
 		ElderGuardianPet::class,
 		EnderCrystalPet::class,
@@ -158,7 +181,11 @@ class Loader extends PluginBase {
 		EndermanPet::class,
 		EndermitePet::class,
 		EvokerPet::class,
+		FoxArcticPet::class,
+		FoxRedPet::class,
 		GhastPet::class,
+		GlowSquidPet::class,
+		GoatPet::class,
 		GuardianPet::class,
 		HorsePet::class,
 		HuskPet::class,
@@ -168,10 +195,12 @@ class Loader extends PluginBase {
 		MooshroomPet::class,
 		MulePet::class,
 		OcelotPet::class,
+		PandaPet::class,
 		ParrotPet::class,
 		PigPet::class,
 		PolarBearPet::class,
 		RabbitPet::class,
+		SalmonPet::class,
 		SheepPet::class,
 		SilverFishPet::class,
 		SkeletonHorsePet::class,
@@ -181,6 +210,7 @@ class Loader extends PluginBase {
 		SpiderPet::class,
 		SquidPet::class,
 		StrayPet::class,
+		TurtlePet::class,
 		VexPet::class,
 		VillagerPet::class,
 		VindicatorPet::class,

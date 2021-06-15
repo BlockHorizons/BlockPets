@@ -10,7 +10,7 @@ use BlockHorizons\BlockPets\pets\SmallCreature;
 class VexPet extends HoveringPet implements SmallCreature {
 
 	const NETWORK_NAME = "VEX_PET";
-	const NETWORK_ORIG_ID = self::VEX;
+	const BLOCKPET_ENTITY_ID = "minecraft:vex";
 
 	public $height = 0.8;
 	public $width = 0.4;

@@ -9,10 +9,10 @@ use BlockHorizons\BlockPets\pets\HoveringPet;
 class GhastPet extends HoveringPet {
 
 	const NETWORK_NAME = "GHAST_PET";
-	const NETWORK_ORIG_ID = self::GHAST;
+	const BLOCKPET_ENTITY_ID = "minecraft:ghast";
 
-	public $width = 4.0;
 	public $height = 4.0;
+	public $width = 4.0;
 
 	public $name = "Ghast Pet";
 }
