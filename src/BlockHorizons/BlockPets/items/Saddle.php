@@ -12,4 +12,8 @@ class Saddle extends Item {
 		parent::__construct(self::SADDLE, $meta, "Saddle");
 	}
 
+	public function getMaxStackSize(): int {
+		return 1;
+	}
+
 }
