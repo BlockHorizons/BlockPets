@@ -371,6 +371,9 @@ abstract class BasePet extends Creature implements Rideable {
 		if(!$silent && $this->getPetOwner() !== null) {
 			$this->getPetOwner()->addTitle((TextFormat::GREEN . "Level Up!"), (TextFormat::AQUA . "Your pet " . $this->getPetName() . TextFormat::RESET . TextFormat::AQUA . " turned level " . $ev->getTo() . "!"));
 		}
+
+		$this->calculator->recalculateAll();
+		
 		return true;
 	}
 
@@ -382,8 +385,9 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	public function addPetLevelPoints(int $points): bool {
-		$this->levelUp(LevelCalculator::calculateLevelUp($points, $this->getPetLevel(), $remaining));
-		$this->setPetLevelPoints($remaining);
+		$needAddLevelPoints = $this->getPetLevelPoints() + $points;
+		$this->levelUp(LevelCalculator::calculateLevelUp($needAddLevelPoints, $this->getPetLevel(), $remaining));
+		$this->setPetLevelPoints(LevelCalculator::calculateRemainingLevelPoints($needAddLevelPoints, $this->getPetLevel(), $remaining));
 		$this->calculator->updateNameTag();
 		return true;
 	}
@@ -509,6 +513,7 @@ abstract class BasePet extends Creature implements Rideable {
 		}
 
 		$this->seatpos = new Vector3(0, $scale * 0.4 - 0.3, 0);
+		$this->calculator->recalculateAll();
 	}
 
 	public function generateCustomPetData(): void {

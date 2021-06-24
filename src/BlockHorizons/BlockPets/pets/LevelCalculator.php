@@ -40,4 +40,17 @@ class LevelCalculator {
 
 		return $levelled;
 	}
+
+	
+	public static function calculateRemainingLevelPoints(int $points, int $level, ?int &$remaining = null): int {
+		$remaining = $points;
+		$levelled = 0;
+
+		while($remaining > ($reqd = self::getRequiredLevelPoints($level + $levelled))) {
+			++$levelled;
+			$remaining -= $reqd;
+		}
+
+		return $remaining;
+	}
 }
