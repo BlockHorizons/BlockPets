@@ -386,8 +386,9 @@ abstract class BasePet extends Creature implements Rideable {
 	 */
 	public function addPetLevelPoints(int $points): bool {
 		$needAddLevelPoints = $this->getPetLevelPoints() + $points;
-		$this->levelUp(LevelCalculator::calculateLevelUp($needAddLevelPoints, $this->getPetLevel(), $remaining));
-		$this->setPetLevelPoints(LevelCalculator::calculateRemainingLevelPoints($needAddLevelPoints, $this->getPetLevel(), $remaining));
+		$originalLevel = $this->getPetLevel();
+		$this->levelUp(LevelCalculator::calculateLevelUp($needAddLevelPoints, $originalLevel, $remaining));
+		$this->setPetLevelPoints(LevelCalculator::calculateRemainingLevelPoints($needAddLevelPoints, $originalLevel, $remaining));
 		$this->calculator->updateNameTag();
 		return true;
 	}
