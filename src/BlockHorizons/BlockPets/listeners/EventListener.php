@@ -97,7 +97,7 @@ class EventListener implements Listener {
 							(bool) $data["Visible"],
 							$data["Inventory"]
 						);
-						if(!is_null($pet)){
+						if($pet !== null){
 							$pet->spawnToAll();
 							$pet->setDormant(false);
 							if($hard_reset) {
