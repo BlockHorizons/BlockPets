@@ -15,7 +15,7 @@ class PetLevelUpEvent extends PetEvent implements Cancellable {
 	/** @var int */
 	private $to;
 
-	public function __construct(Loader $loader, BasePet $pet, int $from, int $to) {
+	public function __construct(Loader $loader, $pet, int $from, int $to) {
 		parent::__construct($loader, $pet);
 		$this->pet = $pet;
 		$this->from = $from;

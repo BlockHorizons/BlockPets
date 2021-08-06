@@ -56,7 +56,7 @@ abstract class BaseDataStorer {
 	 *
 	 * @param BasePet $pet
 	 */
-	public abstract function registerPet(BasePet $pet): void;
+	public abstract function registerPet($pet): void;
 
 	/**
 	 * Deletes the pet's entry from the database
@@ -64,7 +64,7 @@ abstract class BaseDataStorer {
 	 *
 	 * @param BasePet $pet
 	 */
-	public abstract function unregisterPet(BasePet $pet): void;
+	public abstract function unregisterPet($pet): void;
 
 	/**
 	 * Updates pet's level and level points if it's
@@ -72,7 +72,7 @@ abstract class BaseDataStorer {
 	 *
 	 * @param BasePet $pet
 	 */
-	public abstract function updateExperience(BasePet $pet): void;
+	public abstract function updateExperience($pet): void;
 
 	/**
 	 * Retrieves all of the owner's pets from the
@@ -125,7 +125,7 @@ abstract class BaseDataStorer {
 	 *
 	 * @param BasePet $pet
 	 */
-	public abstract function updateChested(BasePet $pet): void;
+	public abstract function updateChested($pet): void;
 
 	/**
 	 * Updates the database with the pet's inventory
@@ -133,7 +133,7 @@ abstract class BaseDataStorer {
 	 *
 	 * @param BasePet $pet
 	 */
-	public abstract function updateInventory(BasePet $pet): void;
+	public abstract function updateInventory($pet): void;
 
 	/**
 	 * Called during plugin disable to let databases

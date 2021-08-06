@@ -11,7 +11,7 @@ class Calculator {
 	/** @var BasePet */
 	private $pet;
 
-	public function __construct(BasePet $pet) {
+	public function __construct($pet) {
 		$this->pet = $pet;
 	}
 
@@ -43,7 +43,7 @@ class Calculator {
 	/**
 	 * @return BasePet
 	 */
-	public function getPet(): BasePet {
+	public function getPet() {
 		return $this->pet;
 	}
 

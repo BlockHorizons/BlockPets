@@ -11,7 +11,7 @@ class PetRespawnTask extends BaseTask {
 
 	private $pet;
 
-	public function __construct(Loader $loader, BasePet $pet) {
+	public function __construct(Loader $loader, $pet) {
 		parent::__construct($loader);
 		$this->pet = $pet;
 	}

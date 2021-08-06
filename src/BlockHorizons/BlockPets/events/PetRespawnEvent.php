@@ -13,7 +13,7 @@ class PetRespawnEvent extends PetEvent implements Cancellable {
 	/** @var int */
 	private $delay = 0;
 
-	public function __construct(Loader $loader, BasePet $pet, int $delay) {
+	public function __construct(Loader $loader, $pet, int $delay) {
 		parent::__construct($loader, $pet);
 		$this->delay = $delay;
 	}

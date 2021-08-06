@@ -13,7 +13,7 @@ use BlockHorizons\BlockPets\pets\inventory\PetInventoryManager;
 use BlockHorizons\BlockPets\tasks\PetRespawnTask;
 use muqsit\invmenu\inventory\InvMenuInventory;
 use pocketmine\entity\Attribute;
-use pocketmine\entity\Creature;
+use pocketmine\entity\Human;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Rideable;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -32,7 +32,16 @@ use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use pocketmine\math\Vector3;
 
-abstract class BasePet extends Creature implements Rideable {
+use pocketmine\entity\Skin;
+use pocketmine\network\mcpe\protocol\{
+	AddPlayerPacket, MovePlayerPacket, PlayerSkinPacket
+};
+use pocketmine\utils\UUID;
+use pocketmine\network\mcpe\protocol\types\SkinAdapterSingleton;
+use pocketmine\item\ItemFactory;
+use pocketmine\item\ItemIds;
+
+abstract class HumanPet extends Human implements Rideable {
 
 	const STATE_STANDING = 0;
 	const STATE_SITTING = 1;
@@ -76,8 +85,14 @@ abstract class BasePet extends Creature implements Rideable {
 	protected $speed = 1.0;
 	/** @var int */
 	protected $petLevelPoints = 0;
-	
+
 	protected $petCustomType = '';
+	
+	/** @var UUID */
+	protected $uuid;
+
+	/** @var Skin */
+	protected $skin;
 
 	/** @var bool */
 	protected $canBeRidden = true;
@@ -250,20 +265,74 @@ abstract class BasePet extends Creature implements Rideable {
 
 		parent::spawnTo($player);
 	}
-
+	/*
 	protected function sendSpawnPacket(Player $player): void {
-		$pk = new AddActorPacket();
-		$pk->entityRuntimeId = $this->getId();
-		$pk->type = static::BLOCKPET_ENTITY_ID;
-		$pk->position = $this->asVector3();
-		$pk->motion = $this->getMotion();
-		$pk->yaw = $this->yaw;
-		$pk->pitch = $this->pitch;
-		$pk->attributes = $this->attributeMap->getAll();
-		$pk->metadata = $this->propertyManager->getAll();
-		$pk->links = array_values($this->links);
-		$player->dataPacket($pk);
+		
+		#$pk = new AddActorPacket();
+		#$pk->entityRuntimeId = $this->getId();
+		#$pk->type = static::BLOCKPET_ENTITY_ID;
+		#$pk->position = $this->asVector3();
+		#$pk->motion = $this->getMotion();
+		#$pk->yaw = $this->yaw;
+		#$pk->pitch = $this->pitch;
+		#$pk->attributes = $this->attributeMap->getAll();
+		#$pk->metadata = $this->propertyManager->getAll();
+		#$pk->links = array_values($this->links);
+		#$player->dataPacket($pk);
+		
+		#$pk2 = new AddPlayerPacket();
+		#$pk2->uuid = $this->getUniqueId();
+		#$pk2->username = $this->getNameTag();
+		#$pk2->entityRuntimeId = $this->getId();
+		#$pk2->position = $this->asVector3();
+		#$pk2->motion = $this->getMotion();
+		#$pk2->yaw = $this->yaw;
+		#$pk2->pitch = $this->pitch;
+		#//$pk2->item = ItemFactory::get(ItemIds::AIR);
+		#$pk2->metadata = $this->propertyManager->getAll();
+		#$player->dataPacket($pk2);
+		
+		//$this->sendSkin([$player]);
+		
+		parent::sendSpawnPacket($player);
 	}
+	*/
+	
+
+	/**
+	 * @return UUID
+	 */
+	public function getUniqueId() : UUID{
+		return $this->uuid;
+	}
+
+	/**
+	 * @param Skin $skin
+	 */
+	/*
+	public function setSkin(Skin $skin) : void{
+		if(!$skin->isValid()){
+			throw new \InvalidStateException('Specified skin is not valid, must be 8KiB or 16KiB');
+		}
+		$this->skin = $skin;
+		$this->skin->debloatGeometryData();
+		$this->sendSkin($this->getViewers());
+	}
+	*/
+	
+	/**
+	 * @param Player[]|null $targets
+	 */
+	/*
+	public function sendSkin(array $targets = null) : void{
+		$pk = new PlayerSkinPacket();
+		$pk->uuid = $this->getUniqueId();
+		$pk->skin = SkinAdapterSingleton::get()->toSkinData($this->skin);
+		//$pk->skin = $this->skin;
+		$this->server->broadcastPacket($targets ?? $this->hasSpawned, $pk);
+	}
+	*/
+	
 
 	/**
 	 * Returns the player that owns this pet if they are online.
@@ -290,6 +359,7 @@ abstract class BasePet extends Creature implements Rideable {
 		if(!$this->visibility) {
 			return;
 		}
+		$this->calculator->updateNameTag();
 		if($source instanceof EntityDamageByEntityEvent) {
 			$player = $source->getDamager();
 			if($player instanceof Player) {
@@ -340,7 +410,6 @@ abstract class BasePet extends Creature implements Rideable {
 				}
 			}
 		}
-		$this->calculator->updateNameTag();
 		parent::attack($source);
 	}
 
@@ -503,6 +572,17 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->setScale($this->scale);
 
 		$this->inventory_manager = new PetInventoryManager($this);
+
+
+		$this->uuid = UUID::fromRandom();
+		if($this->namedtag->getString("petCustomType") != ''){
+			$data = $this->getLoader()->loadFromFile($this->getLoader()->getDataFolder().'CustomPet/'.$this->namedtag->getString("petCustomType").'.json');
+			$newSkin = new Skin($data["skinId"], $this->getLoader()->getSkinBytesFromFile($this->getLoader()->getDataFolder()."CustomPet/".$data["skinData"]), base64_decode($data["capeData"]), $data["geometryName"], $data["geometryData"]);
+			$this->setSkin($newSkin);
+			$this->sendSkin($this->getLoader()->getServer()->getInstance()->getOnlinePlayers());
+		}
+		
+
 		$this->spawnToAll();
 
 		$this->getAttributeMap()->addAttribute(Attribute::getAttribute(20));
@@ -585,14 +665,15 @@ abstract class BasePet extends Creature implements Rideable {
 
 		parent::applyGravity();
 	}
-
+	
+	/*
 	protected function broadcastMovement(bool $teleport = false): void {
 		if($this->isRiding()) {
 			return;
 		}
-
 		parent::broadcastMovement($teleport);
 	}
+	*/
 
 	/**
 	 * @param $currentTick
@@ -600,9 +681,12 @@ abstract class BasePet extends Creature implements Rideable {
 	 * @return bool
 	 */
 	final public function onUpdate(int $currentTick): bool {
+		
 		if(!parent::onUpdate($currentTick) && $this->isClosed()) {
+		//if($this->isClosed()) {
 			return false;
 		}
+		
 		if($this->isRiding()) {
 			$petOwner = $this->getPetOwner();
 
@@ -615,9 +699,11 @@ abstract class BasePet extends Creature implements Rideable {
 			}
 			return false;
 		}
+		
 		if(!$this->checkUpdateRequirements()) {
 			return true;
 		}
+		
 		if(!$this->isRidden()) {
 			if(random_int(1, 60) === 1) {
 				if($this->getHealth() !== $this->getMaxHealth()) {
@@ -645,6 +731,7 @@ abstract class BasePet extends Creature implements Rideable {
 				}
 			}
 		}
+		
 		$this->doPetUpdates($currentTick);
 		return true;
 	}
@@ -1018,6 +1105,7 @@ abstract class BasePet extends Creature implements Rideable {
 		$this->teleport($petOwner);
 		return true;
 	}
+	
 
 	/**
 	 * @return float

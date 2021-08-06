@@ -36,11 +36,11 @@ class SQLDataStorer extends BaseDataStorer {
 	/** @var string */
 	protected $type;
 
-	public function registerPet(BasePet $pet): void {
+	public function registerPet($pet): void {
 		$this->database->executeChange(SQLDataStorer::REGISTER_PET, [
 			"player" => $pet->getPetOwnerName(),
 			"petname" => $pet->getPetName(),
-			"entityname" => $pet->getEntityType(),
+			"entityname" => $pet->getEntityType() . "." . $pet->getPetCustomType(),
 			"petsize" => $pet->getScale(),
 			"isbaby" => (int) $pet->isBaby(),
 			"chested" => (int) $pet->isChested(),
@@ -49,7 +49,7 @@ class SQLDataStorer extends BaseDataStorer {
 		]);
 	}
 
-	public function unregisterPet(BasePet $pet): void {
+	public function unregisterPet($pet): void {
 		$this->database->executeChange(SQLDataStorer::UNREGISTER_PET, [
 			"player" => $pet->getPetOwnerName(),
 			"petname" => $pet->getPetName()
@@ -95,7 +95,7 @@ class SQLDataStorer extends BaseDataStorer {
 		});
 	}
 
-	public function updateExperience(BasePet $pet): void {
+	public function updateExperience($pet): void {
 		$this->database->executeChange(SQLDataStorer::UPDATE_PET_EXPERIENCE, [
 			"petlevel" => $pet->getPetLevel(),
 			"levelpoints" => $pet->getPetLevelPoints(),
@@ -104,7 +104,7 @@ class SQLDataStorer extends BaseDataStorer {
 		]);
 	}
 
-	public function updateChested(BasePet $pet): void {
+	public function updateChested($pet): void {
 		$this->database->executeChange(SQLDataStorer::UPDATE_PET_CHESTED, [
 			"chested" => (int) $pet->isChested(),
 			"player" => $pet->getPetOwnerName(),
@@ -112,7 +112,7 @@ class SQLDataStorer extends BaseDataStorer {
 		]);
 	}
 
-	public function updateInventory(BasePet $pet): void {
+	public function updateInventory($pet): void {
 		$this->database->executeChange(SQLDataStorer::UPDATE_PET_INVENTORY, [
 			"inventory" => $pet->getInventoryManager()->compressContents(),
 			"player" => $pet->getPetOwnerName(),

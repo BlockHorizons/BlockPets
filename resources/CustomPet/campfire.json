@@ -1,0 +1,7 @@
+{  
+	"skinId":"6f8df511-8b23-34ac-9e1f-c865cec25458",
+	"skinData":"campfire.png",
+	"capeData":"",
+	"geometryName":"geometry.campfire.18",
+	"geometryData":"{\"geometry.campfire.18\":{\"texturewidth\":64,\"textureheight\":64,\"visible_bounds_width\":2,\"visible_bounds_height\":1,\"visible_bounds_offset\":[0,0.5,0],\"bones\":[{\"name\":\"body\",\"pivot\":[0,0,0],\"rotation\":[0,180,0],\"cubes\":[{\"origin\":[-9,1,0],\"size\":[14,16,0.01],\"uv\":[0,16]},{\"origin\":[-8,0,-7],\"size\":[16,4,4],\"uv\":[0,56]},{\"origin\":[-8,0,3],\"size\":[16,4,4],\"uv\":[0,56]}]},{\"name\":\"rightLeg\",\"pivot\":[0,0,0],\"rotation\":[0,90,0]},{\"name\":\"leftLeg\",\"pivot\":[0,0,0],\"rotation\":[0,90,0]},{\"name\":\"rightArm\",\"pivot\":[0,0,0],\"rotation\":[0,90,0],\"cubes\":[{\"origin\":[-8,3,-7],\"size\":[16,4,4],\"uv\":[0,0]}]},{\"name\":\"leftArm\",\"pivot\":[0,0,0],\"rotation\":[0,90,0],\"cubes\":[{\"origin\":[-8,3,3],\"size\":[16,4,4],\"uv\":[0,0]}]}]}}"
+}  

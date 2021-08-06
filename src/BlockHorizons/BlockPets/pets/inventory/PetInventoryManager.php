@@ -33,7 +33,7 @@ class PetInventoryManager {
 	/** @var BasePet */
 	private $pet;
 
-	public function __construct(BasePet $pet) {
+	public function __construct($pet) {
 		$this->pet = $pet;
 		$this->menu = InvMenu::create(InvMenu::TYPE_CHEST);
 		$this->menu->setInventoryCloseListener(function(): void {
@@ -50,11 +50,11 @@ class PetInventoryManager {
 		$this->menu->setName($name . "'s Inventory");
 	}
 
-	public function getPet(): BasePet {
+	public function getPet() {
 		return $this->pet;
 	}
 
-	public function getInventory(): InvMenuInventory {
+	public function getInvMenuInventory(): InvMenuInventory {
 		return $this->menu->getInventory();
 	}
 
@@ -68,12 +68,12 @@ class PetInventoryManager {
 			$contents[$nbt->getByte("Slot")] = Item::nbtDeserialize($nbt);
 		}
 
-		$this->getInventory()->setContents($contents);
+		$this->getInvMenuInventory()->setContents($contents);
 	}
 
 	public function compressContents(): string {
 		$list = new ListTag("Inventory");
-		foreach($this->getInventory()->getContents() as $slot => $item) {
+		foreach($this->getInvMenuInventory()->getContents() as $slot => $item) {
 			$list->push($item->nbtSerialize($slot));
 		}
 

@@ -453,4 +453,30 @@ Slime:
   Speed: 1.6
   Jumping-Height: 0.14
   Max-Size: 10
+  
+#
+CustomHovering:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: false
+  Can-Sit-On-Owner: true
+  Speed: 3
+  Flying-Height: 25
+  Max-Size: 10
+CustomSwimming:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: false
+  Can-Sit-On-Owner: true
+  Speed: 1
+  Swimming-Speed: 1.4
+  Jumping-Height: 0.1
+  Max-Size: 10
+CustomWalking:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: false
+  Can-Sit-On-Owner: true
+  Speed: 1.2
+  Max-Size: 10
 ...

@@ -26,6 +26,7 @@ use BlockHorizons\BlockPets\items\Saddle;
 use BlockHorizons\BlockPets\listeners\EventListener;
 use BlockHorizons\BlockPets\listeners\RidingListener;
 use BlockHorizons\BlockPets\pets\BasePet;
+use BlockHorizons\BlockPets\pets\HumanPet;
 use BlockHorizons\BlockPets\pets\creatures\ArrowPet;
 use BlockHorizons\BlockPets\pets\creatures\AxolotlPet;
 use BlockHorizons\BlockPets\pets\creatures\BatPet;
@@ -35,6 +36,9 @@ use BlockHorizons\BlockPets\pets\creatures\CaveSpiderPet;
 use BlockHorizons\BlockPets\pets\creatures\ChickenPet;
 use BlockHorizons\BlockPets\pets\creatures\CowPet;
 use BlockHorizons\BlockPets\pets\creatures\CreeperPet;
+use BlockHorizons\BlockPets\pets\creatures\CustomHoveringPet;
+use BlockHorizons\BlockPets\pets\creatures\CustomSwimmingPet;
+use BlockHorizons\BlockPets\pets\creatures\CustomWalkingPet;
 use BlockHorizons\BlockPets\pets\creatures\DolphinPet;
 use BlockHorizons\BlockPets\pets\creatures\DonkeyPet;
 use BlockHorizons\BlockPets\pets\creatures\ElderGuardianPet;
@@ -98,6 +102,9 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\lang\BaseLang;
 use spoondetector\SpoonDetector;
 
+
+use pocketmine\entity\Skin;
+
 class Loader extends PluginBase {
 
 	const PETS = [
@@ -110,6 +117,9 @@ class Loader extends PluginBase {
 		"Chicken",
 		"Cow",
 		"Creeper",
+		"CustomHovering",
+		"CustomSwimming",
+		"CustomWalking",
 		"Dolphin",
 		"Donkey",
 		"ElderGuardian",
@@ -173,6 +183,9 @@ class Loader extends PluginBase {
 		ChickenPet::class,
 		CowPet::class,
 		CreeperPet::class,
+		CustomHoveringPet::class,
+		CustomSwimmingPet::class,
+		CustomWalkingPet::class,
 		DolphinPet::class,
 		DonkeyPet::class,
 		ElderGuardianPet::class,
@@ -444,7 +457,13 @@ class Loader extends PluginBase {
 	 *
 	 * @return null|BasePet
 	 */
-	public function createPet(string $entityName, Player $player, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0, bool $chested = false, bool $isVisible = true, ?string $inventory = null): ?BasePet {
+	public function createPet(string $entityName, Player $player, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0, bool $chested = false, bool $isVisible = true, ?string $inventory = null) {
+		$explodeEntityName = explode(".",$entityName);
+		$entityData = [
+			"entityType" => $explodeEntityName[0],
+			"customType" => (array_key_exists(1, $explodeEntityName))? $explodeEntityName[1] : '',
+		];
+		
 		$pet = $this->getPetByName($name, $player->getName());
 		if($pet !== null) {
 			$this->removePet($pet);
@@ -458,9 +477,37 @@ class Loader extends PluginBase {
 		$nbt->setInt("petLevelPoints", $levelPoints);
 		$nbt->setByte("isBaby", (int) $isBaby);
 		$nbt->setByte("chested", (int) $chested);
+		$nbt->setString("petCustomType", $entityData["customType"]);
+		
+		$nbt->setTag($player->namedtag->getCompoundTag("Skin"));
 
-		$entity = Entity::createEntity($entityName . "Pet", $player->getLevel(), $nbt);
+		$entity = Entity::createEntity($entityData["entityType"] . "Pet", $player->getLevel(), $nbt);
 		if($entity instanceof BasePet) {
+			if(!empty($inventory)) {
+				$entity->getInventoryManager()->load($inventory);
+			}
+
+			$this->getServer()->getPluginManager()->callEvent($ev = new PetSpawnEvent($this, $entity));
+			if($ev->isCancelled()) {
+				$this->removePet($entity);
+				return null;
+			}
+
+			if(!$isVisible) {
+				$entity->updateVisibility(false);
+			}
+			$this->playerPets[$player->getLowerCaseName()][strtolower($entity->getPetName())] = $entity;
+			return $entity;
+		}elseif($entity instanceof HumanPet) {
+			if($entityData["customType"] != ''){
+
+				$data = $this->loadFromFile($this->getDataFolder().'CustomPet/'.$entityData["customType"].'.json');
+				$newSkin = new Skin($data["skinId"], $this->getSkinBytesFromFile($this->getDataFolder()."CustomPet/".$data["skinData"]), base64_decode($data["capeData"]), $data["geometryName"], $data["geometryData"]);
+				$entity->setSkin($newSkin);
+				$entity->sendSkin($this->getServer()->getInstance()->getOnlinePlayers());
+
+			}
+
 			if(!empty($inventory)) {
 				$entity->getInventoryManager()->load($inventory);
 			}
@@ -487,9 +534,9 @@ class Loader extends PluginBase {
 	 *
 	 * @return BasePet
 	 */
-	public function clonePet(BasePet $pet): BasePet {
+	public function clonePet($pet) {
 		$clone = $this->createPet($pet->getEntityType(), $pet->getPetOwner(), $pet->getPetName(), $pet->getStartingScale(), $pet->isBaby(), $pet->getPetLevel(), $pet->getPetLevelPoints(), $pet->isChested(), $pet->getVisibility());
-		$clone->getInventory()->setContents($pet->getInventory()->getContents());
+		$clone->getInvMenuInventory()->setContents($pet->getInvMenuInventory()->getContents());
 		return $clone;
 	}
 
@@ -512,7 +559,7 @@ class Loader extends PluginBase {
 	 *
 	 * @return BasePet|null
 	 */
-	public function getPetByName(string $name, ?string $player = null): ?BasePet {
+	public function getPetByName(string $name, ?string $player = null) {
 		$name = strtolower($name);
 		if($player !== null) {
 			return $this->playerPets[strtolower($player)][$name] ?? null;
@@ -531,7 +578,7 @@ class Loader extends PluginBase {
 	 *
 	 * @param BasePet $pet
 	 */
-	public function removePet(BasePet $pet, bool $close = true): void {
+	public function removePet($pet, bool $close = true): void {
 		$this->getServer()->getPluginManager()->callEvent(new PetRemoveEvent($this, $pet));//TODO: Call a cancellable event if this method isn't called when pet owner quits
 		if($pet->isRidden()) {
 			$pet->throwRiderOff();
@@ -561,7 +608,7 @@ class Loader extends PluginBase {
 	 *
 	 * @return BasePet
 	 */
-	public function getRiddenPet(Player $player): BasePet {
+	public function getRiddenPet(Player $player) {
 		foreach($this->getPetsFrom($player) as $pet) {
 			if($pet->isRidden()) {
 				return $pet;
@@ -592,4 +639,34 @@ class Loader extends PluginBase {
 	public function getPetProperties(): PetProperties {
 		return $this->pProperties;
 	}
+
+
+
+
+
+    public static function getSkinBytesFromFile(string $path){
+		$img = @\imagecreatefrompng($path);
+		$byte = "";
+		for($y = 0, $height = imagesy($img); $y < $height; $y++){
+			for($x = 0, $width = imagesx($img); $x < $width; $x++){
+				$color = imagecolorat($img, $x, $y);
+				$byte .= pack("c", ($color >> 16) & 0xFF) //red
+					. pack("c", ($color >> 8) & 0xFF) //green
+					. pack("c", $color & 0xFF) //blue
+					. pack("c", 255 - (($color & 0x7F000000) >> 23)); //alpha
+			}
+		}
+        @imagedestroy($img);
+        return $byte;
+    }
+	
+    public static function loadFromFile(string $file) : array{
+		if(!file_exists($file)) return [];
+		return json_decode(file_get_contents($file), true) ?? [];
+	}
+
+
+
+
+
 }

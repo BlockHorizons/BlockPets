@@ -12,7 +12,7 @@ abstract class PetEvent extends BlockPetsEvent {
 	/** @var BasePet */
 	protected $pet;
 
-	public function __construct(Loader $loader, BasePet $pet) {
+	public function __construct(Loader $loader, $pet) {
 		parent::__construct($loader);
 		$this->pet = $pet;
 	}
@@ -22,7 +22,7 @@ abstract class PetEvent extends BlockPetsEvent {
 	 *
 	 * @return BasePet
 	 */
-	public function getPet(): BasePet {
+	public function getPet() {
 		return $this->pet;
 	}
 }

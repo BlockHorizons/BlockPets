@@ -69,7 +69,14 @@ class SpawnPetCommand extends BaseCommand {
 			$args[3] = false;
 		}
 		$petName = $loader->getPet($args[0]);
-		if($petName === null) {
+
+		$entityName = $args[0];
+		$explodeEntityName = explode(".",$entityName);
+		$entityData = [
+			"entityType" => $loader->getPet($explodeEntityName[0]),
+			"customType" => (array_key_exists(1, $explodeEntityName))? $explodeEntityName[1] : '',
+		];
+		if($entityData["entityType"] === null) {
 			$this->sendWarning($sender, $loader->translate("commands.errors.pet.doesnt-exist", [$args[0]]));
 			return true;
 		}
@@ -85,7 +92,7 @@ class SpawnPetCommand extends BaseCommand {
 			}
 			$player->sendMessage(TF::GREEN . $loader->translate("commands.spawnpet.name"));
 			$loader->selectingName[$player->getName()] = [
-				"petType" => $petName,
+				"petType" => $entityData["entityType"],
 				"scale" => isset($args[2]) ? (float) $args[2] : 1.0,
 				"isBaby" => $args[3] ?? false
 			];
@@ -96,7 +103,7 @@ class SpawnPetCommand extends BaseCommand {
 			return true;
 		}
 
-		$pet = $loader->createPet((string) $petName, $player, $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3]);
+		$pet = $loader->createPet((string) $entityName, $player, $args[1], isset($args[2]) ? (float) $args[2] : 1.0, $args[3]);
 		if($pet === null) {
 			$this->sendWarning($sender, $loader->translate("commands.errors.plugin-cancelled"));
 			return true;

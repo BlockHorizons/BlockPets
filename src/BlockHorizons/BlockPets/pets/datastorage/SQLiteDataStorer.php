@@ -23,7 +23,7 @@ class SQLiteDataStorer extends SQLDataStorer {
 		});
 	}
 
-	public function updateInventory(BasePet $pet): void {
+	public function updateInventory($pet): void {
 		$this->database->executeChange(SQLDataStorer::UPDATE_PET_INVENTORY, [
 			"inventory" => base64_encode($pet->getInventoryManager()->compressContents()),
 			"player" => $pet->getPetOwnerName(),
