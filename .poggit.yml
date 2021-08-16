@@ -9,9 +9,9 @@ projects:
       - src: Falkirks/spoondetector/spoondetector
         version: ^0
       - src: poggit/libasynql/libasynql
-        version: ^3.1.1
+        version: 3.3.2
       - src: muqsit/InvMenu/InvMenu
-        version: ^2.0.0
+        version: 4.1.1
       - src: SOFe/AwaitGenerator/Await
         version: ^2.2.0
 ...

@@ -136,7 +136,8 @@ class PetCommand extends BaseCommand {
 					TextFormat::GREEN . "Version: " . TextFormat::YELLOW . $loader->getDescription()->getVersion() . "\n" .
 					TextFormat::GREEN . "Target API: " . TextFormat::YELLOW . implode(", ", $loader->getDescription()->getCompatibleApis()) . "\n" .
 					TextFormat::GREEN . "Organization: " . TextFormat::YELLOW . "BlockHorizons (https://github.com/BlockHorizons/BlockPets)\n" .
-					TextFormat::GREEN . "Authors: " . TextFormat::YELLOW . "Sandertv (@Sandertv), TheDiamondYT (@TheDiamondYT1)"
+					TextFormat::GREEN . "Authors: " . TextFormat::YELLOW . "Sandertv (@Sandertv), Muqsit (@Muqsit), Luke (@lukeeey)\n" .
+					TextFormat::GREEN . "Donate: " . TextFormat::YELLOW . "https://opencollective.com/BlockHorizons"
 				);
 				break;
 		}
