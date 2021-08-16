@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets;
 
+use muqsit\invmenu\inventory\InvMenuInventory;
 use BlockHorizons\BlockPets\events\PetInventoryInitializationEvent;
 use BlockHorizons\BlockPets\events\PetLevelUpEvent;
 use BlockHorizons\BlockPets\events\PetRemoveEvent;
@@ -12,7 +13,6 @@ use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use BlockHorizons\BlockPets\pets\datastorage\types\PetData;
 use BlockHorizons\BlockPets\pets\inventory\PetInventoryManager;
-use BlockHorizons\BlockPets\pets\inventory\PetInventory;
 use BlockHorizons\BlockPets\pets\utils\LevelCalculator;
 use pocketmine\entity\Attribute;
 use pocketmine\entity\Creature;
@@ -524,9 +524,9 @@ abstract class BasePet extends Creature implements Rideable {
 	/**
 	 * Returns the inventory of this pet.
 	 *
-	 * @return PetInventory
+	 * @return InvMenuInventory
 	 */
-	public function getInventory(): PetInventory {
+	public function getInventory(): InvMenuInventory {
 		return $this->inventory_manager->getInventory();
 	}
 

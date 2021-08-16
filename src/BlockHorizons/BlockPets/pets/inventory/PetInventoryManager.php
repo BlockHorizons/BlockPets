@@ -9,6 +9,7 @@ use BlockHorizons\BlockPets\pets\BasePet;
 
 use muqsit\invmenu\InvMenu;
 use muqsit\invmenu\InvMenuHandler;
+use muqsit\invmenu\inventory\InvMenuInventory;
 
 use pocketmine\item\Item;
 use pocketmine\nbt\tag\ListTag;
@@ -26,7 +27,7 @@ class PetInventoryManager {
 	private $menu;
 
 	public function __construct(BasePet $pet) {
-		$this->menu = InvMenu::create(PetInventory::class);
+		$this->menu = InvMenu::create(InvMenu::TYPE_CHEST);
 		$this->setName($pet->getPetName());
 	}
 
@@ -34,7 +35,7 @@ class PetInventoryManager {
 		$this->menu->setName($name . "'s Inventory");
 	}
 
-	public function getInventory(): PetInventory {
+	public function getInventory(): InvMenuInventory {
 		return $this->menu->getInventory();
 	}
 
