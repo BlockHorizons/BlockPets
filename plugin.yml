@@ -179,6 +179,9 @@ permissions:
     blockpets.pet.stray:
         default: op
         description: "Allows access to use the stray pet."
+    blockpets.pet.strider:
+        default: op
+        description: "Allows access to use the strider pet."
     blockpets.pet.vex:
         default: op
         description: "Allows access to use the vex pet."

@@ -59,6 +59,7 @@ use BlockHorizons\BlockPets\pets\creatures\SnowGolemPet;
 use BlockHorizons\BlockPets\pets\creatures\SpiderPet;
 use BlockHorizons\BlockPets\pets\creatures\SquidPet;
 use BlockHorizons\BlockPets\pets\creatures\StrayPet;
+use BlockHorizons\BlockPets\pets\creatures\StriderPet;
 use BlockHorizons\BlockPets\pets\creatures\VexPet;
 use BlockHorizons\BlockPets\pets\creatures\VillagerPet;
 use BlockHorizons\BlockPets\pets\creatures\VindicatorPet;
@@ -128,6 +129,7 @@ class Loader extends PluginBase {
 		"Spider"         => SpiderPet::class,
 		"Squid"          => SquidPet::class,
 		"Stray"          => StrayPet::class,
+		"Strider"        => StriderPet::class,
 		"Vex"            => VexPet::class,
 		"Villager"       => VillagerPet::class,
 		"Vindicator"     => VindicatorPet::class,
