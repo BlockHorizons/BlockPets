@@ -159,7 +159,7 @@ class Loader extends PluginBase{
 	private BlockPetsConfig $bpConfig;
 	private PetProperties $pProperties;
 	private LanguageConfig $language;
-	private BaseDataStorer $database;
+	private ?BaseDataStorer $database = null;
 
 	/** @var BasePet[][] */
 	private array $playerPets = [];
@@ -280,9 +280,6 @@ class Loader extends PluginBase{
 		return $this->availableLanguages;
 	}
 
-	/**
-	 * @return bool
-	 */
 	private function selectDatabase(): bool {
 		switch(strtolower($this->getBlockPetsConfig()->getDatabase())) {
 			default:
@@ -297,19 +294,10 @@ class Loader extends PluginBase{
 		return true;
 	}
 
-	/**
-	 * @return BlockPetsConfig
-	 */
 	public function getBlockPetsConfig(): BlockPetsConfig {
 		return $this->bpConfig;
 	}
 
-	/**
-	 * @param string $key
-	 * @param array  $params
-	 *
-	 * @return string
-	 */
 	public function translate(string $key, array $params = []): string {
 		if(!empty($params)) {
 			return vsprintf($this->getLanguage()->get($key), $params);
@@ -317,19 +305,12 @@ class Loader extends PluginBase{
 		return $this->getLanguage()->get($key);
 	}
 
-	/**
-	 * @return LanguageConfig
-	 */
 	public function getLanguage(): LanguageConfig {
 		return $this->language;
 	}
 
 	/**
 	 * Checks if a pet type of that name exists.
-	 *
-	 * @param string $entityName
-	 *
-	 * @return bool
 	 */
 	public function petExists(string $entityName): bool {
 		return $this->getPet($entityName) !== null;
@@ -337,10 +318,6 @@ class Loader extends PluginBase{
 
 	/**
 	 * Tries to match a pet type with the pet type list, and returns the fully qualified name if this could be found. Null if no valid result was found.
-	 *
-	 * @param string $entityName
-	 *
-	 * @return string|null
 	 */
 	public function getPet(string $entityName): ?string {
 		$pets = array_map("\\strtolower", array_keys(self::PETS));
@@ -349,9 +326,6 @@ class Loader extends PluginBase{
 
 	/**
 	 * Get the class of the relevant pet.
-	 *
-	 * @param string $entityName
-	 * @return string|null
 	 */
 	public function getPetClass(string $entityName): ?string {
 		foreach(self::PETS as $pet => $petClass) {
@@ -364,18 +338,6 @@ class Loader extends PluginBase{
 
 	/**
 	 * Creates a new pet for the given player.
-	 *
-	 * @param string      $entityName
-	 * @param Player      $player
-	 * @param string      $name
-	 * @param float       $scale
-	 * @param bool        $isBaby
-	 * @param int         $level
-	 * @param int         $levelPoints
-	 * @param bool        $chested
-	 * @param string|null $inventory
-	 *
-	 * @return null|BasePet
 	 */
 	public function createPet(string $entityName, Player $player, string $name, float $scale = 1.0, bool $isBaby = false, int $level = 1, int $levelPoints = 0, bool $chested = false, bool $isVisible = true, ?string $inventory = null): ?BasePet {
 		$pet = $this->getPetByName($name, $player->getName());
@@ -423,10 +385,6 @@ class Loader extends PluginBase{
 
 	/**
 	 * Creates a copy of the given pet and returns it.
-	 *
-	 * @param BasePet $pet
-	 *
-	 * @return BasePet
 	 */
 	public function clonePet(BasePet $pet): BasePet {
 		$clone = $this->createPet($pet->getEntityType(), $pet->getPetOwner(), $pet->getPetName(), $pet->getStartingScale(), $pet->isBaby(), $pet->getPetLevel(), $pet->getPetLevelPoints(), $pet->isChested(), $pet->getVisibility());
@@ -437,8 +395,6 @@ class Loader extends PluginBase{
 	/**
 	 * Gets all currently available pets from the given player.
 	 *
-	 * @param Player $player
-	 *
 	 * @return BasePet[]
 	 */
 	public function getPetsFrom(Player $player): array {
@@ -447,11 +403,6 @@ class Loader extends PluginBase{
 
 	/**
 	 * Returns the first pet found with the given name.
-	 *
-	 * @param string      $name
-	 * @param string|null $player
-	 *
-	 * @return BasePet|null
 	 */
 	public function getPetByName(string $name, ?string $player = null): ?BasePet {
 		$name = strtolower($name);
@@ -467,10 +418,7 @@ class Loader extends PluginBase{
 	}
 
 	/**
-	 * Closes and removes the specified pet from cache
-	 * and calls PetRemoveEvent events.
-	 *
-	 * @param BasePet $pet
+	 * Closes and removes the specified pet from cache and calls PetRemoveEvent events.
 	 */
 	public function removePet(BasePet $pet, bool $close = true): void {
 		// TODO: Call a cancellable event if this method isn't called when pet owner quits
@@ -486,8 +434,6 @@ class Loader extends PluginBase{
 
 	/**
 	 * Returns the database to store and fetch data from.
-	 *
-	 * @return BaseDataStorer
 	 */
 	public function getDatabase(): BaseDataStorer {
 		if($this->database === null) {
@@ -498,10 +444,6 @@ class Loader extends PluginBase{
 
 	/**
 	 * Gets the pet the given player is currently riding.
-	 *
-	 * @param Player $player
-	 *
-	 * @return BasePet
 	 */
 	public function getRiddenPet(Player $player): ?BasePet {
 		foreach($this->getPetsFrom($player) as $pet) {
@@ -514,10 +456,6 @@ class Loader extends PluginBase{
 
 	/**
 	 * Checks if the given player is currently riding a pet.
-	 *
-	 * @param Player $player
-	 *
-	 * @return bool
 	 */
 	public function isRidingAPet(Player $player): bool {
 		foreach($this->getPetsFrom($player) as $pet) {
@@ -528,9 +466,6 @@ class Loader extends PluginBase{
 		return false;
 	}
 
-	/**
-	 * @return PetProperties
-	 */
 	public function getPetProperties(): PetProperties {
 		return $this->pProperties;
 	}
