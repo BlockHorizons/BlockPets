@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets\datastorage;
@@ -9,8 +8,6 @@ use BlockHorizons\BlockPets\pets\BasePet;
 class SQLiteDataStorer extends SQLDataStorer {
 
 	public function load(string $player, callable $callable): void {
-		$database = $this;
-
 		$this->database->executeSelect(SQLDataStorer::LOAD_PLAYER_PETS, [
 			"player" => $player
 		], function(array $rows) use($callable): void {

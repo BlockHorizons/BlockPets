@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets\datastorage;
@@ -9,11 +8,7 @@ use BlockHorizons\BlockPets\pets\BasePet;
 
 abstract class BaseDataStorer {
 
-	/** @var Loader */
-	protected $loader;
-
-	public function __construct(Loader $loader) {
-		$this->loader = $loader;
+	public function __construct(protected Loader $loader) {
 		$this->prepare();
 		if($loader->getBlockPetsConfig()->doHardReset()) {
 			$this->reset();
@@ -31,14 +26,9 @@ abstract class BaseDataStorer {
 	/**
 	 * Called when the plugin updates so database
 	 * can perform patches (if any).
-	 *
-	 * @param string $version
 	 */
 	public abstract function patch(string $version): void;
 
-	/**
-	 * @return Loader
-	 */
 	protected function getLoader(): Loader {
 		return $this->loader;
 	}
@@ -53,24 +43,18 @@ abstract class BaseDataStorer {
 	 * If the pet's entry already exists in the
 	 * database, the database will perform an
 	 * UPDATE-ALL-VALUES instead.
-	 *
-	 * @param BasePet $pet
 	 */
 	public abstract function registerPet(BasePet $pet): void;
 
 	/**
 	 * Deletes the pet's entry from the database
 	 * if exists.
-	 *
-	 * @param BasePet $pet
 	 */
 	public abstract function unregisterPet(BasePet $pet): void;
 
 	/**
 	 * Updates pet's level and level points if it's
 	 * entry exists in the database.
-	 *
-	 * @param BasePet $pet
 	 */
 	public abstract function updateExperience(BasePet $pet): void;
 
@@ -78,9 +62,6 @@ abstract class BaseDataStorer {
 	 * Retrieves all of the owner's pets from the
 	 * database and then calls the callable to
 	 * initialize the fetched entries.
-	 *
-	 * @param string $ownerName
-	 * @param callable $callable
 	 */
 	public abstract function load(string $ownerName, callable $callable): void;
 
@@ -90,12 +71,8 @@ abstract class BaseDataStorer {
 	 * the list of pet names.
 	 * If $entityName is not null, only entities with the
 	 * specified entity name will be fetched.
-	 *
-	 * @param string $ownerName
-	 * @param string|null $entityName
-	 * @param callable $callable
 	 */
-	public abstract function getPlayerPets(string $ownerName, ?string $entityName = null, callable $callable): void;
+	public abstract function getPlayerPets(string $ownerName, ?string $entityName = null, callable $callable = null): void;
 
 	/**
 	 * Fetches all pets sorted by their level and points
@@ -103,35 +80,23 @@ abstract class BaseDataStorer {
 	 * pets.
 	 * If $entityName is not null, only entities with the
 	 * specified entity name will be fetched.
-	 *
-	 * @param int $offset
-	 * @param int $length
-	 * @param string|null $entityName
-	 * @param callable $callable
 	 */
-	public abstract function getPetsLeaderboard(int $offset = 0, int $length = 1, ?string $entityName = null, callable $callable): void;
+	public abstract function getPetsLeaderboard(int $offset = 0, int $length = 1, ?string $entityName = null, callable $callable = null): void;
 
 	/**
 	 * Toggles pets on or off from the database.
-	 *
-	 * @param string $ownerName
-	 * @param string|null $petName
 	 */
 	public abstract function togglePets(string $owner, ?string $petName, callable $callable): void;
 
 	/**
 	 * Updates the database with whether the pet is
 	 * chested or not.
-	 *
-	 * @param BasePet $pet
 	 */
 	public abstract function updateChested(BasePet $pet): void;
 
 	/**
 	 * Updates the database with the pet's inventory
 	 * contents.
-	 *
-	 * @param BasePet $pet
 	 */
 	public abstract function updateInventory(BasePet $pet): void;
 
