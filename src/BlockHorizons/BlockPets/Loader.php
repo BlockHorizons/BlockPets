@@ -5,10 +5,8 @@ declare(strict_types = 1);
 namespace BlockHorizons\BlockPets;
 
 use BlockHorizons\BlockPets\commands\AddPetPointsCommand;
-use BlockHorizons\BlockPets\commands\BaseCommand;
 use BlockHorizons\BlockPets\commands\ChangePetNameCommand;
 use BlockHorizons\BlockPets\commands\ClearPetCommand;
-use BlockHorizons\BlockPets\commands\CommandOverloads;
 use BlockHorizons\BlockPets\commands\HealPetCommand;
 use BlockHorizons\BlockPets\commands\LevelUpPetCommand;
 use BlockHorizons\BlockPets\commands\ListPetsCommand;
@@ -78,121 +76,76 @@ use BlockHorizons\BlockPets\pets\datastorage\BaseDataStorer;
 use BlockHorizons\BlockPets\pets\datastorage\MySQLDataStorer;
 use BlockHorizons\BlockPets\pets\datastorage\SQLiteDataStorer;
 use BlockHorizons\BlockPets\pets\inventory\PetInventoryManager;
-use pocketmine\entity\Attribute;
+use pocketmine\entity\AttributeFactory;
 use pocketmine\entity\Entity;
-use pocketmine\item\Item;
+use pocketmine\entity\EntityDataHelper;
+use pocketmine\entity\EntityFactory;
 use pocketmine\item\ItemFactory;
-use pocketmine\Player;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
-use pocketmine\lang\BaseLang;
-use spoondetector\SpoonDetector;
+use pocketmine\world\World;
+use Webmozart\PathUtil\Path;
+use function array_keys;
+use function array_map;
+use function strtolower;
 
-class Loader extends PluginBase {
+class Loader extends PluginBase{
 
+	/** @var string[] */
 	const PETS = [
-		"Arrow",
-		"Bat",
-		"Blaze",
-		"CaveSpider",
-		"Chicken",
-		"Cow",
-		"Creeper",
-		"Donkey",
-		"ElderGuardian",
-		"EnderCrystal",
-		"EnderDragon",
-		"Enderman",
-		"Endermite",
-		"Evoker",
-		"Ghast",
-		"Guardian",
-		"Horse",
-		"Husk",
-		"IronGolem",
-		"Llama",
-		"MagmaCube",
-		"Mooshroom",
-		"Mule",
-		"Ocelot",
-		"Pig",
-		"PolarBear",
-		"Rabbit",
-		"Sheep",
-		"SilverFish",
-		"Skeleton",
-		"SkeletonHorse",
-		"Slime",
-		"SnowGolem",
-		"Spider",
-		"Squid",
-		"Stray",
-		"Vex",
-		"Villager",
-		"Vindicator",
-		"Witch",
-		"Wither",
-		"WitherSkeleton",
-		"WitherSkull",
-		"WitherSkull",
-		"Wolf",
-		"Zombie",
-		"ZombieHorse",
-		"ZombiePigman",
-		"ZombieVillager"
+		"Arrow"          => ArrowPet::class,
+		"Bat"            => BatPet::class,
+		"Blaze"          => BlazePet::class,
+		"CaveSpider"     => CaveSpiderPet::class,
+		"Chicken"        => ChickenPet::class,
+		"Cow"            => CowPet::class,
+		"Creeper"        => CreeperPet::class,
+		"Donkey"         => DonkeyPet::class,
+		"ElderGuardian"  => ElderGuardianPet::class,
+		"EnderCrystal"   => EnderCrystalPet::class,
+		"EnderDragon"    => EnderDragonPet::class,
+		"Enderman"       => EndermanPet::class,
+		"Endermite"      => EndermitePet::class,
+		"Evoker"         => EvokerPet::class,
+		"Ghast"          => GhastPet::class,
+		"Guardian"       => GuardianPet::class,
+		"Horse"          => HorsePet::class,
+		"Husk"           => HuskPet::class,
+		"IronGolem"      => IronGolemPet::class,
+		"Llama"          => LlamaPet::class,
+		"MagmaCube"      => MagmaCubePet::class,
+		"Mooshroom"      => MooshroomPet::class,
+		"Mule"           => MulePet::class,
+		"Ocelot"         => OcelotPet::class,
+		"Pig"            => PigPet::class,
+		"PolarBear"      => PolarBearPet::class,
+		"Rabbit"         => RabbitPet::class,
+		"Sheep"          => SheepPet::class,
+		"SilverFish"     => SilverFishPet::class,
+		"Skeleton"       => SkeletonPet::class,
+		"SkeletonHorse"  => SkeletonHorsePet::class,
+		"Slime"          => SlimePet::class,
+		"SnowGolem"      => SnowGolemPet::class,
+		"Spider"         => SpiderPet::class,
+		"Squid"          => SquidPet::class,
+		"Stray"          => StrayPet::class,
+		"Vex"            => VexPet::class,
+		"Villager"       => VillagerPet::class,
+		"Vindicator"     => VindicatorPet::class,
+		"Witch"          => WitchPet::class,
+		"Wither"         => WitherPet::class,
+		"WitherSkeleton" => WitherSkeletonPet::class,
+		"WitherSkull"    => WitherSkullPet::class,
+		"Wolf"           => WolfPet::class,
+		"Zombie"         => ZombiePet::class,
+		"ZombieHorse"    => ZombieHorsePet::class,
+		"ZombiePigman"   => ZombiePigmanPet::class,
+		"ZombieVillager" => ZombieVillagerPet::class
 	];
 
-	const PET_CLASSES = [
-		ArrowPet::class,
-		BatPet::class,
-		BlazePet::class,
-		CaveSpiderPet::class,
-		ChickenPet::class,
-		CowPet::class,
-		CreeperPet::class,
-		DonkeyPet::class,
-		ElderGuardianPet::class,
-		EnderCrystalPet::class,
-		EnderDragonPet::class,
-		EndermanPet::class,
-		EndermitePet::class,
-		EvokerPet::class,
-		GhastPet::class,
-		GuardianPet::class,
-		HorsePet::class,
-		HuskPet::class,
-		IronGolemPet::class,
-		LlamaPet::class,
-		MagmaCubePet::class,
-		MooshroomPet::class,
-		MulePet::class,
-		OcelotPet::class,
-		PigPet::class,
-		PolarBearPet::class,
-		RabbitPet::class,
-		SheepPet::class,
-		SilverFishPet::class,
-		SkeletonHorsePet::class,
-		SkeletonPet::class,
-		SlimePet::class,
-		SnowGolemPet::class,
-		SpiderPet::class,
-		SquidPet::class,
-		StrayPet::class,
-		VexPet::class,
-		VillagerPet::class,
-		VindicatorPet::class,
-		WitchPet::class,
-		WitherPet::class,
-		WitherSkeletonPet::class,
-		WitherSkullPet::class,
-		WolfPet::class,
-		ZombieHorsePet::class,
-		ZombiePet::class,
-		ZombiePigmanPet::class,
-		ZombieVillagerPet::class
-	];
-
-	private $availableLanguages = [
+	/** @var string[] */
+	private array $availableLanguages = [
 		"en",
 		"nl",
 		"vi",
@@ -201,36 +154,30 @@ class Loader extends PluginBase {
 		"de"
 	];
 
-	/** @var array */
-	public $selectingName = [];
+	public array $selectingName = [];
 
-	/** @var BlockPetsConfig */
-	private $bpConfig;
-	/** @var PetProperties */
-	private $pProperties;
-	/** @var LanguageConfig */
-	private $language;
+	private BlockPetsConfig $bpConfig;
+	private PetProperties $pProperties;
+	private LanguageConfig $language;
+	private BaseDataStorer $database;
 
-	/** @var BaseDataStorer */
-	private $database;
-	/** @var int[][] */
-	private $playerPets = [];
+	/** @var BasePet[][] */
+	private array $playerPets = [];
 
-	public function onEnable() {
+	protected function onEnable(): void {
 		if(!is_dir($this->getDataFolder())) {
 			mkdir($this->getDataFolder());
-			$this->saveResource(".version_file");
 		}
 
-		$database_stmts = $this->getDataFolder() . "database_stmts/";
+		$this->saveResource(".version_file");
+
+		$database_stmts = Path::join($this->getDataFolder(), "database_stmts");
 		if(!is_dir($database_stmts)) {
 			mkdir($database_stmts);
 		}
 
 		$this->saveResource("database_stmts/mysql.sql", true);
 		$this->saveResource("database_stmts/sqlite.sql", true);
-
-		SpoonDetector::printSpoon($this);
 
 		$this->registerEntities();
 		$this->registerItems();
@@ -242,7 +189,10 @@ class Loader extends PluginBase {
 		$this->pProperties = new PetProperties($this);
 		$this->language = new LanguageConfig($this);
 		$this->selectDatabase();
-		Attribute::addAttribute(20, "minecraft:horse.jump_strength", 0, 3, 0.6679779);
+
+		/** @var AttributeFactory $factory */
+		// $factory = AttributeFactory::getInstance();
+		// $factory->register(Attribute::HORSE_JUMP_STRENGTH, 0.0, 3.0, 0.6679779);
 
 		$this->checkVersionChange();
 	}
@@ -293,14 +243,24 @@ class Loader extends PluginBase {
 	}
 
 	public function registerEntities(): void {
-		foreach(self::PET_CLASSES as $petClass) {
-			Entity::registerEntity($petClass, true, [$petClass::NETWORK_NAME]);
+		/** @var EntityFactory $entityFactory */
+		$entityFactory = EntityFactory::getInstance();
+		/**
+		 * @var string  $name
+		 * @var BasePet $petClass
+		 */
+		foreach(self::PETS as $name => $petClass) {
+			$entityFactory->register($petClass, function(World $world, CompoundTag $nbt) use ($petClass): Entity {
+				return new $petClass(EntityDataHelper::parseLocation($nbt, $world), $nbt);
+			}, [$name, $petClass::NETWORK_NAME]);
 		}
 	}
 
 	public function registerItems(): void {
-		ItemFactory::registerItem(new Saddle(), true);
-		Item::addCreativeItem(Item::get(Item::SADDLE));
+		/** @var ItemFactory $factory */
+		$factory = ItemFactory::getInstance();
+		$factory->register(new Saddle(), true);
+		// Item::addCreativeItem(Item::get(Item::SADDLE));
 	}
 
 	public function registerListeners(): void {
@@ -372,12 +332,7 @@ class Loader extends PluginBase {
 	 * @return bool
 	 */
 	public function petExists(string $entityName): bool {
-		foreach(self::PETS as $pet) {
-			if(strtolower($pet) === strtolower($entityName)) {
-				return true;
-			}
-		}
-		return false;
+		return $this->getPet($entityName) !== null;
 	}
 
 	/**
@@ -388,9 +343,20 @@ class Loader extends PluginBase {
 	 * @return string|null
 	 */
 	public function getPet(string $entityName): ?string {
-		foreach(self::PETS as $pet) {
+		$pets = array_map("\\strtolower", array_keys(self::PETS));
+		return $pets[strtolower($entityName)] ?? null;
+	}
+
+	/**
+	 * Get the class of the relevant pet.
+	 *
+	 * @param string $entityName
+	 * @return string|null
+	 */
+	public function getPetClass(string $entityName): ?string {
+		foreach(self::PETS as $pet => $petClass) {
 			if(strtolower($pet) === strtolower($entityName)) {
-				return $pet;
+				return $petClass;
 			}
 		}
 		return null;
@@ -399,14 +365,14 @@ class Loader extends PluginBase {
 	/**
 	 * Creates a new pet for the given player.
 	 *
-	 * @param string $entityName
-	 * @param Player $player
-	 * @param string $name
-	 * @param float  $scale
-	 * @param bool   $isBaby
-	 * @param int    $level
-	 * @param int    $levelPoints
-	 * @param bool   $chested
+	 * @param string      $entityName
+	 * @param Player      $player
+	 * @param string      $name
+	 * @param float       $scale
+	 * @param bool        $isBaby
+	 * @param int         $level
+	 * @param int         $levelPoints
+	 * @param bool        $chested
 	 * @param string|null $inventory
 	 *
 	 * @return null|BasePet
@@ -417,7 +383,7 @@ class Loader extends PluginBase {
 			$this->removePet($pet);
 		}
 
-		$nbt = Entity::createBaseNBT($player, null, $player->yaw, $player->pitch);
+		$nbt = CompoundTag::create();
 		$nbt->setString("petOwner", $player->getName());
 		$nbt->setFloat("scale", $scale);
 		$nbt->setString("petName", $name);
@@ -426,13 +392,20 @@ class Loader extends PluginBase {
 		$nbt->setByte("isBaby", (int) $isBaby);
 		$nbt->setByte("chested", (int) $chested);
 
-		$entity = Entity::createEntity($entityName . "Pet", $player->getLevel(), $nbt);
+		$class = $this->getPetClass($entityName);
+		if($class === null) {
+			return null;
+		}
+
+		$entity = $class($player->getLocation(), $nbt);
 		if($entity instanceof BasePet) {
 			if(!empty($inventory)) {
 				$entity->getInventoryManager()->load($inventory);
 			}
 
-			$this->getServer()->getPluginManager()->callEvent($ev = new PetSpawnEvent($this, $entity));
+			$ev = new PetSpawnEvent($this, $entity);
+			$ev->call();
+
 			if($ev->isCancelled()) {
 				$this->removePet($entity);
 				return null;
@@ -441,9 +414,10 @@ class Loader extends PluginBase {
 			if(!$isVisible) {
 				$entity->updateVisibility(false);
 			}
-			$this->playerPets[$player->getLowerCaseName()][strtolower($entity->getPetName())] = $entity;
+			$this->playerPets[strtolower($player->getName())][strtolower($entity->getPetName())] = $entity;
 			return $entity;
 		}
+
 		return null;
 	}
 
@@ -468,13 +442,13 @@ class Loader extends PluginBase {
 	 * @return BasePet[]
 	 */
 	public function getPetsFrom(Player $player): array {
-		return $this->playerPets[$player->getLowerCaseName()] ?? [];
+		return $this->playerPets[strtolower($player->getName())] ?? [];
 	}
 
 	/**
 	 * Returns the first pet found with the given name.
 	 *
-	 * @param string $name
+	 * @param string      $name
 	 * @param string|null $player
 	 *
 	 * @return BasePet|null
@@ -485,7 +459,7 @@ class Loader extends PluginBase {
 			return $this->playerPets[strtolower($player)][$name] ?? null;
 		}
 		foreach($this->getServer()->getOnlinePlayers() as $player) {
-			if(isset($this->playerPets[$k = $player->getLowerCaseName()][$name])) {
+			if(isset($this->playerPets[$k = strtolower($player->getName())][$name])) {
 				return $this->playerPets[$k][$name];
 			}
 		}
@@ -499,7 +473,8 @@ class Loader extends PluginBase {
 	 * @param BasePet $pet
 	 */
 	public function removePet(BasePet $pet, bool $close = true): void {
-		$this->getServer()->getPluginManager()->callEvent(new PetRemoveEvent($this, $pet));//TODO: Call a cancellable event if this method isn't called when pet owner quits
+		// TODO: Call a cancellable event if this method isn't called when pet owner quits
+		(new PetRemoveEvent($this, $pet))->call();
 		if($pet->isRidden()) {
 			$pet->throwRiderOff();
 		}
@@ -528,7 +503,7 @@ class Loader extends PluginBase {
 	 *
 	 * @return BasePet
 	 */
-	public function getRiddenPet(Player $player): BasePet {
+	public function getRiddenPet(Player $player): ?BasePet {
 		foreach($this->getPetsFrom($player) as $pet) {
 			if($pet->isRidden()) {
 				return $pet;
