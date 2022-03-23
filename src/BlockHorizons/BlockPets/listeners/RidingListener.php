@@ -9,7 +9,7 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\InteractPacket;
-use pocketmine\network\mcpe\protocol\PlayerInputPacket;
+use pocketmine\network\mcpe\protocol\PlayerAuthInputPacket;
 use pocketmine\player\Player;
 
 class RidingListener implements Listener {
@@ -22,15 +22,18 @@ class RidingListener implements Listener {
 	 */
 	public function ridePet(DataPacketReceiveEvent $event): void {
 		$packet = $event->getPacket();
-		if($packet instanceof PlayerInputPacket) {
+		if($packet instanceof PlayerAuthInputPacket) {
 			$loader = $this->getLoader();
 			$player = $event->getOrigin()->getPlayer();
 			if($loader->isRidingAPet($player)) {
-				if($packet->motionX === 0 && $packet->motionY === 0) {
+				if($packet->getMoveVecX() === 0 && $packet->getMoveVecZ() === 0) {
 					return;
 				}
 				$pet = $loader->getRiddenPet($player);
-				$pet->doRidingMovement($packet->motionX, $packet->motionY);
+				if($pet->isClosed() || $pet->isFlaggedForDespawn()) {
+					return;
+				}
+				$pet->doRidingMovement($packet->getMoveVecX(), $packet->getMoveVecZ());
 			}
 		} elseif($packet instanceof InteractPacket) {
 			if($packet->action === InteractPacket::ACTION_LEAVE_VEHICLE) {
