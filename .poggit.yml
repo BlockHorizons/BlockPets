@@ -8,8 +8,6 @@ projects:
     compressBuilds: false
     fullGzip: 9
     libs:
-      - src: Falkirks/spoondetector/spoondetector
-        version: ^0.0.1
       - src: poggit/libasynql/libasynql
         version: ^3.3.1
       - src: muqsit/invmenu/invmenu
