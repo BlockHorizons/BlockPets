@@ -164,7 +164,7 @@ abstract class BasePet extends Living {
 	}
 
 	public static function getNetworkTypeId(): string {
-		return self::NETWORK_ORIG_ID;
+		return static::NETWORK_ORIG_ID;
 	}
 
 	protected function getInitialSizeInfo(): EntitySizeInfo {

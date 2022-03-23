@@ -86,8 +86,6 @@ use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\world\World;
 use Webmozart\PathUtil\Path;
-use function array_keys;
-use function array_map;
 use function strtolower;
 
 class Loader extends PluginBase {
@@ -320,8 +318,12 @@ class Loader extends PluginBase {
 	 * Tries to match a pet type with the pet type list, and returns the fully qualified name if this could be found. Null if no valid result was found.
 	 */
 	public function getPet(string $entityName): ?string {
-		$pets = array_map("\\strtolower", array_keys(self::PETS));
-		return $pets[strtolower($entityName)] ?? null;
+		foreach(self::PETS as $pet => $petClass) {
+			if(strtolower($pet) === strtolower($entityName)) {
+				return $pet;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -359,7 +361,7 @@ class Loader extends PluginBase {
 			return null;
 		}
 
-		$entity = $class($player->getLocation(), $nbt);
+		$entity = new $class($player->getLocation(), $nbt);
 		if($entity instanceof BasePet) {
 			if(!empty($inventory)) {
 				$entity->getInventoryManager()->load($inventory);
@@ -375,7 +377,10 @@ class Loader extends PluginBase {
 
 			if(!$isVisible) {
 				$entity->updateVisibility(false);
+			} else {
+				$entity->spawnToAll();
 			}
+
 			$this->playerPets[strtolower($player->getName())][strtolower($entity->getPetName())] = $entity;
 			return $entity;
 		}
