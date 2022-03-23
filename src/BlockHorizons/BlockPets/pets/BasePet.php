@@ -10,6 +10,8 @@ use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use BlockHorizons\BlockPets\pets\inventory\PetInventoryManager;
 use BlockHorizons\BlockPets\tasks\PetRespawnTask;
+use pocketmine\entity\Attribute;
+use pocketmine\entity\AttributeFactory;
 use pocketmine\entity\Entity;
 use pocketmine\entity\EntitySizeInfo;
 use pocketmine\entity\Living;
@@ -22,7 +24,9 @@ use pocketmine\item\Food;
 use pocketmine\item\ItemIds;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\network\mcpe\protocol\AddActorPacket;
 use pocketmine\network\mcpe\protocol\SetActorLinkPacket;
+use pocketmine\network\mcpe\protocol\types\entity\Attribute as NetworkAttribute;
 use pocketmine\network\mcpe\protocol\types\entity\EntityLink;
 use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataCollection;
 use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataFlags;
@@ -31,6 +35,8 @@ use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\particle\HeartParticle;
+use function array_map;
+use function array_values;
 use function get_class;
 use function lcg_value;
 use function max;
@@ -97,7 +103,6 @@ abstract class BasePet extends Living {
 	private PetInventoryManager $inventory_manager;
 	private float $maxSize = 10.0;
 
-
 	final public function __construct(Location $location, ?CompoundTag $nbt = null) {
 		if(static::NETWORK_ID !== -1) {
 			throw new \LogicException("Network IDs of pets cannot be overridden.");
@@ -139,7 +144,7 @@ abstract class BasePet extends Living {
 		$this->inventory_manager = new PetInventoryManager($this);
 		$this->spawnToAll();
 
-		// $this->getAttributeMap()->addAttribute(Attribute::getAttribute(20)); TODO: figure
+		$this->getAttributeMap()->add(AttributeFactory::getInstance()->get(Attribute::HORSE_JUMP_STRENGTH));
 		$this->setCanSaveWithChunk(false);
 
 		$this->generateCustomPetData();
@@ -286,21 +291,23 @@ abstract class BasePet extends Living {
 		parent::spawnTo($player);
 	}
 
-	/* TODO: figure
 	protected function sendSpawnPacket(Player $player): void {
-		$pk = new AddActorPacket();
-		$pk->entityRuntimeId = $this->getId();
-		$pk->type = AddActorPacket::LEGACY_ID_MAP_BC[static::NETWORK_ORIG_ID];
-		$pk->position = $this->asVector3();
-		$pk->motion = $this->getMotion();
-		$pk->yaw = $this->yaw;
-		$pk->pitch = $this->pitch;
-		$pk->attributes = $this->attributeMap->getAll();
-		$pk->metadata = $this->propertyManager->getAll();
-		$pk->links = array_values($this->links);
-		$player->dataPacket($pk);
+		$player->getNetworkSession()->sendDataPacket(AddActorPacket::create(
+			$this->getId(),
+			$this->getId(),
+			static::NETWORK_ORIG_ID,
+			$this->location->asVector3(),
+			$this->getMotion(),
+			$this->location->pitch,
+			$this->location->yaw,
+			$this->location->yaw,
+			array_map(static function(Attribute $attr): NetworkAttribute {
+				return new NetworkAttribute($attr->getId(), $attr->getMinValue(), $attr->getMaxValue(), $attr->getValue(), $attr->getDefaultValue());
+			}, $this->attributeMap->getAll()),
+			$this->getAllNetworkData(),
+			array_values($this->links)
+		));
 	}
-	*/
 
 	/**
 	 * Returns the player that owns this pet if they are online.
@@ -523,16 +530,6 @@ abstract class BasePet extends Living {
 		return true;
 	}
 
-	/* TODO: figure
-	protected function applyGravity(): void {
-		if($this->isRiding()) {
-			return;
-		}
-
-		parent::applyGravity();
-	}
-	*/
-
 	protected function broadcastMovement(bool $teleport = false): void {
 		if($this->isRiding()) {
 			return;
@@ -545,21 +542,23 @@ abstract class BasePet extends Living {
 		if(!parent::onUpdate($currentTick) && $this->isClosed()) {
 			return false;
 		}
-		if($this->isRiding()) {
-			$petOwner = $this->getPetOwner();
+		$petOwner = $this->getPetOwner();
+		if($petOwner !== null && $this->isRiding()) {
+			$this->gravityEnabled = false;
 
-			$ownerLocation = $petOwner->getLocation();
-			$location = $this->getLocation();
+			$ownerLoc = $petOwner->getLocation();
+			$currLoc = $this->getLocation();
 
-			$x = $ownerLocation->getX() - $location->getX();
-			$y = $ownerLocation->getY() - $location->getY();
-			$z = $ownerLocation->getZ() - $location->getZ();
+			$x = $ownerLoc->getX() - $currLoc->getX();
+			$y = $ownerLoc->getY() - $currLoc->getY();
+			$z = $ownerLoc->getZ() - $currLoc->getZ();
 
 			if($x !== 0.0 || $z !== 0.0 || $y !== -$petOwner->getSize()->getHeight()) {
 				$this->move($x, $y + $petOwner->getSize()->getHeight(), $z);
 			}
 			return false;
 		}
+		$this->gravityEnabled = true;
 		if(!$this->checkUpdateRequirements()) {
 			return true;
 		}
@@ -718,13 +717,13 @@ abstract class BasePet extends Living {
 			return false;
 		}
 		if($this->isDormant()) {
-			$this->despawnFromAll();
+			$this->flagForDespawn();
 			return false;
 		}
 		if($this->getPetOwner()->isClosed()) {
 			$this->rider = null;
 			$this->riding = false;
-			$this->despawnFromAll();
+			$this->flagForDespawn();
 			$this->setDormant();
 			$this->close();
 			return false;

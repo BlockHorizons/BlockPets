@@ -75,6 +75,7 @@ use BlockHorizons\BlockPets\pets\datastorage\BaseDataStorer;
 use BlockHorizons\BlockPets\pets\datastorage\MySQLDataStorer;
 use BlockHorizons\BlockPets\pets\datastorage\SQLiteDataStorer;
 use BlockHorizons\BlockPets\pets\inventory\PetInventoryManager;
+use pocketmine\entity\Attribute;
 use pocketmine\entity\AttributeFactory;
 use pocketmine\entity\Entity;
 use pocketmine\entity\EntityDataHelper;
@@ -190,8 +191,8 @@ class Loader extends PluginBase {
 		$this->selectDatabase();
 
 		/** @var AttributeFactory $factory */
-		// $factory = AttributeFactory::getInstance();
-		// $factory->register(Attribute::HORSE_JUMP_STRENGTH, 0.0, 3.0, 0.6679779);
+		$factory = AttributeFactory::getInstance();
+		$factory->register(Attribute::HORSE_JUMP_STRENGTH, 0.0, 3.0, 0.6679779);
 
 		$this->checkVersionChange();
 	}
