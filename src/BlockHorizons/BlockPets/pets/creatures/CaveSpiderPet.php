@@ -1,24 +1,25 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets\creatures;
 
 use BlockHorizons\BlockPets\pets\SmallCreature;
 use BlockHorizons\BlockPets\pets\WalkingPet;
+use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
+use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataFlags;
 
 class CaveSpiderPet extends WalkingPet implements SmallCreature {
 
 	const NETWORK_NAME = "CAVE_SPIDER_PET";
-	const NETWORK_ORIG_ID = self::CAVE_SPIDER;
+	const NETWORK_ORIG_ID = EntityIds::CAVE_SPIDER;
 
-	public $speed = 1.4;
-	public $height = 0.5;
-	public $width = 0.7;
+	protected string $name = "Cave Spider Pet";
 
-	public $name = "Cave Spider Pet";
+	public float $speed = 1.4;
+	protected float $height = 0.5;
+	protected float $width = 0.7;
 
 	public function generateCustomPetData(): void {
-		$this->setGenericFlag(self::DATA_FLAG_CAN_CLIMB, true);
+		$this->getNetworkProperties()->setGenericFlag(EntityMetadataFlags::CAN_CLIMB, true);
 	}
 }

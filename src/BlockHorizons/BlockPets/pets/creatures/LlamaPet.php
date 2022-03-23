@@ -1,23 +1,24 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets\creatures;
 
 use BlockHorizons\BlockPets\pets\WalkingPet;
+use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
+use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataProperties;
 
 class LlamaPet extends WalkingPet {
 
-	const NETWORK_NAME = "LLAMA_PET";
-	const NETWORK_ORIG_ID = self::LLAMA;
+	const NETWORK_NAME    = "LLAMA_PET";
+	const NETWORK_ORIG_ID = EntityIds::LLAMA;
 
-	public $height = 0.935;
-	public $width = 0.45;
+	protected float $height = 0.935;
+	protected float $width = 0.45;
 
-	public $name = "Llama Pet";
+	protected string $name = "Llama Pet";
 
 	public function generateCustomPetData(): void {
 		$randomVariant = random_int(0, 3);
-		$this->getDataPropertyManager()->setInt(self::DATA_VARIANT, $randomVariant);
+		$this->getNetworkProperties()->setInt(EntityMetadataProperties::VARIANT, $randomVariant);
 	}
 }

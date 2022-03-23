@@ -1,19 +1,19 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets\creatures;
 
 use BlockHorizons\BlockPets\pets\HoveringPet;
 use BlockHorizons\BlockPets\pets\SmallCreature;
+use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 
 class BatPet extends HoveringPet implements SmallCreature {
 
 	const NETWORK_NAME = "BAT_PET";
-	const NETWORK_ORIG_ID = self::BAT;
+	const NETWORK_ORIG_ID = EntityIds::BAT;
 
-	public $name = "Bat Pet";
+	protected string $name = "Bat Pet";
 
-	public $width = 0.5;
-	public $height = 0.9;
+	protected float $width = 0.5;
+	protected float $height = 0.9;
 }

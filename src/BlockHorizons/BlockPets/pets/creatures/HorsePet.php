@@ -1,21 +1,22 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets\creatures;
 
 use BlockHorizons\BlockPets\pets\WalkingPet;
+use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
+use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataProperties;
 
 class HorsePet extends WalkingPet {
 
-	const NETWORK_NAME = "HORSE_PET";
-	const NETWORK_ORIG_ID = self::HORSE;
+	const NETWORK_NAME    = "HORSE_PET";
+	const NETWORK_ORIG_ID = EntityIds::HORSE;
 
-	const TYPE_NONE = 0;
-	const TYPE_WHITE = 1;
+	const TYPE_NONE        = 0;
+	const TYPE_WHITE       = 1;
 	const TYPE_WHITE_FIELD = 2;
-	const TYPE_WHITE_DOTS = 3;
-	const TYPE_BLACK_DOTS = 4;
+	const TYPE_WHITE_DOTS  = 3;
+	const TYPE_BLACK_DOTS  = 4;
 
 	const COLOR_WHITE = 0, COLOUR_WHITE = 0;
 	const COLOR_CREAMY = 1, COLOUR_CREAMY = 1;
@@ -25,10 +26,12 @@ class HorsePet extends WalkingPet {
 	const COLOR_GRAY = 5, COLOUR_GRAY = 5;
 	const COLOR_DARKBROWN = 6, COLOUR_DARKBROWN = 6;
 
-	public $name = "Horse Pet";
+	protected string $name = "Horse Pet";
 
-	public $width = 1.3965;
-	public $height = 1.6;
+	protected float $width = 1.3965;
+	protected float $height = 1.6;
+
+	protected int $variant;
 
 	public function generateCustomPetData(): void {
 		$this->setVariant($this->getRandomType(), $this->getRandomColor());
@@ -57,10 +60,11 @@ class HorsePet extends WalkingPet {
 	}
 
 	public function getVariant(): int {
-		return $this->getDataPropertyManager()->getInt(self::DATA_VARIANT);
+		return $this->variant;
 	}
 
 	public function setVariant(int $type, int $colour): void {
-		$this->getDataPropertyManager()->setInt(self::DATA_VARIANT, $colour | $type << 8);
+		$this->variant = $colour | $type << 8;
+		$this->getNetworkProperties()->setInt(EntityMetadataProperties::VARIANT, $colour | $type << 8);
 	}
 }

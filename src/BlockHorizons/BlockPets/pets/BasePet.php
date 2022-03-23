@@ -54,10 +54,13 @@ abstract class BasePet extends Living {
 	const NETWORK_NAME    = null;
 	const NETWORK_ORIG_ID = null;
 
+	protected float $height = 0.0;
+	protected float $width = 0.0;
+
 	/** @var float */
 	public $scale = 1.0;
-	public string $name = "";
 
+	protected string $name = "";
 	protected int $petLevel = 0;
 	protected string $petName = "";
 	protected ?Player $rider = null;
@@ -93,6 +96,7 @@ abstract class BasePet extends Living {
 	private int $positionSeekTick = 60;
 	private PetInventoryManager $inventory_manager;
 	private float $maxSize = 10.0;
+
 
 	final public function __construct(Location $location, ?CompoundTag $nbt = null) {
 		if(static::NETWORK_ID !== -1) {
@@ -152,6 +156,14 @@ abstract class BasePet extends Living {
 
 		$this->seatPos = new Vector3(0, $scale * 0.4 - 0.3, 0);
 		$this->networkPropertiesDirty = true;
+	}
+
+	public static function getNetworkTypeId(): string {
+		return self::NETWORK_ORIG_ID;
+	}
+
+	protected function getInitialSizeInfo(): EntitySizeInfo {
+		return new EntitySizeInfo($this->height, $this->width);
 	}
 
 	public function register(): void {

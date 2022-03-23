@@ -1,26 +1,27 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets\creatures;
 
 use BlockHorizons\BlockPets\pets\SmallCreature;
 use BlockHorizons\BlockPets\pets\WalkingPet;
+use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
+use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataProperties;
 
 class WolfPet extends WalkingPet implements SmallCreature {
 
 	const NETWORK_NAME = "WOLF_PET";
-	const NETWORK_ORIG_ID = self::WOLF;
+	const NETWORK_ORIG_ID = EntityIds::WOLF;
 
-	public $name = "Wolf Pet";
+	protected string $name = "Wolf Pet";
 
-	public $width = 0.6;
-	public $height = 0.85;
+	protected float $width = 0.6;
+	protected float $height = 0.85;
 
 	public function generateCustomPetData(): void {
 		$randomColour = random_int(0, 15);
 		$eid = 123456789123456789;
-		$this->getDataPropertyManager()->setLong(self::DATA_OWNER_EID, $eid);
-		$this->getDataPropertyManager()->setByte(self::DATA_COLOUR, $randomColour);
+		$this->getNetworkProperties()->setLong(EntityMetadataProperties::OWNER_EID, $eid);
+		$this->getNetworkProperties()->setByte(EntityMetadataProperties::COLOR, $randomColour);
 	}
 }
