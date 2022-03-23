@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets;
@@ -7,14 +6,16 @@ namespace BlockHorizons\BlockPets\pets;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\Player;
+use pocketmine\player\Player;
+use function abs;
+use function atan2;
+use function rad2deg;
+use function sqrt;
 
 abstract class SwimmingPet extends BouncingPet {
 
-	/** @var float */
-	protected $swimmingSpeed = 0.0;
-	/** @var float */
-	protected $follow_range_sq = 1.2;
+	protected float $swimmingSpeed = 0.0;
+	protected float $followRangeSq = 1.2;
 
 	public function doPetUpdates(int $currentTick): bool {
 		if(!parent::doPetUpdates($currentTick)) {
@@ -23,9 +24,12 @@ abstract class SwimmingPet extends BouncingPet {
 
 		if(!$this->isAngry() && $this->isUnderwater()) {
 			$petOwner = $this->getPetOwner();
-			$x = $petOwner->x + $this->xOffset - $this->x;
-			$y = $petOwner->y + $this->yOffset - $this->y;
-			$z = $petOwner->z + $this->zOffset - $this->z;
+			$ownerLoc = $petOwner->getLocation();
+			$currLoc = $this->getLocation();
+
+			$x = $ownerLoc->getX() + $this->xOffset - $currLoc->getX();
+			$y = $ownerLoc->getY() + $this->yOffset - $currLoc->getY();
+			$z = $ownerLoc->getZ() + $this->zOffset - $currLoc->getZ();
 
 			$xz_sq = $x * $x + $z * $z;
 			$xz_modulus = sqrt($xz_sq);
@@ -39,8 +43,8 @@ abstract class SwimmingPet extends BouncingPet {
 				$this->motion->z = $speed_factor * ($z / $xz_modulus);
 			}
 			$this->motion->y = $speed_factor * $y;
-			$this->yaw = rad2deg(atan2(-$x, $z));
-			$this->pitch = rad2deg(-atan2($y, $xz_modulus));
+			$this->location->yaw = rad2deg(atan2(-$x, $z));
+			$this->location->pitch = rad2deg(-atan2($y, $xz_modulus));
 
 			$this->move($this->motion->x, $this->motion->y, $this->motion->z);
 
@@ -52,14 +56,17 @@ abstract class SwimmingPet extends BouncingPet {
 	}
 
 	public function follow(Entity $target, float $xOffset = 0.0, float $yOffset = 0.0, float $zOffset = 0.0): void {
-		$x = $target->x + $xOffset - $this->x;
-		$y = $target->y + $yOffset - $this->y;
-		$z = $target->z + $zOffset - $this->z;
+		$targetLoc = $target->getLocation();
+		$currLoc = $this->getLocation();
+
+		$x = $targetLoc->getX() + $xOffset - $currLoc->getX();
+		$y = $targetLoc->getY() + $yOffset - $currLoc->getY();
+		$z = $targetLoc->getZ() + $zOffset - $currLoc->getZ();
 
 		$xz_sq = $x * $x + $z * $z;
 		$xz_modulus = sqrt($xz_sq);
 
-		if($xz_sq < $this->follow_range_sq) {
+		if($xz_sq < $this->followRangeSq) {
 			$this->motion->x = 0;
 			$this->motion->z = 0;
 		} else {
@@ -72,8 +79,8 @@ abstract class SwimmingPet extends BouncingPet {
 			$this->motion->y = $this->getSwimmingSpeed() * 0.15 * $y;
 		}
 
-		$this->yaw = rad2deg(atan2(-$x, $z));
-		$this->pitch = rad2deg(-atan2($y, $xz_modulus));
+		$this->location->yaw = rad2deg(atan2(-$x, $z));
+		$this->location->pitch = rad2deg(-atan2($y, $xz_modulus));
 
 		$this->move($this->motion->x, $this->motion->y, $this->motion->z);
 	}
@@ -87,7 +94,7 @@ abstract class SwimmingPet extends BouncingPet {
 			$target = $this->getTarget();
 			$this->follow($target);
 
-			if($this->distance($target) <= $this->scale + 0.5 && $this->waitingTime <= 0) {
+			if($this->location->distance($target->location) <= $this->scale + 0.5 && $this->waitingTime <= 0) {
 				$event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage());
 				$target->attack($event);
 
@@ -101,7 +108,7 @@ abstract class SwimmingPet extends BouncingPet {
 				}
 
 				$this->waitingTime = 12;
-			} elseif($this->distance($this->getPetOwner()) > 25 || $this->distance($target) > 15) {
+			} elseif($this->location->distance($this->getPetOwner()->location) > 25 || $this->location->distance($target->location) > 15) {
 				$this->calmDown();
 			}
 
@@ -112,9 +119,6 @@ abstract class SwimmingPet extends BouncingPet {
 		parent::doAttackingMovement();
 	}
 
-	/**
-	 * @return float
-	 */
 	public function getSwimmingSpeed(): float {
 		return $this->swimmingSpeed;
 	}
@@ -123,8 +127,8 @@ abstract class SwimmingPet extends BouncingPet {
 		if($this->isUnderwater()) {
 			$rider = $this->getRider();
 
-			$this->pitch = $rider->pitch;
-			$this->yaw = $rider->yaw;
+			$this->location->pitch = $rider->location->pitch;
+			$this->location->yaw = $rider->location->yaw;
 
 			$speed_factor = 2 * $this->getSwimmingSpeed();
 			$rider_directionvec = $rider->getDirectionVector();
@@ -181,9 +185,6 @@ abstract class SwimmingPet extends BouncingPet {
 		parent::doRidingMovement($motionX, $motionZ);
 	}
 
-	/**
-	 * @param array $properties
-	 */
 	public function useProperties(array $properties): void {
 		parent::useProperties($properties);
 		$this->swimmingSpeed = (float) $properties["Swimming-Speed"];

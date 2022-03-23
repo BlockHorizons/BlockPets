@@ -4,6 +4,8 @@ declare(strict_types = 1);
 namespace BlockHorizons\BlockPets\pets\datastorage;
 
 use BlockHorizons\BlockPets\pets\BasePet;
+use function base64_decode;
+use function base64_encode;
 
 class SQLiteDataStorer extends SQLDataStorer {
 

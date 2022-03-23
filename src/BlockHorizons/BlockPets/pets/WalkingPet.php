@@ -1,20 +1,16 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets;
 
-use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\Player;
+use pocketmine\nbt\tag\CompoundTag;
 
 abstract class WalkingPet extends IrasciblePet {
 
-	/** @var int */
-	protected $jumpTicks = 0;
+	protected int $jumpTicks = 0;
 
-	protected function initEntity(): void {
-		parent::initEntity();
+	protected function initEntity(CompoundTag $nbt): void {
+		parent::initEntity($nbt);
 		$this->jumpVelocity = $this->gravity * 10;
 	}
 
@@ -63,16 +59,13 @@ abstract class WalkingPet extends IrasciblePet {
 	public function doRidingMovement(float $motionX, float $motionZ): void {
 		$rider = $this->getPetOwner();
 
-		$this->pitch = $rider->pitch;
-		$this->yaw = $rider->yaw;
+		$this->location->pitch = $rider->location->pitch;
+		$this->location->yaw = $rider->location->yaw;
 
 		$speed_factor = 2.5 * $this->getSpeed();
 		$direction_plane = $this->getDirectionPlane();
 		$x = $direction_plane->x / $speed_factor;
 		$z = $direction_plane->y / $speed_factor;
-
-		$finalMotionX = 0;
-		$finalMotionZ = 0;
 
 		switch($motionZ) {
 			case 1:

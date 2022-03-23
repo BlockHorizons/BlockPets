@@ -6,6 +6,9 @@ namespace BlockHorizons\BlockPets\pets\datastorage;
 use BlockHorizons\BlockPets\pets\BasePet;
 use poggit\libasynql\DataConnector;
 use poggit\libasynql\libasynql;
+use function array_combine;
+use function str_replace;
+use function strtolower;
 
 class SQLDataStorer extends BaseDataStorer {
 

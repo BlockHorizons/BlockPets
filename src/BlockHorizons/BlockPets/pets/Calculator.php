@@ -44,8 +44,6 @@ class Calculator {
 
 	/**
 	 * Recalculates size that the pet should have according to its configuration scalings.
-	 *
-	 * @return bool
 	 */
 	public function recalculateSize(): bool {
 		$pet = $this->getPet();

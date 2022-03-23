@@ -31,7 +31,10 @@ use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\particle\HeartParticle;
+use function get_class;
+use function lcg_value;
 use function max;
+use function random_int;
 
 abstract class BasePet extends Living {
 
