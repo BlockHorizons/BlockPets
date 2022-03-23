@@ -1,12 +1,11 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\utils\TextFormat as TF;
 
 class ChangePetNameCommand extends BaseCommand {
@@ -34,7 +33,7 @@ class ChangePetNameCommand extends BaseCommand {
 				$this->sendPermissionMessage($sender);
 				return true;
 			}
-			if(($player = $this->getLoader()->getServer()->getPlayer($args[2])) === null) {
+			if(($player = $this->getLoader()->getServer()->getPlayerByPrefix($args[2])) === null) {
 				$this->sendWarning($sender, $this->getLoader()->translate("commands.errors.player.not-found"));
 				return true;
 			}

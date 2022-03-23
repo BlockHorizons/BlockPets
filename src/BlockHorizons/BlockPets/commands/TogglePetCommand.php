@@ -1,12 +1,11 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
 class TogglePetCommand extends BaseCommand {
@@ -30,7 +29,7 @@ class TogglePetCommand extends BaseCommand {
 
 		$player = $sender;
 		if(isset($args[1])) {
-			if(($player = $loader->getServer()->getPlayer($args[1])) === null) {
+			if(($player = $loader->getServer()->getPlayerByPrefix($args[1])) === null) {
 				$this->sendWarning($sender, TextFormat::RED . $loader->translate("commands.errors.player.not-found"));
 				return true;
 			}
@@ -89,7 +88,7 @@ class TogglePetCommand extends BaseCommand {
 					["PetName" => $petName, "Visible" => $isVisible] = array_pop($rows);
 					$pet = $loader->getPetByName($petName, $player);
 					if($pet === null) {
-						$this->sendWarning(TextFormat::RED . $sender, $loader->translate("commands.errors.player.no-pet"));
+						$this->sendWarning($sender, TextFormat::RED . $loader->translate("commands.errors.player.no-pet"));
 						return;
 					}
 

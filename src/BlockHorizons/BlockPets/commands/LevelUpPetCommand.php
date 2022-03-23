@@ -1,12 +1,10 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 
 class LevelUpPetCommand extends BaseCommand {
@@ -35,7 +33,7 @@ class LevelUpPetCommand extends BaseCommand {
 		}
 
 		if(isset($args[2])) {
-			if(($player = $loader->getServer()->getPlayer($args[2])) === null) {
+			if(($player = $loader->getServer()->getPlayerByPrefix($args[2])) === null) {
 				$this->sendWarning($sender, $loader->translate("commands.errors.player.not-found"));
 				return true;
 			}

@@ -6,7 +6,6 @@ namespace BlockHorizons\BlockPets\commands;
 use BlockHorizons\BlockPets\Loader;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginOwned;
 use pocketmine\utils\TextFormat as TF;
 
@@ -39,7 +38,7 @@ abstract class BaseCommand extends Command implements PluginOwned {
 		return $this->loader;
 	}
 
-	public function getPlugin(): Plugin {
+	public function getOwningPlugin(): Loader {
 		return $this->loader;
 	}
 

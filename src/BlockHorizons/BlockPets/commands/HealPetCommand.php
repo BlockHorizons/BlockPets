@@ -1,13 +1,12 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
 use pocketmine\command\CommandSender;
-use pocketmine\level\particle\HeartParticle;
 use pocketmine\utils\TextFormat as TF;
+use pocketmine\world\particle\HeartParticle;
 
 class HealPetCommand extends BaseCommand {
 
@@ -28,7 +27,7 @@ class HealPetCommand extends BaseCommand {
 		}
 
 		if(isset($args[1])) {
-			if(($player = $loader->getServer()->getPlayer($args[1])) === null) {
+			if(($player = $loader->getServer()->getPlayerByPrefix($args[1])) === null) {
 				$this->sendWarning($sender, $loader->translate("commands.errors.player.not-found"));
 				return true;
 			}
@@ -39,7 +38,7 @@ class HealPetCommand extends BaseCommand {
 		}
 
 		$pet->fullHeal();
-		$pet->getLevel()->addParticle(new HeartParticle($pet->add(0, 2), 4));
+		$pet->getWorld()->addParticle($pet->getLocation()->add(0, 2, 0), new HeartParticle(4));
 		$sender->sendMessage(TF::GREEN . $loader->translate("commands.healpet.success", [$pet->getPetName()]));
 		return true;
 	}

@@ -1,17 +1,15 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
 class PetsTopCommand extends BaseCommand {
 
-	const ENTRIES_PER_PAGE = 10;//No. of pets to list per page.
+	const ENTRIES_PER_PAGE = 10; // No. of pets to list per page.
 
 	public function __construct(Loader $loader) {
 		parent::__construct($loader, "petstop", "Lists the pets leaderboard", "/petstop [EntityName=ALL] [page=1]", ["petsleaderboard", "toppets"]);
@@ -59,9 +57,9 @@ class PetsTopCommand extends BaseCommand {
 				if($pets === "") {
 					if($page === 1) {
 						if($entityName === null) {
-							$sender->sendMessage(TextFormat::RED . $loader->translate("commands.errors.pets.none-on-server"));
+							$sender->sendMessage(TextFormat::RED . $this->getLoader()->translate("commands.errors.pets.none-on-server"));
 						} else {
-							$sender->sendMessage(TextFormat::RED . $loader->translate("commands.errors.pets.none-on-server-type", [$entityName]));
+							$sender->sendMessage(TextFormat::RED . $this->getLoader()->translate("commands.errors.pets.none-on-server-type", [$entityName]));
 						}
 					} else {
 						if($entityName === null) {
