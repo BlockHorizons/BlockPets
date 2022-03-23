@@ -18,8 +18,7 @@ use pocketmine\player\Player;
 
 class PetInventoryManager {
 
-	/** @var BigEndianNbtSerializer */
-	private static $nbtSerializer;
+	private static BigEndianNbtSerializer $nbtSerializer;
 
 	public static function init(Loader $plugin): void {
 		self::$nbtSerializer = new BigEndianNbtSerializer();
