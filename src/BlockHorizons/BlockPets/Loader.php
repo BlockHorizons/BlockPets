@@ -89,7 +89,7 @@ use function array_keys;
 use function array_map;
 use function strtolower;
 
-class Loader extends PluginBase{
+class Loader extends PluginBase {
 
 	/** @var string[] */
 	const PETS = [

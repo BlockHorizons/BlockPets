@@ -6,7 +6,7 @@ namespace BlockHorizons\BlockPets\tasks;
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\BasePet;
 
-class PetRespawnTask extends BaseTask{
+class PetRespawnTask extends BaseTask {
 
 	public function __construct(Loader $loader, private BasePet $pet) {
 		parent::__construct($loader);

@@ -70,7 +70,7 @@ class EventListener implements Listener {
 		if(!$loader->getBlockPetsConfig()->doHardReset()) {
 			$loader->getDatabase()->load(
 				$player->getName(),
-				function(array $petData) use($player, $loader): void {
+				function(array $petData) use ($player, $loader): void {
 					$hard_reset = $loader->getBlockPetsConfig()->doHardReset();
 					foreach($petData as $data) {
 						$pet = $loader->createPet(
