@@ -4,16 +4,20 @@ declare(strict_types = 1);
 namespace BlockHorizons\BlockPets\events;
 
 use BlockHorizons\BlockPets\Loader;
-use BlockHorizons\BlockPets\pets\BasePet;
+use BlockHorizons\BlockPets\pets\PetData;
 use pocketmine\event\Cancellable;
 use pocketmine\event\CancellableTrait;
 
-class PetRespawnEvent extends PetEvent implements Cancellable {
+class PetRespawnEvent extends BlockPetsEvent implements Cancellable {
 
 	use CancellableTrait;
 
-	public function __construct(Loader $loader, BasePet $pet, private int $delay) {
-		parent::__construct($loader, $pet);
+	public function __construct(Loader $loader, private PetData $petData, private int $delay) {
+		parent::__construct($loader);
+	}
+
+	public function getPetData(): PetData {
+		return $this->petData;
 	}
 
 	/**
