@@ -76,6 +76,7 @@ use BlockHorizons\BlockPets\pets\datastorage\BaseDataStorer;
 use BlockHorizons\BlockPets\pets\datastorage\MySQLDataStorer;
 use BlockHorizons\BlockPets\pets\datastorage\SQLiteDataStorer;
 use BlockHorizons\BlockPets\pets\inventory\PetInventoryManager;
+use BlockHorizons\BlockPets\pets\PetData;
 use pocketmine\entity\Attribute;
 use pocketmine\entity\AttributeFactory;
 use pocketmine\entity\Entity;
@@ -393,10 +394,23 @@ class Loader extends PluginBase {
 	/**
 	 * Creates a copy of the given pet and returns it.
 	 */
-	public function clonePet(BasePet $pet): BasePet {
-		$clone = $this->createPet($pet->getEntityType(), $pet->getPetOwner(), $pet->getPetName(), $pet->getStartingScale(), $pet->isBaby(), $pet->getPetLevel(), $pet->getPetLevelPoints(), $pet->isChested(), $pet->getVisibility());
-		$clone->getInventory()->setContents($pet->getInventory()->getContents());
-		return $clone;
+	public function clonePet(PetData $data): ?BasePet {
+		$owner = $this->getServer()->getPlayerExact($data->getOwnerName());
+		if($owner === null) {
+			return null;
+		}
+		return $this->createPet(
+			$data->getPetId(),
+			$owner,
+			$data->getPetName(),
+			$data->getScale(),
+			$data->isBaby(),
+			$data->getLevel(),
+			$data->getLevelPoints(),
+			$data->isChested(),
+			$data->isVisible(),
+			$data->getInventory()
+		);
 	}
 
 	/**

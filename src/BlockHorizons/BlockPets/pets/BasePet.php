@@ -217,6 +217,21 @@ abstract class BasePet extends Living {
 		$this->maxSize = (float) $properties["Max-Size"];
 	}
 
+	public function getPetData(): PetData {
+		return new PetData(
+			$this->getEntityType(),
+			$this->getPetOwnerName(),
+			$this->petName,
+			$this->getStartingScale(),
+			$this->baby,
+			$this->petLevel,
+			$this->petLevelPoints,
+			$this->chested,
+			$this->visibility,
+			$this->inventory_manager->compressContents()
+		);
+	}
+
 	public function isRiding(): bool {
 		return $this->riding;
 	}
