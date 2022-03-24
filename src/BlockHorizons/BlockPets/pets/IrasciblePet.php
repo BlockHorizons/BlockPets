@@ -136,7 +136,7 @@ abstract class IrasciblePet extends BasePet {
 	}
 
 	protected function checkAttackRequirements(): bool {
-		if($this->closed || !($this->isAlive()) || !($this->isAngry())) {
+		if($this->closed || !($this->isAlive()) || !($this->isAngry()) || $this->isFlaggedForDespawn()) {
 			$this->calmDown();
 			return false;
 		}
