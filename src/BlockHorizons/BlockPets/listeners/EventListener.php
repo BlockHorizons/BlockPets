@@ -9,6 +9,7 @@ use BlockHorizons\BlockPets\pets\IrasciblePet;
 use pocketmine\entity\Living;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityDespawnEvent;
 use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
@@ -123,6 +124,16 @@ class EventListener implements Listener {
 			$clearLaggPlugin = $this->getLoader()->getServer()->getPluginManager()->getPlugin("ClearLagg");
 			if($clearLaggPlugin !== null) {
 				$clearLaggPlugin->exemptEntity($entity);
+			}
+		}
+	}
+
+	public function onEntityDespawn(EntityDespawnEvent $event): void {
+		$entity = $event->getEntity();
+		if($entity instanceof BasePet) {
+			if(!$this->loader->getBlockPetsConfig()->storeToDatabase()) {
+				$this->loader->getDatabase()->unregisterPet($entity);
+				$this->loader->removePet($entity, false);
 			}
 		}
 	}

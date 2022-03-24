@@ -98,10 +98,10 @@ abstract class BasePet extends Living {
 
 	private ?Player $petOwner = null;
 	private bool $dormant = false;
-	private bool $shouldIgnoreEvent = false;
 	private int $positionSeekTick = 60;
 	private PetInventoryManager $inventory_manager;
 	private float $maxSize = 10.0;
+	private bool $dead = false;
 
 	final public function __construct(Location $location, ?CompoundTag $nbt = null) {
 		if(static::NETWORK_ID !== -1) {
@@ -553,8 +553,40 @@ abstract class BasePet extends Living {
 		parent::broadcastMovement($teleport);
 	}
 
+	protected function onDeath(): void {
+		parent::onDeath();
+		$this->dead = true;
+
+		$loader = $this->getLoader();
+		$loader->getDatabase()->unregisterPet($this);
+		$loader->removePet($this, false); // don't close since it will be closed automatically
+
+		$ev = new PetRespawnEvent($loader, $this->getPetData(), $loader->getBlockPetsConfig()->getRespawnTime());
+		$ev->call();
+
+		if($ev->isCancelled()) {
+			$this->flagForDespawn();
+			return;
+		}
+
+		$newPet = $loader->clonePet($ev->getPetData());
+		if($newPet === null) {
+			return;
+		}
+
+		$newPet->register();
+		$newPet->despawnFromAll();
+		$newPet->setDormant();
+
+		$loader->getScheduler()->scheduleDelayedTask(new PetRespawnTask($loader, $newPet), $ev->getDelay() * 20);
+	}
+
 	final public function onUpdate(int $currentTick): bool {
 		if(!parent::onUpdate($currentTick) && $this->isClosed()) {
+			return false;
+		}
+		if($this->dead) {
+			$this->close();
 			return false;
 		}
 		$petOwner = $this->getPetOwner();
@@ -614,11 +646,6 @@ abstract class BasePet extends Living {
 			return true;
 		}
 		return false;
-	}
-
-	public function kill($ignore = false): void {
-		$this->shouldIgnoreEvent = $ignore;
-		parent::kill();
 	}
 
 	/**
@@ -721,10 +748,6 @@ abstract class BasePet extends Living {
 		return $this->calculator;
 	}
 
-	public function shouldIgnoreEvent(): bool {
-		return $this->shouldIgnoreEvent;
-	}
-
 	public abstract function doRidingMovement(float $motionX, float $motionZ): void;
 
 	protected function checkUpdateRequirements(): bool {
@@ -732,7 +755,7 @@ abstract class BasePet extends Living {
 			return false;
 		}
 		if($this->isDormant()) {
-			$this->flagForDespawn();
+			$this->despawnFromAll();
 			return false;
 		}
 		if($this->getPetOwner()->isClosed()) {
@@ -740,50 +763,12 @@ abstract class BasePet extends Living {
 			$this->riding = false;
 			$this->flagForDespawn();
 			$this->setDormant();
-			$this->close();
 			return false;
 		}
 		if(!$this->getPetOwner()->isAlive()) {
 			return false;
 		}
 		return true;
-	}
-
-	public function onDispose(): void {
-		if(!$this->closed) {
-			$loader = $this->getLoader();
-			if(!$loader->getBlockPetsConfig()->storeToDatabase()) {
-				$loader->getDatabase()->unregisterPet($this);
-				$loader->removePet($this, false);
-			}
-			parent::onDispose();
-		}
-	}
-
-	public function onDeath(): void {
-		parent::onDeath();
-		$loader = $this->getLoader();
-		$delay = $loader->getBlockPetsConfig()->getRespawnTime();
-
-		$loader->getDatabase()->unregisterPet($this);
-		if($this->shouldIgnoreEvent()) {
-			return;
-		}
-
-		$ev = new PetRespawnEvent($loader, $this, $delay);
-		$ev->call();
-
-		if($ev->isCancelled()) {
-			return;
-		}
-
-		$newPet = $loader->clonePet($this);
-		$newPet->register();
-
-		$delay = $ev->getDelay() * 20;
-		$loader->getScheduler()->scheduleDelayedTask(new PetRespawnTask($loader, $newPet), $delay);
-		$newPet->despawnFromAll();
-		$newPet->setDormant();
 	}
 
 	/**
