@@ -48,6 +48,7 @@ class SpawnPetCommand extends BaseCommand {
 		}
 
 		if(!isset($args[1]) || empty(trim($args[1]))) {
+			/** @phpstan-ignore-next-line */
 			$args[1] = $player->getDisplayName();
 		}
 

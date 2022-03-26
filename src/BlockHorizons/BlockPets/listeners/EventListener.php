@@ -88,6 +88,7 @@ class EventListener implements Listener {
 						);
 						$pet->spawnToAll();
 						$pet->setDormant(false);
+						/** @phpstan-ignore-next-line */
 						if($hard_reset) {
 							$pet->close();
 						}
@@ -123,6 +124,7 @@ class EventListener implements Listener {
 		if($entity instanceof BasePet) {
 			$clearLaggPlugin = $this->getLoader()->getServer()->getPluginManager()->getPlugin("ClearLagg");
 			if($clearLaggPlugin !== null) {
+				/** @phpstan-ignore-next-line */
 				$clearLaggPlugin->exemptEntity($entity);
 			}
 		}
