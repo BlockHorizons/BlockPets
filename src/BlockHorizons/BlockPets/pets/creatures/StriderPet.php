@@ -6,13 +6,13 @@ namespace BlockHorizons\BlockPets\pets\creatures;
 use BlockHorizons\BlockPets\pets\WalkingPet;
 use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 
-class CowPet extends WalkingPet {
+class StriderPet extends WalkingPet {
 
-	const NETWORK_NAME = "COW_PET";
-	const NETWORK_ORIG_ID = EntityIds::COW;
+	const NETWORK_NAME = "STRIDER_PET";
+	const NETWORK_ORIG_ID = EntityIds::STRIDER;
 
-	protected string $name = "Cow Pet";
+	protected string $name = "Strider Pet";
 
-	protected float $height = 1.4;
 	protected float $width = 0.9;
+	protected float $height = 1.7;
 }

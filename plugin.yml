@@ -1,223 +1,221 @@
 ---
 name: BlockPets
 main: BlockHorizons\BlockPets\Loader
-version: 1.1.3
-api: 3.19.0
+version: 2.0.0
+api: 4.0.0
 author: BlockHorizons
-mcpe-protocol: 448
+# mcpe-protocol: 448
 description: A pets plugin for PocketMine-MP
 
 permissions:
     blockpets:
         default: false
         description: "Allows access to all BlockPets features."
-        children:
-            blockpets.bypass-limit:
-                default: op
-                description: "Allows bypassing the pet limit set in the config.yml."
-            blockpets.bypass-size-limit:
-                default: op
-                description: "Allows bypassing the maximum size of pets."
-            blockpets.command:
-                default: false
-                description: "Allows access to all BlockPets command features."
-                children:
-                    blockpets.command.spawnpet:
-                        default: false
-                        description: "Allows access to use the spawnpet command."
-                        children:
-                            blockpets.command.spawnpet.use:
-                                default: op
-                                description: "Allows access to use the spawnpet command for yourself."
-                            blockpets.command.spawnpet.others:
-                                default: op
-                                description: "Allows access to use the spawnpet command for other players."
-                    blockpets.command.changepetname:
-                        default: false
-                        description: "Allows access to use the changepetname command."
-                        children:
-                            blockpets.command.changepetname.use:
-                                default: op
-                                description: "Allows access to use the changepetname command for yourself."
-                            blockpets.command.changepetname.others:
-                                default: op
-                                description: "Allows access to use the changepetname command for others."
-                    blockpets.command.removepet:
-                        default: op
-                        description: "Allows access to use the removepet command."
-                    blockpets.command.leveluppet:
-                        default: op
-                        description: "Allows access to use the leveluppet command."
-                    blockpets.command.addpetpoints:
-                        default: op
-                        description: "Allows access to use the addpetpoints command."
-                    blockpets.command.healpet:
-                        default: op
-                        description: "Allows access to use the healpet command."
-                    blockpets.command.clearpet:
-                        default: true
-                        description: "Allows access to use the clearpet command."
-                    blockpets.command.togglepet:
-                        default: true
-                        description: "Allows access to use the togglepets command."
-                    blockpets.command.pet:
-                        default: op
-                        description: "Allows access to use the pets command."
-                    blockpets.command.listpets:
-                        default: op
-                        description: "Allows access to use the listpets command."
-                    blockpets.command.petstop:
-                        default: op
-                        description: "Allows access to use the petstop command."
-            blockpets.pet:
-                default: false
-                description: "Allows access to all BlockPets pets."
-                children:
-                    blockpets.pet.arrow:
-                        default: op
-                        description: "Allows access to use the arrow pet."
-                    blockpets.pet.bat:
-                        default: op
-                        description: "Allows access to use the bat pet."
-                    blockpets.pet.blaze:
-                        default: op
-                        description: "Allows access to use the blaze pet."
-                    blockpets.pet.cavespider:
-                        default: op
-                        description: "Allows access to use the cave spider pet."
-                    blockpets.pet.chicken:
-                        default: op
-                        description: "Allows access to use the chicken pet."
-                    blockpets.pet.cow:
-                        default: op
-                        description: "Allows access to use the cow pet."
-                    blockpets.pet.creeper:
-                        default: op
-                        description: "Allows access to use the creeper pet."
-                    blockpets.pet.donkey:
-                        default: op
-                        description: "Allows access to use the donkey pet."
-                    blockpets.pet.elderguardian:
-                        default: op
-                        description: "Allows access to use the elder guardian pet."
-                    blockpets.pet.endercrystal:
-                        default: op
-                        description: "Allows access to use the ender crystal pet."
-                    blockpets.pet.enderdragon:
-                        default: op
-                        description: "Allows access to use the ender dragon pet."
-                    blockpets.pet.enderman:
-                        default: op
-                        description: "Allows access to use the enderman pet."
-                    blockpets.pet.endermite:
-                        default: op
-                        description: "Allows access to use the endermite pet."
-                    blockpets.pet.evocationfangs:
-                        default: op
-                        description: "Allows access to use the evocation fangs pet."
-                    blockpets.pet.evoker:
-                        default: op
-                        description: "Allows access to use the evoker pet."
-                    blockpets.pet.ghast:
-                        default: op
-                        description: "Allows access to use the ghast pet."
-                    blockpets.pet.guardian:
-                        default: op
-                        description: "Allows access to use the guardian pet."
-                    blockpets.pet.horse:
-                        default: op
-                        description: "Allows access to use the horse pet."
-                    blockpets.pet.husk:
-                        default: op
-                        description: "Allows access to use the husk pet."
-                    blockpets.pet.irongolem:
-                        default: op
-                        description: "Allows access to use the iron golem pet."
-                    blockpets.pet.llama:
-                        default: op
-                        description: "Allows access to use the llama pet."
-                    blockpets.pet.magmacube:
-                        default: op
-                        description: "Allows access to use the magma cube pet."
-                    blockpets.pet.mooshroom:
-                        default: op
-                        description: "Allows access to use the mooshroom pet."
-                    blockpets.pet.mule:
-                        default: op
-                        description: "Allows access to use the mule pet."
-                    blockpets.pet.ocelot:
-                        default: op
-                        description: "Allows access to use the ocelot pet."
-                    blockpets.pet.pig:
-                        default: op
-                        description: "Allows access to use the pig pet."
-                    blockpets.pet.polarbear:
-                        default: op
-                        description: "Allows access to use the polar bear pet."
-                    blockpets.pet.rabbit:
-                        default: op
-                        description: "Allows access to use the rabbit pet."
-                    blockpets.pet.sheep:
-                        default: op
-                        description: "Allows access to use the sheep pet."
-                    blockpets.pet.silverfish:
-                        default: op
-                        description: "Allows access to use the silverfish pet."
-                    blockpets.pet.skeleton:
-                        default: op
-                        description: "Allows access to use the skeleton pet."
-                    blockpets.pet.skeletonhorse:
-                        default: op
-                        description: "Allows access to use the skeleton horse pet."
-                    blockpets.pet.slime:
-                        default: op
-                        description: "Allows access to use the slime pet."
-                    blockpets.pet.snowgolem:
-                        default: op
-                        description: "Allows access to use the snow golem pet."
-                    blockpets.pet.spider:
-                        default: op
-                        description: "Allows access to use the spider pet."
-                    blockpets.pet.squid:
-                        default: op
-                        description: "Allows access to use the squid pet."
-                    blockpets.pet.stray:
-                        default: op
-                        description: "Allows access to use the stray pet."
-                    blockpets.pet.vex:
-                        default: op
-                        description: "Allows access to use the vex pet."
-                    blockpets.pet.villager:
-                        default: op
-                        description: "Allows access to use the village pet."
-                    blockpets.pet.vindicator:
-                        default: op
-                        description: "Allows access to use the vindicator pet."
-                    blockpets.pet.witch:
-                        default: op
-                        description: "Allows access to use the witch pet."
-                    blockpets.pet.wither:
-                        default: op
-                        description: "Allows access to use the wither pet."
-                    blockpets.pet.witherskeleton:
-                        default: op
-                        description: "Allows access to use the wither skeleton pet."
-                    blockpets.pet.witherskull:
-                        default: op
-                        description: "Allows access to use the wither skull pet."
-                    blockpets.pet.wolf:
-                        default: op
-                        description: "Allows access to use the wolf pet."
-                    blockpets.pet.zombie:
-                        default: op
-                        description: "Allows access to use the zombie pet."
-                    blockpets.pet.zombiehorse:
-                        default: op
-                        description: "Allows access to use the zombie horse pet."
-                    blockpets.pet.zombiepigman:
-                        default: op
-                        description: "Allows access to use the zombie pigman pet."
-                    blockpets.pet.zombievillager:
-                        default: op
-                        description: "Allows access to use the zombie villager pet."
+    blockpets.bypass-limit:
+        default: op
+        description: "Allows bypassing the pet limit set in the config.yml."
+    blockpets.bypass-size-limit:
+        default: op
+        description: "Allows bypassing the maximum size of pets."
+    blockpets.command:
+        default: false
+        description: "Allows access to all BlockPets command features."
+    blockpets.command.spawnpet:
+        default: false
+        description: "Allows access to use the spawnpet command."
+    blockpets.command.spawnpet.use:
+        default: op
+        description: "Allows access to use the spawnpet command for yourself."
+    blockpets.command.spawnpet.others:
+        default: op
+        description: "Allows access to use the spawnpet command for other players."
+    blockpets.command.changepetname:
+        default: false
+        description: "Allows access to use the changepetname command."
+    blockpets.command.changepetname.use:
+        default: op
+        description: "Allows access to use the changepetname command for yourself."
+    blockpets.command.changepetname.others:
+        default: op
+        description: "Allows access to use the changepetname command for others."
+    blockpets.command.removepet:
+        default: op
+        description: "Allows access to use the removepet command."
+    blockpets.command.leveluppet:
+        default: op
+        description: "Allows access to use the leveluppet command."
+    blockpets.command.addpetpoints:
+        default: op
+        description: "Allows access to use the addpetpoints command."
+    blockpets.command.healpet:
+        default: op
+        description: "Allows access to use the healpet command."
+    blockpets.command.clearpet:
+        default: true
+        description: "Allows access to use the clearpet command."
+    blockpets.command.togglepet:
+        default: true
+        description: "Allows access to use the togglepets command."
+    blockpets.command.pet:
+        default: op
+        description: "Allows access to use the pets command."
+    blockpets.command.listpets:
+        default: op
+        description: "Allows access to use the listpets command."
+    blockpets.command.petstop:
+        default: op
+        description: "Allows access to use the petstop command."
+    blockpets.pet:
+        default: false
+        description: "Allows access to all BlockPets pets."
+    blockpets.pet.arrow:
+        default: op
+        description: "Allows access to use the arrow pet."
+    blockpets.pet.bat:
+        default: op
+        description: "Allows access to use the bat pet."
+    blockpets.pet.blaze:
+        default: op
+        description: "Allows access to use the blaze pet."
+    blockpets.pet.cavespider:
+        default: op
+        description: "Allows access to use the cave spider pet."
+    blockpets.pet.chicken:
+        default: op
+        description: "Allows access to use the chicken pet."
+    blockpets.pet.cow:
+        default: op
+        description: "Allows access to use the cow pet."
+    blockpets.pet.creeper:
+        default: op
+        description: "Allows access to use the creeper pet."
+    blockpets.pet.donkey:
+        default: op
+        description: "Allows access to use the donkey pet."
+    blockpets.pet.elderguardian:
+        default: op
+        description: "Allows access to use the elder guardian pet."
+    blockpets.pet.endercrystal:
+        default: op
+        description: "Allows access to use the ender crystal pet."
+    blockpets.pet.enderdragon:
+        default: op
+        description: "Allows access to use the ender dragon pet."
+    blockpets.pet.enderman:
+        default: op
+        description: "Allows access to use the enderman pet."
+    blockpets.pet.endermite:
+        default: op
+        description: "Allows access to use the endermite pet."
+    blockpets.pet.evocationfangs:
+        default: op
+        description: "Allows access to use the evocation fangs pet."
+    blockpets.pet.evoker:
+        default: op
+        description: "Allows access to use the evoker pet."
+    blockpets.pet.ghast:
+        default: op
+        description: "Allows access to use the ghast pet."
+    blockpets.pet.guardian:
+        default: op
+        description: "Allows access to use the guardian pet."
+    blockpets.pet.horse:
+        default: op
+        description: "Allows access to use the horse pet."
+    blockpets.pet.husk:
+        default: op
+        description: "Allows access to use the husk pet."
+    blockpets.pet.irongolem:
+        default: op
+        description: "Allows access to use the iron golem pet."
+    blockpets.pet.llama:
+        default: op
+        description: "Allows access to use the llama pet."
+    blockpets.pet.magmacube:
+        default: op
+        description: "Allows access to use the magma cube pet."
+    blockpets.pet.mooshroom:
+        default: op
+        description: "Allows access to use the mooshroom pet."
+    blockpets.pet.mule:
+        default: op
+        description: "Allows access to use the mule pet."
+    blockpets.pet.ocelot:
+        default: op
+        description: "Allows access to use the ocelot pet."
+    blockpets.pet.pig:
+        default: op
+        description: "Allows access to use the pig pet."
+    blockpets.pet.polarbear:
+        default: op
+        description: "Allows access to use the polar bear pet."
+    blockpets.pet.rabbit:
+        default: op
+        description: "Allows access to use the rabbit pet."
+    blockpets.pet.sheep:
+        default: op
+        description: "Allows access to use the sheep pet."
+    blockpets.pet.silverfish:
+        default: op
+        description: "Allows access to use the silverfish pet."
+    blockpets.pet.skeleton:
+        default: op
+        description: "Allows access to use the skeleton pet."
+    blockpets.pet.skeletonhorse:
+        default: op
+        description: "Allows access to use the skeleton horse pet."
+    blockpets.pet.slime:
+        default: op
+        description: "Allows access to use the slime pet."
+    blockpets.pet.snowgolem:
+        default: op
+        description: "Allows access to use the snow golem pet."
+    blockpets.pet.spider:
+        default: op
+        description: "Allows access to use the spider pet."
+    blockpets.pet.squid:
+        default: op
+        description: "Allows access to use the squid pet."
+    blockpets.pet.stray:
+        default: op
+        description: "Allows access to use the stray pet."
+    blockpets.pet.strider:
+        default: op
+        description: "Allows access to use the strider pet."
+    blockpets.pet.vex:
+        default: op
+        description: "Allows access to use the vex pet."
+    blockpets.pet.villager:
+        default: op
+        description: "Allows access to use the village pet."
+    blockpets.pet.vindicator:
+        default: op
+        description: "Allows access to use the vindicator pet."
+    blockpets.pet.witch:
+        default: op
+        description: "Allows access to use the witch pet."
+    blockpets.pet.wither:
+        default: op
+        description: "Allows access to use the wither pet."
+    blockpets.pet.witherskeleton:
+        default: op
+        description: "Allows access to use the wither skeleton pet."
+    blockpets.pet.witherskull:
+        default: op
+        description: "Allows access to use the wither skull pet."
+    blockpets.pet.wolf:
+        default: op
+        description: "Allows access to use the wolf pet."
+    blockpets.pet.zombie:
+        default: op
+        description: "Allows access to use the zombie pet."
+    blockpets.pet.zombiehorse:
+        default: op
+        description: "Allows access to use the zombie horse pet."
+    blockpets.pet.zombiepigman:
+        default: op
+        description: "Allows access to use the zombie pigman pet."
+    blockpets.pet.zombievillager:
+        default: op
+        description: "Allows access to use the zombie villager pet."
 ...

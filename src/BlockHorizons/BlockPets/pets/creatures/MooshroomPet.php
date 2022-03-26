@@ -1,18 +1,18 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets\creatures;
 
 use BlockHorizons\BlockPets\pets\WalkingPet;
+use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 
 class MooshroomPet extends WalkingPet {
 
 	const NETWORK_NAME = "MOOSHROOM_PET";
-	const NETWORK_ORIG_ID = self::MOOSHROOM;
+	const NETWORK_ORIG_ID = EntityIds::MOOSHROOM;
 
-	public $height = 1.4;
-	public $width = 0.9;
+	protected float $height = 1.4;
+	protected float $width = 0.9;
 
-	public $name = "Mooshroom Pet";
+	protected string $name = "Mooshroom Pet";
 }

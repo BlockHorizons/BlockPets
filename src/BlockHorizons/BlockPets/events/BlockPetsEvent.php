@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\events;
@@ -9,18 +8,15 @@ use pocketmine\event\plugin\PluginEvent;
 
 abstract class BlockPetsEvent extends PluginEvent {
 
-	/** @var BasePet */
-	private $loader;
-
-	public function __construct(Loader $loader) {
+	public function __construct(private Loader $loader) {
 		parent::__construct($loader);
-		$this->loader = $loader;
 	}
 
-	/**
-	 * @return Loader
-	 */
 	public function getLoader(): Loader {
+		return $this->loader;
+	}
+
+	public function getPlugin(): Loader {
 		return $this->loader;
 	}
 }

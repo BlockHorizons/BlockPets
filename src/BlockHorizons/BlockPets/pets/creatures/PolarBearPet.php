@@ -1,18 +1,18 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets\creatures;
 
 use BlockHorizons\BlockPets\pets\WalkingPet;
+use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 
 class PolarBearPet extends WalkingPet {
 
 	const NETWORK_NAME = "POLAR_BEAR_PET";
-	const NETWORK_ORIG_ID = self::POLAR_BEAR;
+	const NETWORK_ORIG_ID = EntityIds::POLAR_BEAR;
 
-	public $height = 1.4;
-	public $width = 1.3;
+	protected float $height = 1.4;
+	protected float $width = 1.3;
 
-	public $name = "Polar Bear Pet";
+	protected string $name = "Polar Bear Pet";
 }

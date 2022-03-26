@@ -1,48 +1,43 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets\inventory;
 
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\BasePet;
-
-use muqsit\invmenu\inventory\InvMenuInventory;
 use muqsit\invmenu\InvMenu;
 use muqsit\invmenu\InvMenuHandler;
+use pocketmine\inventory\Inventory;
 use pocketmine\item\Item;
-use pocketmine\nbt\BigEndianNBTStream;
+use pocketmine\nbt\BigEndianNbtSerializer;
+use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
-use pocketmine\Player;
+use pocketmine\nbt\TreeRoot;
+use pocketmine\player\Player;
 
 class PetInventoryManager {
 
-	/** @var BigEndianNBTStream */
-	private static $nbtParser;
+	private static BigEndianNbtSerializer $nbtSerializer;
 
 	public static function init(Loader $plugin): void {
-		self::$nbtParser = new BigEndianNBTStream();
+		self::$nbtSerializer = new BigEndianNbtSerializer();
 		if(!InvMenuHandler::isRegistered()) {
 			InvMenuHandler::register($plugin);
 		}
 	}
 
-	/** @var InvMenu */
-	private $menu;
-	/** @var BasePet */
-	private $pet;
+	private InvMenu $menu;
 
-	public function __construct(BasePet $pet) {
-		$this->pet = $pet;
+	public function __construct(private BasePet $pet) {
 		$this->menu = InvMenu::create(InvMenu::TYPE_CHEST);
 		$this->menu->setInventoryCloseListener(function(): void {
-            $pet = $this->getPet();
-            $loader = $pet->getLoader();
-            if($loader->getBlockPetsConfig()->storeToDatabase()) {
-                $loader->getDatabase()->updateInventory($pet);
-            }
-        });
+			$pet = $this->getPet();
+			$loader = $pet->getLoader();
+			if($loader->getBlockPetsConfig()->storeToDatabase()) {
+				$loader->getDatabase()->updateInventory($pet);
+			}
+		});
 		$this->setName($pet->getPetName());
 	}
 
@@ -54,7 +49,7 @@ class PetInventoryManager {
 		return $this->pet;
 	}
 
-	public function getInventory(): InvMenuInventory {
+	public function getInventory(): Inventory {
 		return $this->menu->getInventory();
 	}
 
@@ -64,7 +59,9 @@ class PetInventoryManager {
 
 	public function load(string $compressed): void {
 		$contents = [];
-		foreach(self::$nbtParser->readCompressed($compressed)->getListTag("Inventory") as $nbt) {
+
+		/** @var CompoundTag $nbt */
+		foreach(self::$nbtSerializer->read($compressed)->mustGetCompoundTag()->getListTag("Inventory") as $nbt) {
 			$contents[$nbt->getByte("Slot")] = Item::nbtDeserialize($nbt);
 		}
 
@@ -72,13 +69,14 @@ class PetInventoryManager {
 	}
 
 	public function compressContents(): string {
-		$list = new ListTag("Inventory");
+		$contents = [];
+
 		foreach($this->getInventory()->getContents() as $slot => $item) {
-			$list->push($item->nbtSerialize($slot));
+			$contents[] = $item->nbtSerialize($slot);
 		}
 
-		$tag = new CompoundTag();
-		$tag->setTag($list);
-		return self::$nbtParser->writeCompressed($tag);
+		$tag = CompoundTag::create()->setTag("Inventory", new ListTag($contents, NBT::TAG_Compound));
+
+		return self::$nbtSerializer->write(new TreeRoot($tag));
 	}
 }

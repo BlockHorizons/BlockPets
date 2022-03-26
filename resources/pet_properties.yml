@@ -168,6 +168,13 @@ Stray:
   Can-Sit-On-Owner: true
   Speed: 1.2
   Max-Size: 10
+Strider:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: false
+  Can-Sit-On-Owner: true
+  Speed: 1.2
+  Max-Size: 4
 Villager:
   Can-Attack: true
   Can-Be-Ridden: true

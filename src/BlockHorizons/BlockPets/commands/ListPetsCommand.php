@@ -1,17 +1,16 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
 class ListPetsCommand extends BaseCommand {
 
-	const ENTRIES_PER_PAGE = 10;//No. of pets to list per page.
+	const ENTRIES_PER_PAGE = 10; // No. of pets to list per page.
 
 	public function __construct(Loader $loader) {
 		parent::__construct($loader, "listpets", "Lists all pets that you own", "/listpets [EntityName=ALL] [page=1]", ["lpets", "petslist"]);

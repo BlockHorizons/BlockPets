@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\configurable;
@@ -8,11 +7,9 @@ use BlockHorizons\BlockPets\Loader;
 
 class PetMessages {
 
-	private $loader;
-	private $messages = [];
+	private array $messages = [];
 
-	public function __construct(Loader $loader) {
-		$this->loader = $loader;
+	public function __construct(private Loader $loader) {
 	}
 
 	public function collectMessages(): void {
@@ -20,9 +17,6 @@ class PetMessages {
 		$this->messages = $data;
 	}
 
-	/**
-	 * @return Loader
-	 */
 	public function getLoader(): Loader {
 		return $this->loader;
 	}

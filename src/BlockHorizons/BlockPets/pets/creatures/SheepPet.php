@@ -1,31 +1,34 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets\creatures;
 
 use BlockHorizons\BlockPets\pets\WalkingPet;
+use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
+use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataProperties;
 
 class SheepPet extends WalkingPet {
 
 	const NETWORK_NAME = "SHEEP_PET";
-	const NETWORK_ORIG_ID = self::SHEEP;
+	const NETWORK_ORIG_ID = EntityIds::SHEEP;
 
-	public $height = 1.3;
-	public $width = 0.9;
+	protected float $height = 1.3;
+	protected float $width = 0.9;
 
-	public $name = "Sheep Pet";
+	protected string $name = "Sheep Pet";
+	protected int $color;
 
 	public function generateCustomPetData(): void {
 		$this->setColor(random_int(0, 15));
 	}
 
 	public function setColor(int $color): void {
-		$this->propertyManager->setByte(self::DATA_COLOUR, $color % 16);
+		$this->color = $color % 16;
+		$this->getNetworkProperties()->setByte(EntityMetadataProperties::COLOR, $color % 16);
 	}
 
 	public function getColor(): int {
-		return $this->propertyManager->getByte(self::DATA_COLOR);
+		return $this->color;
 	}
 
 	public function doPetUpdates(int $currentTick): bool {

@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets;
@@ -8,11 +7,7 @@ use pocketmine\utils\TextFormat;
 
 class Calculator {
 
-	/** @var BasePet */
-	private $pet;
-
-	public function __construct(BasePet $pet) {
-		$this->pet = $pet;
+	public function __construct(private BasePet $pet) {
 	}
 
 	/**
@@ -49,8 +44,6 @@ class Calculator {
 
 	/**
 	 * Recalculates size that the pet should have according to its configuration scalings.
-	 *
-	 * @return bool
 	 */
 	public function recalculateSize(): bool {
 		$pet = $this->getPet();

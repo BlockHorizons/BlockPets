@@ -1,12 +1,11 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\utils\TextFormat as TF;
 
 class SpawnPetCommand extends BaseCommand {
@@ -38,7 +37,7 @@ class SpawnPetCommand extends BaseCommand {
 		$loader = $this->getLoader();
 
 		if(isset($args[4])) {
-			if(($player = $loader->getServer()->getPlayer($args[4])) === null) {
+			if(($player = $loader->getServer()->getPlayerByPrefix($args[4])) === null) {
 				$this->sendWarning($sender, $loader->translate("commands.errors.player.not-found"));
 				return true;
 			}
@@ -74,7 +73,7 @@ class SpawnPetCommand extends BaseCommand {
 			return true;
 		}
 		if(count($loader->getPetsFrom($player)) >= $loader->getBlockPetsConfig()->getMaxPets() && !$player->hasPermission("blockpets.bypass-limit")) {
-			$sender->sendMessage($sender, $loader->translate("commands.spawnpet.exceeded-limit", [
+			$sender->sendMessage($loader->translate("commands.spawnpet.exceeded-limit", [
 				$player === $sender ? "You have " : "Your target has "
 			]));
 			return true;

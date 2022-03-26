@@ -1,25 +1,29 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets;
 
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
+use pocketmine\data\bedrock\EntityLegacyIds;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\Player;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\player\Player;
+use function abs;
+use function atan2;
+use function rad2deg;
+use function sqrt;
 
 abstract class HoveringPet extends IrasciblePet {
 
 	/** @var float */
 	public $gravity = 0;
-	/** @var int */
-	protected $flyHeight = 0;
+	protected float $flyHeight = 0;
 
-	protected function initEntity(): void {
-		parent::initEntity();
-		$this->follow_range_sq = 8 + $this->getScale();
+	protected function initEntity(CompoundTag $tag): void {
+		parent::initEntity($tag);
+		$this->followRangeSq = 8 + $this->getScale();
 	}
 
 	public function doPetUpdates(int $currentTick): bool {
@@ -42,14 +46,17 @@ abstract class HoveringPet extends IrasciblePet {
 	}
 
 	public function follow(Entity $target, float $xOffset = 0.0, float $yOffset = 0.0, float $zOffset = 0.0): void {
-		$x = $target->x + $xOffset - $this->x;
-		$y = $target->y + $yOffset - $this->y;
-		$z = $target->z + $zOffset - $this->z;
+		$targetLoc = $target->getLocation();
+		$currLoc = $this->getLocation();
+
+		$x = $targetLoc->getX() + $xOffset - $currLoc->getX();
+		$y = $targetLoc->getY() + $yOffset - $currLoc->getY();
+		$z = $targetLoc->getZ() + $zOffset - $currLoc->getZ();
 
 		$xz_sq = $x * $x + $z * $z;
 		$xz_modulus = sqrt($xz_sq);
 
-		if($xz_sq < $this->follow_range_sq) {
+		if($xz_sq < $this->followRangeSq) {
 			$this->motion->x = 0;
 			$this->motion->z = 0;
 		} else {
@@ -62,11 +69,11 @@ abstract class HoveringPet extends IrasciblePet {
 			$this->motion->y = $this->getSpeed() * 0.25 * $y;
 		}
 
-		$this->yaw = rad2deg(atan2(-$x, $z));
-		if($this->getNetworkId() === self::ENDER_DRAGON) {
-			$this->yaw += 180;
+		$this->location->yaw = rad2deg(atan2(-$x, $z));
+		if($this->getNetworkId() === EntityLegacyIds::ENDER_DRAGON) {
+			$this->location->yaw += 180;
 		}
-		$this->pitch = rad2deg(-atan2($y, $xz_modulus));
+		$this->location->pitch = rad2deg(-atan2($y, $xz_modulus));
 
 		$this->move($this->motion->x, $this->motion->y, $this->motion->z);
 	}
@@ -79,7 +86,7 @@ abstract class HoveringPet extends IrasciblePet {
 		$target = $this->getTarget();
 		$this->follow($target, 0.0, 0.5, 0.0);
 
-		if($this->distance($target) <= $this->scale + 1.1 && $this->waitingTime <= 0 && $target->isAlive()) {
+		if($this->location->distance($target->location) <= $this->scale + 1.1 && $this->waitingTime <= 0 && $target->isAlive()) {
 			$event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage());
 			$target->attack($event);
 
@@ -93,7 +100,7 @@ abstract class HoveringPet extends IrasciblePet {
 			}
 
 			$this->waitingTime = 12;
-		} elseif($this->distance($this->getPetOwner()) > 25 || $this->distance($this->getTarget()) > 15) {
+		} elseif($this->location->distance($this->getPetOwner()->location) > 25 || $this->location->distance($this->getTarget()->location) > 15) {
 			$this->calmDown();
 		}
 
@@ -103,8 +110,8 @@ abstract class HoveringPet extends IrasciblePet {
 	public function doRidingMovement(float $motionX, float $motionZ): void {
 		$rider = $this->getPetOwner();
 
-		$this->pitch = $rider->pitch;
-		$this->yaw = $this instanceof EnderDragonPet ? $rider->yaw + 180 : $rider->yaw;
+		$this->location->pitch = $rider->location->pitch;
+		$this->location->yaw = $this instanceof EnderDragonPet ? $rider->location->yaw + 180 : $rider->location->yaw;
 
 		$speed_factor = 2 * $this->getSpeed();
 		$rider_directionvec = $rider->getDirectionVector();
@@ -149,7 +156,7 @@ abstract class HoveringPet extends IrasciblePet {
 		if(((float) $y) !== 0.0) {
 			if($y < 0) {
 				$this->motion->y = $this->getSpeed() * 0.3 * $y;
-			} elseif($this->y - $this->getLevel()->getHighestBlockAt((int) $this->x, (int) $this->z) < $this->flyHeight) {
+			} elseif($this->location->y - $this->getLevel()->getHighestBlockAt((int) $this->x, (int) $this->z) < $this->flyHeight) {
 				$this->motion->y = $this->getSpeed() * 0.3 * $y;
 			}
 		}
@@ -161,19 +168,13 @@ abstract class HoveringPet extends IrasciblePet {
 		$this->updateMovement();
 	}
 
-	/**
-	 * @param EntityDamageEvent $source
-	 */
 	public function attack(EntityDamageEvent $source): void {
 		if($source->getCause() === $source::CAUSE_FALL) {
-			$source->setCancelled();
+			$source->cancel();
 		}
 		parent::attack($source);
 	}
 
-	/**
-	 * @param array $properties
-	 */
 	public function useProperties(array $properties): void {
 		parent::useProperties($properties);
 		$this->flyHeight = (float) $properties["Flying-Height"];

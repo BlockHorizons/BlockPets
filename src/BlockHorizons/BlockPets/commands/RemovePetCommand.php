@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\commands;
@@ -22,7 +21,7 @@ class RemovePetCommand extends BaseCommand {
 
 		$loader = $this->getLoader();
 		if(isset($args[1])) {
-			if(($player = $loader->getServer()->getPlayer($args[1])) === null) {
+			if(($player = $loader->getServer()->getPlayerByPrefix($args[1])) === null) {
 				$this->sendWarning($sender, $loader->translate("commands.errors.player.not-found"));
 				return true;
 			}

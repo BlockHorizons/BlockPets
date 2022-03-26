@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\configurable;
@@ -9,12 +8,9 @@ use pocketmine\utils\TextFormat;
 
 class LanguageConfig {
 
-	private $loader;
-	private $messages = [];
+	private array $messages = [];
 
-	public function __construct(Loader $loader) {
-		$this->loader = $loader;
-
+	public function __construct(private Loader $loader) {
 		$this->collectMessages();
 	}
 
@@ -36,7 +32,6 @@ class LanguageConfig {
 
 		$iterator = new \RecursiveTreeIterator(new \RecursiveArrayIterator($language));
 		$keys = [];
-		$current_index = NAN;
 
 		foreach($iterator as $value) {
 			$prefix = str_replace("\\", "|", $iterator->getPrefix());
@@ -59,18 +54,10 @@ class LanguageConfig {
 		}
 	}
 
-	/**
-	 * @return Loader
-	 */
 	public function getLoader(): Loader {
 		return $this->loader;
 	}
 
-	/**
-	 * @param string $key
-	 *
-	 * @return string
-	 */
 	public function get(string $key): string {
 		return $this->messages[$key] ?? $key;
 	}

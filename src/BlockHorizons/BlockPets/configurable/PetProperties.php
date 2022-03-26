@@ -1,20 +1,15 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\configurable;
-
 
 use BlockHorizons\BlockPets\Loader;
 
 class PetProperties {
 
-	private $loader;
-	private $properties;
+	private array $properties;
 
-	public function __construct(Loader $loader) {
-		$this->loader = $loader;
-
+	public function __construct(private Loader $loader) {
 		$loader->saveResource("pet_properties.yml");
 		$this->collectProperties();
 	}
@@ -24,18 +19,10 @@ class PetProperties {
 		$this->properties = $data;
 	}
 
-	/**
-	 * @return Loader
-	 */
 	public function getLoader(): Loader {
 		return $this->loader;
 	}
 
-	/**
-	 * @param string $entityType
-	 *
-	 * @return array
-	 */
 	public function getPropertiesFor(string $entityType): array {
 		if(!$this->propertiesExistFor($entityType)) {
 			return [];
@@ -43,11 +30,6 @@ class PetProperties {
 		return $this->properties[$entityType];
 	}
 
-	/**
-	 * @param string $entityType
-	 *
-	 * @return bool
-	 */
 	public function propertiesExistFor(string $entityType): bool {
 		if(isset($this->properties[$entityType])) {
 			return true;

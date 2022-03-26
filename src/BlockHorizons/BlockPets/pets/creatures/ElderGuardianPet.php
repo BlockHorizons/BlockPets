@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets\creatures;
@@ -8,21 +7,23 @@ use BlockHorizons\BlockPets\pets\SwimmingPet;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\network\mcpe\protocol\LevelEventPacket;
-use pocketmine\Player;
+use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
+use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataFlags;
+use pocketmine\player\Player;
 
 class ElderGuardianPet extends SwimmingPet {
 
 	const NETWORK_NAME = "ELDER_GUARDIAN_PET";
-	const NETWORK_ORIG_ID = self::ELDER_GUARDIAN;
+	const NETWORK_ORIG_ID = EntityIds::ELDER_GUARDIAN;
 
-	public $width = 1.9975;
-	public $height = 1.9975;
+	protected float $width = 1.9975;
+	protected float $height = 1.9975;
 
-	public $name = "Elder Guardian Pet";
+	public string $name = "Elder Guardian Pet";
 
 	public function generateCustomPetData(): void {
 		parent::generateCustomPetData();
-		$this->setGenericFlag(self::DATA_FLAG_ELDER, true);
+		$this->getNetworkProperties()->setGenericFlag(EntityMetadataFlags::ELDER, true);
 	}
 
 	public function attack(EntityDamageEvent $source): void {
@@ -32,7 +33,7 @@ class ElderGuardianPet extends SwimmingPet {
 				$pk = new LevelEventPacket();
 				$pk->evid = 2006;
 				$pk->data = 0;
-				$attacker->dataPacket($pk);
+				$attacker->getNetworkSession()->sendDataPacket($pk);
 			}
 		}
 		parent::attack($source);

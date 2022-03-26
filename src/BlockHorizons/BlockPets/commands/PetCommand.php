@@ -1,12 +1,11 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\commands;
 
 use BlockHorizons\BlockPets\Loader;
 use pocketmine\command\CommandSender;
-use pocketmine\command\ConsoleCommandSender;
+use pocketmine\console\ConsoleCommandSender;
 use pocketmine\utils\TextFormat;
 
 class PetCommand extends BaseCommand {
@@ -123,11 +122,6 @@ class PetCommand extends BaseCommand {
 					"{CURRENT_PAGE}" => $page,
 					"{TOTAL_PAGES}" => count($this->help_messages)
 				]) . TextFormat::EOL . implode(TextFormat::EOL, $this->help_messages[$page - 1]));
-				break;
-			case "reload":
-				$sender->sendMessage(TextFormat::GREEN . "Reloading...");
-				$this->getLoader()->onEnable();
-				$sender->sendMessage(TextFormat::GREEN . "Reload complete.");
 				break;
 			default:
 			case "info":

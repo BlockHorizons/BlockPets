@@ -1,23 +1,21 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets;
 
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\Player;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\player\Player;
 
 abstract class BouncingPet extends IrasciblePet {
 
-	/** @var int */
-	protected $jumpTicks = 0;
-	/** @var float */
-	protected $jumpHeight = 0.08;
+	protected int $jumpTicks = 0;
+	protected float $jumpHeight = 0.08;
 
-	protected function initEntity(): void {
-		parent::initEntity();
-		$this->follow_range_sq = 9 + $this->getScale();
+	protected function initEntity(CompoundTag $nbt): void {
+		parent::initEntity($nbt);
+		$this->followRangeSq = 9 + $this->getScale();
 		$this->jumpVelocity = $this->jumpHeight * 12 * $this->getScale();
 	}
 
@@ -62,7 +60,7 @@ abstract class BouncingPet extends IrasciblePet {
 		$target = $this->getTarget();
 		$this->follow($target);
 
-		if($this->distance($target) <= $this->scale + 1 && $this->waitingTime <= 0) {
+		if($this->location->distance($target->location) <= $this->scale + 1 && $this->waitingTime <= 0) {
 			$event = new EntityDamageByEntityEvent($this, $target, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $this->getAttackDamage());
 			$target->attack($event);
 
@@ -76,7 +74,7 @@ abstract class BouncingPet extends IrasciblePet {
 			}
 
 			$this->waitingTime = 12;
-		} elseif($this->distance($this->getPetOwner()) > 25 || $this->distance($this->getTarget()) > 15) {
+		} elseif($this->location->distance($this->getPetOwner()->location) > 25 || $this->location->distance($this->getTarget()->location) > 15) {
 			$this->calmDown();
 		}
 
@@ -91,8 +89,8 @@ abstract class BouncingPet extends IrasciblePet {
 	public function doRidingMovement(float $motionX, float $motionZ): void {
 		$rider = $this->getPetOwner();
 
-		$this->pitch = $rider->pitch;
-		$this->yaw = $rider->yaw;
+		$this->location->pitch = $rider->location->pitch;
+		$this->location->yaw = $rider->location->yaw;
 
 		$speed_factor = 2 * $this->getSpeed();
 		$direction_plane = $this->getDirectionPlane();
@@ -172,19 +170,13 @@ abstract class BouncingPet extends IrasciblePet {
 		$this->updateMovement();
 	}
 
-	/**
-	 * @param EntityDamageEvent $source
-	 */
 	public function attack(EntityDamageEvent $source): void {
 		if($source->getCause() === $source::CAUSE_FALL) {
-			$source->setCancelled();
+			$source->cancel();
 		}
 		parent::attack($source);
 	}
 
-	/**
-	 * @param array $properties
-	 */
 	public function useProperties(array $properties): void {
 		parent::useProperties($properties);
 		$this->jumpHeight = (float) $properties["Jumping-Height"];
