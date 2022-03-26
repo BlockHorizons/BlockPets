@@ -80,11 +80,6 @@ class TogglePetCommand extends BaseCommand {
 						));
 					}
 				} else {
-					if(empty($rows)) {
-						$this->sendWarning($sender, $loader->translate("commands.errors.player.no-pet"));
-						return;
-					}
-
 					["PetName" => $petName, "Visible" => $isVisible] = array_pop($rows);
 					$pet = $loader->getPetByName($petName, $player);
 					if($pet === null) {

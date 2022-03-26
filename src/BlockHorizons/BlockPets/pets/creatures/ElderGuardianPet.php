@@ -30,10 +30,7 @@ class ElderGuardianPet extends SwimmingPet {
 		if($source instanceof EntityDamageByEntityEvent) {
 			$attacker = $source->getDamager();
 			if($attacker instanceof Player && random_int(0, 1)) {
-				$pk = new LevelEventPacket();
-				$pk->evid = 2006;
-				$pk->data = 0;
-				$attacker->getNetworkSession()->sendDataPacket($pk);
+				$attacker->getNetworkSession()->sendDataPacket(LevelEventPacket::create(2006, 0, $attacker->getLocation()));
 			}
 		}
 		parent::attack($source);

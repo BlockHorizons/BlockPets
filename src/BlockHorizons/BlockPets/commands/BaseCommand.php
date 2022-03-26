@@ -31,7 +31,7 @@ abstract class BaseCommand extends Command implements PluginOwned {
 	}
 
 	public function sendPermissionMessage(CommandSender $sender): void {
-		$this->sendWarning($sender, $this->getLoader()->translate("commands." . $this->getName() . ".no-permission") ?? $this->getLoader()->translate("commands.no-permission"));
+		$this->sendWarning($sender, ($this->getLoader()->translate("commands." . $this->getName() . ".no-permission") !== "" ? $this->getLoader()->translate("commands." . $this->getName() . ".no-permission") : $this->getLoader()->translate("commands.no-permission")));
 	}
 
 	public function getLoader(): Loader {
