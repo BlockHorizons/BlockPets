@@ -26,7 +26,7 @@ class RidingListener implements Listener {
 			$loader = $this->getLoader();
 			$player = $event->getOrigin()->getPlayer();
 			if($loader->isRidingAPet($player)) {
-				if($packet->getMoveVecX() === 0 && $packet->getMoveVecZ() === 0) {
+				if(((int)$packet->getMoveVecX()) === 0 && ((int)$packet->getMoveVecZ()) === 0) {
 					return;
 				}
 				$pet = $loader->getRiddenPet($player);

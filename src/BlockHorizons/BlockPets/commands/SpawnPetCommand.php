@@ -59,7 +59,7 @@ class SpawnPetCommand extends BaseCommand {
 		}
 
 		if(isset($args[3])) {
-			if($args[3] === "false" || $args === "no") {
+			if($args[3] === "false" || $args[3] === "no") {
 				$args[3] = false;
 			} else {
 				$args[3] = true;
