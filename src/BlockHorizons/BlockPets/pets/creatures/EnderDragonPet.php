@@ -14,5 +14,5 @@ class EnderDragonPet extends HoveringPet {
 	protected string $name = "Ender Dragon Pet";
 
 	protected float $width = 2.5;
-	protected float $height = 1;
+	protected float $height = 3;
 }

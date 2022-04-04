@@ -64,7 +64,7 @@ abstract class BasePet extends Living {
 	protected float $width = 0.0;
 
 	/** @var float */
-	public $scale = 1.0;
+	protected $scale = 1.0;
 
 	protected string $name = "";
 	protected int $petLevel = 0;
@@ -130,7 +130,7 @@ abstract class BasePet extends Living {
 		$this->petLevel = $nbt->getInt("petLevel", 1);
 		$this->petLevelPoints = $nbt->getInt("petLevelPoints", 0);
 		$this->petName = $nbt->getString("petName");
-		$this->scale = $nbt->getFloat("scale", $this->getScale());
+		$this->scale = $nbt->getFloat("scale", 1.0);
 		$this->chested = (bool) $nbt->getByte("chested", 0);
 		$this->baby = (bool) $nbt->getByte("isBaby", 0);
 
@@ -152,7 +152,7 @@ abstract class BasePet extends Living {
 
 		$scale = $this->getScale();
 		if($this instanceof EnderDragonPet) {
-			$this->riderSeatPos = new Vector3(0, 2.65 + $scale, -1.7);
+			$this->riderSeatPos = new Vector3(-0.5, 3.35 + $scale, -1.7);
 		} elseif($this instanceof SmallCreature) {
 			$this->riderSeatPos = new Vector3(0, 0.78 + $scale * 0.9, -0.25);
 		} else {
