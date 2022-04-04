@@ -4,11 +4,11 @@ declare(strict_types = 1);
 namespace BlockHorizons\BlockPets\pets;
 
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
-use pocketmine\data\bedrock\EntityLegacyIds;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 use pocketmine\player\Player;
 use function abs;
 use function atan2;
@@ -70,10 +70,11 @@ abstract class HoveringPet extends IrasciblePet {
 		}
 
 		$this->location->yaw = rad2deg(atan2(-$x, $z));
-		if($this->getNetworkId() === EntityLegacyIds::ENDER_DRAGON) {
+		$this->location->pitch = rad2deg(-atan2($y, $xz_modulus));
+
+		if(static::getNetworkTypeId() === EntityIds::ENDER_DRAGON) {
 			$this->location->yaw += 180;
 		}
-		$this->location->pitch = rad2deg(-atan2($y, $xz_modulus));
 
 		$this->move($this->motion->x, $this->motion->y, $this->motion->z);
 	}

@@ -310,7 +310,7 @@ abstract class BasePet extends Living {
 		$player->getNetworkSession()->sendDataPacket(AddActorPacket::create(
 			$this->getId(),
 			$this->getId(),
-			static::NETWORK_ORIG_ID,
+			static::getNetworkTypeId(),
 			$this->location->asVector3(),
 			$this->getMotion(),
 			$this->location->pitch,
