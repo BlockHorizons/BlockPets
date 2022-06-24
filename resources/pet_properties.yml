@@ -1,5 +1,12 @@
 ---
 # Walking Pets
+Axolotl:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1.2
+  Max-Size: 10
 CaveSpider:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -50,6 +57,20 @@ Endermite:
   Speed: 1.4
   Max-Size: 10
 Evoker:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1.4
+  Max-Size: 10
+Fox:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1.8
+  Max-Size: 10
+Goat:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true
@@ -238,8 +259,23 @@ ZombieVillager:
   Can-Sit-On-Owner: true
   Speed: 1.2
   Max-Size: 10
+Warden:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1
+  Max-Size: 10
 
 # Flying Pets
+Allay:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1
+  Flying-Height: 5
+  Max-Size: 10
 Arrow:
   Can-Attack: true
   Can-Be-Ridden: true
@@ -249,6 +285,14 @@ Arrow:
   Flying-Height: 25
   Max-Size: 10
 Bat:
+  Can-Attack: true
+  Can-Be-Ridden: true
+  Can-Be-Chested: true
+  Can-Sit-On-Owner: true
+  Speed: 1
+  Flying-Height: 8
+  Max-Size: 10
+Bee:
   Can-Attack: true
   Can-Be-Ridden: true
   Can-Be-Chested: true

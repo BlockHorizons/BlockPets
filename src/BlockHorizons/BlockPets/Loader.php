@@ -23,8 +23,11 @@ use BlockHorizons\BlockPets\items\Saddle;
 use BlockHorizons\BlockPets\listeners\EventListener;
 use BlockHorizons\BlockPets\listeners\RidingListener;
 use BlockHorizons\BlockPets\pets\BasePet;
+use BlockHorizons\BlockPets\pets\creatures\AllayPet;
 use BlockHorizons\BlockPets\pets\creatures\ArrowPet;
+use BlockHorizons\BlockPets\pets\creatures\AxolotlPet;
 use BlockHorizons\BlockPets\pets\creatures\BatPet;
+use BlockHorizons\BlockPets\pets\creatures\BeePet;
 use BlockHorizons\BlockPets\pets\creatures\BlazePet;
 use BlockHorizons\BlockPets\pets\creatures\CaveSpiderPet;
 use BlockHorizons\BlockPets\pets\creatures\ChickenPet;
@@ -37,7 +40,9 @@ use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use BlockHorizons\BlockPets\pets\creatures\EndermanPet;
 use BlockHorizons\BlockPets\pets\creatures\EndermitePet;
 use BlockHorizons\BlockPets\pets\creatures\EvokerPet;
+use BlockHorizons\BlockPets\pets\creatures\FoxPet;
 use BlockHorizons\BlockPets\pets\creatures\GhastPet;
+use BlockHorizons\BlockPets\pets\creatures\GoatPet;
 use BlockHorizons\BlockPets\pets\creatures\GuardianPet;
 use BlockHorizons\BlockPets\pets\creatures\HorsePet;
 use BlockHorizons\BlockPets\pets\creatures\HuskPet;
@@ -63,6 +68,7 @@ use BlockHorizons\BlockPets\pets\creatures\StriderPet;
 use BlockHorizons\BlockPets\pets\creatures\VexPet;
 use BlockHorizons\BlockPets\pets\creatures\VillagerPet;
 use BlockHorizons\BlockPets\pets\creatures\VindicatorPet;
+use BlockHorizons\BlockPets\pets\creatures\WardenPet;
 use BlockHorizons\BlockPets\pets\creatures\WitchPet;
 use BlockHorizons\BlockPets\pets\creatures\WitherPet;
 use BlockHorizons\BlockPets\pets\creatures\WitherSkeletonPet;
@@ -94,8 +100,11 @@ class Loader extends PluginBase {
 
 	/** @var string[] */
 	const PETS = [
+		"Allay" 		 => AllayPet::class,
 		"Arrow"          => ArrowPet::class,
+		"Axolotl" 		 => AxolotlPet::class,
 		"Bat"            => BatPet::class,
+		"Bee"			 => BeePet::class,
 		"Blaze"          => BlazePet::class,
 		"CaveSpider"     => CaveSpiderPet::class,
 		"Chicken"        => ChickenPet::class,
@@ -108,7 +117,9 @@ class Loader extends PluginBase {
 		"Enderman"       => EndermanPet::class,
 		"Endermite"      => EndermitePet::class,
 		"Evoker"         => EvokerPet::class,
+		"Fox"			 => FoxPet::class,
 		"Ghast"          => GhastPet::class,
+		"Goat"			 => GoatPet::class,
 		"Guardian"       => GuardianPet::class,
 		"Horse"          => HorsePet::class,
 		"Husk"           => HuskPet::class,
@@ -134,6 +145,7 @@ class Loader extends PluginBase {
 		"Vex"            => VexPet::class,
 		"Villager"       => VillagerPet::class,
 		"Vindicator"     => VindicatorPet::class,
+		"Warden"		 => WardenPet::class,
 		"Witch"          => WitchPet::class,
 		"Wither"         => WitherPet::class,
 		"WitherSkeleton" => WitherSkeletonPet::class,
