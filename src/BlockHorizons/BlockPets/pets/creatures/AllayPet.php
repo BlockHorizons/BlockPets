@@ -11,7 +11,6 @@ class AllayPet extends HoveringPet implements SmallCreature {
 
 	const NETWORK_NAME = "ALLAY_PET";
 	const NETWORK_ORIG_ID = self::ALLAY;
-	const NETWORD_ID = self::ALLAY;
 
 	protected string $name = "Allay Pet";
 

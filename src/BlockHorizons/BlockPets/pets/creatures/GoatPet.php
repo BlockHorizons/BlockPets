@@ -10,7 +10,6 @@ class GoatPet extends WalkingPet {
 
 	const NETWORK_NAME = "GOAT_PET";
 	const NETWORK_ORIG_ID = self::GOAT;
-	const NETWORD_ID = self::GOAT;
 
 	protected string $name = "Goat Pet";
 

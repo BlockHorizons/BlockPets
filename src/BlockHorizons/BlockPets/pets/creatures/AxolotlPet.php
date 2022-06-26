@@ -11,7 +11,6 @@ class AxolotlPet extends WalkingPet implements SmallCreature {
 
 	const NETWORK_NAME = "AXOLOTL_PET";
 	const NETWORK_ORIG_ID = self::AXOLOTL;
-	const NETWORD_ID = self::AXOLOTL;
 
 	protected string $name = "Axolotl Pet";
 

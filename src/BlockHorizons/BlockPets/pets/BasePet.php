@@ -42,7 +42,7 @@ use function lcg_value;
 use function max;
 use function random_int;
 
-abstract class BasePet extends Living {
+abstract class BasePet extends Living implements PetIds{
 
 	const STATE_STANDING = 0;
 	const STATE_SITTING  = 1;
@@ -59,13 +59,6 @@ abstract class BasePet extends Living {
 	const NETWORK_ID      = -1;
 	const NETWORK_NAME    = null;
 	const NETWORK_ORIG_ID = null;
-	
-	public const ALLAY = "minecraft:allay";
-	public const AXOLOTL = "minecraft:axolotl";
-	public const BEE = "minecraft:bee";
-	public const FOX = "minecraft:fox";
-	public const GOAT = "minecraft:goat";
-	public const WARDEN = "minecraft:warden";
 
 	protected float $height = 0.0;
 	protected float $width = 0.0;

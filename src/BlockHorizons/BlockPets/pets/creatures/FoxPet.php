@@ -11,7 +11,6 @@ class FoxPet extends WalkingPet implements SmallCreature {
 
 	const NETWORK_NAME = "FOX_PET";
 	const NETWORK_ORIG_ID = self::FOX;
-	const NETWORD_ID = self::FOX;
 
 	protected string $name = "Fox Pet";
 

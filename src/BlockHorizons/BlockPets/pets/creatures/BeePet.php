@@ -11,7 +11,6 @@ class BeePet extends HoveringPet implements SmallCreature {
 
 	const NETWORK_NAME = "BEE_PET";
 	const NETWORK_ORIG_ID = self::BEE;
-	const NETWORD_ID = self::BEE;
 
 	protected string $name = "Bee Pet";
 
