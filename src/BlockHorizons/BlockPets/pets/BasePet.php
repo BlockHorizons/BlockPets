@@ -42,7 +42,7 @@ use function lcg_value;
 use function max;
 use function random_int;
 
-abstract class BasePet extends Living {
+abstract class BasePet extends Living implements PetIds{
 
 	const STATE_STANDING = 0;
 	const STATE_SITTING  = 1;
