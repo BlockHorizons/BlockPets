@@ -5,7 +5,7 @@ namespace BlockHorizons\BlockPets\pets;
 
 interface PetIds{
 
-    public const ALLAY = "minecraft:allay";
+    	public const ALLAY = "minecraft:allay";
 	public const AXOLOTL = "minecraft:axolotl";
 	public const BEE = "minecraft:bee";
 	public const FOX = "minecraft:fox";
