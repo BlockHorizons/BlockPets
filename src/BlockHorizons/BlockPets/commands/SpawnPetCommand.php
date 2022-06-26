@@ -26,6 +26,11 @@ class SpawnPetCommand extends BaseCommand {
 			if(count($args) > 5 || count($args) < 1) {
 				return false;
 			}
+			
+			if(!$sender->hasPermission("blockpets.pet." . strtolower($args[0]))) {
+				$this->sendPermissionMessage($sender);
+				return true;
+			}
 		}
 
 		$player = $sender;
