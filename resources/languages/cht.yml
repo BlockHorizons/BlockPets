@@ -14,12 +14,17 @@ commands:
     pet:
       doesnt-exist: "該名稱寵物不存在"
       numeric: "寵物的大小必須是一個數值"
+      none-on-server: "目前伺服器上沒有任何寵物"
+      none-on-server-type: "目前伺服器上沒有任何屬 %s 種的寵物"
       
     player:
       not-found: "無法找到該玩家"
       no-pet: "您不能擁有叫這個名稱的寵物"
       no-pet-other: "該玩家不能擁有叫這個名稱的寵物"
       already-own-pet: "您已擁有叫這個名稱的寵物了"
+
+  addpetpoints:
+    success: "成功充值 &b%s 點經驗值&a 到寵物 &b%s&r&a!"
          
   changepetname:
     no-permission: "您並無權限更改其他玩家的寵物名稱"
@@ -32,9 +37,9 @@ commands:
     success: "%s &r&a 已成功被治療!"
 
   leveluppet:
-  spawnpet:
     success: "寵物已升等: &b%s &r&a %s!"
-    
+
+  spawnpet:
     no-permission: "您並無權限生成寵物"
     no-permission-others: "您並無權限為其他人生成寵物"
     success: "成功生成一隻名為 &b%s&a 的寵物!"
@@ -50,4 +55,8 @@ commands:
     no-pet-specified: "您並無指定要切換的寵物"
     success: "成功切換了您的寵物 %s!"
     success-others: "成功切換寵物 &b%s &r&a %s!"
+    success-specific: "成功切換了您的寵物 %s %s"
+    success-specific-others: "成功切換了屬於 %s 的寵物 %s"
+    success-diff: "成功切換了您的寵物，目前可見的有： &b%s."
+    success-diff-others: "成功切換了屬於 %s 的寵物，目前可見的有： &b%s."
 ...
