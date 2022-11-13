@@ -6,7 +6,7 @@ prefix:
 
 commands:
   errors:
-    console-use: "当您从控制台只用该指令时，务必填写所有参数"
+    console-use: "当您从控制台使用该指令时，务必填写所有参数"
     no-console-use: "该指令仅可由玩家使用"
     no-permission: "您并无权限使用该指令"
     plugin-cancelled: "插件操作已取消"
