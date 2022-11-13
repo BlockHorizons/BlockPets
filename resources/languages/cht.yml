@@ -6,7 +6,7 @@ prefix:
 
 commands:
   errors:
-    console-use: "當您從控制台只用該指令時，務必填寫所有參數"
+    console-use: "當您從控制台使用該指令時，務必填寫所有參數"
     no-console-use: "該指令僅可由玩家使用"
     no-permission: "您並無權限使用該指令"
     plugin-cancelled: "插件操作已取消"
@@ -24,7 +24,7 @@ commands:
       already-own-pet: "您已擁有叫這個名稱的寵物了"
 
   addpetpoints:
-    success: "成功充值 &b%s 點經驗值&a 到寵物 &b%s&r&a!"
+    success: "成功儲值 &b%s 點經驗值&a 到寵物 &b%s&r&a!"
          
   changepetname:
     no-permission: "您並無權限更改其他玩家的寵物名稱"
