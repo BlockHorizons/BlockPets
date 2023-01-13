@@ -1,0 +1,65 @@
+---
+# Spanish messages translation file for BlockPets, a pets plugin by BlockHorizons.
+
+prefix:
+  warning: "&c[&6Alerta&c]"
+
+commands:
+  errors:
+    console-use: "Cuando se usa ese comando desde la consola, se deben proveer todos los argumentos."
+    no-console-use: "Este comando solo puede ser usado por jugadores."
+    no-permission: "No tienes permiso para usar ese comando."
+    plugin-cancelled: "Un plugin ha cancelado esa acción."
+
+    pet:
+      doesnt-exist: "No existe una mascota con ese nombre."
+      numeric: "La escala de la mascota debería ser numérica."
+      none-on-server: "No hay mascotas en este servidor."
+      none-on-server-type: "No hay mascotas de tipo %s en este servidor."
+
+    player:
+      not-found: "El jugador proveído no puede ser encontrado."
+      no-pet: "No posees una mascota con ese nombre."
+      no-pet-other: "El jugador proveído no tiene una mascota con ese nombre."
+      already-own-pet: "Ya tienes una mascota con ese nombre"
+
+  addpetpoints:
+    success: "Se ha añadido &b%sxp&a a la mascota &b%s&r&a!"
+
+  changepetname:
+    no-permission: "No tienes permiso para cambiar el nombre de las mascotas de otros jugadores."
+    success: "Cambiado correctamente la mascota %s &r&aa %s!"
+
+  clearpet:
+    success: "La mascota &b%s&a ha sido limpiada correctamente!"
+
+  healpet:
+    success: "La mascota %s &r&a ha sido curada correctamente!"
+
+  leveluppet:
+    success: "¡Subió de nivel a la mascota: &b%s &r&a %s!"
+
+  listpets:
+    no-pets-found: "&cNo tienes ninguna mascota."
+    no-pets-found-type: "&cNo tienes ningún %ss."
+
+  spawnpet:
+    no-permission: "No tienes permiso para spawnear esa mascota"
+    no-permission-others: "No tienes permiso para spawnear mascotas a otros jugadores."
+    success: "Spawneado correctamente una mascota con el nombre de &b%s&a!"
+    success-other: "Has recibido una mascota con el nombre de &b%s&a!"
+    name: "Por favor, envía un mensaje con el nombre para la mascota!"
+    selecting-name: "Ahora, %s está eligiendo un nombre para su mascota!"
+    exceeded-limit: "%s ha excedido el límite de mascotas."
+
+  removepet:
+    success: "Eliminada la mascota &b%s&a! :("
+
+  togglepet:
+    no-pet-specified: "No has especificado una mascota."
+    success: "Tus mascotas %s ahora son visibles!"
+    success-others: "La mascota &b%s &r&a %s ahora es visible!"
+    success-specific: "Tu mascota %s %s ahora es visible."
+    success-specific-others: "La mascota de %s, %s, ahora es visible."
+    success-diff: "Visibilidad cambiada, actualmente visibles: &b%s."
+    success-diff-others: "Visibilidad de las mascotas de %s cambiada, actualmente visibles: &b%s."
