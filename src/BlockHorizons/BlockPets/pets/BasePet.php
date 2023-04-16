@@ -316,6 +316,7 @@ abstract class BasePet extends Living implements PetIds{
 			$this->location->pitch,
 			$this->location->yaw,
 			$this->location->yaw,
+			$this->location->yaw,
 			array_map(static function(Attribute $attr): NetworkAttribute {
 				return new NetworkAttribute($attr->getId(), $attr->getMinValue(), $attr->getMaxValue(), $attr->getValue(), $attr->getDefaultValue());
 			}, $this->attributeMap->getAll()),
