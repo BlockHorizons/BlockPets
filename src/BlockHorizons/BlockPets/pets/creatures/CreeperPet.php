@@ -8,8 +8,8 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 
 class CreeperPet extends WalkingPet {
 
-	const NETWORK_NAME = "CREEPER_PET";
-	const NETWORK_ORIG_ID = EntityIds::CREEPER;
+	public const NETWORK_NAME = "CREEPER_PET";
+	public const NETWORK_ORIG_ID = EntityIds::CREEPER;
 
 	protected float $height = 1.7;
 	protected float $width = 0.6;

@@ -9,8 +9,8 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 
 class BatPet extends HoveringPet implements SmallCreature {
 
-	const NETWORK_NAME = "BAT_PET";
-	const NETWORK_ORIG_ID = EntityIds::BAT;
+	public const NETWORK_NAME = "BAT_PET";
+	public const NETWORK_ORIG_ID = EntityIds::BAT;
 
 	protected string $name = "Bat Pet";
 

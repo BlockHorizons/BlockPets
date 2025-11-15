@@ -10,7 +10,6 @@ use pocketmine\entity\Living;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDespawnEvent;
-use pocketmine\event\entity\EntitySpawnEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerJoinEvent;
@@ -116,17 +115,6 @@ class EventListener implements Listener {
 			$loader->createPet($data["petType"], $player, $petName, $data["scale"], $data["isBaby"]);
 			$player->sendMessage(TextFormat::GREEN . "Successfully obtained a " . $data["petType"] . " with the name " . $event->getMessage());
 			unset($loader->selectingName[$player->getName()]);
-		}
-	}
-
-	public function onEntitySpawn(EntitySpawnEvent $event): void {
-		$entity = $event->getEntity();
-		if($entity instanceof BasePet) {
-			$clearLaggPlugin = $this->getLoader()->getServer()->getPluginManager()->getPlugin("ClearLagg");
-			if($clearLaggPlugin !== null) {
-				/** @phpstan-ignore-next-line */
-				$clearLaggPlugin->exemptEntity($entity);
-			}
 		}
 	}
 

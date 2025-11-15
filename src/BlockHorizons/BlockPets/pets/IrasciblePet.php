@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets;
 
+use BlockHorizons\BlockPets\items\Saddle;
 use BlockHorizons\BlockPets\pets\creatures\ArrowPet;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Living;
@@ -57,7 +58,7 @@ abstract class IrasciblePet extends BasePet {
 			}
 			if($attacker instanceof Player && !$attacker->isSneaking() && $this->canBeRidden && $attacker->getName() === $this->getPetOwnerName()) {
 				$item = $attacker->getInventory()->getItemInHand();
-				if($item->getId() === ItemIds::SADDLE) {
+				if($item->getTypeId() === Saddle::SADDLE()->getTypeId()) {
 					$this->setRider($attacker);
 					$attacker->sendTip(TextFormat::GRAY . "Crouch or jump to dismount...");
 					$source->cancel();

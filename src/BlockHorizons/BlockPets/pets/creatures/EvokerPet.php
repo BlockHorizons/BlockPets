@@ -9,8 +9,8 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataFlags;
 
 class EvokerPet extends WalkingPet {
 
-	const NETWORK_NAME = "EVOKER_PET";
-	const NETWORK_ORIG_ID = EntityIds::EVOCATION_ILLAGER;
+	public const NETWORK_NAME = "EVOKER_PET";
+	public const NETWORK_ORIG_ID = EntityIds::EVOCATION_ILLAGER;
 
 	protected string $name = "Evoker Pet";
 

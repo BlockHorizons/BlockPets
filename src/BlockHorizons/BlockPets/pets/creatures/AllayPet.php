@@ -6,11 +6,12 @@ namespace BlockHorizons\BlockPets\pets\creatures;
 
 use BlockHorizons\BlockPets\pets\HoveringPet;
 use BlockHorizons\BlockPets\pets\SmallCreature;
+use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 
 class AllayPet extends HoveringPet implements SmallCreature {
 
-	const NETWORK_NAME = "ALLAY_PET";
-	const NETWORK_ORIG_ID = self::ALLAY;
+	public const NETWORK_NAME = "ALLAY_PET";
+	public const NETWORK_ORIG_ID = EntityIds::ALLAY;
 
 	protected string $name = "Allay Pet";
 

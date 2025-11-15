@@ -9,8 +9,8 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 
 class ChickenPet extends WalkingPet implements SmallCreature {
 
-	const NETWORK_NAME = "CHICKEN_PET";
-	const NETWORK_ORIG_ID = EntityIds::CHICKEN;
+	public const NETWORK_NAME = "CHICKEN_PET";
+	public const NETWORK_ORIG_ID = EntityIds::CHICKEN;
 
 	protected float $width = 0.4;
 	protected float $height = 0.7;

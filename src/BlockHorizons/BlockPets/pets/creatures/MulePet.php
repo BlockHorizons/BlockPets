@@ -8,8 +8,8 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 
 class MulePet extends WalkingPet {
 
-	const NETWORK_NAME = "MULE_PET";
-	const NETWORK_ORIG_ID = EntityIds::MULE;
+	public const NETWORK_NAME = "MULE_PET";
+	public const NETWORK_ORIG_ID = EntityIds::MULE;
 
 	protected string $name = "Mule Pet";
 
