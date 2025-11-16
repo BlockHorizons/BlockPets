@@ -90,6 +90,7 @@ use pocketmine\entity\AttributeFactory;
 use pocketmine\entity\Entity;
 use pocketmine\entity\EntityDataHelper;
 use pocketmine\entity\EntityFactory;
+use pocketmine\inventory\CreativeInventory;
 use pocketmine\item\StringToItemParser;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\permission\Permission;
@@ -97,6 +98,7 @@ use pocketmine\permission\PermissionManager;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\AsyncTask;
+use pocketmine\utils\SingletonTrait;
 use pocketmine\world\format\io\GlobalItemDataHandlers;
 use pocketmine\world\World;
 use Symfony\Component\Filesystem\Path;
@@ -164,6 +166,8 @@ class Loader extends PluginBase {
 		"ZombieVillager" => ZombieVillagerPet::class
 	];
 
+	use SingletonTrait;
+
 	/** @var string[] */
 	private array $availableLanguages = [
 		"en",
@@ -185,6 +189,8 @@ class Loader extends PluginBase {
 	private array $playerPets = [];
 
 	protected function onEnable(): void {
+        self::$instance = $this;
+
 		if(!is_dir($this->getDataFolder())) {
 			mkdir($this->getDataFolder());
 		}
@@ -286,6 +292,7 @@ class Loader extends PluginBase {
 		GlobalItemDataHandlers::getDeserializer()->map(ItemTypeNames::SADDLE, fn() => clone Saddle::SADDLE());
 		GlobalItemDataHandlers::getSerializer()->map(Saddle::SADDLE(), fn() => new SavedItemData(ItemTypeNames::SADDLE));
 		StringToItemParser::getInstance()->register("saddle", fn() => clone Saddle::SADDLE());
+		CreativeInventory::getInstance()->add(Saddle::SADDLE());
 	}
 
 	public function registerListeners(): void {
@@ -302,8 +309,6 @@ class Loader extends PluginBase {
 	 * Registers all BlockPets permissions with the server's permission manager.
 	 * This method creates and adds permissions for various plugin features and pet types.
 	 * Permissions are used to control access to commands and pet spawning functionality.
-	 * We use PermissionManager::addPermission() instead of PluginManager::addPermission()
-	 * because it directly registers permissions with the global permission system,
 	 * ensuring they are available for all players and plugins to check against.
 	 */
 	public function registerPermissions(): void {
@@ -554,8 +559,13 @@ class Loader extends PluginBase {
 	 * Closes and removes the specified pet from cache and calls PetRemoveEvent events.
 	 */
 	public function removePet(BasePet $pet, bool $close = true): void {
-		// TODO: Call a cancellable event if this method isn't called when pet owner quits
-		(new PetRemoveEvent($this, $pet))->call();
+		$ev =new PetRemoveEvent($this, $pet);
+		$ev->call();
+
+		if($ev->isCancelled()) {
+			return;
+		}
+
 		if($pet->isRidden()) {
 			$pet->throwRiderOff();
 		}

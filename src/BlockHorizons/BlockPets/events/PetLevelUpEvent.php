@@ -5,12 +5,8 @@ namespace BlockHorizons\BlockPets\events;
 
 use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\BasePet;
-use pocketmine\event\Cancellable;
-use pocketmine\event\CancellableTrait;
 
-class PetLevelUpEvent extends PetEvent implements Cancellable {
-
-	use CancellableTrait;
+class PetLevelUpEvent extends PetEvent {
 
 	public function __construct(Loader $loader, BasePet $pet, private int $from, private int $to) {
 		parent::__construct($loader, $pet);

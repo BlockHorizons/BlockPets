@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets;
@@ -37,6 +38,9 @@ use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\particle\HeartParticle;
+use pocketmine\world\sound\FizzSound;
+use pocketmine\world\sound\PopSound;
+
 use function array_map;
 use function get_class;
 use function lcg_value;
@@ -143,6 +147,7 @@ abstract class BasePet extends Living {
 		$this->setCanSaveWithChunk(false);
 
 		$this->generateCustomPetData();
+		$this->setNoClientPredictions();
 
 		$scale = $this->getScale();
 		if($this instanceof EnderDragonPet) {
@@ -177,12 +182,8 @@ abstract class BasePet extends Living {
 	/**
 	 * Returns the BlockPets Loader. For internal usage.
 	 */
-	public function getLoader(): ?Loader {
-		$plugin = $this->server->getPluginManager()->getPlugin("BlockPets");
-		if($plugin instanceof Loader) {
-			return $plugin;
-		}
-		return null;
+	public function getLoader(): Loader {
+		return Loader::getInstance();
 	}
 
 	/**
@@ -304,6 +305,9 @@ abstract class BasePet extends Living {
 		return $this->petName;
 	}
 
+	/**
+	 * Note: Use getBlock() from items because BlockItems IDs are returned with a negative sign.
+	 */
 	public function attack(EntityDamageEvent $source): void {
 		if(!$this->visibility) {
 			return;
@@ -327,6 +331,7 @@ abstract class BasePet extends Living {
 					$player->getInventory()->setItemInHand($hand);
 					$this->heal(new EntityRegainHealthEvent($this, $heal, EntityRegainHealthEvent::CAUSE_SATURATION));
 					$this->getWorld()->addParticle($this->location->add(0, 2, 0), new HeartParticle(4));
+					$this->getWorld()->addSound($this->getPosition(), new FizzSound(), [$player]);
 
 					if($this->getLoader()->getBlockPetsConfig()->giveExperienceWhenFed()) {
 						$this->addPetLevelPoints((int) ($nutrition / 40 * LevelCalculator::getRequiredLevelPoints($this->getPetLevel())));
@@ -340,6 +345,7 @@ abstract class BasePet extends Living {
 						$ev->call();
 						if(!$ev->isCancelled()) {
 							$hand->pop();
+							$this->getWorld()->addSound($this->getPosition(), new PopSound(), [$player]);
 							$player->getInventory()->setItemInHand($hand);
 							$this->setChested();
 							$source->cancel();
