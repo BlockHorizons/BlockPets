@@ -505,8 +505,6 @@ class Loader extends PluginBase {
 			return $entity;
 		}
 
-		$this->getLoader()->getLogger()->info("spawn pet: " . implode(", ", array_keys($pets)));
-
 		return null;
 	}
 
