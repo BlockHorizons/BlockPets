@@ -2,7 +2,7 @@
 name: BlockPets
 main: BlockHorizons\BlockPets\Loader
 version: 3.0.0
-api: 5.3.0
+api: 5.30.0
 author: BlockHorizons
 description: A pets plugin for PocketMine-MP
 
