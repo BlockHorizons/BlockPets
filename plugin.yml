@@ -1,15 +1,14 @@
 ---
 name: BlockPets
 main: BlockHorizons\BlockPets\Loader
-version: 2.0.2
-api: 4.0.0
+version: 2.0.3
+api: 5.0.0
 author: BlockHorizons
-# mcpe-protocol: 448
 description: A pets plugin for PocketMine-MP
 
 permissions:
     blockpets:
-        default: false
+        default: op
         description: "Allows access to all BlockPets features."
     blockpets.bypass-limit:
         default: op
@@ -18,10 +17,10 @@ permissions:
         default: op
         description: "Allows bypassing the maximum size of pets."
     blockpets.command:
-        default: false
+        default: op
         description: "Allows access to all BlockPets command features."
     blockpets.command.spawnpet:
-        default: false
+        default: op
         description: "Allows access to use the spawnpet command."
     blockpets.command.spawnpet.use:
         default: op
@@ -30,7 +29,7 @@ permissions:
         default: op
         description: "Allows access to use the spawnpet command for other players."
     blockpets.command.changepetname:
-        default: false
+        default: op
         description: "Allows access to use the changepetname command."
     blockpets.command.changepetname.use:
         default: op
@@ -51,10 +50,10 @@ permissions:
         default: op
         description: "Allows access to use the healpet command."
     blockpets.command.clearpet:
-        default: true
+        default: op
         description: "Allows access to use the clearpet command."
     blockpets.command.togglepet:
-        default: true
+        default: op
         description: "Allows access to use the togglepets command."
     blockpets.command.pet:
         default: op
@@ -66,14 +65,23 @@ permissions:
         default: op
         description: "Allows access to use the petstop command."
     blockpets.pet:
-        default: false
+        default: op
         description: "Allows access to all BlockPets pets."
+    blockpets.pet.allay:
+        default: op
+        description: "Allows access to use the allay pet."
     blockpets.pet.arrow:
         default: op
         description: "Allows access to use the arrow pet."
+    blockpets.pet.axolotl:
+        default: op
+        description: "Allows access to use the axolotl pet."
     blockpets.pet.bat:
         default: op
         description: "Allows access to use the bat pet."
+    blockpets.pet.bee:
+        default: op
+        description: "Allows access to use the bee pet."
     blockpets.pet.blaze:
         default: op
         description: "Allows access to use the blaze pet."
@@ -107,15 +115,18 @@ permissions:
     blockpets.pet.endermite:
         default: op
         description: "Allows access to use the endermite pet."
-    blockpets.pet.evocationfangs:
-        default: op
-        description: "Allows access to use the evocation fangs pet."
     blockpets.pet.evoker:
         default: op
         description: "Allows access to use the evoker pet."
+    blockpets.pet.fox:
+        default: op
+        description: "Allows access to use the fox pet."
     blockpets.pet.ghast:
         default: op
         description: "Allows access to use the ghast pet."
+    blockpets.pet.goat:
+        default: op
+        description: "Allows access to use the goat pet."
     blockpets.pet.guardian:
         default: op
         description: "Allows access to use the guardian pet."
@@ -191,6 +202,9 @@ permissions:
     blockpets.pet.vindicator:
         default: op
         description: "Allows access to use the vindicator pet."
+    blockpets.pet.warden:
+        default: op
+        description: "Allows access to use the warden pet."
     blockpets.pet.witch:
         default: op
         description: "Allows access to use the witch pet."

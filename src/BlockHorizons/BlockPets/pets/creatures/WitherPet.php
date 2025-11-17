@@ -8,8 +8,8 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 
 class WitherPet extends HoveringPet {
 
-	const NETWORK_NAME = "WITHER_PET";
-	const NETWORK_ORIG_ID = EntityIds::WITHER;
+	public const NETWORK_NAME = "WITHER_PET";
+	public const NETWORK_ORIG_ID = EntityIds::WITHER;
 
 	protected float $height = 3.5;
 	protected float $width = 0.9;

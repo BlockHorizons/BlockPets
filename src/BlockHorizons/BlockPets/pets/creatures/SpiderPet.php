@@ -10,8 +10,8 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataFlags;
 
 class SpiderPet extends WalkingPet implements SmallCreature {
 
-	const NETWORK_NAME = "SPIDER_PET";
-	const NETWORK_ORIG_ID = EntityIds::SPIDER;
+	public const NETWORK_NAME = "SPIDER_PET";
+	public const NETWORK_ORIG_ID = EntityIds::SPIDER;
 
 	protected float $height = 0.9;
 	protected float $width = 1.4;

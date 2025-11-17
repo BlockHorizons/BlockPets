@@ -10,8 +10,8 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataFlags;
 
 class ArrowPet extends HoveringPet implements SmallCreature {
 
-	const NETWORK_NAME    = "ARROW_PET";
-	const NETWORK_ORIG_ID = EntityIds::ARROW;
+	public const NETWORK_NAME    = "ARROW_PET";
+	public const NETWORK_ORIG_ID = EntityIds::ARROW;
 
 	protected string $name = "Arrow Pet";
 

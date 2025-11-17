@@ -9,7 +9,8 @@ projects:
     fullGzip: 9
     libs:
       - src: poggit/libasynql/libasynql
-        version: ^4.0.1
-      - src: muqsit/invmenu/invmenu
-        version: ^4.4.0
+        version: ^4.1.6
+      - src: muqsit/InvMenu/InvMenu
+        branch: pm5
+        version: ^4.7.3 
 ...

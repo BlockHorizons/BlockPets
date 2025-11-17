@@ -9,8 +9,8 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 
 class MagmaCubePet extends BouncingPet implements SmallCreature {
 
-	const NETWORK_NAME = "MAGMA_CUBE_PET";
-	const NETWORK_ORIG_ID = EntityIds::MAGMA_CUBE;
+	public const NETWORK_NAME = "MAGMA_CUBE_PET";
+	public const NETWORK_ORIG_ID = EntityIds::MAGMA_CUBE;
 
 	protected float $height = 0.51;
 	protected float $width = 0.51;

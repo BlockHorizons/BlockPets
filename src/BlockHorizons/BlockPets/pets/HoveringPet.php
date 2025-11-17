@@ -18,7 +18,7 @@ use function sqrt;
 abstract class HoveringPet extends IrasciblePet {
 
 	/** @var float */
-	public $gravity = 0;
+	public float $gravity = 0;
 	protected float $flyHeight = 0;
 
 	protected function initEntity(CompoundTag $tag): void {

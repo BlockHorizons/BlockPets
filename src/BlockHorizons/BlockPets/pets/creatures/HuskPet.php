@@ -8,8 +8,8 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 
 class HuskPet extends WalkingPet {
 
-	const NETWORK_NAME = "HUSK_PET";
-	const NETWORK_ORIG_ID = EntityIds::HUSK;
+	public const NETWORK_NAME = "HUSK_PET";
+	public const NETWORK_ORIG_ID = EntityIds::HUSK;
 
 	protected float $height = 1.95;
 	protected float $width = 0.6;

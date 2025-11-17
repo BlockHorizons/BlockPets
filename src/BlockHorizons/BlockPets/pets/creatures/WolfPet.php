@@ -7,17 +7,21 @@ use BlockHorizons\BlockPets\pets\SmallCreature;
 use BlockHorizons\BlockPets\pets\WalkingPet;
 use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataProperties;
+use Random\RandomException;
 
 class WolfPet extends WalkingPet implements SmallCreature {
 
-	const NETWORK_NAME = "WOLF_PET";
-	const NETWORK_ORIG_ID = EntityIds::WOLF;
+	public const NETWORK_NAME = "WOLF_PET";
+	public const NETWORK_ORIG_ID = EntityIds::WOLF;
 
 	protected string $name = "Wolf Pet";
 
 	protected float $width = 0.6;
 	protected float $height = 0.85;
 
+	/**
+	 * @throws RandomException
+	 */
 	public function generateCustomPetData(): void {
 		$randomColour = random_int(0, 15);
 		$eid = 123456789123456789;

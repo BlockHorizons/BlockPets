@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\pets;
@@ -10,6 +11,7 @@ use BlockHorizons\BlockPets\Loader;
 use BlockHorizons\BlockPets\pets\creatures\EnderDragonPet;
 use BlockHorizons\BlockPets\pets\inventory\PetInventoryManager;
 use BlockHorizons\BlockPets\tasks\PetRespawnTask;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\entity\Attribute;
 use pocketmine\entity\AttributeFactory;
 use pocketmine\entity\Entity;
@@ -21,9 +23,9 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\inventory\Inventory;
 use pocketmine\item\Food;
-use pocketmine\item\ItemIds;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\network\mcpe\NetworkBroadcastUtils;
 use pocketmine\network\mcpe\protocol\AddActorPacket;
 use pocketmine\network\mcpe\protocol\SetActorLinkPacket;
 use pocketmine\network\mcpe\protocol\types\entity\Attribute as NetworkAttribute;
@@ -31,40 +33,37 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityLink;
 use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataCollection;
 use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataFlags;
 use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataProperties;
+use pocketmine\network\mcpe\protocol\types\entity\PropertySyncData;
 use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\particle\HeartParticle;
+use pocketmine\world\sound\FizzSound;
+use pocketmine\world\sound\PopSound;
+
 use function array_map;
-use function array_values;
 use function get_class;
 use function lcg_value;
 use function max;
 use function random_int;
 
-abstract class BasePet extends Living implements PetIds{
+abstract class BasePet extends Living {
 
-	const STATE_STANDING = 0;
-	const STATE_SITTING  = 1;
+	public const STATE_STANDING = 0;
+	public const STATE_SITTING  = 1;
 
-	const TIER_COMMON    = 1;
-	const TIER_UNCOMMON  = 2;
-	const TIER_SPECIAL   = 3;
-	const TIER_EPIC      = 4;
-	const TIER_LEGENDARY = 5;
+	public const LINK_RIDING = 0;
+	public const LINK_RIDER  = 1;
 
-	const LINK_RIDING = 0;
-	const LINK_RIDER  = 1;
-
-	const NETWORK_ID      = -1;
-	const NETWORK_NAME    = null;
-	const NETWORK_ORIG_ID = null;
+	public const NETWORK_ID      = -1;
+	public const NETWORK_NAME    = null;
+	public const NETWORK_ORIG_ID = null;
 
 	protected float $height = 0.0;
 	protected float $width = 0.0;
 
 	/** @var float */
-	protected $scale = 1.0;
+	protected float $scale = 1.0;
 
 	protected string $name = "";
 	protected int $petLevel = 0;
@@ -94,7 +93,7 @@ abstract class BasePet extends Living implements PetIds{
 	protected float $zOffset = 0.0;
 
 	/** @var EntityLink[] */
-	private $links = [];
+	private array $links = [];
 
 	private ?Player $petOwner = null;
 	private bool $dormant = false;
@@ -113,7 +112,7 @@ abstract class BasePet extends Living implements PetIds{
 		if(static::NETWORK_ORIG_ID === null) {
 			throw new \LogicException("NETWORK_ORIG_ID constant in " . get_class($this) . " must be defined.");
 		}
-		$this->petOwner = Server::getInstance()->getPlayerExact($nbt->getString("petOwner"));
+		$this->petOwner = Server::getInstance()->getPlayerExact($nbt?->getString("petOwner"));
 		if($this->petOwner === null) {
 			$this->close();
 			return;
@@ -148,7 +147,7 @@ abstract class BasePet extends Living implements PetIds{
 		$this->setCanSaveWithChunk(false);
 
 		$this->generateCustomPetData();
-		$this->setImmobile();
+		$this->setNoClientPredictions();
 
 		$scale = $this->getScale();
 		if($this instanceof EnderDragonPet) {
@@ -164,7 +163,7 @@ abstract class BasePet extends Living implements PetIds{
 	}
 
 	public static function getNetworkTypeId(): string {
-		return static::NETWORK_ORIG_ID;
+		return (string) static::NETWORK_ORIG_ID;
 	}
 
 	protected function getInitialSizeInfo(): EntitySizeInfo {
@@ -183,12 +182,8 @@ abstract class BasePet extends Living implements PetIds{
 	/**
 	 * Returns the BlockPets Loader. For internal usage.
 	 */
-	public function getLoader(): ?Loader {
-		$plugin = $this->server->getPluginManager()->getPlugin("BlockPets");
-		if($plugin instanceof Loader) {
-			return $plugin;
-		}
-		return null;
+	public function getLoader(): Loader {
+		return Loader::getInstance();
 	}
 
 	/**
@@ -236,11 +231,6 @@ abstract class BasePet extends Living implements PetIds{
 		return $this->riding;
 	}
 
-	public function setRiding(bool $riding): void {
-		$this->riding = $riding;
-		$this->networkPropertiesDirty = true;
-	}
-
 	public function isChested(): bool {
 		return $this->chested;
 	}
@@ -260,42 +250,17 @@ abstract class BasePet extends Living implements PetIds{
 		return $this->baby;
 	}
 
-	public function setBaby(bool $baby): void {
-		$this->baby = $baby;
-		$this->networkPropertiesDirty = true;
-	}
-
-	public function isSaddled(): bool {
-		return $this->saddled;
-	}
-
-	public function setSaddled(bool $saddled): void {
-		$this->saddled = $saddled;
-		$this->networkPropertiesDirty = true;
-	}
-
-	public function getVisibility(): bool {
-		return $this->visibility;
-	}
-
 	/**
 	 * @internal
 	 */
 	public function updateVisibility(bool $value): void {
 		$this->visibility = $value;
-		$this->setImmobile(!$value);
+		$this->setNoClientPredictions(!$value);
 		if($value) {
 			$this->spawnToAll();
 		} else {
 			$this->despawnFromAll();
 		}
-	}
-
-	public function setImmobile(bool $value = true): void {
-		if(!$this->visibility && $value) {
-			return;
-		}
-		parent::setImmobile($value);
 	}
 
 	public function spawnTo(Player $player): void {
@@ -316,10 +281,12 @@ abstract class BasePet extends Living implements PetIds{
 			$this->location->pitch,
 			$this->location->yaw,
 			$this->location->yaw,
-			array_map(static function(Attribute $attr): NetworkAttribute {
-				return new NetworkAttribute($attr->getId(), $attr->getMinValue(), $attr->getMaxValue(), $attr->getValue(), $attr->getDefaultValue());
+			$this->location->yaw, 
+			array_map(static function(Attribute $attr) : NetworkAttribute{
+				return  new NetworkAttribute($attr->getId(), $attr->getMinValue(), $attr->getMaxValue(), $attr->getValue(), $attr->getDefaultValue(), []);
 			}, $this->attributeMap->getAll()),
 			$this->getAllNetworkData(),
+			new PropertySyncData([], []),
 			array_values($this->links)
 		));
 	}
@@ -338,10 +305,14 @@ abstract class BasePet extends Living implements PetIds{
 		return $this->petName;
 	}
 
+	/**
+	 * Note: Use getBlock() from items because BlockItems IDs are returned with a negative sign.
+	 */
 	public function attack(EntityDamageEvent $source): void {
 		if(!$this->visibility) {
 			return;
 		}
+
 		if($source instanceof EntityDamageByEntityEvent) {
 			$player = $source->getDamager();
 			if($player instanceof Player) {
@@ -360,6 +331,7 @@ abstract class BasePet extends Living implements PetIds{
 					$player->getInventory()->setItemInHand($hand);
 					$this->heal(new EntityRegainHealthEvent($this, $heal, EntityRegainHealthEvent::CAUSE_SATURATION));
 					$this->getWorld()->addParticle($this->location->add(0, 2, 0), new HeartParticle(4));
+					$this->getWorld()->addSound($this->getPosition(), new FizzSound(), [$player]);
 
 					if($this->getLoader()->getBlockPetsConfig()->giveExperienceWhenFed()) {
 						$this->addPetLevelPoints((int) ($nutrition / 40 * LevelCalculator::getRequiredLevelPoints($this->getPetLevel())));
@@ -367,19 +339,20 @@ abstract class BasePet extends Living implements PetIds{
 
 					$this->calculator->updateNameTag();
 					$source->cancel();
-				} elseif($hand->getId() === ItemIds::CHEST && $this->canBeChested) {
+				} elseif($hand->getBlock()->getTypeId() === BlockTypeIds::CHEST && $this->canBeChested) {
 					if(!$this->isChested() && $this->getPetOwnerName() === $player->getName()) {
 						$ev = new PetInventoryInitializationEvent($this->getLoader(), $this);
 						$ev->call();
 						if(!$ev->isCancelled()) {
 							$hand->pop();
+							$this->getWorld()->addSound($this->getPosition(), new PopSound(), [$player]);
 							$player->getInventory()->setItemInHand($hand);
 							$this->setChested();
 							$source->cancel();
 						}
 					}
 				} elseif($player->getName() === $this->getPetOwnerName()) {
-					if($this->isChested() && $hand->getId() === ItemIds::AIR) {
+					if($this->isChested() && $hand->getBlock()->getTypeId() === BlockTypeIds::AIR) {
 						$source->cancel();
 						$this->getInventoryManager()->openAs($player);
 					} elseif($player->isSneaking() && $this->canRide) {
@@ -421,7 +394,7 @@ abstract class BasePet extends Living implements PetIds{
 	 */
 	public function addPetLevelPoints(int $points): bool {
 		$this->levelUp(LevelCalculator::calculateLevelUp($points, $this->getPetLevel(), $remaining));
-		$this->setPetLevelPoints($remaining);
+		$this->setPetLevelPoints((int) $remaining);
 		$this->calculator->updateNameTag();
 		return true;
 	}
@@ -525,7 +498,7 @@ abstract class BasePet extends Living implements PetIds{
 	}
 
 	/**
-	 * Returns the attack damage of this pet.
+	 * Returns the attack damage to this pet.
 	 */
 	public function getAttackDamage(): int {
 		return $this->attackDamage;
@@ -658,7 +631,7 @@ abstract class BasePet extends Living implements PetIds{
 
 		$rider = $this->getRider();
 		$this->rider = null;
-		$rider->canCollide = true;
+		$rider->canCollided = true;
 		$this->removeLink($rider, self::LINK_RIDER);
 
 		$this->riding = false;
@@ -692,7 +665,7 @@ abstract class BasePet extends Living implements PetIds{
 		}
 
 		$this->rider = $player;
-		$player->canCollide = false;
+		$player->canCollided = false;
 		$owner = $this->getPetOwner();
 
 		$player->getNetworkProperties()->setVector3(EntityMetadataProperties::RIDER_SEAT_POSITION, $this->riderSeatPos);
@@ -801,14 +774,14 @@ abstract class BasePet extends Living implements PetIds{
 
 		switch($type) {
 			case self::LINK_RIDER:
-				$link = new EntityLink($this->getId(), $entity->getId(), self::STATE_SITTING, true, true);
+				$link = new EntityLink($this->getId(), $entity->getId(), self::STATE_SITTING, true, true, 0.5);
 
 				if($entity instanceof Player) {
 					$pk = new SetActorLinkPacket();
 					$pk->link = $link;
 					$entity->getNetworkSession()->sendDataPacket($pk);
 
-					$link_2 = new EntityLink($this->getId(), 0, self::STATE_SITTING, true, true);
+					$link_2 = new EntityLink($this->getId(), 0, self::STATE_SITTING, true, true, 0.5);
 
 					$pk = new SetActorLinkPacket();
 					$pk->link = $link_2;
@@ -817,14 +790,14 @@ abstract class BasePet extends Living implements PetIds{
 				}
 				break;
 			case self::LINK_RIDING:
-				$link = new EntityLink($entity->getId(), $this->getId(), self::STATE_SITTING, true, false);
+				$link = new EntityLink($entity->getId(), $this->getId(), self::STATE_SITTING, true, false, 0.5);
 
 				if($entity instanceof Player) {
 					$pk = new SetActorLinkPacket();
 					$pk->link = $link;
 					$entity->getNetworkSession()->sendDataPacket($pk);
 
-					$link_2 = new EntityLink($entity->getId(), 0, self::STATE_SITTING, true, false);
+					$link_2 = new EntityLink($entity->getId(), 0, self::STATE_SITTING, true, false, 0.5);
 
 					$pk = new SetActorLinkPacket();
 					$pk->link = $link_2;
@@ -839,7 +812,7 @@ abstract class BasePet extends Living implements PetIds{
 		if(!empty($viewers)) {
 			$pk = new SetActorLinkPacket();
 			$pk->link = $link;
-			$this->server->broadcastPackets($viewers, [$pk]);
+			NetworkBroadcastUtils::broadcastPackets($viewers, [$pk]);
 		}
 
 		$this->links[$type] = $link;
@@ -857,14 +830,14 @@ abstract class BasePet extends Living implements PetIds{
 
 		switch($type) {
 			case self::LINK_RIDER:
-				$link = new EntityLink($this->getId(), $entity->getId(), self::STATE_STANDING, true, true);
+				$link = new EntityLink($this->getId(), $entity->getId(), self::STATE_STANDING, true, true, 0.5);
 
 				if($entity instanceof Player) {
 					$pk = new SetActorLinkPacket();
 					$pk->link = $link;
 					$entity->getNetworkSession()->sendDataPacket($pk);
 
-					$link_2 = new EntityLink($this->getId(), 0, self::STATE_STANDING, true, true);
+					$link_2 = new EntityLink($this->getId(), 0, self::STATE_STANDING, true, true, 0.5);
 
 					$pk = new SetActorLinkPacket();
 					$pk->link = $link_2;
@@ -873,14 +846,14 @@ abstract class BasePet extends Living implements PetIds{
 				}
 				break;
 			case self::LINK_RIDING:
-				$link = new EntityLink($entity->getId(), $this->getId(), self::STATE_STANDING, true, false);
+				$link = new EntityLink($entity->getId(), $this->getId(), self::STATE_STANDING, true, false, 0.5);
 
 				if($entity instanceof Player) {
 					$pk = new SetActorLinkPacket();
 					$pk->link = $link;
 					$entity->getNetworkSession()->sendDataPacket($pk);
 
-					$link_2 = new EntityLink($entity->getId(), 0, self::STATE_STANDING, true, false);
+					$link_2 = new EntityLink($entity->getId(), 0, self::STATE_STANDING, true, false, 0.5);
 
 					$pk = new SetActorLinkPacket();
 					$pk->link = $link_2;
@@ -897,7 +870,7 @@ abstract class BasePet extends Living implements PetIds{
 		if(!empty($viewers)) {
 			$pk = new SetActorLinkPacket();
 			$pk->link = $link;
-			$this->server->broadcastPackets($viewers, [$pk]);
+			NetworkBroadcastUtils::broadcastPackets($viewers, [$pk]);
 		}
 	}
 

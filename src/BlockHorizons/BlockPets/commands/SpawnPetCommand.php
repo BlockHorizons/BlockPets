@@ -18,7 +18,6 @@ class SpawnPetCommand extends BaseCommand {
 	public function onCommand(CommandSender $sender, string $commandLabel, array $args): bool {
 		if(!($sender instanceof Player) && count($args) !== 5) {
 			$this->sendConsoleError($sender);
-			//$sender->sendMessage(TF::RED . "When using spawnpet from the console, all arguments must be provided.");
 			return false;
 		}
 
@@ -49,7 +48,7 @@ class SpawnPetCommand extends BaseCommand {
 
 		if(!isset($args[1]) || empty(trim($args[1]))) {
 			/** @phpstan-ignore-next-line */
-			$args[1] = $player->getDisplayName();
+			$args[1] = $player->getName();
 		}
 
 		if(isset($args[2])) {

@@ -6,11 +6,12 @@ namespace BlockHorizons\BlockPets\pets\creatures;
 
 use BlockHorizons\BlockPets\pets\SmallCreature;
 use BlockHorizons\BlockPets\pets\WalkingPet;
+use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 
 class AxolotlPet extends WalkingPet implements SmallCreature {
 
-	const NETWORK_NAME = "AXOLOTL_PET";
-	const NETWORK_ORIG_ID = self::AXOLOTL;
+	public const NETWORK_NAME = "AXOLOTL_PET";
+	public const NETWORK_ORIG_ID = EntityIds::AXOLOTL;
 
 	protected string $name = "Axolotl Pet";
 

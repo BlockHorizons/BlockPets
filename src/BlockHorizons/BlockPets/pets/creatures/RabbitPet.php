@@ -10,8 +10,8 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataProperties;
 
 class RabbitPet extends BouncingPet implements SmallCreature {
 
-	const NETWORK_NAME = "RABBIT_PET";
-	const NETWORK_ORIG_ID = EntityIds::RABBIT;
+	public const NETWORK_NAME = "RABBIT_PET";
+	public const NETWORK_ORIG_ID = EntityIds::RABBIT;
 
 	protected float $height = 0.5;
 	protected float $width = 0.4;

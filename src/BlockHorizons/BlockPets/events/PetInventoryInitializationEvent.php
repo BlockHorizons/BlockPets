@@ -3,12 +3,7 @@ declare(strict_types = 1);
 
 namespace BlockHorizons\BlockPets\events;
 
-use pocketmine\event\Cancellable;
-use pocketmine\event\CancellableTrait;
-
-class PetInventoryInitializationEvent extends PetEvent implements Cancellable {
-
-	use CancellableTrait;
+class PetInventoryInitializationEvent extends PetEvent {
 
 	/**
 	 * Returns the name of the owner of the pet.

@@ -10,8 +10,8 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataProperties;
 
 class OcelotPet extends WalkingPet implements SmallCreature {
 
-	const NETWORK_NAME = "OCELOT_PET";
-	const NETWORK_ORIG_ID = EntityIds::OCELOT;
+	public const NETWORK_NAME = "OCELOT_PET";
+	public const NETWORK_ORIG_ID = EntityIds::OCELOT;
 
 	protected string $name = "Ocelot Pet";
 

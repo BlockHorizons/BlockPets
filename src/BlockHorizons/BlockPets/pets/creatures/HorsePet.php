@@ -9,22 +9,22 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataProperties;
 
 class HorsePet extends WalkingPet {
 
-	const NETWORK_NAME    = "HORSE_PET";
-	const NETWORK_ORIG_ID = EntityIds::HORSE;
+	public const NETWORK_NAME    = "HORSE_PET";
+	public const NETWORK_ORIG_ID = EntityIds::HORSE;
 
-	const TYPE_NONE        = 0;
-	const TYPE_WHITE       = 1;
-	const TYPE_WHITE_FIELD = 2;
-	const TYPE_WHITE_DOTS  = 3;
-	const TYPE_BLACK_DOTS  = 4;
+	public const TYPE_NONE        = 0;
+	public const TYPE_WHITE       = 1;
+	public const TYPE_WHITE_FIELD = 2;
+	public const TYPE_WHITE_DOTS  = 3;
+	public const TYPE_BLACK_DOTS  = 4;
 
-	const COLOR_WHITE = 0, COLOUR_WHITE = 0;
-	const COLOR_CREAMY = 1, COLOUR_CREAMY = 1;
-	const COLOR_CHESTNUT = 2, COLOUR_CHESTNUT = 2;
-	const COLOR_BROWN = 3, COLOUR_BROWN = 3;
-	const COLOR_BLACK = 4, COLOUR_BLACK = 4;
-	const COLOR_GRAY = 5, COLOUR_GRAY = 5;
-	const COLOR_DARKBROWN = 6, COLOUR_DARKBROWN = 6;
+	public const COLOR_WHITE = 0;
+	public const COLOR_CREAMY = 1;
+	public const COLOR_CHESTNUT = 2;
+	public const COLOR_BROWN = 3;
+	public const COLOR_BLACK = 4;
+	public const COLOR_GRAY = 5;
+	public const COLOR_DARKBROWN = 6;
 
 	protected string $name = "Horse Pet";
 
