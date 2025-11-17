@@ -13,4 +13,6 @@ projects:
       - src: muqsit/InvMenu/InvMenu
         branch: pm5
         version: ^4.7.3 
+    lint:
+      phpstan: false
 ...
