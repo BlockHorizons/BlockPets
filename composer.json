@@ -1,0 +1,11 @@
+{
+  "name": "blockhorizons/blockpets",
+  "require": {
+    "pocketmine/pocketmine-mp": "^5.0.0",
+    "muqsit/invmenu": "4.7.3",
+    "sof3/libasynql": "4.2.3"
+  },
+  "autoload": {
+    "classmap": ["src"]
+  }
+}
