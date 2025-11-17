@@ -57,14 +57,14 @@ class SQLDataStorer extends BaseDataStorer {
 		], $callable);
 	}
 
-	public function getPlayerPets(string $player, ?string $entityName = null, callable $callable = null): void {
+	public function getPlayerPets(string $player, ?string $entityName = null, ?callable $callable = null): void {
 		$this->database->executeSelect(SQLDataStorer::LIST_PLAYER_PETS, [
 			"player"     => $player,
 			"entityname" => $entityName ?? "%"
 		], $callable);
 	}
 
-	public function getPetsLeaderboard(int $offset = 0, int $length = 1, ?string $entityName = null, callable $callable = null): void {
+	public function getPetsLeaderboard(int $offset = 0, int $length = 1, ?string $entityName = null, ?callable $callable = null): void {
 		$this->database->executeSelect(SQLDataStorer::PET_LEADERBOARD, [
 			"offset"     => $offset,
 			"length"     => $length,

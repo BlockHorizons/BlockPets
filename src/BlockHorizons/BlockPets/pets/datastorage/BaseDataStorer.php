@@ -72,7 +72,7 @@ abstract class BaseDataStorer {
 	 * If $entityName is not null, only entities with the
 	 * specified entity name will be fetched.
 	 */
-	public abstract function getPlayerPets(string $ownerName, ?string $entityName = null, callable $callable = null): void;
+	public abstract function getPlayerPets(string $ownerName, ?string $entityName = null, ?callable $callable = null): void;
 
 	/**
 	 * Fetches all pets sorted by their level and points
@@ -81,7 +81,7 @@ abstract class BaseDataStorer {
 	 * If $entityName is not null, only entities with the
 	 * specified entity name will be fetched.
 	 */
-	public abstract function getPetsLeaderboard(int $offset = 0, int $length = 1, ?string $entityName = null, callable $callable = null): void;
+	public abstract function getPetsLeaderboard(int $offset = 0, int $length = 1, ?string $entityName = null, ?callable $callable = null): void;
 
 	/**
 	 * Toggles pets on or off from the database.
