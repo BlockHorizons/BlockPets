@@ -707,10 +707,14 @@ abstract class BasePet extends Living {
 
 	public function changeName(string $newName): void {
 		$database = $this->getLoader()->getDatabase();
+	
+		$this->getLoader()->_changePetName($this->petOwner->getName(), $this->petName, $newName);
+
 		$database->unregisterPet($this);
 		$this->petName = $newName;
 		$this->getCalculator()->updateNameTag();
 		$database->registerPet($this);
+
 		$this->getInventoryManager()->setName($newName);
 	}
 

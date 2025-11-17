@@ -505,6 +505,8 @@ class Loader extends PluginBase {
 			return $entity;
 		}
 
+		$this->getLoader()->getLogger()->info("spawn pet: " . implode(", ", array_keys($pets)));
+
 		return null;
 	}
 
@@ -573,6 +575,22 @@ class Loader extends PluginBase {
 			$pet->close();
 		}
 		unset($this->playerPets[strtolower($pet->getPetOwnerName())][strtolower($pet->getPetName())]);
+	}
+
+	/**
+	 * Change the pet name in the playerPets array.
+	 * This is for internal use, for plugins use {@link BasePet#changeName}.
+	 */
+	public function _changePetName($playerName, $oldName, $newName) {
+		$oldNameLower = strtolower($oldName);
+		$newNameLower = strtolower($newName);
+
+		$pets = &$this->playerPets[strtolower($playerName)];
+
+		if (isset($pets[$oldNameLower]) && !isset($pets[$newNameLower])) {
+			$pets[$newNameLower] = $pets[$oldNameLower];
+			unset($pets[$oldNameLower]);
+		}
 	}
 
 	/**
