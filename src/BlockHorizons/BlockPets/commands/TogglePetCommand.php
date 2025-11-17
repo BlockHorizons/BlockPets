@@ -63,7 +63,7 @@ class TogglePetCommand extends BaseCommand {
 					}
 
 					$visible = array_keys($pets, 1, true);
-					/** @phpstan-ignore-next-line */
+
 					if(count($visible) === 0) {
 						$sender->sendMessage(TextFormat::GREEN . $loader->translate(
 							$sender->getName() === $player ? "commands.togglepet.success" : "commands.togglepet.success-others",

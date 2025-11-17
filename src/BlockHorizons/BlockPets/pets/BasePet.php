@@ -631,7 +631,7 @@ abstract class BasePet extends Living {
 
 		$rider = $this->getRider();
 		$this->rider = null;
-		$rider->canCollided = true;
+
 		$this->removeLink($rider, self::LINK_RIDER);
 
 		$this->riding = false;
@@ -665,7 +665,7 @@ abstract class BasePet extends Living {
 		}
 
 		$this->rider = $player;
-		$player->canCollided = false;
+
 		$owner = $this->getPetOwner();
 
 		$player->getNetworkProperties()->setVector3(EntityMetadataProperties::RIDER_SEAT_POSITION, $this->riderSeatPos);

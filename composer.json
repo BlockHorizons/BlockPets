@@ -5,6 +5,9 @@
     "muqsit/invmenu": "4.7.3",
     "sof3/libasynql": "4.2.3"
   },
+  "require-dev": {
+    "phpstan/phpstan": "2.1.31"
+  },
   "autoload": {
     "classmap": ["src"]
   }

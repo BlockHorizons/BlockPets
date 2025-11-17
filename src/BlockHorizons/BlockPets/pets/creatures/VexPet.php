@@ -19,7 +19,7 @@ class VexPet extends HoveringPet implements SmallCreature {
 
 	protected string $name = "Vex Pet";
 
-	public function generateCustomPetData(): void {
-		$this->canCollided = false;
+	public function canBeCollidedWith(): bool {
+		return false;
 	}
 }

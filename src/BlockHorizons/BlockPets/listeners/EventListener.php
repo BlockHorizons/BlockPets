@@ -87,7 +87,7 @@ class EventListener implements Listener {
 						);
 						$pet->spawnToAll();
 						$pet->setDormant(false);
-						/** @phpstan-ignore-next-line */
+
 						if($hard_reset) {
 							$pet->close();
 						}
