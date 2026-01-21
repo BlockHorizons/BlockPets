@@ -1,4 +1,4 @@
--- #!mysql
+-- #!sqlite
 -- #{ blockpets
 
 -- #  { init
