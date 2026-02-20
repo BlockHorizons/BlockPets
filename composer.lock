@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e8caed284cd5ca8da2de13e03a9ab7af",
+    "content-hash": "7c5f697e1de9aead5a6983140e891daf",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -124,6 +124,62 @@
                 }
             ],
             "time": "2025-08-29T12:40:03+00:00"
+        },
+        {
+            "name": "bstats/pocketmine-mp",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Bastian/bstats-pmmp.git",
+                "reference": "30da79baf3fa90df456a9f75ae84ae809f40d182"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Bastian/bstats-pmmp/zipball/30da79baf3fa90df456a9f75ae84ae809f40d182",
+                "reference": "30da79baf3fa90df456a9f75ae84ae809f40d182",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.0",
+                "pocketmine/pocketmine-mp": "^5.0.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "virion": {
+                    "spec": "3.1",
+                    "namespace-root": "bStats\\PocketmineMp"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "bStats\\PocketmineMp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bastian",
+                    "homepage": "https://bStats.org",
+                    "role": "Developer"
+                }
+            ],
+            "description": "bStats Metrics for PocketMine-MP plugins",
+            "homepage": "https://github.com/Bastian/bstats-pmmp",
+            "keywords": [
+                "bstats",
+                "pocketmine-mp"
+            ],
+            "support": {
+                "issues": "https://github.com/Bastian/bstats-pmmp/issues",
+                "source": "https://github.com/Bastian/bstats-pmmp/tree/1.0.0"
+            },
+            "time": "2026-02-16T18:41:20+00:00"
         },
         {
             "name": "muqsit/invmenu",

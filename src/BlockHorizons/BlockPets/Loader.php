@@ -102,6 +102,7 @@ use pocketmine\utils\SingletonTrait;
 use pocketmine\world\format\io\GlobalItemDataHandlers;
 use pocketmine\world\World;
 use Symfony\Component\Filesystem\Path;
+use bStats\PocketmineMp\Metrics;
 
 use function strtolower;
 
@@ -194,6 +195,8 @@ class Loader extends PluginBase {
 		if(!is_dir($this->getDataFolder())) {
 			mkdir($this->getDataFolder());
 		}
+
+		new Metrics($this, 29645);
 
 		$this->saveResource(".version_file");
 
